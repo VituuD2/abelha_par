@@ -63,8 +63,39 @@ export async function fetchOlistOrders({
       return true; // If ecommerce info is missing in the list endpoint, keep it and check later
     });
 
+    if (wooCommerceItems.length > 0) {
+      console.log("=== LOG DE UM ITEM BRUTO DA LISTA ===");
+      console.dir(wooCommerceItems[0], { depth: null });
+      console.log("======================================");
+    }
+
     // For each order, fetch details to get observacoes
     for (const item of wooCommerceItems) {
+      // First, try to get the ID directly from the list item to avoid hitting the API rate limit (429)
+      let yampiId = null;
+      const numero = item.numero_pedido || item.numero;
+      const numero_ecommerce = item.numero_ecommerce || (item.ecommerce && item.ecommerce.numeroPedidoEcommerce);
+      const clientName = item.cliente?.nome || item.nome || "";
+      
+      if (numero_ecommerce) {
+        yampiId = String(numero_ecommerce).trim();
+      } else if (numero) {
+        yampiId = String(numero).trim();
+      }
+
+      // Se já temos um ID, podemos pular a busca de detalhes e economizar cota da API!
+      if (yampiId) {
+        allOrders.push({
+          id: item.id,
+          yampiId,
+          trackingCode: item.codigo_rastreamento || "",
+          clientName,
+          numeroPedido: numero,
+        });
+        continue;
+      }
+
+      // Se realmente precisamos dos detalhes, buscamos com cuidado
       try {
         const detail = await fetchOrderDetail(item.id, headers);
 
@@ -73,7 +104,7 @@ export async function fetchOlistOrders({
           continue;
         }
 
-        let yampiId = extractYampiId(
+        yampiId = extractYampiId(
           `${detail.observacoes || ""} ${detail.observacao_interna || ""}`
         );
 
@@ -89,9 +120,12 @@ export async function fetchOlistOrders({
           id: detail.id,
           yampiId,
           trackingCode: detail.codigo_rastreamento || "",
-          clientName: detail.nome || "",
-          numeroPedido: detail.numero,
+          clientName: detail.cliente?.nome || detail.nome || clientName,
+          numeroPedido: detail.numero_pedido || detail.numero || numero,
         });
+
+        // Delay para evitar 429 Too Many Requests
+        await new Promise((resolve) => setTimeout(resolve, 350));
       } catch (err) {
         console.error(`Failed to fetch detail for order ${item.id}:`, err);
         // Still add with basic info
@@ -99,8 +133,8 @@ export async function fetchOlistOrders({
           id: item.id,
           yampiId: null,
           trackingCode: item.codigo_rastreamento || "",
-          clientName: item.nome || "",
-          numeroPedido: item.numero,
+          clientName,
+          numeroPedido: numero,
         });
       }
     }
