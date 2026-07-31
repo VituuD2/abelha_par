@@ -18,7 +18,7 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed p-6 left-0 top-0 bottom-0 w-[260px] flex-col z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-[260px] flex-col z-40">
         <div className="flex-1 glass border-r border-[var(--color-border-light)] px-4 py-6 flex flex-col">
           {/* Logo */}
           <div className="flex items-center gap-4 px-4 mb-8">
