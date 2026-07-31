@@ -1,0 +1,8 @@
+{
+  "/api/auth/callback/route": "app/api/auth/callback/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/status/route": "app/api/auth/status/route.js",
+  "/history/page": "app/history/page.js",
+  "/page": "app/page.js",
+  "/scanner/page": "app/scanner/page.js"
+}

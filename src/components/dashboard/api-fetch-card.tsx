@@ -88,23 +88,23 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   };
 
   return (
-    <div className="card p-6 flex flex-col h-full min-h-[320px]">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
-          <Cloud className="w-5 h-5 text-[var(--color-accent-blue)]" />
+    <div className="card p-8 flex flex-col h-full min-h-[380px]">
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
+          <Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[16px] font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+          <h3 className="text-[18px] font-semibold text-[var(--color-text-primary)] flex items-center gap-3">
             Pedidos Olist
             {isCheckingAuth ? (
-               <Loader2 className="w-3 h-3 animate-spin text-[var(--color-text-tertiary)]" />
+               <Loader2 className="w-4 h-4 animate-spin text-[var(--color-text-tertiary)]" />
             ) : isConnected ? (
-              <span className="badge badge-checked bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)] px-2 py-0.5 text-[10px]">Conectado</span>
+              <span className="badge badge-checked bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)] px-2.5 py-1 text-[11px]">Conectado</span>
             ) : (
-              <span className="badge badge-error bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)] px-2 py-0.5 text-[10px]">Desconectado</span>
+              <span className="badge badge-error bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)] px-2.5 py-1 text-[11px]">Desconectado</span>
             )}
           </h3>
-          <p className="text-[13px] text-[var(--color-text-tertiary)]">
+          <p className="text-[14px] text-[var(--color-text-tertiary)] mt-1">
             Buscar via API Tiny ERP
           </p>
         </div>
@@ -116,15 +116,15 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         </div>
       ) : !isConnected ? (
         <div className="flex-1 flex flex-col justify-center">
-          <div className="text-center mb-5">
-            <LinkIcon className="w-8 h-8 text-[var(--color-text-tertiary)] mx-auto mb-2 opacity-50" />
-            <p className="text-[14px] text-[var(--color-text-secondary)]">
+          <div className="text-center mb-8">
+            <LinkIcon className="w-10 h-10 text-[var(--color-text-tertiary)] mx-auto mb-4 opacity-50" />
+            <p className="text-[15px] text-[var(--color-text-secondary)]">
               Conecte sua conta do Tiny ERP para <br/>buscar os pedidos automaticamente.
             </p>
           </div>
           <button
             onClick={handleConnect}
-            className="btn-primary w-full shadow-md hover:shadow-lg transition-shadow mt-auto"
+            className="btn-primary w-full shadow-md hover:shadow-lg transition-shadow mt-auto py-3 text-[15px]"
           >
             Conectar Tiny ERP
             <ExternalLink className="w-4 h-4 ml-1" />
@@ -147,9 +147,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
       ) : (
         <div className="flex-1 flex flex-col justify-between">
           {/* Date Range */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-2 gap-5 mb-8">
             <div>
-              <label className="text-[12px] font-medium text-[var(--color-text-secondary)] mb-1.5 block">
+              <label className="text-[13px] font-medium text-[var(--color-text-secondary)] mb-2 block">
                 Data Início
               </label>
               <div className="relative">
@@ -163,7 +163,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
               </div>
             </div>
             <div>
-              <label className="text-[12px] font-medium text-[var(--color-text-secondary)] mb-1.5 block">
+              <label className="text-[13px] font-medium text-[var(--color-text-secondary)] mb-2 block">
                 Data Fim
               </label>
               <div className="relative">
@@ -183,7 +183,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
             <button
               onClick={handleFetch}
               disabled={isLoading}
-              className="btn-primary w-full mt-auto"
+              className="btn-primary w-full mt-auto py-3 text-[15px]"
             >
               {isLoading ? (
                 <>

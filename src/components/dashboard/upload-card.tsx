@@ -75,16 +75,16 @@ export function UploadCard({ onUpload }: UploadCardProps) {
   );
 
   return (
-    <div className="card p-6 flex flex-col h-full min-h-[320px]">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-purple)]/10 flex items-center justify-center">
-          <FileSpreadsheet className="w-5 h-5 text-[var(--color-accent-purple)]" />
+    <div className="card p-8 flex flex-col h-full min-h-[380px]">
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--color-accent-purple)]/10 flex items-center justify-center">
+          <FileSpreadsheet className="w-6 h-6 text-[var(--color-accent-purple)]" />
         </div>
         <div>
-          <h3 className="text-[16px] font-semibold text-[var(--color-text-primary)]">
+          <h3 className="text-[18px] font-semibold text-[var(--color-text-primary)]">
             Planilha Yampi
           </h3>
-          <p className="text-[13px] text-[var(--color-text-tertiary)]">
+          <p className="text-[14px] text-[var(--color-text-tertiary)] mt-1">
             Upload da planilha de pedidos
           </p>
         </div>
@@ -97,16 +97,16 @@ export function UploadCard({ onUpload }: UploadCardProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="flex items-center gap-3 p-4 rounded-[var(--radius-md)] bg-[var(--color-accent-green)]/8 border border-[var(--color-accent-green)]/20"
+            className="flex items-center gap-4 p-5 rounded-[var(--radius-lg)] bg-[var(--color-accent-green)]/8 border border-[var(--color-accent-green)]/20"
           >
-            <div className="w-8 h-8 rounded-full bg-[var(--color-accent-green)] flex items-center justify-center flex-shrink-0">
-              <Check className="w-4 h-4 text-white" />
+            <div className="w-10 h-10 rounded-full bg-[var(--color-accent-green)] flex items-center justify-center flex-shrink-0">
+              <Check className="w-5 h-5 text-white" />
             </div>
             <div className="min-w-0">
-              <p className="text-[14px] font-medium text-[var(--color-text-primary)] truncate">
+              <p className="text-[15px] font-medium text-[var(--color-text-primary)] truncate">
                 {uploadedFile}
               </p>
-              <p className="text-[12px] text-[var(--color-text-secondary)]">
+              <p className="text-[13px] text-[var(--color-text-secondary)] mt-0.5">
                 {totalRows} pedidos encontrados
               </p>
             </div>
@@ -136,20 +136,20 @@ export function UploadCard({ onUpload }: UploadCardProps) {
               onClick={() => fileInputRef.current?.click()}
             >
               {isProcessing ? (
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-8 h-8 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin" />
-                  <p className="text-[14px] text-[var(--color-text-secondary)]">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-10 h-10 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin" />
+                  <p className="text-[15px] text-[var(--color-text-secondary)]">
                     Processando planilha...
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <Upload className="w-8 h-8 text-[var(--color-text-tertiary)]" />
-                  <p className="text-[14px] text-[var(--color-text-secondary)]">
+                <div className="flex flex-col items-center gap-3">
+                  <Upload className="w-10 h-10 text-[var(--color-text-tertiary)]" />
+                  <p className="text-[15px] text-[var(--color-text-secondary)]">
                     Arraste um arquivo <span className="font-semibold">.xlsx</span> ou{" "}
                     <span className="font-semibold">.csv</span> aqui
                   </p>
-                  <p className="text-[12px] text-[var(--color-text-tertiary)]">
+                  <p className="text-[13px] text-[var(--color-text-tertiary)]">
                     ou clique para selecionar
                   </p>
                 </div>

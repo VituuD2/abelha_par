@@ -1,0 +1,10 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/auth/callback/route": "/api/auth/callback",
+  "/api/auth/status/route": "/api/auth/status",
+  "/api/olist/route": "/api/olist",
+  "/api/auth/login/route": "/api/auth/login",
+  "/history/page": "/history",
+  "/page": "/",
+  "/scanner/page": "/scanner"
+}

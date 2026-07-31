@@ -72,17 +72,17 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="card p-5 mb-6"
+        className="card p-8 mb-10"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-lg">
-            <Package className="w-6 h-6 text-white" />
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-lg">
+            <Package className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h2 className="text-[18px] font-bold text-[var(--color-text-primary)]">
+            <h2 className="text-[20px] font-bold text-[var(--color-text-primary)]">
               Conferência de Pedidos
             </h2>
-            <p className="text-[13px] text-[var(--color-text-secondary)]">
+            <p className="text-[14px] text-[var(--color-text-secondary)] mt-1">
               {bothLoaded
                 ? `${olistOrders.length} pedidos Olist × ${yampiIds.size} IDs Yampi carregados`
                 : "Carregue os pedidos da API e a planilha Yampi para cruzar os dados"}
@@ -92,7 +92,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
@@ -114,7 +114,7 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center gap-3 p-4 rounded-[var(--radius-lg)] bg-white/60 border border-dashed border-[var(--color-border-medium)]"
+          className="flex items-center justify-center gap-4 p-8 rounded-[var(--radius-lg)] bg-white/60 border border-dashed border-[var(--color-border-medium)] mb-10"
         >
           <ArrowDownUp className="w-5 h-5 text-[var(--color-text-tertiary)] animate-pulse-slow" />
           <p className="text-[14px] text-[var(--color-text-secondary)]">
