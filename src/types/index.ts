@@ -42,7 +42,12 @@ export interface OlistApiOrder {
   ecommerce?: {
     id: number;
     nome: string;
+    numeroPedidoEcommerce?: string;
   };
+  cliente?: {
+    nome: string;
+  };
+  numero_pedido?: number;
 }
 
 export interface OlistApiResponse {
@@ -65,7 +70,12 @@ export interface OlistDetailResponse {
   ecommerce?: {
     id: number;
     nome: string;
+    numeroPedidoEcommerce?: string;
   };
+  cliente?: {
+    nome: string;
+  };
+  numero_pedido?: number;
 }
 
 /* ===== Scanner State Types ===== */
