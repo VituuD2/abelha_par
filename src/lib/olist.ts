@@ -29,13 +29,13 @@ export async function fetchOlistOrders({
 
   while (currentPage <= totalPages) {
     const params = new URLSearchParams({
-      dataAtualizacao: dateFrom,
+      data_inicial: dateFrom,
       limite: "100",
       pagina: String(currentPage),
     });
 
     if (dateTo) {
-      params.set("dataAtualizacaoFim", dateTo);
+      params.set("data_final", dateTo);
     }
 
     const response = await fetch(`${API_BASE}/pedidos?${params.toString()}`, {
