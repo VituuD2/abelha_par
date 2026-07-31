@@ -64,7 +64,7 @@ export default function DashboardPage() {
       <Header
         title="Dashboard"
         subtitle="Carregue os dados para iniciar a conferência de pedidos"
-        breadcrumbs={["Scanner Checkout", "Dashboard"]}
+        breadcrumbs={["Abelha Par", "Dashboard"]}
       />
 
       {/* Hero Stats */}
@@ -80,7 +80,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <h2 className="text-[20px] font-bold text-[var(--color-text-primary)]">
-              Conferência de Pedidos
+              Dashboard
             </h2>
             <p className="text-[14px] text-[var(--color-text-secondary)] mt-1">
               {bothLoaded

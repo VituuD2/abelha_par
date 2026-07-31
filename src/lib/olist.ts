@@ -73,9 +73,17 @@ export async function fetchOlistOrders({
           continue;
         }
 
-        const yampiId = extractYampiId(
+        let yampiId = extractYampiId(
           `${detail.observacoes || ""} ${detail.observacao_interna || ""}`
         );
+
+        if (!yampiId && detail.numero_ecommerce) {
+          yampiId = String(detail.numero_ecommerce).trim();
+        }
+
+        if (!yampiId && detail.numero) {
+          yampiId = String(detail.numero).trim();
+        }
 
         allOrders.push({
           id: detail.id,
