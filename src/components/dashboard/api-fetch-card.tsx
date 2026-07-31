@@ -88,7 +88,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   };
 
   return (
-    <div className="card p-8 flex flex-col h-full min-h-[380px]">
+    <div className="card p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
       <div className="flex items-center gap-4 mb-6">
         <div className="w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
           <Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" />
@@ -153,12 +153,11 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
                 Data Início
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-tertiary)]" />
                 <input
                   type="date"
                   value={dateFrom}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-white text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
+                  className="w-full px-3 py-2.5 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-white text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
                 />
               </div>
             </div>
@@ -167,12 +166,11 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
                 Data Fim
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-tertiary)]" />
                 <input
                   type="date"
                   value={dateTo}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-white text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
+                  className="w-full px-3 py-2.5 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-white text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
                 />
               </div>
             </div>

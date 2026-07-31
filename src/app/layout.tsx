@@ -27,7 +27,7 @@ export default function RootLayout({
           <Sidebar />
           
           {/* Main Content */}
-          <main className="lg:ml-[260px] pb-20 lg:pb-0 min-h-screen flex flex-col items-center justify-center">
+          <main className="lg:ml-[260px] pb-20 lg:pb-0 min-h-screen flex flex-col">
             <div className="w-full max-w-6xl px-6 sm:px-10 lg:px-12 py-10 lg:py-16">
               {children}
             </div>

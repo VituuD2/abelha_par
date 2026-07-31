@@ -55,10 +55,24 @@ export async function fetchOlistOrders({
       totalPages = data.paginacao.paginas || 1;
     }
 
+    // Filter items to only include WooCommerce orders (id: 20161) if ecommerce data is available in the list
+    const wooCommerceItems = items.filter((item: any) => {
+      if (item.ecommerce) {
+        return item.ecommerce.id === 20161 || String(item.ecommerce.nome).toLowerCase() === "woocommerce";
+      }
+      return true; // If ecommerce info is missing in the list endpoint, keep it and check later
+    });
+
     // For each order, fetch details to get observacoes
-    for (const item of items) {
+    for (const item of wooCommerceItems) {
       try {
         const detail = await fetchOrderDetail(item.id, headers);
+
+        // Fallback filter: if list didn't have ecommerce info, check it at the detail level
+        if (detail.ecommerce && detail.ecommerce.id !== 20161 && String(detail.ecommerce.nome).toLowerCase() !== "woocommerce") {
+          continue;
+        }
+
         const yampiId = extractYampiId(
           `${detail.observacoes || ""} ${detail.observacao_interna || ""}`
         );

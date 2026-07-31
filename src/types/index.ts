@@ -39,6 +39,10 @@ export interface OlistApiOrder {
   codigo_rastreamento: string;
   observacoes: string;
   observacao_interna: string;
+  ecommerce?: {
+    id: number;
+    nome: string;
+  };
 }
 
 export interface OlistApiResponse {
@@ -58,6 +62,10 @@ export interface OlistDetailResponse {
   codigo_rastreamento: string;
   observacoes: string;
   observacao_interna: string;
+  ecommerce?: {
+    id: number;
+    nome: string;
+  };
 }
 
 /* ===== Scanner State Types ===== */

@@ -1,8 +1,9 @@
 import * as XLSX from "xlsx";
 
 /**
- * Parses a Yampi spreadsheet (.xlsx or .csv) and extracts all IDs from the first column.
- * Returns a Set of Yampi ID strings for O(1) lookups during cross-referencing.
+ * Parses a Yampi spreadsheet (.xlsx or .csv) and extracts all IDs from the correct column.
+ * It searches for the 'numero_pedido' column dynamically.
+ * Returns a Set of unique Yampi ID strings.
  */
 export function parseYampiSpreadsheet(buffer: ArrayBuffer): Set<string> {
   const workbook = XLSX.read(buffer, { type: "array" });
@@ -15,12 +16,26 @@ export function parseYampiSpreadsheet(buffer: ArrayBuffer): Set<string> {
   }) as unknown as unknown[][];
 
   const yampiIds = new Set<string>();
+  
+  if (rows.length < 2) return yampiIds; // Empty or just header
 
-  // Skip header row (index 0), extract first column values
+  // Find the correct column for the order number
+  const headers = (rows[0] as string[]).map(h => String(h).toLowerCase().trim());
+  let orderNumberColIndex = headers.indexOf("numero_pedido");
+  
+  // Fallback to first column if 'numero_pedido' header is not found
+  if (orderNumberColIndex === -1) {
+    orderNumberColIndex = 0;
+  }
+
+  // Skip header row (index 0), extract order numbers
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    if (row && row[0] !== undefined && row[0] !== null && row[0] !== "") {
-      yampiIds.add(String(row[0]).trim());
+    if (row && row[orderNumberColIndex] !== undefined && row[orderNumberColIndex] !== null && row[orderNumberColIndex] !== "") {
+      const orderId = String(row[orderNumberColIndex]).trim();
+      if (orderId) {
+        yampiIds.add(orderId);
+      }
     }
   }
 
@@ -28,7 +43,7 @@ export function parseYampiSpreadsheet(buffer: ArrayBuffer): Set<string> {
 }
 
 /**
- * Gets the total count from the spreadsheet
+ * Gets the total count from the spreadsheet, accurately reflecting unique orders.
  */
 export function getSpreadsheetInfo(buffer: ArrayBuffer): { totalRows: number; headers: string[] } {
   const workbook = XLSX.read(buffer, { type: "array" });
@@ -39,8 +54,12 @@ export function getSpreadsheetInfo(buffer: ArrayBuffer): { totalRows: number; he
   }) as unknown[][];
 
   const headers = rows[0] ? rows[0].map(String) : [];
+  
+  // Instead of just returning row count, we return the unique order count
+  const uniqueOrders = parseYampiSpreadsheet(buffer);
+
   return {
-    totalRows: rows.length - 1, // Exclude header
+    totalRows: uniqueOrders.size,
     headers,
   };
 }
