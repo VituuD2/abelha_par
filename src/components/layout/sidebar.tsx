@@ -18,12 +18,12 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-[260px] flex-col z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-[300px] flex-col z-40">
         <div className="flex-1 glass border-r border-[var(--color-border-light)] px-4 py-6 flex flex-col">
           {/* Logo */}
-          <div className="flex items-center gap-3 px-3 mb-8">
-            <div className="w-12 h-12 rounded-[var(--radius-md)] bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-white">
+          <div className="flex items-center gap-4 px-4 mb-8">
+            <div className="w-14 h-14 p-2.5 rounded-[var(--radius-md)] bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-white">
                 <path d="M2 13v-2a2 2 0 0 1 2-2h1.5l1.5-1.5A3.5 3.5 0 0 1 9.5 6.5h3A3.5 3.5 0 0 1 15 7.5l1.5 1.5H18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1.5l-1.5 1.5a3.5 3.5 0 0 1-2.5 1h-3a3.5 3.5 0 0 1-2.5-1L5.5 15H4a2 2 0 0 1-2-2z"/>
                 <path d="M12 16v-4"/>
                 <path d="M9 16v-4"/>
@@ -53,7 +53,7 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "relative flex items-center gap-4 px-4 py-3.5 rounded-[var(--radius-md)] text-[15px] font-medium transition-all duration-200",
+                    "relative flex items-center gap-4 px-5 py-4 rounded-[var(--radius-md)] text-[15px] font-medium transition-all duration-200",
                     isActive
                       ? "text-[var(--color-accent-blue)]"
                       : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-black/[0.03]"

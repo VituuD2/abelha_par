@@ -90,8 +90,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   return (
     <div className="card p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
-          <Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" />
+        <div className="w-14 h-14 p-3 rounded-[var(--radius-lg)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center shrink-0">
+          <Cloud className="w-7 h-7 text-[var(--color-accent-blue)]" />
         </div>
         <div className="flex-1">
           <h3 className="text-[18px] font-semibold text-[var(--color-text-primary)] flex items-center gap-3">

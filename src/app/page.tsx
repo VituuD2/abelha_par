@@ -75,8 +75,8 @@ export default function DashboardPage() {
         className="card p-8 mb-10"
       >
         <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-lg">
-            <Package className="w-8 h-8 text-white" />
+          <div className="w-[72px] h-[72px] p-4 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-lg shrink-0">
+            <Package className="w-10 h-10 text-white" />
           </div>
           <div>
             <h2 className="text-[20px] font-bold text-[var(--color-text-primary)]">

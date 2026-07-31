@@ -77,8 +77,8 @@ export function UploadCard({ onUpload }: UploadCardProps) {
   return (
     <div className="card p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--color-accent-purple)]/10 flex items-center justify-center">
-          <FileSpreadsheet className="w-6 h-6 text-[var(--color-accent-purple)]" />
+        <div className="w-14 h-14 p-3 rounded-[var(--radius-lg)] bg-[var(--color-accent-purple)]/10 flex items-center justify-center shrink-0">
+          <FileSpreadsheet className="w-7 h-7 text-[var(--color-accent-purple)]" />
         </div>
         <div>
           <h3 className="text-[18px] font-semibold text-[var(--color-text-primary)]">
