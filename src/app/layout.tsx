@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`}>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`} suppressHydrationWarning>
         <div className="min-h-screen w-full">
           {/* Sidebar - Desktop */}
           <Sidebar />
