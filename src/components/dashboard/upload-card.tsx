@@ -27,6 +27,14 @@ export function UploadCard({ onUpload }: UploadCardProps) {
         const info = getSpreadsheetInfo(buffer);
         const yampiIds = parseYampiSpreadsheet(buffer);
 
+        console.log("=== LOG DE IDS EXTRAÍDOS DA PLANILHA (Yampi) ===");
+        console.log(`Total de IDs únicos extraídos: ${yampiIds.size}`);
+        if (yampiIds.size > 0) {
+          console.log("Exemplo dos primeiros 5 IDs extraídos:");
+          console.log(Array.from(yampiIds).slice(0, 5));
+        }
+        console.log("==================================================");
+
         if (yampiIds.size === 0) {
           setError("Nenhum ID encontrado na planilha. Verifique se a primeira coluna contém os IDs.");
           setIsProcessing(false);

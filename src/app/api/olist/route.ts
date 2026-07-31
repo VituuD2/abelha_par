@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { fetchOlistOrders } from "@/lib/olist";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 
+function formatTinyDate(dateStr: string) {
+  if (!dateStr || !dateStr.includes("-")) return dateStr;
+  const [y, m, d] = dateStr.split("-");
+  return `${d}/${m}/${y}`;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -23,11 +29,24 @@ export async function POST(request: Request) {
       );
     }
 
+    const formattedDateFrom = formatTinyDate(dateFrom);
+    const formattedDateTo = formatTinyDate(dateTo || dateFrom);
+
+    console.log(`Buscando pedidos Olist/Tiny no período: ${formattedDateFrom} até ${formattedDateTo}`);
+
     const orders = await fetchOlistOrders({
       token: apiToken,
-      dateFrom,
-      dateTo: dateTo || dateFrom,
+      dateFrom: formattedDateFrom,
+      dateTo: formattedDateTo,
     });
+
+    console.log("=== LOG DE PEDIDOS BUSCADOS DA API (Tiny) ===");
+    console.log(`Total de pedidos encontrados: ${orders.length}`);
+    if (orders.length > 0) {
+      console.log("Exemplo dos primeiros 5 pedidos (para verificação de ID):");
+      console.dir(orders.slice(0, 5), { depth: null });
+    }
+    console.log("===============================================");
 
     return NextResponse.json({
       orders,
