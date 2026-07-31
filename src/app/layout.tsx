@@ -27,8 +27,8 @@ export default function RootLayout({
           <Sidebar />
           
           {/* Main Content */}
-          <main className="w-full lg:!pl-[260px] pb-20 lg:pb-0 min-h-screen flex flex-col">
-            <div className="w-full max-w-6xl mx-auto p-6 px-6 sm:px-10 lg:px-12 py-10 lg:py-16">
+          <main className="w-full lg:!pl-[260px] p-6 pb-20 lg:pb-0 min-h-screen flex flex-col">
+            <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 py-10 lg:py-16">
               {children}
             </div>
           </main>
