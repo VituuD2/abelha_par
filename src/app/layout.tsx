@@ -21,13 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.variable} font-sans`}>
-        <div className="flex min-h-screen">
+      <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`}>
+        <div className="min-h-screen w-full">
           {/* Sidebar - Desktop */}
           <Sidebar />
           
           {/* Main Content */}
-          <main className="flex-1 lg:ml-[260px] pb-20 lg:pb-0">
+          <main className="w-full lg:pl-[260px] pb-20 lg:pb-0 min-h-screen">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               {children}
             </div>

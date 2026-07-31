@@ -22,14 +22,22 @@ export function Sidebar() {
         <div className="flex-1 glass border-r border-[var(--color-border-light)] px-4 py-6 flex flex-col">
           {/* Logo */}
           <div className="flex items-center gap-3 px-3 mb-8">
-            <div className="w-10 h-10 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-md">
-              <Package className="w-5 h-5 text-white" />
+            <div className="w-12 h-12 rounded-[var(--radius-md)] bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-white">
+                <path d="M2 13v-2a2 2 0 0 1 2-2h1.5l1.5-1.5A3.5 3.5 0 0 1 9.5 6.5h3A3.5 3.5 0 0 1 15 7.5l1.5 1.5H18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1.5l-1.5 1.5a3.5 3.5 0 0 1-2.5 1h-3a3.5 3.5 0 0 1-2.5-1L5.5 15H4a2 2 0 0 1-2-2z"/>
+                <path d="M12 16v-4"/>
+                <path d="M9 16v-4"/>
+                <path d="M15 16v-4"/>
+                <path d="M10 6v-2a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/>
+                <path d="M4 11h2"/>
+                <path d="M18 11h2"/>
+              </svg>
             </div>
             <div>
-              <h1 className="text-[15px] font-bold text-[var(--color-text-primary)] tracking-tight">
-                Scanner Checkout
+              <h1 className="text-[18px] font-bold text-[var(--color-text-primary)] tracking-tight leading-tight">
+                Abelha Par
               </h1>
-              <p className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+              <p className="text-[12px] text-[var(--color-text-tertiary)] font-medium">
                 Conferência de Pedidos
               </p>
             </div>
@@ -45,7 +53,7 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "relative flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] text-[14px] font-medium transition-all duration-200",
+                    "relative flex items-center gap-4 px-4 py-3.5 rounded-[var(--radius-md)] text-[15px] font-medium transition-all duration-200",
                     isActive
                       ? "text-[var(--color-accent-blue)]"
                       : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-black/[0.03]"
@@ -62,7 +70,7 @@ export function Sidebar() {
                       }}
                     />
                   )}
-                  <Icon className="w-[18px] h-[18px] relative z-10" />
+                  <Icon className="w-[22px] h-[22px] relative z-10" />
                   <span className="relative z-10">{item.label}</span>
                 </Link>
               );
