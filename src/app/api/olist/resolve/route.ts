@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
-import { resolveOlistOrders } from "@/lib/olist";
+import { resolveOlistOrders, TinyRateLimitError } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 
@@ -25,7 +25,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ orders });
   } catch (error) {
     console.error("[olist/resolve] request failed", error);
-    const status = error instanceof Error && error.message.includes("429") ? 429 : 502;
-    return NextResponse.json({ error: status === 429 ? "A Tiny limitou temporariamente as consultas." : "Não foi possível resolver os detalhes dos pedidos." }, { status });
+    if (error instanceof TinyRateLimitError) {
+      return NextResponse.json(
+        { error: "A Tiny limitou temporariamente as consultas.", retryAfterSeconds: error.retryAfterSeconds },
+        { status: 429, headers: { "Retry-After": String(error.retryAfterSeconds) } }
+      );
+    }
+    return NextResponse.json({ error: "Não foi possível resolver os detalhes dos pedidos." }, { status: 502 });
   }
 }

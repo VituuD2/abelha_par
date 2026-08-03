@@ -4,10 +4,16 @@ import type { OlistApiOrder, OlistOrder } from "@/types";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
 const DETAIL_CONCURRENCY = 2;
-// Olist documents a 120 requests/minute account-wide limit. 520 ms leaves a
-// small margin for the list and connection-status requests.
-const DETAIL_REQUEST_INTERVAL_MS = 520;
+// Some accounts have limits below the published account maximum. Keep detail
+// calls below ~55/minute; the dashboard resolves them in short requests.
+const DETAIL_REQUEST_INTERVAL_MS = 1_100;
 let nextDetailRequestAt = 0;
+
+export class TinyRateLimitError extends Error {
+  constructor(public readonly retryAfterSeconds: number) {
+    super("Tiny rate limit reached");
+  }
+}
 
 interface FetchOrdersParams { token: string; dateFrom: string; dateTo?: string }
 interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
@@ -116,16 +122,22 @@ async function fetchOrderDetail(orderId: number, headers: Record<string, string>
 async function fetchTiny(url: string, options: RequestInit): Promise<Response> {
   for (let attempt = 0; attempt < 3; attempt += 1) {
     const response = await fetch(url, { ...options, cache: "no-store" });
-    if (response.status !== 429 && response.status < 500) return response;
+    if (response.status === 429) {
+      const retryAfter = getRetryAfterSeconds(response);
+      throw new TinyRateLimitError(retryAfter);
+    }
+    if (response.status < 500) return response;
     if (attempt === 2) return response;
 
-    const retryAfterSeconds = Number(response.headers.get("retry-after"));
-    const delay = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
-      ? retryAfterSeconds * 1000
-      : 1_000 * 2 ** attempt;
+    const delay = 1_000 * 2 ** attempt;
     await sleep(delay);
   }
   throw new Error("Tiny request retry loop exhausted");
+}
+
+function getRetryAfterSeconds(response: Response) {
+  const candidate = Number(response.headers.get("retry-after") || response.headers.get("x-ratelimit-reset"));
+  return Number.isFinite(candidate) && candidate > 0 ? Math.ceil(candidate) : 60;
 }
 
 async function waitForDetailSlot() {

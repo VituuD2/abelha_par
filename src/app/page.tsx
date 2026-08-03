@@ -48,7 +48,8 @@ export default function DashboardPage() {
 
       try {
         const resolvedOrders: OlistOrder[] = [];
-        for (let start = 0; start < orders.length; start += 10) {
+        let start = 0;
+        while (start < orders.length) {
           const batch = orders.slice(start, start + 10);
           const response = await fetch("/api/olist/resolve", {
             method: "POST",
@@ -56,10 +57,19 @@ export default function DashboardPage() {
             body: JSON.stringify({ orderIds: batch.map((order) => order.id) }),
           });
           const payload = await response.json().catch(() => ({}));
+          if (response.status === 429) {
+            const retryAfterSeconds = Math.max(1, Number(payload.retryAfterSeconds) || 60);
+            setResolutionError(`A Tiny atingiu o limite. Retomando automaticamente em ${retryAfterSeconds} segundos...`);
+            await new Promise((resolve) => setTimeout(resolve, retryAfterSeconds * 1000));
+            if (resolutionId !== resolutionIdRef.current) return;
+            setResolutionError(null);
+            continue;
+          }
           if (!response.ok) throw new Error(payload.error || "Não foi possível consultar os detalhes na Tiny.");
           if (resolutionId !== resolutionIdRef.current) return;
           resolvedOrders.push(...payload.orders);
           setResolvedCount(resolvedOrders.length);
+          start += batch.length;
         }
 
         if (resolutionId !== resolutionIdRef.current) return;
@@ -185,12 +195,12 @@ export default function DashboardPage() {
         <div className="flex items-center justify-center gap-3 p-6 rounded-[var(--radius-lg)] bg-white/60 border border-dashed border-[var(--color-border-medium)]">
           <div className="w-5 h-5 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin" />
           <p className="text-[14px] text-[var(--color-text-secondary)]">
-            Consultando observações internas na Tiny: {resolvedCount} de {olistOrders.length} pedidos
+            {resolutionError || `Consultando observações internas na Tiny: ${resolvedCount} de ${olistOrders.length} pedidos`}
           </p>
         </div>
       )}
 
-      {bothLoaded && resolutionError && (
+      {bothLoaded && resolutionError && !isResolving && (
         <div role="alert" className="p-5 rounded-[var(--radius-lg)] bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)]">
           {resolutionError} Tente buscar os pedidos novamente.
         </div>
