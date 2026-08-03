@@ -49,8 +49,8 @@ export function UploadCard({ onUpload, onClear }: UploadCardProps) {
   }, [onClear]);
 
   return (
-    <div className="card p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
-      <div className="flex items-center gap-4 mb-6">
+    <section className="card p-5 sm:p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
+      <div className="flex items-center gap-4 mb-7">
         <div className="w-14 h-14 p-3 rounded-[var(--radius-lg)] bg-[var(--color-accent-purple)]/10 flex items-center justify-center shrink-0">
           <FileSpreadsheet className="w-7 h-7 text-[var(--color-accent-purple)]" />
         </div>
@@ -65,13 +65,13 @@ export function UploadCard({ onUpload, onClear }: UploadCardProps) {
             <button onClick={clear} className="btn-ghost text-[13px]">Trocar</button>
           </motion.div>
         ) : (
-          <motion.div key="dropzone" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`drop-zone flex-1 flex flex-col justify-center ${isDragging ? "drop-zone-active" : ""}`} onDrop={(event) => { event.preventDefault(); setIsDragging(false); const file = event.dataTransfer.files[0]; if (file) void processFile(file); }} onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onClick={() => fileInputRef.current?.click()}>
+          <motion.div key="dropzone" initial={{ opacity: 0 }} animate={{ opacity: 1 }} role="button" tabIndex={0} aria-label="Selecionar planilha Yampi" className={`drop-zone flex-1 flex flex-col justify-center ${isDragging ? "drop-zone-active" : ""}`} onDrop={(event) => { event.preventDefault(); setIsDragging(false); const file = event.dataTransfer.files[0]; if (file) void processFile(file); }} onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onClick={() => fileInputRef.current?.click()} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); fileInputRef.current?.click(); } }}>
             {isProcessing ? <p className="text-center text-[15px]">Processando planilha...</p> : <div className="flex flex-col items-center gap-3"><Upload className="w-10 h-10 text-[var(--color-text-tertiary)]" /><p className="text-[15px] text-[var(--color-text-secondary)]">Arraste um arquivo .xlsx, .xls ou .csv aqui</p><p className="text-[13px] text-[var(--color-text-tertiary)]">ou clique para selecionar</p></div>}
           </motion.div>
         )}
       </AnimatePresence>
       <input ref={fileInputRef} type="file" accept=".xlsx,.xls,.csv" onChange={(event) => { const file = event.target.files?.[0]; if (file) void processFile(file); }} className="hidden" />
       {error && <div role="alert" className="flex items-center gap-2 mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-accent-red)]/8"><AlertCircle className="w-4 h-4 text-[var(--color-accent-red)]" /><p className="text-[13px] text-[var(--color-accent-red)]">{error}</p></div>}
-    </div>
+    </section>
   );
 }

@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ title, subtitle, breadcrumbs }: HeaderProps) {
   return (
-    <div className="mb-10">
+    <header className="mb-8 sm:mb-10">
       {breadcrumbs && breadcrumbs.length > 0 && (
         <div className="flex items-center gap-2 mb-3 text-[13px] text-[var(--color-text-tertiary)]">
           {breadcrumbs.map((crumb, index) => (
@@ -23,14 +23,14 @@ export function Header({ title, subtitle, breadcrumbs }: HeaderProps) {
           ))}
         </div>
       )}
-      <h1 className="text-[32px] font-bold text-[var(--color-text-primary)] tracking-tight">
+      <h1 className="text-[30px] sm:text-[34px] font-bold text-[var(--color-text-primary)] tracking-[-0.035em] leading-tight">
         {title}
       </h1>
       {subtitle && (
-        <p className="text-[16px] text-[var(--color-text-secondary)] mt-2">
+        <p className="max-w-2xl text-[15px] sm:text-[16px] text-[var(--color-text-secondary)] mt-2">
           {subtitle}
         </p>
       )}
-    </div>
+    </header>
   );
 }

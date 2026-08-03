@@ -49,7 +49,7 @@ export default function HistoryPage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between mb-4"
+        className="card p-4 sm:p-5 flex items-center justify-between mb-5"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
@@ -68,7 +68,7 @@ export default function HistoryPage() {
         <button
           onClick={fetchBatches}
           disabled={isLoading}
-          className="btn-ghost text-[13px]"
+          className="btn-ghost text-[13px] px-3 sm:px-4"
         >
           <RefreshCw
             className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`}

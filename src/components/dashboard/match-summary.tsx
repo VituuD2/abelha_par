@@ -26,7 +26,7 @@ export function MatchSummary({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-      className="card-elevated p-6"
+      className="card-elevated p-5 sm:p-6"
     >
       <div className="flex items-center gap-3 mb-5">
         <div className="w-10 h-10 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--color-accent-green)] to-[var(--color-accent-blue)] flex items-center justify-center">
@@ -43,8 +43,8 @@ export function MatchSummary({
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-3 mb-5">
-        <div className="text-center p-3 rounded-[var(--radius-md)] bg-[var(--color-accent-green)]/8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        <div className="text-center p-3.5 rounded-[var(--radius-md)] bg-[var(--color-accent-green)]/8">
           <p className="text-[24px] font-bold text-[var(--color-accent-green)]">
             {matchedOrders.length}
           </p>
@@ -52,7 +52,7 @@ export function MatchSummary({
             Pedidos Conferir
           </p>
         </div>
-        <div className="text-center p-3 rounded-[var(--radius-md)] bg-[var(--color-accent-orange)]/8">
+        <div className="text-center p-3.5 rounded-[var(--radius-md)] bg-[var(--color-accent-orange)]/8">
           <p className="text-[24px] font-bold text-[var(--color-accent-orange)]">
             {unmatchedOrders.length}
           </p>
@@ -60,7 +60,7 @@ export function MatchSummary({
             Sem Match Olist
           </p>
         </div>
-        <div className="text-center p-3 rounded-[var(--radius-md)] bg-[var(--color-accent-red)]/8">
+        <div className="text-center p-3.5 rounded-[var(--radius-md)] bg-[var(--color-accent-red)]/8">
           <p className="text-[24px] font-bold text-[var(--color-accent-red)]">
             {missingFromOlist.length}
           </p>

@@ -3,6 +3,7 @@ import { normalizeOrderId } from "./order-id";
 import type { OlistApiOrder, OlistOrder } from "@/types";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
+const WOOCOMMERCE_ECOMMERCE_ID = Number(process.env.OLIST_WOOCOMMERCE_ECOMMERCE_ID || "20161");
 const DETAIL_CONCURRENCY = 2;
 // Some accounts have limits below the published account maximum. Keep detail
 // calls below ~55/minute; the dashboard resolves them in short requests.
@@ -35,7 +36,14 @@ export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersP
   let total = 0;
 
   do {
-    const params = new URLSearchParams({ dataInicial: dateFrom, dataFinal: dateTo || dateFrom, limit: String(limit), offset: String(offset) });
+    // Olist documents dataInicial/dataFinal as filters for order creation date.
+    const params = new URLSearchParams({
+      dataInicial: dateFrom,
+      dataFinal: dateTo || dateFrom,
+      orderBy: "desc",
+      limit: String(limit),
+      offset: String(offset),
+    });
     const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers });
     if (!response.ok) throw new Error(`Tiny API returned ${response.status}`);
 
@@ -59,7 +67,13 @@ export async function resolveOlistOrders(token: string, orderIds: number[]): Pro
 }
 
 function isWooCommerceOrder(item: OlistApiOrder) {
-  return !item.ecommerce || item.ecommerce.id === 20161 || item.ecommerce.nome.toLowerCase() === "woocommerce";
+  if (!item.ecommerce) return false;
+  const channelName = item.ecommerce.nome
+    ?.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+  return item.ecommerce.id === WOOCOMMERCE_ECOMMERCE_ID || channelName === "woocommerce";
 }
 
 function toListOrder(item: OlistApiOrder): OlistOrder {

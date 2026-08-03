@@ -15,7 +15,7 @@ export function BatchTable({ batches }: BatchTableProps) {
 
   if (batches.length === 0) {
     return (
-      <div className="card p-12 text-center">
+      <div className="card p-8 sm:p-12 text-center">
         <div className="w-16 h-16 rounded-full bg-[var(--color-bg-primary)] flex items-center justify-center mx-auto mb-4">
           <Package className="w-8 h-8 text-[var(--color-text-tertiary)]" />
         </div>
@@ -57,7 +57,7 @@ export function BatchTable({ batches }: BatchTableProps) {
               onClick={() =>
                 setExpandedId(isExpanded ? null : batch.id)
               }
-              className="w-full flex items-center gap-3 p-4 text-left hover:bg-black/[0.02] transition-colors"
+            className="w-full flex items-center gap-3 p-4 sm:p-5 text-left hover:bg-[var(--color-accent-yellow)]/10 transition-colors"
             >
               <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-green)]/10 flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-accent-green)]" />

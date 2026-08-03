@@ -127,7 +127,7 @@ export default function DashboardPage() {
   return (
     <>
       <Header
-        title="Dashboard"
+        title="Abelha Par - Dashboard"
         subtitle="Carregue os dados para iniciar a conferência de pedidos"
         breadcrumbs={["Abelha Par", "Dashboard"]}
       />
@@ -137,14 +137,16 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="card p-8 mb-10"
+        className="card p-6 sm:p-8 mb-8 sm:mb-10 overflow-hidden relative"
       >
-        <div className="flex items-center gap-6">
-          <div className="w-[72px] h-[72px] p-4 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-lg shrink-0">
-            <Package className="w-10 h-10 text-white" />
+        <div className="absolute -right-10 -top-16 w-44 h-44 rounded-full bg-[var(--color-accent-yellow)]/15 blur-2xl pointer-events-none" />
+        <div className="relative flex items-center gap-4 sm:gap-6">
+          <div className="w-14 h-14 sm:w-[72px] sm:h-[72px] p-3 sm:p-4 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-yellow)] to-[var(--color-accent-blue)] flex items-center justify-center shadow-lg shrink-0">
+            <Package className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </div>
           <div>
-            <h2 className="text-[20px] font-bold text-[var(--color-text-primary)]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--color-accent-blue)] mb-1">Central de conferência</p>
+            <h2 className="text-[20px] font-bold text-[var(--color-text-primary)] tracking-tight">
               Dashboard
             </h2>
             <p className="text-[14px] text-[var(--color-text-secondary)] mt-1">
@@ -157,7 +159,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-6 mb-8 sm:mb-10">
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
@@ -179,7 +181,7 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center gap-4 p-8 rounded-[var(--radius-lg)] bg-white/60 border border-dashed border-[var(--color-border-medium)] mb-10"
+          className="flex items-center justify-center gap-3 p-6 sm:p-8 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/70 border border-dashed border-[var(--color-border-medium)] mb-10 text-center"
         >
           <ArrowDownUp className="w-5 h-5 text-[var(--color-text-tertiary)] animate-pulse-slow" />
           <p className="text-[14px] text-[var(--color-text-secondary)]">
@@ -192,7 +194,7 @@ export default function DashboardPage() {
 
       {/* Match Summary */}
       {bothLoaded && isResolving && (
-        <div className="flex items-center justify-center gap-3 p-6 rounded-[var(--radius-lg)] bg-white/60 border border-dashed border-[var(--color-border-medium)]">
+        <div className="flex items-center justify-center gap-3 p-6 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/70 border border-dashed border-[var(--color-border-medium)] text-center">
           <div className="w-5 h-5 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin" />
           <p className="text-[14px] text-[var(--color-text-secondary)]">
             {resolutionError || `Consultando observações internas na Tiny: ${resolvedCount} de ${olistOrders.length} pedidos`}

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Scanner Checkout — Conferência de Pedidos",
+  title: "Abelha Par - Dashboard",
   description:
     "Sistema de bipagem para conferência de pedidos Olist com dados Yampi. Garanta que apenas os pedidos corretos sejam despachados.",
 };

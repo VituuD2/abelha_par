@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { Barcode, ScanLine } from "lucide-react";
 import { useScanStore } from "@/stores/scan-store";
 
 interface ScanInputProps {
@@ -9,53 +10,67 @@ interface ScanInputProps {
 
 export function ScanInput({ disabled = false }: ScanInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState("");
   const processBarcode = useScanStore((state) => state.processBarcode);
-  const state = useScanStore((state) => state.state);
+  const scannerState = useScanStore((state) => state.state);
+  const isDisabled = disabled || scannerState === "error" || scannerState === "complete";
 
-  // Focus only on mount/state changes and window return; avoid permanent polling.
+  const focusInput = useCallback(() => {
+    if (!isDisabled) inputRef.current?.focus();
+  }, [isDisabled]);
+
   useEffect(() => {
-    const focusInput = () => {
-      if (
-        inputRef.current &&
-        state !== "error" &&
-        state !== "complete" &&
-        !disabled
-      ) {
-        inputRef.current.focus();
-      }
-    };
-
     focusInput();
     window.addEventListener("focus", focusInput);
     return () => window.removeEventListener("focus", focusInput);
-  }, [state, disabled]);
+  }, [focusInput]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const value = (e.target as HTMLInputElement).value.trim();
-        if (value) {
-          processBarcode(value);
-          (e.target as HTMLInputElement).value = "";
-        }
-      }
-    },
-    [processBarcode]
-  );
+  const submit = useCallback(() => {
+    const code = value.trim();
+    if (!code || isDisabled) return;
+    processBarcode(code);
+    setValue("");
+  }, [isDisabled, processBarcode, value]);
+
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    submit();
+  }, [submit]);
 
   return (
-    <input
-      ref={inputRef}
-      type="text"
-      onKeyDown={handleKeyDown}
-      disabled={disabled || state === "error" || state === "complete"}
-      className="fixed opacity-0 w-0 h-0 pointer-events-auto"
-      aria-label="Scanner barcode input"
-      autoComplete="off"
-      autoCapitalize="off"
-      autoCorrect="off"
-      spellCheck={false}
-    />
+    <section className="card p-5 sm:p-6 mb-5" aria-label="Leitor de código de rastreamento">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
+          <Barcode className="w-5 h-5 text-[var(--color-accent-blue)]" />
+        </div>
+        <div>
+          <h2 className="text-[15px] font-semibold text-[var(--color-text-primary)]">Código de rastreamento</h2>
+          <p className="text-[12px] text-[var(--color-text-tertiary)]">Use o scanner ou digite o código e pressione Enter.</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5">
+        <input
+          ref={inputRef}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          disabled={isDisabled}
+          type="text"
+          inputMode="text"
+          enterKeyHint="done"
+          autoComplete="off"
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck={false}
+          placeholder="Aponte o scanner ou digite o código"
+          className="flex-1 min-w-0 px-4 py-3 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] text-[15px] font-mono text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] disabled:opacity-50"
+          aria-label="Código de rastreamento"
+        />
+        <button type="submit" disabled={isDisabled || !value.trim()} className="btn-primary px-5 sm:px-4">
+          <ScanLine className="w-5 h-5" />
+          Bipar
+        </button>
+      </form>
+    </section>
   );
 }

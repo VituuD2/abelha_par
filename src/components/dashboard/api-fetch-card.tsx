@@ -76,6 +76,10 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
 
   const handleFetch = async () => {
     if (!dateFrom || !dateTo) return;
+    if (dateFrom > dateTo) {
+      setError("A data inicial não pode ser posterior à data final.");
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
@@ -122,13 +126,13 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const showReconnect = !isConnected && (needsReconnect || authMessage);
 
   return (
-    <div className="card p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
-      <div className="flex items-center gap-4 mb-6">
+    <section className="card p-5 sm:p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
+      <div className="flex items-center gap-4 mb-7">
         <div className="w-14 h-14 p-3 rounded-[var(--radius-lg)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center shrink-0">
           <Cloud className="w-7 h-7 text-[var(--color-accent-blue)]" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[18px] font-semibold text-[var(--color-text-primary)] flex items-center gap-3">
+          <h3 className="text-[18px] font-semibold tracking-tight text-[var(--color-text-primary)] flex flex-wrap items-center gap-2">
             Pedidos Olist
             {isCheckingAuth ? (
                <Loader2 className="w-4 h-4 animate-spin text-[var(--color-text-tertiary)]" />
@@ -141,7 +145,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
             )}
           </h3>
           <p className="text-[14px] text-[var(--color-text-tertiary)] mt-1">
-            Buscar via API Tiny ERP
+            Pedidos WooCommerce por data de criação (API Tiny ERP)
           </p>
         </div>
       </div>
@@ -219,7 +223,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         /* Connected — show fetch UI */
         <div className="flex-1 flex flex-col justify-between">
           {/* Date Range */}
-          <div className="grid grid-cols-2 gap-5 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-8">
             <div>
               <label className="text-[13px] font-medium text-[var(--color-text-secondary)] mb-2 block">
                 Data Início
@@ -228,8 +232,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
                 <input
                   type="date"
                   value={dateFrom}
+                  max={dateTo || undefined}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-white text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
+                  className="w-full px-3.5 py-3 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
                 />
               </div>
             </div>
@@ -241,8 +246,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
                 <input
                   type="date"
                   value={dateTo}
+                  min={dateFrom || undefined}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-white text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
+                  className="w-full px-3.5 py-3 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
                 />
               </div>
             </div>
@@ -307,6 +313,6 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

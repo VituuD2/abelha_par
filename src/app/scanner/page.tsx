@@ -73,10 +73,10 @@ export default function ScannerPage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card p-5 mb-5"
+        className="card p-5 sm:p-6 mb-5"
       >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-green)] flex items-center justify-center">
               <ScanBarcode className="w-5 h-5 text-white" />
             </div>
@@ -105,7 +105,7 @@ export default function ScannerPage() {
         </div>
 
         {/* Scanner Status */}
-        <div className="flex items-center gap-2 mt-3">
+          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[var(--color-border-light)]">
           <div className="relative">
             <div className="w-2 h-2 rounded-full bg-[var(--color-accent-green)]" />
             <div className="absolute inset-0 w-2 h-2 rounded-full bg-[var(--color-accent-green)] animate-ping" />
@@ -122,7 +122,7 @@ export default function ScannerPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="text-[14px] font-semibold text-[var(--color-text-secondary)]">
             Lista de Pedidos
           </h3>
