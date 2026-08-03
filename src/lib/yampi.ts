@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { normalizeOrderId } from "@/lib/order-id";
 
 /**
  * Parses a Yampi spreadsheet (.xlsx or .csv) and extracts all IDs from the correct column.
@@ -32,7 +33,7 @@ export function parseYampiSpreadsheet(buffer: ArrayBuffer): Set<string> {
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
     if (row && row[orderNumberColIndex] !== undefined && row[orderNumberColIndex] !== null && row[orderNumberColIndex] !== "") {
-      const orderId = String(row[orderNumberColIndex]).trim();
+      const orderId = normalizeOrderId(row[orderNumberColIndex]);
       if (orderId) {
         yampiIds.add(orderId);
       }
@@ -63,9 +64,8 @@ export function getSpreadsheetInfo(buffer: ArrayBuffer): { totalRows: number; he
   }
   for (const row of rows.slice(1)) {
     const value = row[orderNumberColumn];
-    if (value !== undefined && value !== null && String(value).trim()) {
-      yampiIds.add(String(value).trim());
-    }
+    const orderId = normalizeOrderId(value);
+    if (orderId) yampiIds.add(orderId);
   }
 
   return {

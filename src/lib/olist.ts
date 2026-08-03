@@ -1,4 +1,5 @@
 import { extractYampiId } from "./regex";
+import { normalizeOrderId } from "./order-id";
 import type { OlistApiOrder, OlistOrder } from "@/types";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
@@ -47,19 +48,18 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
   const numeroPedido = item.numeroPedido || 0;
   const base = {
     id: item.id,
-    yampiId: item.ecommerce?.numeroPedidoEcommerce?.trim() || (numeroPedido ? String(numeroPedido).trim() : null),
+    yampiId: normalizeOrderId(item.ecommerce?.numeroPedidoEcommerce),
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido,
   };
-  if (base.yampiId) return base;
-
   try {
     const detail = await fetchOrderDetail(item.id, headers);
     if (!isWooCommerceOrder(detail)) return { ...base, yampiId: null };
     return {
       id: detail.id,
-      yampiId: detail.ecommerce?.numeroPedidoEcommerce?.trim() || extractYampiId(`${detail.observacoes || ""} ${detail.observacaoInterna || ""}`) || String(detail.numeroPedido || "").trim() || null,
+      // The business identifier comes from the Tiny internal notes, not numeroPedido.
+      yampiId: getYampiIdFromDetail(detail) || normalizeOrderId(detail.ecommerce?.numeroPedidoEcommerce) || base.yampiId,
       trackingCode: detail.transportador?.codigoRastreamento || base.trackingCode,
       clientName: detail.cliente?.nome || base.clientName,
       numeroPedido: detail.numeroPedido || numeroPedido,
@@ -67,6 +67,17 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
   } catch {
     return { ...base, yampiId: null };
   }
+}
+
+function getYampiIdFromDetail(detail: OlistApiOrder) {
+  const internalNotes = [
+    detail.observacoesInternas,
+    detail.observacoes_internas,
+    detail.observacaoInterna,
+    detail.observacao_interna,
+    detail.observacoes,
+  ].filter((value): value is string => typeof value === "string");
+  return normalizeOrderId(extractYampiId(internalNotes.join("\n")));
 }
 
 async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {

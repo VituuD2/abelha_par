@@ -1,4 +1,9 @@
 import type { OlistOrder, ScanOrder } from "@/types";
+import { normalizeOrderId } from "@/lib/order-id";
+
+function normalizedIdSet(ids: Set<string>) {
+  return new Set(Array.from(ids, normalizeOrderId).filter((id): id is string => id !== null));
+}
 
 /**
  * Cross-references Olist orders against Yampi spreadsheet IDs.
@@ -9,11 +14,15 @@ export function matchOrders(
   olistOrders: OlistOrder[],
   yampiIds: Set<string>
 ): ScanOrder[] {
+  const ids = normalizedIdSet(yampiIds);
   return olistOrders
-    .filter((order) => order.yampiId !== null && yampiIds.has(order.yampiId))
+    .filter((order) => {
+      const id = normalizeOrderId(order.yampiId);
+      return id !== null && ids.has(id);
+    })
     .map((order) => ({
       ...order,
-      yampiId: order.yampiId as string,
+      yampiId: normalizeOrderId(order.yampiId) as string,
       status: "pending" as const,
     }));
 }
@@ -26,8 +35,12 @@ export function getUnmatchedOrders(
   olistOrders: OlistOrder[],
   yampiIds: Set<string>
 ): OlistOrder[] {
+  const ids = normalizedIdSet(yampiIds);
   return olistOrders.filter(
-    (order) => order.yampiId === null || !yampiIds.has(order.yampiId)
+    (order) => {
+      const id = normalizeOrderId(order.yampiId);
+      return id === null || !ids.has(id);
+    }
   );
 }
 
@@ -39,7 +52,10 @@ export function getMissingFromOlist(
   yampiIds: Set<string>
 ): string[] {
   const olistYampiIds = new Set(
-    olistOrders.map((o) => o.yampiId).filter(Boolean) as string[]
+    olistOrders.map((o) => normalizeOrderId(o.yampiId)).filter((id): id is string => id !== null)
   );
-  return Array.from(yampiIds).filter((id) => !olistYampiIds.has(id));
+  return Array.from(yampiIds).filter((id) => {
+    const normalized = normalizeOrderId(id);
+    return normalized === null || !olistYampiIds.has(normalized);
+  });
 }

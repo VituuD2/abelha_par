@@ -6,11 +6,11 @@ export function extractYampiId(text: string): string | null {
   if (!text) return null;
 
   // Try "ID Yampi: 123456" pattern first
-  const yampiMatch = text.match(/ID\s*Yampi[:\s]*(\d+)/i);
+  const yampiMatch = text.match(/ID\s*Yampi\s*[:#-]?\s*(\d{6,})/i);
   if (yampiMatch) return yampiMatch[1];
 
   // Try "Yampi: 123456" pattern
-  const yampiShort = text.match(/Yampi[:\s]+(\d+)/i);
+  const yampiShort = text.match(/Yampi\s*[:#-]\s*(\d{6,})/i);
   if (yampiShort) return yampiShort[1];
 
   // Try "#123456" standalone number pattern (less specific, use as fallback)

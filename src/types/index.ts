@@ -61,6 +61,9 @@ export interface OlistApiOrder {
   // Fields from detail endpoint
   observacoes?: string;
   observacaoInterna?: string;
+  observacao_interna?: string;
+  observacoesInternas?: string;
+  observacoes_internas?: string;
 }
 
 export interface OlistApiResponse {
