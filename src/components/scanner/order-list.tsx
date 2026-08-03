@@ -1,12 +1,18 @@
 "use client";
 
-import { Package, Check, Clock } from "lucide-react";
+import { Check, Clock, CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ScanOrder } from "@/types";
 import { motion } from "framer-motion";
 
 interface OrderListProps {
   orders: ScanOrder[];
+}
+
+function formatOrderDate(value: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("pt-BR");
 }
 
 export function OrderList({ orders }: OrderListProps) {
@@ -72,6 +78,15 @@ export function OrderList({ orders }: OrderListProps) {
               <p className="text-[11px] text-[var(--color-text-tertiary)]">
                 Yampi #{order.yampiId}
               </p>
+              {formatOrderDate(order.dataCriacao) && (
+                <>
+                  <span className="text-[10px] text-[var(--color-text-tertiary)]">•</span>
+                  <p className="flex items-center gap-1 text-[11px] text-[var(--color-text-tertiary)]">
+                    <CalendarDays className="w-3 h-3" />
+                    {formatOrderDate(order.dataCriacao)}
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

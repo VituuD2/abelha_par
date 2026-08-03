@@ -83,6 +83,7 @@ function toListOrder(item: OlistApiOrder): OlistOrder {
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido: item.numeroPedido || 0,
+    dataCriacao: item.dataCriacao || null,
   };
 }
 
@@ -94,6 +95,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido,
+    dataCriacao: item.dataCriacao || null,
   };
   // The list endpoint normally does not contain internal notes. Always fetch
   // the detail unless the note was already supplied by the list response.
@@ -109,6 +111,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
       trackingCode: detail.transportador?.codigoRastreamento || base.trackingCode,
       clientName: detail.cliente?.nome || base.clientName,
       numeroPedido: detail.numeroPedido || numeroPedido,
+      dataCriacao: detail.dataCriacao || base.dataCriacao,
     };
   } catch {
     return { ...base, yampiId: null };

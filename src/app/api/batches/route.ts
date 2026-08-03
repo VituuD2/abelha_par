@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
-type IncomingOrder = { id?: unknown; yampiId?: unknown; trackingCode?: unknown; clientName?: unknown; scannedAt?: unknown; status?: unknown };
+type IncomingOrder = { id?: unknown; yampiId?: unknown; trackingCode?: unknown; clientName?: unknown; dataCriacao?: unknown; scannedAt?: unknown; status?: unknown };
 
 function sanitizeOrders(value: unknown) {
   if (!Array.isArray(value) || value.length === 0 || value.length > 10_000) return null;
   const orders = value as IncomingOrder[];
   if (orders.some((order) => order.status !== "checked" || typeof order.id !== "number" || typeof order.yampiId !== "string" || typeof order.trackingCode !== "string" || typeof order.clientName !== "string")) return null;
-  return orders.map((order) => ({ id: order.id as number, yampiId: (order.yampiId as string).slice(0, 100), trackingCode: (order.trackingCode as string).slice(0, 200), clientName: (order.clientName as string).slice(0, 300), scannedAt: typeof order.scannedAt === "string" ? order.scannedAt : null }));
+  return orders.map((order) => ({ id: order.id as number, yampiId: (order.yampiId as string).slice(0, 100), trackingCode: (order.trackingCode as string).slice(0, 200), clientName: (order.clientName as string).slice(0, 300), dataCriacao: typeof order.dataCriacao === "string" ? order.dataCriacao.slice(0, 64) : null, scannedAt: typeof order.scannedAt === "string" ? order.scannedAt : null }));
 }
 
 export async function GET() {

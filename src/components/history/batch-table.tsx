@@ -10,6 +10,12 @@ interface BatchTableProps {
   batches: Batch[];
 }
 
+function formatOrderDate(value: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("pt-BR");
+}
+
 export function BatchTable({ batches }: BatchTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -118,6 +124,11 @@ export function BatchTable({ batches }: BatchTableProps) {
                             <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono">
                               {order.trackingCode}
                             </p>
+                            {formatOrderDate(order.dataCriacao) && (
+                              <p className="text-[11px] text-[var(--color-text-tertiary)]">
+                                Venda em {formatOrderDate(order.dataCriacao)}
+                              </p>
+                            )}
                           </div>
                           <span className="text-[11px] text-[var(--color-text-tertiary)]">
                             Yampi #{order.yampiId}

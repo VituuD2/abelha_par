@@ -6,6 +6,7 @@ export interface OlistOrder {
   trackingCode: string;
   clientName: string;
   numeroPedido: number;
+  dataCriacao: string | null;
 }
 
 export interface ScanOrder extends OlistOrder {
