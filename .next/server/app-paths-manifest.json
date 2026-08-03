@@ -7,7 +7,7 @@
   "/api/auth/login/route": "app/api/auth/login/route.js",
   "/api/auth/callback/route": "app/api/auth/callback/route.js",
   "/page": "app/page.js",
-  "/login/page": "app/login/page.js",
   "/history/page": "app/history/page.js",
-  "/scanner/page": "app/scanner/page.js"
+  "/scanner/page": "app/scanner/page.js",
+  "/login/page": "app/login/page.js"
 }

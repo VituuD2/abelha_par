@@ -7,7 +7,7 @@
   "/api/auth/login/route": "/api/auth/login",
   "/api/auth/callback/route": "/api/auth/callback",
   "/page": "/",
-  "/login/page": "/login",
   "/history/page": "/history",
-  "/scanner/page": "/scanner"
+  "/scanner/page": "/scanner",
+  "/login/page": "/login"
 }

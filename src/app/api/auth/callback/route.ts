@@ -15,16 +15,14 @@ export async function GET(request: Request) {
   const cookieStore = await cookies();
   const expectedState = cookieStore.get("tiny_oauth_state")?.value;
   const expectedUserId = cookieStore.get("tiny_oauth_user")?.value;
-  const verifier = cookieStore.get("tiny_oauth_verifier")?.value;
   const user = await getAuthenticatedUser();
   const clearCookies = (response: NextResponse) => {
     response.cookies.delete("tiny_oauth_state");
     response.cookies.delete("tiny_oauth_user");
-    response.cookies.delete("tiny_oauth_verifier");
     return response;
   };
 
-  if (!code || !state || state !== expectedState || !verifier || !user || user.id !== expectedUserId) {
+  if (!code || !state || state !== expectedState || !user || user.id !== expectedUserId) {
     return clearCookies(NextResponse.redirect(`${appUrl}/?error=OAuthValidationFailed`));
   }
 
@@ -33,7 +31,7 @@ export async function GET(request: Request) {
   if (!clientId || !clientSecret) return clearCookies(NextResponse.redirect(`${appUrl}/?error=ConfigurationError`));
 
   try {
-    const params = new URLSearchParams({ grant_type: "authorization_code", code, client_id: clientId, client_secret: clientSecret, code_verifier: verifier, redirect_uri: `${appUrl}/api/auth/callback` });
+    const params = new URLSearchParams({ grant_type: "authorization_code", code, client_id: clientId, client_secret: clientSecret, redirect_uri: `${appUrl}/api/auth/callback` });
     const tokenResponse = await fetch("https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
     if (!tokenResponse.ok) return clearCookies(NextResponse.redirect(`${appUrl}/?error=TokenExchangeFailed`));
 
