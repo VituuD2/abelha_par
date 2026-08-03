@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 import { testTinyConnection } from "@/lib/olist";

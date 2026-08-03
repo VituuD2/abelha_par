@@ -116,7 +116,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   };
 
   const handleConnect = () => {
-    window.location.href = "/api/auth/login";
+    window.location.href = `/api/auth/login?t=${Date.now()}`;
   };
 
   // Show reconnection UI when session expired
