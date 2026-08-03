@@ -3,7 +3,7 @@
 import { ScanBarcode, ArrowRight, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ScanOrder, OlistOrder } from "@/types";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface MatchSummaryProps {
   matchedOrders: ScanOrder[];
@@ -18,6 +18,7 @@ export function MatchSummary({
   missingFromOlist,
   onStartScanning,
 }: MatchSummaryProps) {
+  const router = useRouter();
   const hasIssues = unmatchedOrders.length > 0 || missingFromOlist.length > 0;
 
   return (
@@ -85,16 +86,18 @@ export function MatchSummary({
       )}
 
       {/* Start Scanning Button */}
-      <Link href="/scanner" onClick={onStartScanning}>
-        <button
-          className="btn-success w-full text-[16px] py-3"
-          disabled={matchedOrders.length === 0}
-        >
+      <button
+        className="btn-success w-full text-[16px] py-3"
+        disabled={matchedOrders.length === 0}
+        onClick={() => {
+          onStartScanning();
+          router.push("/scanner");
+        }}
+      >
           <ScanBarcode className="w-5 h-5" />
           Iniciar Bipagem ({matchedOrders.length} pedidos)
           <ArrowRight className="w-4 h-4" />
-        </button>
-      </Link>
+      </button>
     </motion.div>
   );
 }

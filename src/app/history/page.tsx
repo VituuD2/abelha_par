@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Header } from "@/components/layout/header";
 import { BatchTable } from "@/components/history/batch-table";
-import { createClient } from "@/lib/supabase/client";
 import type { Batch } from "@/types";
 import { motion } from "framer-motion";
 import { Clock, RefreshCw } from "lucide-react";
@@ -13,21 +12,16 @@ export default function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchBatches = async () => {
+  const fetchBatches = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const { data, error: fetchError } = await supabase
-        .from("lotes_bipagem")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (fetchError) {
-        throw fetchError;
+      const response = await fetch("/api/batches", { cache: "no-store" });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.error || "Não foi possível carregar o histórico.");
       }
-
-      setBatches(data || []);
+      setBatches(payload.batches || []);
     } catch (err) {
       setError(
         err instanceof Error
@@ -37,11 +31,11 @@ export default function HistoryPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchBatches();
-  }, []);
+    void fetchBatches();
+  }, [fetchBatches]);
 
   return (
     <>

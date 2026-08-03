@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { PartyPopper, Save, RotateCcw } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useScanStore } from "@/stores/scan-store";
-import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,8 +19,11 @@ export function Completion() {
   useEffect(() => {
     const duration = 3000;
     const end = Date.now() + duration;
+    let frameId: number | undefined;
+    let cancelled = false;
 
     const frame = () => {
+      if (cancelled) return;
       confetti({
         particleCount: 3,
         angle: 60,
@@ -38,35 +40,27 @@ export function Completion() {
       });
 
       if (Date.now() < end) {
-        requestAnimationFrame(frame);
+        frameId = requestAnimationFrame(frame);
       }
     };
 
     frame();
+    return () => {
+      cancelled = true;
+      if (frameId) cancelAnimationFrame(frameId);
+    };
   }, []);
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      const supabase = createClient();
-      const { error } = await supabase.from("lotes_bipagem").insert({
-        data: new Date().toISOString().split("T")[0],
-        qtd_pedidos: orders.length,
-        pedidos: orders.map((o) => ({
-          olistId: o.id,
-          yampiId: o.yampiId,
-          trackingCode: o.trackingCode,
-          clientName: o.clientName,
-          scannedAt: o.scannedAt,
-        })),
+      const response = await fetch("/api/batches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orders }),
       });
-
-      if (error) {
-        console.error("Supabase save error:", error);
-        alert(`Erro ao salvar: ${error.message}`);
-      } else {
-        setSaved(true);
-      }
+      if (!response.ok) throw new Error("Não foi possível salvar o lote.");
+      setSaved(true);
     } catch (err) {
       console.error("Save error:", err);
       alert("Erro ao salvar lote. Verifique a conexão com o Supabase.");

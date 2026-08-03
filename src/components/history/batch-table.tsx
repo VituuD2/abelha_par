@@ -103,7 +103,7 @@ export function BatchTable({ batches }: BatchTableProps) {
                     <div className="pt-3 space-y-2">
                       {(batch.pedidos || []).map((order, idx) => (
                         <div
-                          key={idx}
+                          key={`${order.id}-${order.yampiId}`}
                           className="flex items-center gap-3 p-2.5 rounded-[var(--radius-sm)] bg-[var(--color-bg-primary)]"
                         >
                           <div className="w-6 h-6 rounded-full bg-[var(--color-accent-green)]/10 flex items-center justify-center flex-shrink-0">

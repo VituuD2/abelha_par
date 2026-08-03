@@ -43,6 +43,14 @@ export default function DashboardPage() {
     [olistOrders, runCrossReference]
   );
 
+  const handleClearUpload = useCallback(() => {
+    setYampiIds(null);
+    setYampiFileName("");
+    setMatchedOrders([]);
+    setUnmatchedOrders([]);
+    setMissingFromOlist([]);
+  }, []);
+
   const handleFetch = useCallback(
     (orders: OlistOrder[]) => {
       setOlistOrders(orders);
@@ -105,7 +113,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          <UploadCard onUpload={handleUpload} />
+          <UploadCard onUpload={handleUpload} onClear={handleClearUpload} />
         </motion.div>
       </div>
 
@@ -126,7 +134,7 @@ export default function DashboardPage() {
       )}
 
       {/* Match Summary */}
-      {bothLoaded && matchedOrders.length >= 0 && (
+      {bothLoaded && (
         <MatchSummary
           matchedOrders={matchedOrders}
           unmatchedOrders={unmatchedOrders}

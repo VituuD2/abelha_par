@@ -1,198 +1,89 @@
 import { extractYampiId } from "./regex";
-import type { OlistOrder } from "@/types";
+import type { OlistApiOrder, OlistOrder } from "@/types";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
+const DETAIL_CONCURRENCY = 3;
 
-interface FetchOrdersParams {
-  token: string;
-  dateFrom: string;
-  dateTo?: string;
-}
+interface FetchOrdersParams { token: string; dateFrom: string; dateTo?: string }
+interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
 
-/**
- * Tests if the given token is valid by making a lightweight API call.
- * Returns true if the API accepts the token, false otherwise.
- */
-export async function testTinyConnection(token: string): Promise<{ ok: boolean; status: number; detail?: string }> {
+export async function testTinyConnection(token: string): Promise<{ ok: boolean; status: number }> {
   try {
-    // Use the company info endpoint as a lightweight test
-    const response = await fetch(`${API_BASE}/info`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      return { ok: true, status: response.status };
-    }
-
-    const errorText = await response.text().catch(() => "");
-    return { ok: false, status: response.status, detail: errorText };
-  } catch (err) {
-    return { ok: false, status: 0, detail: err instanceof Error ? err.message : "Network error" };
+    const response = await fetch(`${API_BASE}/info`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
+    return { ok: response.ok, status: response.status };
+  } catch {
+    return { ok: false, status: 0 };
   }
 }
 
-/**
- * Fetches all orders from Olist/Tiny API v3 for a given date range.
- * Uses limit/offset pagination as per the official API docs.
- * 
- * API v3 parameters (camelCase):
- * - dataInicial, dataFinal (date filters)
- * - limit (default 100, max 100)
- * - offset (pagination offset)
- */
-export async function fetchOlistOrders({
-  token,
-  dateFrom,
-  dateTo,
-}: FetchOrdersParams): Promise<OlistOrder[]> {
+export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersParams): Promise<OlistOrder[]> {
   const allOrders: OlistOrder[] = [];
-  let offset = 0;
+  const headers = { Authorization: `Bearer ${token}` };
   const limit = 100;
-  let hasMore = true;
+  let offset = 0;
+  let total = 0;
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
+  do {
+    const params = new URLSearchParams({ dataInicial: dateFrom, dataFinal: dateTo || dateFrom, limit: String(limit), offset: String(offset) });
+    const response = await fetch(`${API_BASE}/pedidos?${params}`, { headers, cache: "no-store" });
+    if (!response.ok) throw new Error(`Tiny API returned ${response.status}`);
 
-  while (hasMore) {
-    const params = new URLSearchParams({
-      dataInicial: dateFrom,
-      limit: String(limit),
-      offset: String(offset),
-    });
-
-    if (dateTo) {
-      params.set("dataFinal", dateTo);
-    }
-
-    console.log(`[olist] Fetching orders: offset=${offset}, limit=${limit}`);
-
-    const response = await fetch(`${API_BASE}/pedidos?${params.toString()}`, {
-      headers,
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text().catch(() => "");
-      console.error(`[olist] API error ${response.status}: ${errorBody}`);
-      throw new Error(
-        `Olist API error: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    const items = data.itens || [];
-
-    // API v3 pagination: { limit, offset, total }
-    const pagination = data.paginacao;
-    const total = pagination?.total || 0;
-
-    console.log(`[olist] Got ${items.length} items (offset=${offset}, total=${total})`);
-
-    // Filter items to only include WooCommerce orders (id: 20161) if ecommerce data is available
-    const wooCommerceItems = items.filter((item: any) => {
-      if (item.ecommerce) {
-        return item.ecommerce.id === 20161 || String(item.ecommerce.nome).toLowerCase() === "woocommerce";
-      }
-      return true; // If ecommerce info is missing, keep it and check later
-    });
-
-    if (wooCommerceItems.length > 0 && offset === 0) {
-      console.log("=== LOG DE UM ITEM BRUTO DA LISTA ===");
-      console.dir(wooCommerceItems[0], { depth: null });
-      console.log("======================================");
-    }
-
-    // Process each order
-    for (const item of wooCommerceItems) {
-      let yampiId = null;
-      // API v3 uses camelCase field names
-      const numero = item.numeroPedido || item.numero;
-      const numero_ecommerce = item.ecommerce?.numeroPedidoEcommerce;
-      const clientName = item.cliente?.nome || "";
-      const trackingCode = item.transportador?.codigoRastreamento || "";
-
-      if (numero_ecommerce) {
-        yampiId = String(numero_ecommerce).trim();
-      } else if (numero) {
-        yampiId = String(numero).trim();
-      }
-
-      // If we already have an ID, skip detail fetch
-      if (yampiId) {
-        allOrders.push({
-          id: item.id,
-          yampiId,
-          trackingCode,
-          clientName,
-          numeroPedido: numero,
-        });
-        continue;
-      }
-
-      // If we really need details, fetch them
-      try {
-        const detail = await fetchOrderDetail(item.id, headers);
-
-        // Fallback filter for ecommerce
-        if (detail.ecommerce && detail.ecommerce.id !== 20161 && String(detail.ecommerce.nome).toLowerCase() !== "woocommerce") {
-          continue;
-        }
-
-        yampiId = extractYampiId(
-          `${detail.observacoes || ""} ${detail.observacaoInterna || ""}`
-        );
-
-        if (!yampiId && detail.ecommerce?.numeroPedidoEcommerce) {
-          yampiId = String(detail.ecommerce.numeroPedidoEcommerce).trim();
-        }
-
-        if (!yampiId && detail.numeroPedido) {
-          yampiId = String(detail.numeroPedido).trim();
-        }
-
-        allOrders.push({
-          id: detail.id,
-          yampiId,
-          trackingCode: detail.transportador?.codigoRastreamento || trackingCode,
-          clientName: detail.cliente?.nome || clientName,
-          numeroPedido: detail.numeroPedido || numero,
-        });
-
-        // Delay to avoid 429 Too Many Requests
-        await new Promise((resolve) => setTimeout(resolve, 350));
-      } catch (err) {
-        console.error(`Failed to fetch detail for order ${item.id}:`, err);
-        allOrders.push({
-          id: item.id,
-          yampiId: null,
-          trackingCode,
-          clientName,
-          numeroPedido: numero,
-        });
-      }
-    }
-
-    // Advance pagination
+    const data = await response.json() as TinyListResponse;
+    const items = (data.itens || []).filter(isWooCommerceOrder);
+    const mapped = await mapWithConcurrency(items, DETAIL_CONCURRENCY, (item) => toOlistOrder(item, headers));
+    allOrders.push(...mapped);
+    total = data.paginacao?.total || 0;
     offset += limit;
-    hasMore = offset < total;
-  }
+  } while (offset < total);
 
   return allOrders;
 }
 
-async function fetchOrderDetail(
-  orderId: number,
-  headers: Record<string, string>
-): Promise<any> {
-  const response = await fetch(`${API_BASE}/pedidos/${orderId}`, { headers });
+function isWooCommerceOrder(item: OlistApiOrder) {
+  return !item.ecommerce || item.ecommerce.id === 20161 || item.ecommerce.nome.toLowerCase() === "woocommerce";
+}
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch order ${orderId}: ${response.status}`);
+async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>): Promise<OlistOrder> {
+  const numeroPedido = item.numeroPedido || 0;
+  const base = {
+    id: item.id,
+    yampiId: item.ecommerce?.numeroPedidoEcommerce?.trim() || (numeroPedido ? String(numeroPedido).trim() : null),
+    trackingCode: item.transportador?.codigoRastreamento || "",
+    clientName: item.cliente?.nome || "",
+    numeroPedido,
+  };
+  if (base.yampiId) return base;
+
+  try {
+    const detail = await fetchOrderDetail(item.id, headers);
+    if (!isWooCommerceOrder(detail)) return { ...base, yampiId: null };
+    return {
+      id: detail.id,
+      yampiId: detail.ecommerce?.numeroPedidoEcommerce?.trim() || extractYampiId(`${detail.observacoes || ""} ${detail.observacaoInterna || ""}`) || String(detail.numeroPedido || "").trim() || null,
+      trackingCode: detail.transportador?.codigoRastreamento || base.trackingCode,
+      clientName: detail.cliente?.nome || base.clientName,
+      numeroPedido: detail.numeroPedido || numeroPedido,
+    };
+  } catch {
+    return { ...base, yampiId: null };
   }
+}
 
-  return response.json();
+async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {
+  const response = await fetch(`${API_BASE}/pedidos/${orderId}`, { headers, cache: "no-store" });
+  if (!response.ok) throw new Error(`Tiny detail returned ${response.status}`);
+  return response.json() as Promise<OlistApiOrder>;
+}
+
+async function mapWithConcurrency<T, R>(items: T[], concurrency: number, mapper: (item: T) => Promise<R>): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let cursor = 0;
+  async function worker() {
+    while (cursor < items.length) {
+      const index = cursor++;
+      results[index] = await mapper(items[index]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, worker));
+  return results;
 }

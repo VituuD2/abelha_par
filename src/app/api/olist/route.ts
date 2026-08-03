@@ -1,108 +1,48 @@
 import { NextResponse } from "next/server";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { fetchOlistOrders } from "@/lib/olist";
+import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const MAX_RANGE_DAYS = 31;
+
+function isValidRange(dateFrom: string, dateTo: string) {
+  if (!ISO_DATE.test(dateFrom) || !ISO_DATE.test(dateTo)) return false;
+  const from = new Date(`${dateFrom}T00:00:00.000Z`);
+  const to = new Date(`${dateTo}T00:00:00.000Z`);
+  return !Number.isNaN(from.getTime()) && !Number.isNaN(to.getTime()) && to >= from && (to.getTime() - from.getTime()) / 86_400_000 <= MAX_RANGE_DAYS;
+}
+
 export async function POST(request: Request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  if (isRateLimited(`olist:${user.id}`, 10, 60_000)) {
+    return NextResponse.json({ error: "Muitas consultas. Tente novamente em um minuto." }, { status: 429 });
+  }
+
+  let body: { dateFrom?: unknown; dateTo?: unknown };
   try {
-    const body = await request.json();
-    const { dateFrom, dateTo } = body;
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const dateFrom = typeof body.dateFrom === "string" ? body.dateFrom : "";
+  const dateTo = typeof body.dateTo === "string" && body.dateTo ? body.dateTo : dateFrom;
+  if (!isValidRange(dateFrom, dateTo)) {
+    return NextResponse.json({ error: "Informe datas válidas com intervalo máximo de 31 dias." }, { status: 400 });
+  }
 
-    if (!dateFrom) {
-      return NextResponse.json(
-        { error: "Data de início é obrigatória" },
-        { status: 400 }
-      );
-    }
+  const tokenResult = await getValidTinyToken(user.id);
+  if (!tokenResult.token) {
+    return NextResponse.json({ error: tokenResult.message || "Conexão Tiny indisponível.", needsReconnect: tokenResult.status === "expired" }, { status: tokenResult.status === "expired" ? 401 : 503 });
+  }
 
-    // First attempt to get a valid token
-    const tokenResult = await getValidTinyToken();
-
-    if (tokenResult.status === "expired") {
-      return NextResponse.json(
-        { 
-          error: tokenResult.message || "Sessão expirada. Por favor, reconecte sua conta Tiny ERP.",
-          needsReconnect: true,
-        },
-        { status: 401 }
-      );
-    }
-
-    if (!tokenResult.token) {
-      // At this point status is "valid", "refreshed", or "error" (expired was handled above)
-      return NextResponse.json(
-        { 
-          error: tokenResult.message || "Erro ao obter token de acesso.",
-          needsReconnect: false,
-        },
-        { status: 503 }
-      );
-    }
-
-    console.log(`[olist] Buscando pedidos no período: ${dateFrom} até ${dateTo || dateFrom} (token status: ${tokenResult.status})`);
-
-    try {
-      const orders = await fetchOlistOrders({
-        token: tokenResult.token,
-        dateFrom,
-        dateTo: dateTo || dateFrom,
-      });
-
-      console.log(`[olist] Total de pedidos encontrados: ${orders.length}`);
-
-      return NextResponse.json({
-        orders,
-        total: orders.length,
-        fetchedAt: new Date().toISOString(),
-      });
-
-    } catch (apiError) {
-      // If the API returned 401, the token we got might have just expired
-      // Try refreshing once more and retry
-      if (apiError instanceof Error && apiError.message.includes("401")) {
-        console.warn("[olist] API returned 401. Attempting token refresh and retry...");
-
-        const retryResult = await getValidTinyToken();
-
-        if (!retryResult.token || retryResult.status === "expired") {
-          return NextResponse.json(
-            { 
-              error: "Token expirado. Por favor, reconecte sua conta Tiny ERP.",
-              needsReconnect: true,
-            },
-            { status: 401 }
-          );
-        }
-
-        // Retry the API call with the fresh token
-        const orders = await fetchOlistOrders({
-          token: retryResult.token,
-          dateFrom,
-          dateTo: dateTo || dateFrom,
-        });
-
-        console.log(`[olist] Retry successful. Total de pedidos: ${orders.length}`);
-
-        return NextResponse.json({
-          orders,
-          total: orders.length,
-          fetchedAt: new Date().toISOString(),
-        });
-      }
-
-      // Re-throw non-401 errors
-      throw apiError;
-    }
-
+  try {
+    const orders = await fetchOlistOrders({ token: tokenResult.token, dateFrom, dateTo });
+    return NextResponse.json({ orders, total: orders.length, fetchedAt: new Date().toISOString() });
   } catch (error) {
-    console.error("[olist] API error:", error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erro interno ao buscar pedidos",
-      },
-      { status: 500 }
-    );
+    console.error("[olist] request failed", error);
+    return NextResponse.json({ error: "Não foi possível buscar os pedidos na Tiny." }, { status: 502 });
   }
 }

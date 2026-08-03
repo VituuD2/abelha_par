@@ -33,10 +33,22 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
       "page": "/history",
       "regex": "^/history(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/history(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
     },
     {
       "page": "/scanner",

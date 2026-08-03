@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/sidebar";
+import { AppShell } from "@/components/layout/app-shell";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,19 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`} suppressHydrationWarning>
-        <div className="min-h-screen w-full">
-          {/* Sidebar - Desktop */}
-          <Sidebar />
-          
-          {/* Main Content */}
-          <main className="w-full lg:!pl-[260px] pb-20 lg:pb-0 min-h-screen flex flex-col">
-            <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 py-10 lg:py-16">
-              {children}
-            </div>
-          </main>
-        </div>
+    <html lang="pt-BR">
+      <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`}>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

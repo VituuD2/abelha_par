@@ -12,29 +12,23 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
   const processBarcode = useScanStore((state) => state.processBarcode);
   const state = useScanStore((state) => state.state);
 
-  // Keep input focused at all times (unless error modal is blocking)
+  // Focus only on mount/state changes and window return; avoid permanent polling.
   useEffect(() => {
-    const interval = setInterval(() => {
+    const focusInput = () => {
       if (
         inputRef.current &&
-        document.activeElement !== inputRef.current &&
         state !== "error" &&
         state !== "complete" &&
         !disabled
       ) {
         inputRef.current.focus();
       }
-    }, 200);
+    };
 
-    return () => clearInterval(interval);
+    focusInput();
+    window.addEventListener("focus", focusInput);
+    return () => window.removeEventListener("focus", focusInput);
   }, [state, disabled]);
-
-  // Initial focus
-  useEffect(() => {
-    if (inputRef.current && !disabled) {
-      inputRef.current.focus();
-    }
-  }, [disabled]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {

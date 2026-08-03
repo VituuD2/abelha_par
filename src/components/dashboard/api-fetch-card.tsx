@@ -13,14 +13,8 @@ interface ApiFetchCardProps {
 const AUTH_POLL_INTERVAL = 10 * 60 * 1000;
 
 export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
-  const [dateFrom, setDateFrom] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split("T")[0];
-  });
-  const [dateTo, setDateTo] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split("T")[0];
-  });
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
@@ -53,6 +47,10 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   }, []);
 
   useEffect(() => {
+    const formatter = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" });
+    const today = formatter.format(new Date());
+    setDateFrom(today);
+    setDateTo(today);
     checkAuthStatus(true);
     
     // Check for success/error from OAuth redirect in URL
@@ -77,6 +75,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   }, [checkAuthStatus]);
 
   const handleFetch = async () => {
+    if (!dateFrom || !dateTo) return;
     setIsLoading(true);
     setError(null);
 
@@ -253,7 +252,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
             {/* Fetch Button */}
             <button
               onClick={handleFetch}
-              disabled={isLoading}
+              disabled={isLoading || !dateFrom || !dateTo}
               className="btn-primary w-full mt-auto py-3 text-[15px]"
             >
               {isLoading ? (

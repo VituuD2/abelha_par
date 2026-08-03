@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
 import { useScanStore } from "@/stores/scan-store";
-import type { ScanOrder } from "@/types";
 
 export function useScanner() {
   const state = useScanStore((state) => state.state);

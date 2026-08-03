@@ -45,7 +45,7 @@ export function parseYampiSpreadsheet(buffer: ArrayBuffer): Set<string> {
 /**
  * Gets the total count from the spreadsheet, accurately reflecting unique orders.
  */
-export function getSpreadsheetInfo(buffer: ArrayBuffer): { totalRows: number; headers: string[] } {
+export function getSpreadsheetInfo(buffer: ArrayBuffer): { totalRows: number; headers: string[]; yampiIds: Set<string> } {
   const workbook = XLSX.read(buffer, { type: "array" });
   const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json<unknown[]>(firstSheet, {
@@ -55,11 +55,22 @@ export function getSpreadsheetInfo(buffer: ArrayBuffer): { totalRows: number; he
 
   const headers = rows[0] ? rows[0].map(String) : [];
   
-  // Instead of just returning row count, we return the unique order count
-  const uniqueOrders = parseYampiSpreadsheet(buffer);
+  const yampiIds = new Set<string>();
+  const normalizedHeaders = headers.map((header) => header.toLowerCase().trim());
+  const orderNumberColumn = normalizedHeaders.indexOf("numero_pedido");
+  if (orderNumberColumn === -1) {
+    throw new Error("A coluna obrigatória numero_pedido não foi encontrada.");
+  }
+  for (const row of rows.slice(1)) {
+    const value = row[orderNumberColumn];
+    if (value !== undefined && value !== null && String(value).trim()) {
+      yampiIds.add(String(value).trim());
+    }
+  }
 
   return {
-    totalRows: uniqueOrders.size,
+    totalRows: yampiIds.size,
     headers,
+    yampiIds,
   };
 }

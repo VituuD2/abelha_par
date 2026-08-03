@@ -10,5 +10,12 @@
     "files": [
       "static/chunks/646.f342b7cffc01feb0.js"
     ]
+  },
+  "components\\dashboard\\upload-card.tsx -> @/lib/yampi": {
+    "id": 7734,
+    "files": [
+      "static/chunks/2170a4aa.84442ea23d8ebc64.js",
+      "static/chunks/239.75fa4e660afe5d13.js"
+    ]
   }
 }
