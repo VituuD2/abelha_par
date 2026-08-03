@@ -23,59 +23,53 @@ export interface Batch {
   created_at: string;
 }
 
-/* ===== API Response Types ===== */
+/* ===== API Response Types (Tiny ERP API v3) ===== */
 
 export interface OlistApiOrder {
   id: number;
-  numero: number;
-  numero_ecommerce: string;
-  data_pedido: string;
-  data_prevista: string;
-  nome: string;
-  situacao: {
-    id: number;
-    valor: string;
-  };
-  codigo_rastreamento: string;
-  observacoes: string;
-  observacao_interna: string;
+  numeroPedido: number;
+  situacao: number;
+  dataCriacao: string;
+  dataPrevista: string;
+  valor: string;
+  origemPedido: number;
   ecommerce?: {
     id: number;
     nome: string;
     numeroPedidoEcommerce?: string;
+    numeroPedidoCanalVenda?: string;
+    canalVenda?: string;
   };
   cliente?: {
+    id: number;
+    nome: string;
+    codigo?: string;
+    cpfCnpj?: string;
+    email?: string;
+  };
+  transportador?: {
+    id: number;
+    nome: string;
+    codigoRastreamento?: string;
+    urlRastreamento?: string;
+    formaEnvio?: { id: number; nome: string };
+  };
+  vendedor?: {
+    id: number;
     nome: string;
   };
-  numero_pedido?: number;
+  // Fields from detail endpoint
+  observacoes?: string;
+  observacaoInterna?: string;
 }
 
 export interface OlistApiResponse {
   itens: OlistApiOrder[];
   paginacao: {
-    paginas: number;
-    itens_pagina: number;
-    total_itens: number;
-    pagina_atual: number;
+    limit: number;
+    offset: number;
+    total: number;
   };
-}
-
-export interface OlistDetailResponse {
-  id: number;
-  numero: number;
-  nome: string;
-  codigo_rastreamento: string;
-  observacoes: string;
-  observacao_interna: string;
-  ecommerce?: {
-    id: number;
-    nome: string;
-    numeroPedidoEcommerce?: string;
-  };
-  cliente?: {
-    nome: string;
-  };
-  numero_pedido?: number;
 }
 
 /* ===== Scanner State Types ===== */
