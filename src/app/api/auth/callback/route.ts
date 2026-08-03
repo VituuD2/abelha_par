@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { encryptToken } from "@/lib/token-crypto";
+import { getAppUrl } from "@/lib/app-url";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (!appUrl) return NextResponse.json({ error: "URL pública não configurada" }, { status: 500 });
+  const appUrl = getAppUrl(request);
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const state = searchParams.get("state");

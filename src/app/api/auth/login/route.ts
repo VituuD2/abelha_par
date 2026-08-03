@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { getAppUrl } from "@/lib/app-url";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +13,10 @@ export async function GET(request: Request) {
   }
 
   const clientId = process.env.TINY_CLIENT_ID;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (!clientId || !appUrl) return NextResponse.json({ error: "OAuth Tiny não configurado" }, { status: 500 });
+  if (!clientId) return NextResponse.json({ error: "TINY_CLIENT_ID não configurado" }, { status: 500 });
 
   const state = crypto.randomUUID();
+  const appUrl = getAppUrl(request);
   const redirectUri = `${appUrl}/api/auth/callback`;
   // Parameters follow the Tiny/Olist confidential-client OAuth documentation.
   // `state` is retained as an anti-CSRF value and is ignored by the provider flow.
