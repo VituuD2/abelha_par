@@ -17,11 +17,11 @@ export async function GET(request: Request) {
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: "code",
-    scope: "openid",
+    scope: "openid profile email offline_access",
+    prompt: "login", // Forces the user to re-authenticate instead of silent SSO
   });
 
   const tinyAuthUrl = `https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?${params.toString()}`;
 
-  // Redirect the user to Tiny ERP login
   return NextResponse.redirect(tinyAuthUrl);
 }
