@@ -46,12 +46,32 @@ export async function GET(request: Request) {
     }
 
     const data = await tokenResponse.json();
+    
+    // Log the full response keys for debugging token lifetimes
+    console.log("[auth/callback] Token response keys:", Object.keys(data));
+    console.log("[auth/callback] expires_in:", data.expires_in, "refresh_expires_in:", data.refresh_expires_in);
+
     const expiresAt = new Date(Date.now() + data.expires_in * 1000).toISOString();
+    
+    // Keycloak provides refresh_expires_in for the refresh token lifetime
+    const refreshExpiresAt = data.refresh_expires_in
+      ? new Date(Date.now() + data.refresh_expires_in * 1000).toISOString()
+      : null;
 
     const supabase = await createClient();
 
-    // Upsert behavior: To keep it single-tenant for now, we'll try to find an existing record.
-    // If it exists, update it. If not, insert it.
+    const integrationData: Record<string, unknown> = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: expiresAt,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (refreshExpiresAt) {
+      integrationData.refresh_expires_at = refreshExpiresAt;
+    }
+
+    // Upsert behavior: single-tenant, find existing or insert new
     const { data: existing } = await supabase
       .from("tiny_integrations")
       .select("id")
@@ -59,25 +79,27 @@ export async function GET(request: Request) {
       .single();
 
     if (existing) {
-      await supabase
+      const { error: updateError } = await supabase
         .from("tiny_integrations")
-        .update({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token,
-          expires_at: expiresAt,
-          updated_at: new Date().toISOString(),
-        })
+        .update(integrationData)
         .eq("id", existing.id);
+
+      if (updateError) {
+        console.error("[auth/callback] Failed to update integration:", updateError);
+        return NextResponse.redirect(`${appUrl}/?error=DatabaseUpdateFailed`);
+      }
     } else {
-      await supabase
+      const { error: insertError } = await supabase
         .from("tiny_integrations")
-        .insert({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token,
-          expires_at: expiresAt,
-        });
+        .insert(integrationData);
+
+      if (insertError) {
+        console.error("[auth/callback] Failed to insert integration:", insertError);
+        return NextResponse.redirect(`${appUrl}/?error=DatabaseInsertFailed`);
+      }
     }
 
+    console.log("[auth/callback] OAuth tokens saved successfully. Refresh expires at:", refreshExpiresAt || "unknown");
     return NextResponse.redirect(`${appUrl}/?success=TinyConnected`);
   } catch (error) {
     console.error("OAuth callback error:", error);

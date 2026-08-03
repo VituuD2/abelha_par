@@ -3,15 +3,23 @@ import { getValidTinyToken } from "@/lib/tiny-auth";
 
 export async function GET() {
   try {
-    const token = await getValidTinyToken();
+    const result = await getValidTinyToken();
     
     return NextResponse.json({
-      isConnected: !!token,
+      isConnected: result.status === "valid" || result.status === "refreshed",
+      needsReconnect: result.status === "expired",
+      status: result.status,
+      message: result.message || null,
     });
   } catch (error) {
     console.error("Error checking auth status:", error);
     return NextResponse.json(
-      { isConnected: false, error: "Failed to check status" },
+      { 
+        isConnected: false, 
+        needsReconnect: false,
+        status: "error",
+        message: "Erro ao verificar status da conexão.",
+      },
       { status: 500 }
     );
   }

@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Cloud, Loader2, Check, AlertCircle, Calendar, Link as LinkIcon, ExternalLink } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Cloud, Loader2, Check, AlertCircle, Link as LinkIcon, ExternalLink, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { OlistOrder } from "@/types";
 
 interface ApiFetchCardProps {
   onFetch: (orders: OlistOrder[]) => void;
 }
+
+// Poll auth status every 10 minutes to detect token expiration proactively
+const AUTH_POLL_INTERVAL = 10 * 60 * 1000;
 
 export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [dateFrom, setDateFrom] = useState(() => {
@@ -21,36 +24,57 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
+  const [needsReconnect, setNeedsReconnect] = useState(false);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fetchedCount, setFetchedCount] = useState<number | null>(null);
+  const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const checkAuthStatus = useCallback(async (showLoading = false) => {
+    if (showLoading) setIsCheckingAuth(true);
+    try {
+      const res = await fetch("/api/auth/status");
+      const data = await res.json();
+      
+      setIsConnected(data.isConnected);
+      setNeedsReconnect(data.needsReconnect || false);
+      setAuthMessage(data.message || null);
+
+      // If we just detected disconnection while user thought they were connected
+      if (!data.isConnected && data.needsReconnect) {
+        setError(null);
+        setFetchedCount(null);
+      }
+    } catch (err) {
+      console.error("Failed to check auth status", err);
+    } finally {
+      if (showLoading) setIsCheckingAuth(false);
+    }
+  }, []);
 
   useEffect(() => {
-    checkAuthStatus();
+    checkAuthStatus(true);
     
     // Check for success/error from OAuth redirect in URL
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("error")) {
       setError(`Erro na autenticação: ${urlParams.get("error")}`);
-      // Clean URL
       window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get("success")) {
-      // Clean URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
 
-  const checkAuthStatus = async () => {
-    setIsCheckingAuth(true);
-    try {
-      const res = await fetch("/api/auth/status");
-      const data = await res.json();
-      setIsConnected(data.isConnected);
-    } catch (err) {
-      console.error("Failed to check auth status", err);
-    } finally {
-      setIsCheckingAuth(false);
-    }
-  };
+    // Start polling for auth status
+    pollTimerRef.current = setInterval(() => {
+      checkAuthStatus(false);
+    }, AUTH_POLL_INTERVAL);
+
+    return () => {
+      if (pollTimerRef.current) {
+        clearInterval(pollTimerRef.current);
+      }
+    };
+  }, [checkAuthStatus]);
 
   const handleFetch = async () => {
     setIsLoading(true);
@@ -66,14 +90,22 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         }),
       });
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        // Check if the API is telling us we need to reconnect
+        if (response.status === 401 || data.needsReconnect) {
+          setIsConnected(false);
+          setNeedsReconnect(true);
+          setAuthMessage(data.error || "Sessão expirada. Reconecte sua conta.");
+          setFetchedCount(null);
+          return;
+        }
         throw new Error(
-          errorData.error || `Erro ${response.status}: ${response.statusText}`
+          data.error || `Erro ${response.status}: ${response.statusText}`
         );
       }
 
-      const data = await response.json();
       setFetchedCount(data.orders.length);
       onFetch(data.orders);
     } catch (err) {
@@ -86,6 +118,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const handleConnect = () => {
     window.location.href = "/api/auth/login";
   };
+
+  // Show reconnection UI when session expired
+  const showReconnect = !isConnected && (needsReconnect || authMessage);
 
   return (
     <div className="card p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
@@ -100,6 +135,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
                <Loader2 className="w-4 h-4 animate-spin text-[var(--color-text-tertiary)]" />
             ) : isConnected ? (
               <span className="badge badge-checked bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)] px-2.5 py-1 text-[11px]">Conectado</span>
+            ) : needsReconnect ? (
+              <span className="badge badge-error bg-[var(--color-accent-orange,#f59e0b)]/10 text-[var(--color-accent-orange,#f59e0b)] px-2.5 py-1 text-[11px]">Sessão Expirada</span>
             ) : (
               <span className="badge badge-error bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)] px-2.5 py-1 text-[11px]">Desconectado</span>
             )}
@@ -114,7 +151,42 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         <div className="flex-1 flex items-center justify-center">
            <Loader2 className="w-6 h-6 animate-spin text-[var(--color-accent-blue)]" />
         </div>
+      ) : showReconnect ? (
+        /* Session expired — show reconnection UI */
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="text-center mb-8">
+            <RefreshCw className="w-10 h-10 text-[var(--color-accent-orange,#f59e0b)] mx-auto mb-4 opacity-70" />
+            <p className="text-[15px] text-[var(--color-text-secondary)] mb-2">
+              {authMessage || "Sua sessão com o Tiny ERP expirou."}
+            </p>
+            <p className="text-[13px] text-[var(--color-text-tertiary)]">
+              Reconecte para continuar buscando pedidos.
+            </p>
+          </div>
+          <button
+            onClick={handleConnect}
+            className="btn-primary w-full shadow-md hover:shadow-lg transition-shadow mt-auto py-3 text-[15px]"
+          >
+            <RefreshCw className="w-4 h-4 mr-1" />
+            Reconectar Tiny ERP
+          </button>
+          
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="flex items-center gap-2 mt-4 p-3 rounded-[var(--radius-md)] bg-[var(--color-accent-red)]/8"
+              >
+                <AlertCircle className="w-4 h-4 text-[var(--color-accent-red)] flex-shrink-0" />
+                <p className="text-[13px] text-[var(--color-accent-red)]">{error}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       ) : !isConnected ? (
+        /* Not connected at all — first-time connection */
         <div className="flex-1 flex flex-col justify-center">
           <div className="text-center mb-8">
             <LinkIcon className="w-10 h-10 text-[var(--color-text-tertiary)] mx-auto mb-4 opacity-50" />
@@ -145,6 +217,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
           </AnimatePresence>
         </div>
       ) : (
+        /* Connected — show fetch UI */
         <div className="flex-1 flex flex-col justify-between">
           {/* Date Range */}
           <div className="grid grid-cols-2 gap-5 mb-8">

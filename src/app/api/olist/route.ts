@@ -14,38 +14,87 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiToken = await getValidTinyToken();
+    // First attempt to get a valid token
+    const tokenResult = await getValidTinyToken();
 
-    if (!apiToken) {
+    if (tokenResult.status === "expired") {
       return NextResponse.json(
-        { error: "Não conectado ao Tiny ERP. Por favor, conecte sua conta primeiro." },
+        { 
+          error: tokenResult.message || "Sessão expirada. Por favor, reconecte sua conta Tiny ERP.",
+          needsReconnect: true,
+        },
         { status: 401 }
       );
     }
 
-    console.log(`Buscando pedidos Olist/Tiny no período: ${dateFrom} até ${dateTo || dateFrom}`);
-
-    const orders = await fetchOlistOrders({
-      token: apiToken,
-      dateFrom,
-      dateTo: dateTo || dateFrom,
-    });
-
-    console.log("=== LOG DE PEDIDOS BUSCADOS DA API (Tiny) ===");
-    console.log(`Total de pedidos encontrados: ${orders.length}`);
-    if (orders.length > 0) {
-      console.log("Exemplo dos primeiros 5 pedidos (para verificação de ID):");
-      console.dir(orders.slice(0, 5), { depth: null });
+    if (!tokenResult.token) {
+      // At this point status is "valid", "refreshed", or "error" (expired was handled above)
+      return NextResponse.json(
+        { 
+          error: tokenResult.message || "Erro ao obter token de acesso.",
+          needsReconnect: false,
+        },
+        { status: 503 }
+      );
     }
-    console.log("===============================================");
 
-    return NextResponse.json({
-      orders,
-      total: orders.length,
-      fetchedAt: new Date().toISOString(),
-    });
+    console.log(`[olist] Buscando pedidos no período: ${dateFrom} até ${dateTo || dateFrom} (token status: ${tokenResult.status})`);
+
+    try {
+      const orders = await fetchOlistOrders({
+        token: tokenResult.token,
+        dateFrom,
+        dateTo: dateTo || dateFrom,
+      });
+
+      console.log(`[olist] Total de pedidos encontrados: ${orders.length}`);
+
+      return NextResponse.json({
+        orders,
+        total: orders.length,
+        fetchedAt: new Date().toISOString(),
+      });
+
+    } catch (apiError) {
+      // If the API returned 401, the token we got might have just expired
+      // Try refreshing once more and retry
+      if (apiError instanceof Error && apiError.message.includes("401")) {
+        console.warn("[olist] API returned 401. Attempting token refresh and retry...");
+
+        const retryResult = await getValidTinyToken();
+
+        if (!retryResult.token || retryResult.status === "expired") {
+          return NextResponse.json(
+            { 
+              error: "Token expirado. Por favor, reconecte sua conta Tiny ERP.",
+              needsReconnect: true,
+            },
+            { status: 401 }
+          );
+        }
+
+        // Retry the API call with the fresh token
+        const orders = await fetchOlistOrders({
+          token: retryResult.token,
+          dateFrom,
+          dateTo: dateTo || dateFrom,
+        });
+
+        console.log(`[olist] Retry successful. Total de pedidos: ${orders.length}`);
+
+        return NextResponse.json({
+          orders,
+          total: orders.length,
+          fetchedAt: new Date().toISOString(),
+        });
+      }
+
+      // Re-throw non-401 errors
+      throw apiError;
+    }
+
   } catch (error) {
-    console.error("Olist API error:", error);
+    console.error("[olist] API error:", error);
     return NextResponse.json(
       {
         error:
