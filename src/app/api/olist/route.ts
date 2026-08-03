@@ -4,6 +4,9 @@ import { fetchOlistOrders } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 
+// Detail lookup is intentionally paced to stay below Tiny's documented limit.
+export const maxDuration = 60;
+
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_RANGE_DAYS = 31;
 
@@ -43,6 +46,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ orders, total: orders.length, fetchedAt: new Date().toISOString() });
   } catch (error) {
     console.error("[olist] request failed", error);
-    return NextResponse.json({ error: "Não foi possível buscar os pedidos na Tiny." }, { status: 502 });
+    const status = error instanceof Error && error.message.includes("429") ? 429 : 502;
+    return NextResponse.json(
+      { error: status === 429 ? "A Tiny limitou temporariamente as consultas. Aguarde um minuto e tente novamente." : "Não foi possível buscar os pedidos na Tiny." },
+      { status }
+    );
   }
 }

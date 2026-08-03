@@ -3,7 +3,11 @@ import { normalizeOrderId } from "./order-id";
 import type { OlistApiOrder, OlistOrder } from "@/types";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
-const DETAIL_CONCURRENCY = 3;
+const DETAIL_CONCURRENCY = 2;
+// Olist documents a 120 requests/minute account-wide limit. 520 ms leaves a
+// small margin for the list and connection-status requests.
+const DETAIL_REQUEST_INTERVAL_MS = 520;
+let nextDetailRequestAt = 0;
 
 interface FetchOrdersParams { token: string; dateFrom: string; dateTo?: string }
 interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
@@ -18,7 +22,7 @@ export async function testTinyConnection(token: string): Promise<{ ok: boolean; 
 }
 
 export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersParams): Promise<OlistOrder[]> {
-  const allOrders: OlistOrder[] = [];
+  const allItems: OlistApiOrder[] = [];
   const headers = { Authorization: `Bearer ${token}` };
   const limit = 100;
   let offset = 0;
@@ -26,18 +30,16 @@ export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersP
 
   do {
     const params = new URLSearchParams({ dataInicial: dateFrom, dataFinal: dateTo || dateFrom, limit: String(limit), offset: String(offset) });
-    const response = await fetch(`${API_BASE}/pedidos?${params}`, { headers, cache: "no-store" });
+    const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers });
     if (!response.ok) throw new Error(`Tiny API returned ${response.status}`);
 
     const data = await response.json() as TinyListResponse;
-    const items = (data.itens || []).filter(isWooCommerceOrder);
-    const mapped = await mapWithConcurrency(items, DETAIL_CONCURRENCY, (item) => toOlistOrder(item, headers));
-    allOrders.push(...mapped);
+    allItems.push(...(data.itens || []).filter(isWooCommerceOrder));
     total = data.paginacao?.total || 0;
     offset += limit;
   } while (offset < total);
 
-  return allOrders;
+  return mapWithConcurrency(allItems, DETAIL_CONCURRENCY, (item) => toOlistOrder(item, headers));
 }
 
 function isWooCommerceOrder(item: OlistApiOrder) {
@@ -48,11 +50,15 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
   const numeroPedido = item.numeroPedido || 0;
   const base = {
     id: item.id,
-    yampiId: normalizeOrderId(item.ecommerce?.numeroPedidoEcommerce),
+    yampiId: getYampiIdFromDetail(item) || normalizeOrderId(item.ecommerce?.numeroPedidoEcommerce),
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido,
   };
+  // The list endpoint normally does not contain internal notes. Always fetch
+  // the detail unless the note was already supplied by the list response.
+  if (getYampiIdFromDetail(item)) return base;
+
   try {
     const detail = await fetchOrderDetail(item.id, headers);
     if (!isWooCommerceOrder(detail)) return { ...base, yampiId: null };
@@ -81,9 +87,36 @@ function getYampiIdFromDetail(detail: OlistApiOrder) {
 }
 
 async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {
-  const response = await fetch(`${API_BASE}/pedidos/${orderId}`, { headers, cache: "no-store" });
+  await waitForDetailSlot();
+  const response = await fetchTiny(`${API_BASE}/pedidos/${orderId}`, { headers });
   if (!response.ok) throw new Error(`Tiny detail returned ${response.status}`);
   return response.json() as Promise<OlistApiOrder>;
+}
+
+async function fetchTiny(url: string, options: RequestInit): Promise<Response> {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const response = await fetch(url, { ...options, cache: "no-store" });
+    if (response.status !== 429 && response.status < 500) return response;
+    if (attempt === 2) return response;
+
+    const retryAfterSeconds = Number(response.headers.get("retry-after"));
+    const delay = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+      ? retryAfterSeconds * 1000
+      : 1_000 * 2 ** attempt;
+    await sleep(delay);
+  }
+  throw new Error("Tiny request retry loop exhausted");
+}
+
+async function waitForDetailSlot() {
+  const now = Date.now();
+  const scheduled = Math.max(now, nextDetailRequestAt);
+  nextDetailRequestAt = scheduled + DETAIL_REQUEST_INTERVAL_MS;
+  await sleep(scheduled - now);
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function mapWithConcurrency<T, R>(items: T[], concurrency: number, mapper: (item: T) => Promise<R>): Promise<R[]> {

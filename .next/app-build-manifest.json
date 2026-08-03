@@ -31,13 +31,6 @@
       "static/chunks/main-app-f7b6e4c3fe154a36.js",
       "static/chunks/app/api/batches/route-34a2a7ad17c61d36.js"
     ],
-    "/api/olist/route": [
-      "static/chunks/webpack-a61de64ecfebb41e.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-3d881dfa8c72bc56.js",
-      "static/chunks/main-app-f7b6e4c3fe154a36.js",
-      "static/chunks/app/api/olist/route-34a2a7ad17c61d36.js"
-    ],
     "/api/auth/login/route": [
       "static/chunks/webpack-a61de64ecfebb41e.js",
       "static/chunks/4bd1b696-c023c6e3521b1417.js",
@@ -51,6 +44,13 @@
       "static/chunks/255-3d881dfa8c72bc56.js",
       "static/chunks/main-app-f7b6e4c3fe154a36.js",
       "static/chunks/app/api/auth/callback/route-34a2a7ad17c61d36.js"
+    ],
+    "/api/olist/route": [
+      "static/chunks/webpack-a61de64ecfebb41e.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-3d881dfa8c72bc56.js",
+      "static/chunks/main-app-f7b6e4c3fe154a36.js",
+      "static/chunks/app/api/olist/route-34a2a7ad17c61d36.js"
     ],
     "/login/page": [
       "static/chunks/webpack-a61de64ecfebb41e.js",
