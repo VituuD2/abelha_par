@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Header } from "@/components/layout/header";
 import { UploadCard } from "@/components/dashboard/upload-card";
 import { ApiFetchCard } from "@/components/dashboard/api-fetch-card";
@@ -18,6 +18,10 @@ export default function DashboardPage() {
   const [matchedOrders, setMatchedOrders] = useState<ScanOrder[]>([]);
   const [unmatchedOrders, setUnmatchedOrders] = useState<OlistOrder[]>([]);
   const [missingFromOlist, setMissingFromOlist] = useState<string[]>([]);
+  const [isResolving, setIsResolving] = useState(false);
+  const [resolvedCount, setResolvedCount] = useState(0);
+  const [resolutionError, setResolutionError] = useState<string | null>(null);
+  const resolutionIdRef = useRef(0);
   const setStoreOrders = useScanStore((state) => state.setOrders);
 
   const runCrossReference = useCallback(
@@ -32,33 +36,76 @@ export default function DashboardPage() {
     []
   );
 
+  const resolveAndCrossReference = useCallback(
+    async (orders: OlistOrder[], ids: Set<string>) => {
+      const resolutionId = ++resolutionIdRef.current;
+      setIsResolving(true);
+      setResolvedCount(0);
+      setResolutionError(null);
+      setMatchedOrders([]);
+      setUnmatchedOrders([]);
+      setMissingFromOlist([]);
+
+      try {
+        const resolvedOrders: OlistOrder[] = [];
+        for (let start = 0; start < orders.length; start += 10) {
+          const batch = orders.slice(start, start + 10);
+          const response = await fetch("/api/olist/resolve", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderIds: batch.map((order) => order.id) }),
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload.error || "Não foi possível consultar os detalhes na Tiny.");
+          if (resolutionId !== resolutionIdRef.current) return;
+          resolvedOrders.push(...payload.orders);
+          setResolvedCount(resolvedOrders.length);
+        }
+
+        if (resolutionId !== resolutionIdRef.current) return;
+        setOlistOrders(resolvedOrders);
+        runCrossReference(resolvedOrders, ids);
+      } catch (error) {
+        if (resolutionId === resolutionIdRef.current) {
+          setResolutionError(error instanceof Error ? error.message : "Não foi possível cruzar os pedidos.");
+        }
+      } finally {
+        if (resolutionId === resolutionIdRef.current) setIsResolving(false);
+      }
+    },
+    [runCrossReference]
+  );
+
   const handleUpload = useCallback(
     (ids: Set<string>, fileName: string) => {
       setYampiIds(ids);
       setYampiFileName(fileName);
       if (olistOrders.length > 0) {
-        runCrossReference(olistOrders, ids);
+        void resolveAndCrossReference(olistOrders, ids);
       }
     },
-    [olistOrders, runCrossReference]
+    [olistOrders, resolveAndCrossReference]
   );
 
   const handleClearUpload = useCallback(() => {
+    resolutionIdRef.current += 1;
     setYampiIds(null);
     setYampiFileName("");
     setMatchedOrders([]);
     setUnmatchedOrders([]);
     setMissingFromOlist([]);
+    setIsResolving(false);
+    setResolutionError(null);
   }, []);
 
   const handleFetch = useCallback(
     (orders: OlistOrder[]) => {
       setOlistOrders(orders);
       if (yampiIds) {
-        runCrossReference(orders, yampiIds);
+        void resolveAndCrossReference(orders, yampiIds);
       }
     },
-    [yampiIds, runCrossReference]
+    [yampiIds, resolveAndCrossReference]
   );
 
   const handleStartScanning = useCallback(() => {
@@ -134,7 +181,22 @@ export default function DashboardPage() {
       )}
 
       {/* Match Summary */}
-      {bothLoaded && (
+      {bothLoaded && isResolving && (
+        <div className="flex items-center justify-center gap-3 p-6 rounded-[var(--radius-lg)] bg-white/60 border border-dashed border-[var(--color-border-medium)]">
+          <div className="w-5 h-5 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[14px] text-[var(--color-text-secondary)]">
+            Consultando observações internas na Tiny: {resolvedCount} de {olistOrders.length} pedidos
+          </p>
+        </div>
+      )}
+
+      {bothLoaded && resolutionError && (
+        <div role="alert" className="p-5 rounded-[var(--radius-lg)] bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)]">
+          {resolutionError} Tente buscar os pedidos novamente.
+        </div>
+      )}
+
+      {bothLoaded && !isResolving && !resolutionError && (
         <MatchSummary
           matchedOrders={matchedOrders}
           unmatchedOrders={unmatchedOrders}

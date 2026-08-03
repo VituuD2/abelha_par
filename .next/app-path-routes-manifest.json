@@ -1,13 +1,14 @@
 {
   "/_not-found/page": "/_not-found",
   "/api/auth/status/route": "/api/auth/status",
+  "/api/olist/resolve/route": "/api/olist/resolve",
   "/api/batches/route": "/api/batches",
+  "/api/olist/route": "/api/olist",
   "/favicon.ico/route": "/favicon.ico",
   "/api/auth/login/route": "/api/auth/login",
   "/api/auth/callback/route": "/api/auth/callback",
-  "/api/olist/route": "/api/olist",
   "/login/page": "/login",
   "/page": "/",
-  "/scanner/page": "/scanner",
-  "/history/page": "/history"
+  "/history/page": "/history",
+  "/scanner/page": "/scanner"
 }

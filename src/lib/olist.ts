@@ -39,14 +39,34 @@ export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersP
     offset += limit;
   } while (offset < total);
 
-  return mapWithConcurrency(allItems, DETAIL_CONCURRENCY, (item) => toOlistOrder(item, headers));
+  // Keep the initial request short. Internal notes are resolved in batches by
+  // the dedicated endpoint so a Vercel function never times out.
+  return allItems.map(toListOrder);
+}
+
+export async function resolveOlistOrders(token: string, orderIds: number[]): Promise<OlistOrder[]> {
+  const headers = { Authorization: `Bearer ${token}` };
+  return mapWithConcurrency(orderIds, DETAIL_CONCURRENCY, async (id) => {
+    const detail = await fetchOrderDetail(id, headers);
+    return toOlistOrder(detail, headers, false);
+  });
 }
 
 function isWooCommerceOrder(item: OlistApiOrder) {
   return !item.ecommerce || item.ecommerce.id === 20161 || item.ecommerce.nome.toLowerCase() === "woocommerce";
 }
 
-async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>): Promise<OlistOrder> {
+function toListOrder(item: OlistApiOrder): OlistOrder {
+  return {
+    id: item.id,
+    yampiId: getYampiIdFromDetail(item) || normalizeOrderId(item.ecommerce?.numeroPedidoEcommerce),
+    trackingCode: item.transportador?.codigoRastreamento || "",
+    clientName: item.cliente?.nome || "",
+    numeroPedido: item.numeroPedido || 0,
+  };
+}
+
+async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>, fetchDetail = true): Promise<OlistOrder> {
   const numeroPedido = item.numeroPedido || 0;
   const base = {
     id: item.id,
@@ -57,7 +77,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
   };
   // The list endpoint normally does not contain internal notes. Always fetch
   // the detail unless the note was already supplied by the list response.
-  if (getYampiIdFromDetail(item)) return base;
+  if (getYampiIdFromDetail(item) || !fetchDetail) return base;
 
   try {
     const detail = await fetchOrderDetail(item.id, headers);

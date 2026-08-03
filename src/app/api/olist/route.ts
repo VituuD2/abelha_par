@@ -4,9 +4,6 @@ import { fetchOlistOrders } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 
-// Detail lookup is intentionally paced to stay below Tiny's documented limit.
-export const maxDuration = 60;
-
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_RANGE_DAYS = 31;
 

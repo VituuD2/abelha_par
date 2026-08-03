@@ -1,8 +1,4 @@
 {
   "version": 1,
-  "functions": {
-    "/api/olist": {
-      "maxDuration": 60
-    }
-  }
+  "functions": {}
 }
