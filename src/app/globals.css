@@ -86,9 +86,44 @@ input, select { accent-color: var(--color-accent-blue); }
   border: 1px solid var(--color-border-light);
   transition: box-shadow 180ms ease, border-color 180ms ease;
 }
-.card { border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
 .card:hover { border-color: rgba(217, 119, 6, 0.18); box-shadow: var(--shadow-md); }
 .card-elevated { border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); }
+
+/* A restrained honey edge: visible in the whitespace below each card, never over content. */
+.card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 12%;
+  right: 12%;
+  bottom: -18px;
+  height: 25px;
+  opacity: 0.82;
+  pointer-events: none;
+  transform-origin: 50% 0;
+  background:
+    radial-gradient(10px 15px at 7% 0, #edab22 0 68%, transparent 72%),
+    radial-gradient(7px 22px at 25% 0, #d97706 0 66%, transparent 71%),
+    radial-gradient(11px 13px at 48% 0, #f2ba32 0 69%, transparent 73%),
+    radial-gradient(6px 19px at 72% 0, #d97706 0 68%, transparent 73%),
+    radial-gradient(9px 15px at 92% 0, #e69a16 0 68%, transparent 73%),
+    linear-gradient(90deg, transparent, #eda51d 8%, #d97706 48%, #f2ba32 88%, transparent);
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 5px 5px rgba(165, 87, 0, 0.14));
+  animation: honey-drip 7s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+
+.card:hover::after {
+  opacity: 1;
+  animation-duration: 3.4s;
+}
 
 .btn-primary, .btn-success, .btn-danger, .btn-ghost {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -120,6 +155,11 @@ input, select { accent-color: var(--color-accent-blue); }
 @keyframes scaleIn { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes honey-drip {
+  0%, 100% { transform: translateY(-3px) scaleY(.88); }
+  48% { transform: translateY(3px) scaleY(1.08); }
+  68% { transform: translateY(0) scaleY(.98); }
+}
 .animate-slide-down { animation: slideDown .3s ease-out; }
 .animate-fade-in { animation: fadeIn .2s ease-out; }
 .animate-scale-in { animation: scaleIn .3s cubic-bezier(.2, 0, 0, 1); }
