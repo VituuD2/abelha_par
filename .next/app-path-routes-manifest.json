@@ -1,14 +1,14 @@
 {
   "/_not-found/page": "/_not-found",
   "/api/auth/status/route": "/api/auth/status",
-  "/api/olist/route": "/api/olist",
-  "/api/olist/resolve/route": "/api/olist/resolve",
-  "/favicon.ico/route": "/favicon.ico",
-  "/api/auth/callback/route": "/api/auth/callback",
-  "/api/auth/login/route": "/api/auth/login",
-  "/page": "/",
-  "/scanner/page": "/scanner",
-  "/history/page": "/history",
   "/api/batches/route": "/api/batches",
-  "/login/page": "/login"
+  "/api/olist/resolve/route": "/api/olist/resolve",
+  "/api/olist/route": "/api/olist",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/auth/login/route": "/api/auth/login",
+  "/api/auth/callback/route": "/api/auth/callback",
+  "/login/page": "/login",
+  "/page": "/",
+  "/history/page": "/history",
+  "/scanner/page": "/scanner"
 }

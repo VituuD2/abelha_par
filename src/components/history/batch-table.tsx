@@ -36,13 +36,6 @@ function formatBatchDate(value: string) {
 }
 
 function printBatch(batch: Batch) {
-  const printWindow = window.open("", "_blank");
-  if (!printWindow) {
-    window.alert("Não foi possível abrir a impressão. Libere pop-ups para este site e tente novamente.");
-    return;
-  }
-
-  printWindow.opener = null;
   const rows = (batch.pedidos || [])
     .map((order, index) => {
       const saleDate = formatOrderDate(order.dataCriacao);
@@ -56,7 +49,7 @@ function printBatch(batch: Batch) {
     })
     .join("");
 
-  printWindow.document.write(`<!doctype html>
+  const printDocument = `<!doctype html>
     <html lang="pt-BR">
       <head>
         <meta charset="utf-8" />
@@ -97,10 +90,34 @@ function printBatch(batch: Batch) {
         </table>
         <footer>Documento gerado em ${escapeHtml(formatBatchDate(new Date().toISOString()))}.</footer>
       </body>
-    </html>`);
-  printWindow.document.close();
-  printWindow.focus();
-  window.setTimeout(() => printWindow.print(), 250);
+    </html>`;
+
+  // Imprimir por um iframe evita que o navegador trate a ação como pop-up.
+  const printFrame = document.createElement("iframe");
+  printFrame.setAttribute("aria-hidden", "true");
+  printFrame.style.cssText = "position:fixed;width:1px;height:1px;right:0;bottom:0;border:0;opacity:0;pointer-events:none;";
+
+  const removePrintFrame = () => {
+    window.setTimeout(() => printFrame.remove(), 0);
+  };
+
+  printFrame.onload = () => {
+    const frameWindow = printFrame.contentWindow;
+    if (!frameWindow) {
+      removePrintFrame();
+      window.alert("Não foi possível preparar a impressão. Tente novamente.");
+      return;
+    }
+
+    frameWindow.addEventListener("afterprint", removePrintFrame, { once: true });
+    frameWindow.focus();
+    frameWindow.print();
+    // Alguns navegadores não disparam afterprint ao cancelar a impressão.
+    window.setTimeout(removePrintFrame, 60_000);
+  };
+
+  printFrame.srcdoc = printDocument;
+  document.body.appendChild(printFrame);
 }
 
 export function BatchTable({ batches }: BatchTableProps) {
