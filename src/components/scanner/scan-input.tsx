@@ -45,7 +45,7 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
         </div>
         <div>
           <h2 className="text-[15px] font-semibold text-[var(--color-text-primary)]">Código de rastreamento</h2>
-          <p className="text-[12px] text-[var(--color-text-tertiary)]">Use o scanner ou digite o código e pressione Enter.</p>
+          <p className="text-[12px] text-[var(--color-text-tertiary)]">Correios: código completo. Loggi: etiqueta de 20 caracteres, usando os 8 últimos caracteres.</p>
         </div>
       </div>
 

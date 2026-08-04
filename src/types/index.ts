@@ -30,7 +30,8 @@ export interface OlistApiOrder {
   id: number;
   numeroPedido: number;
   situacao: number;
-  dataCriacao: string;
+  dataCriacao?: string;
+  data?: string;
   dataPrevista: string;
   valor: string;
   origemPedido: number;

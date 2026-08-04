@@ -83,7 +83,7 @@ function toListOrder(item: OlistApiOrder): OlistOrder {
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido: item.numeroPedido || 0,
-    dataCriacao: item.dataCriacao || null,
+    dataCriacao: getCreationDate(item),
   };
 }
 
@@ -95,7 +95,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido,
-    dataCriacao: item.dataCriacao || null,
+    dataCriacao: getCreationDate(item),
   };
   // The list endpoint normally does not contain internal notes. Always fetch
   // the detail unless the note was already supplied by the list response.
@@ -111,7 +111,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
       trackingCode: detail.transportador?.codigoRastreamento || base.trackingCode,
       clientName: detail.cliente?.nome || base.clientName,
       numeroPedido: detail.numeroPedido || numeroPedido,
-      dataCriacao: detail.dataCriacao || base.dataCriacao,
+      dataCriacao: getCreationDate(detail) || base.dataCriacao,
     };
   } catch {
     return { ...base, yampiId: null };
@@ -127,6 +127,11 @@ function getYampiIdFromDetail(detail: OlistApiOrder) {
     detail.observacoes,
   ].filter((value): value is string => typeof value === "string");
   return normalizeOrderId(extractYampiId(internalNotes.join("\n")));
+}
+
+function getCreationDate(order: OlistApiOrder) {
+  const value = order.dataCriacao || order.data;
+  return typeof value === "string" && value.trim() ? value : null;
 }
 
 async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {

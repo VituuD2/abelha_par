@@ -48,6 +48,7 @@ export default function DashboardPage() {
 
       try {
         const resolvedOrders: OlistOrder[] = [];
+        const sourceOrdersById = new Map(orders.map((order) => [order.id, order]));
         let start = 0;
         while (start < orders.length) {
           const batch = orders.slice(start, start + 10);
@@ -67,7 +68,15 @@ export default function DashboardPage() {
           }
           if (!response.ok) throw new Error(payload.error || "Não foi possível consultar os detalhes na Tiny.");
           if (resolutionId !== resolutionIdRef.current) return;
-          resolvedOrders.push(...payload.orders);
+          resolvedOrders.push(
+            ...payload.orders.map((resolvedOrder: OlistOrder) => ({
+              ...resolvedOrder,
+              dataCriacao:
+                resolvedOrder.dataCriacao ||
+                sourceOrdersById.get(resolvedOrder.id)?.dataCriacao ||
+                null,
+            }))
+          );
           setResolvedCount(resolvedOrders.length);
           start += batch.length;
         }

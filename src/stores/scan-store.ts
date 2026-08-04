@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { ScanOrder, ScannerState, ScanResult } from "@/types";
+import { normalizeTrackingForScan, trackingCodesMatch } from "@/lib/tracking";
 
 interface ScanStore {
   // Session data
@@ -41,13 +42,13 @@ export const useScanStore = create<ScanStore>((set, get) => ({
 
   processBarcode: (code: string) => {
     const { orders } = get();
-    const trimmedCode = code.trim();
+    const normalizedCode = normalizeTrackingForScan(code);
 
     // Find order by tracking code
     const orderIndex = orders.findIndex(
       (o) =>
         o.status === "pending" &&
-        o.trackingCode.toLowerCase() === trimmedCode.toLowerCase()
+        trackingCodesMatch(o.trackingCode, normalizedCode)
     );
 
     if (orderIndex === -1) {
@@ -55,14 +56,14 @@ export const useScanStore = create<ScanStore>((set, get) => ({
       const alreadyScanned = orders.find(
         (o) =>
           o.status === "checked" &&
-          o.trackingCode.toLowerCase() === trimmedCode.toLowerCase()
+          trackingCodesMatch(o.trackingCode, normalizedCode)
       );
 
       const result: ScanResult = {
         type: "error",
         message: alreadyScanned
           ? `Pedido já bipado: ${alreadyScanned.clientName} (${alreadyScanned.trackingCode})`
-          : `Código não encontrado na lista: ${trimmedCode}`,
+          : `Código não encontrado na lista: ${code.trim()}`,
         order: alreadyScanned || undefined,
       };
 

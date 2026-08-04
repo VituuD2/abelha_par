@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Package, Calendar, Hash, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Package, Calendar, Hash, CheckCircle2, Printer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Batch } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,93 @@ function formatOrderDate(value: string | null) {
   if (!value) return null;
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("pt-BR");
+}
+
+function escapeHtml(value: string | number | null | undefined) {
+  return String(value ?? "—")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function formatBatchDate(value: string) {
+  return new Date(value).toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function printBatch(batch: Batch) {
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) {
+    window.alert("Não foi possível abrir a impressão. Libere pop-ups para este site e tente novamente.");
+    return;
+  }
+
+  printWindow.opener = null;
+  const rows = (batch.pedidos || [])
+    .map((order, index) => {
+      const saleDate = formatOrderDate(order.dataCriacao);
+      return `<tr>
+        <td>${index + 1}</td>
+        <td>${escapeHtml(order.clientName)}</td>
+        <td class="code">${escapeHtml(order.trackingCode)}</td>
+        <td>${escapeHtml(order.yampiId)}</td>
+        <td>${escapeHtml(saleDate)}</td>
+      </tr>`;
+    })
+    .join("");
+
+  printWindow.document.write(`<!doctype html>
+    <html lang="pt-BR">
+      <head>
+        <meta charset="utf-8" />
+        <title>Abelha Par - Lote #${batch.numero_lote}</title>
+        <style>
+          @page { size: A4; margin: 16mm; }
+          * { box-sizing: border-box; }
+          body { color: #302518; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 12px; }
+          header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 16px; border-bottom: 2px solid #d97706; }
+          h1 { margin: 0; font-size: 23px; letter-spacing: -0.03em; }
+          h2 { margin: 5px 0 0; color: #6f6252; font-size: 13px; font-weight: 500; }
+          .badge { border-radius: 999px; background: #fff1d6; color: #9a5700; padding: 6px 10px; font-weight: 700; }
+          .summary { display: flex; gap: 28px; margin: 18px 0; padding: 13px 15px; background: #fffaf1; border: 1px solid #f0ddbd; border-radius: 10px; }
+          .summary strong { display: block; margin-top: 3px; font-size: 14px; }
+          table { width: 100%; border-collapse: collapse; }
+          th { color: #6f6252; font-size: 10px; letter-spacing: .05em; text-align: left; text-transform: uppercase; }
+          th, td { padding: 10px 8px; border-bottom: 1px solid #eadfce; vertical-align: top; }
+          td:first-child { color: #978977; width: 32px; }
+          .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+          footer { margin-top: 18px; color: #978977; font-size: 10px; }
+        </style>
+      </head>
+      <body>
+        <header>
+          <div>
+            <h1>Abelha Par</h1>
+            <h2>Resultado da conferência de pedidos</h2>
+          </div>
+          <span class="badge">Lote #${escapeHtml(batch.numero_lote)}</span>
+        </header>
+        <section class="summary">
+          <div>Data da bipagem<strong>${escapeHtml(formatBatchDate(batch.created_at))}</strong></div>
+          <div>Pedidos conferidos<strong>${escapeHtml(batch.qtd_pedidos)}</strong></div>
+        </section>
+        <table>
+          <thead><tr><th>#</th><th>Cliente</th><th>Rastreio</th><th>ID Yampi</th><th>Data da venda</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <footer>Documento gerado em ${escapeHtml(formatBatchDate(new Date().toISOString()))}.</footer>
+      </body>
+    </html>`);
+  printWindow.document.close();
+  printWindow.focus();
+  window.setTimeout(() => printWindow.print(), 250);
 }
 
 export function BatchTable({ batches }: BatchTableProps) {
@@ -39,16 +126,7 @@ export function BatchTable({ batches }: BatchTableProps) {
     <div className="space-y-2">
       {batches.map((batch, index) => {
         const isExpanded = expandedId === batch.id;
-        const formattedDate = new Date(batch.created_at).toLocaleDateString(
-          "pt-BR",
-          {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }
-        );
+        const formattedDate = formatBatchDate(batch.created_at);
 
         return (
           <motion.div
@@ -106,6 +184,19 @@ export function BatchTable({ batches }: BatchTableProps) {
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4 border-t border-[var(--color-border-light)]">
+                    <div className="pt-4 flex items-center justify-between gap-3">
+                      <p className="text-[12px] text-[var(--color-text-secondary)]">
+                        {batch.qtd_pedidos} pedidos conferidos neste lote.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => printBatch(batch)}
+                        className="btn-primary min-h-0 px-4 py-2 text-[13px]"
+                      >
+                        <Printer className="w-4 h-4" />
+                        Imprimir resultado
+                      </button>
+                    </div>
                     <div className="pt-3 space-y-2">
                       {(batch.pedidos || []).map((order, idx) => (
                         <div
