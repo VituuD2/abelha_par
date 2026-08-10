@@ -119,6 +119,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/api/internal/olist-sync/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/internal/olist-sync">> = Specific
+  const handler = {} as typeof import("../../src/app/api/internal/olist-sync/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/api/olist/resolve/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/olist/resolve">> = Specific
@@ -132,6 +141,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/olist">> = Specific
   const handler = {} as typeof import("../../src/app/api/olist/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/webhooks/olist/[ownerId]/[signature]/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/webhooks/olist/[ownerId]/[signature]">> = Specific
+  const handler = {} as typeof import("../../src/app/api/webhooks/olist/[ownerId]/[signature]/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

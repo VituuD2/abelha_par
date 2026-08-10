@@ -1,4 +1,9 @@
 {
   "version": 1,
-  "functions": {}
+  "functions": {
+    "/api/internal/olist-sync": {
+      "maxDuration": 60
+    },
+    "/api/webhooks/olist/[ownerId]/[signature]": {}
+  }
 }

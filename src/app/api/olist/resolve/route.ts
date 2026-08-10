@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
-import { resolveOlistOrders, TinyRateLimitError } from "@/lib/olist";
+import { TinyRateLimitError } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
+import { resolveAndCacheOlistOrders } from "@/lib/olist-sync";
 
 const MAX_BATCH_SIZE = 10;
 
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   if (isRateLimited(`olist-resolve:${user.id}`, 30, 60_000)) return NextResponse.json({ error: "Muitas consultas. Aguarde um minuto." }, { status: 429 });
 
-  let body: { orderIds?: unknown };
+  let body: { orderIds?: unknown; forceRefresh?: unknown };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "JSON inválido" }, { status: 400 }); }
   if (!Array.isArray(body.orderIds) || body.orderIds.length === 0 || body.orderIds.length > MAX_BATCH_SIZE || body.orderIds.some((id) => !Number.isInteger(id) || id <= 0)) {
     return NextResponse.json({ error: `Informe entre 1 e ${MAX_BATCH_SIZE} IDs de pedido válidos.` }, { status: 400 });
@@ -21,7 +22,12 @@ export async function POST(request: Request) {
   if (!token.token) return NextResponse.json({ error: token.message || "Conexão Tiny indisponível.", needsReconnect: token.status === "expired" }, { status: token.status === "expired" ? 401 : 503 });
 
   try {
-    const orders = await resolveOlistOrders(token.token, body.orderIds as number[]);
+    const orders = await resolveAndCacheOlistOrders(
+      user.id,
+      token.token,
+      body.orderIds as number[],
+      body.forceRefresh === true
+    );
     return NextResponse.json({ orders });
   } catch (error) {
     console.error("[olist/resolve] request failed", error);

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Cloud, Loader2, Check, AlertCircle, Link as LinkIcon, ExternalLink, RefreshCw } from "lucide-react";
+import { Cloud, Loader2, Check, AlertCircle, Link as LinkIcon, ExternalLink, RefreshCw, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { OlistOrder } from "@/types";
 
 interface ApiFetchCardProps {
-  onFetch: (orders: OlistOrder[]) => void;
+  onFetch: (orders: OlistOrder[], dateMode: "created" | "updated") => void;
 }
 
 // Poll auth status every 10 minutes to detect token expiration proactively
@@ -15,6 +15,7 @@ const AUTH_POLL_INTERVAL = 10 * 60 * 1000;
 export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [dateMode, setDateMode] = useState<"created" | "updated">("updated");
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
@@ -22,6 +23,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fetchedCount, setFetchedCount] = useState<number | null>(null);
+  const [webhookUrl, setWebhookUrl] = useState<string | null>(null);
+  const [copiedWebhook, setCopiedWebhook] = useState(false);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const checkAuthStatus = useCallback(async (showLoading = false) => {
@@ -33,6 +36,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
       setIsConnected(data.isConnected);
       setNeedsReconnect(data.needsReconnect || false);
       setAuthMessage(data.message || null);
+      setWebhookUrl(data.webhookUrl || null);
 
       // If we just detected disconnection while user thought they were connected
       if (!data.isConnected && data.needsReconnect) {
@@ -90,6 +94,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         body: JSON.stringify({
           dateFrom,
           dateTo,
+          dateMode,
         }),
       });
 
@@ -110,7 +115,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
       }
 
       setFetchedCount(data.orders.length);
-      onFetch(data.orders);
+      onFetch(data.orders, dateMode);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao buscar pedidos");
     } finally {
@@ -120,6 +125,17 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
 
   const handleConnect = () => {
     window.location.href = `/api/auth/login?t=${Date.now()}`;
+  };
+
+  const copyWebhookUrl = async () => {
+    if (!webhookUrl) return;
+    try {
+      await navigator.clipboard.writeText(webhookUrl);
+      setCopiedWebhook(true);
+      window.setTimeout(() => setCopiedWebhook(false), 2_000);
+    } catch {
+      setError("Não foi possível copiar a URL. Copie manualmente pelo navegador.");
+    }
   };
 
   // Show reconnection UI when session expired
@@ -145,7 +161,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
             )}
           </h3>
           <p className="text-[14px] text-[var(--color-text-tertiary)] mt-1">
-            Pedidos WooCommerce por data de criação (API Tiny ERP)
+            {dateMode === "updated"
+              ? "Pedidos WooCommerce liberados ou alterados no período"
+              : "Pedidos WooCommerce por data de criação"}
           </p>
         </div>
       </div>
@@ -222,8 +240,27 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
       ) : (
         /* Connected — show fetch UI */
         <div className="flex-1 flex flex-col justify-between">
+          <div className="mb-5">
+            <label className="text-[13px] font-medium text-[var(--color-text-secondary)] mb-2 block">
+              Critério de busca
+            </label>
+            <select
+              value={dateMode}
+              onChange={(event) => setDateMode(event.target.value as "created" | "updated")}
+              className="w-full px-3.5 py-3 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] text-[14px] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] transition-all"
+            >
+              <option value="updated">Liberados ou alterados no período (recomendado)</option>
+              <option value="created">Criados no período</option>
+            </select>
+            <p className="text-[12px] text-[var(--color-text-tertiary)] mt-2">
+              {dateMode === "updated"
+                ? "Inclui boletos compensados após a criação, quando o pedido é atualizado na Olist."
+                : "Use apenas para localizar vendas pela data original de criação."}
+            </p>
+          </div>
+
           {/* Date Range */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-6">
             <div>
               <label className="text-[13px] font-medium text-[var(--color-text-secondary)] mb-2 block">
                 Data Início
@@ -310,6 +347,19 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {webhookUrl && (
+              <div className="mt-4 p-3.5 rounded-[var(--radius-md)] bg-[var(--color-accent-yellow)]/10 border border-[var(--color-accent-yellow)]/25">
+                <p className="text-[12px] font-semibold text-[var(--color-text-primary)]">Automação de boletos</p>
+                <p className="text-[12px] text-[var(--color-text-secondary)] mt-1">
+                  Cadastre esta URL no webhook de vendas da Olist para atualizar pedidos automaticamente.
+                </p>
+                <button type="button" onClick={copyWebhookUrl} className="btn-ghost px-0 py-1.5 min-h-0 text-[12px] mt-1.5">
+                  {copiedWebhook ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedWebhook ? "URL copiada" : "Copiar URL do webhook"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

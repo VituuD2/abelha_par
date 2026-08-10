@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Muitas consultas. Tente novamente em um minuto." }, { status: 429 });
   }
 
-  let body: { dateFrom?: unknown; dateTo?: unknown };
+  let body: { dateFrom?: unknown; dateTo?: unknown; dateMode?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -29,7 +29,8 @@ export async function POST(request: Request) {
   }
   const dateFrom = typeof body.dateFrom === "string" ? body.dateFrom : "";
   const dateTo = typeof body.dateTo === "string" && body.dateTo ? body.dateTo : dateFrom;
-  if (!isValidRange(dateFrom, dateTo)) {
+  const dateMode = body.dateMode === "created" ? "created" : body.dateMode === "updated" ? "updated" : null;
+  if (!dateMode || !isValidRange(dateFrom, dateTo)) {
     return NextResponse.json({ error: "Informe datas válidas com intervalo máximo de 31 dias." }, { status: 400 });
   }
 
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const orders = await fetchOlistOrders({ token: tokenResult.token, dateFrom, dateTo });
+    const orders = await fetchOlistOrders({ token: tokenResult.token, dateFrom, dateTo, dateMode });
     return NextResponse.json({ orders, total: orders.length, fetchedAt: new Date().toISOString() });
   } catch (error) {
     console.error("[olist] request failed", error);

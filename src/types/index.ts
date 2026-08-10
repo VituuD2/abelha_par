@@ -7,6 +7,7 @@ export interface OlistOrder {
   clientName: string;
   numeroPedido: number;
   dataCriacao: string | null;
+  situacao: number | null;
 }
 
 export interface ScanOrder extends OlistOrder {
@@ -29,7 +30,7 @@ export interface Batch {
 export interface OlistApiOrder {
   id: number;
   numeroPedido: number;
-  situacao: number;
+  situacao?: number;
   dataCriacao?: string;
   data?: string;
   dataPrevista: string;

@@ -11,6 +11,8 @@ import type { OlistOrder, ScanOrder } from "@/types";
 import { motion } from "framer-motion";
 import { Package, ArrowDownUp } from "lucide-react";
 
+type OlistDateMode = "created" | "updated";
+
 export default function DashboardPage() {
   const [yampiIds, setYampiIds] = useState<Set<string> | null>(null);
   const [yampiFileName, setYampiFileName] = useState<string>("");
@@ -21,6 +23,7 @@ export default function DashboardPage() {
   const [isResolving, setIsResolving] = useState(false);
   const [resolvedCount, setResolvedCount] = useState(0);
   const [resolutionError, setResolutionError] = useState<string | null>(null);
+  const [olistDateMode, setOlistDateMode] = useState<OlistDateMode>("updated");
   const resolutionIdRef = useRef(0);
   const setStoreOrders = useScanStore((state) => state.setOrders);
 
@@ -37,7 +40,7 @@ export default function DashboardPage() {
   );
 
   const resolveAndCrossReference = useCallback(
-    async (orders: OlistOrder[], ids: Set<string>) => {
+    async (orders: OlistOrder[], ids: Set<string>, forceRefresh = false) => {
       const resolutionId = ++resolutionIdRef.current;
       setIsResolving(true);
       setResolvedCount(0);
@@ -55,7 +58,7 @@ export default function DashboardPage() {
           const response = await fetch("/api/olist/resolve", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderIds: batch.map((order) => order.id) }),
+            body: JSON.stringify({ orderIds: batch.map((order) => order.id), forceRefresh }),
           });
           const payload = await response.json().catch(() => ({}));
           if (response.status === 429) {
@@ -100,10 +103,10 @@ export default function DashboardPage() {
       setYampiIds(ids);
       setYampiFileName(fileName);
       if (olistOrders.length > 0) {
-        void resolveAndCrossReference(olistOrders, ids);
+        void resolveAndCrossReference(olistOrders, ids, olistDateMode === "updated");
       }
     },
-    [olistOrders, resolveAndCrossReference]
+    [olistDateMode, olistOrders, resolveAndCrossReference]
   );
 
   const handleClearUpload = useCallback(() => {
@@ -118,10 +121,11 @@ export default function DashboardPage() {
   }, []);
 
   const handleFetch = useCallback(
-    (orders: OlistOrder[]) => {
+    (orders: OlistOrder[], dateMode: OlistDateMode) => {
       setOlistOrders(orders);
+      setOlistDateMode(dateMode);
       if (yampiIds) {
-        void resolveAndCrossReference(orders, yampiIds);
+        void resolveAndCrossReference(orders, yampiIds, dateMode === "updated");
       }
     },
     [yampiIds, resolveAndCrossReference]

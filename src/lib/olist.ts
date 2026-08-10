@@ -16,7 +16,14 @@ export class TinyRateLimitError extends Error {
   }
 }
 
-interface FetchOrdersParams { token: string; dateFrom: string; dateTo?: string }
+export type OlistDateMode = "created" | "updated";
+
+interface FetchOrdersParams {
+  token: string;
+  dateFrom: string;
+  dateTo?: string;
+  dateMode?: OlistDateMode;
+}
 interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
 
 export async function testTinyConnection(token: string): Promise<{ ok: boolean; status: number }> {
@@ -28,18 +35,43 @@ export async function testTinyConnection(token: string): Promise<{ ok: boolean; 
   }
 }
 
-export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersParams): Promise<OlistOrder[]> {
-  const allItems: OlistApiOrder[] = [];
+export async function fetchOlistOrders({
+  token,
+  dateFrom,
+  dateTo,
+  dateMode = "created",
+}: FetchOrdersParams): Promise<OlistOrder[]> {
+  const allItems = new Map<number, OlistApiOrder>();
   const headers = { Authorization: `Bearer ${token}` };
+  const endDate = dateTo || dateFrom;
+  const queryDates = dateMode === "updated" ? enumerateDates(dateFrom, endDate) : [dateFrom];
+
+  for (const queryDate of queryDates) {
+    const items = await fetchOrdersPageRange(
+      headers,
+      dateMode === "created"
+        ? { dataInicial: dateFrom, dataFinal: endDate }
+        : { dataAtualizacao: queryDate }
+    );
+    for (const item of items) {
+      if (isWooCommerceOrder(item)) allItems.set(item.id, item);
+    }
+  }
+
+  // Keep the initial request short. Internal notes are resolved in batches by
+  // the dedicated endpoint so a Vercel function never times out.
+  return Array.from(allItems.values()).map(toListOrder);
+}
+
+async function fetchOrdersPageRange(headers: Record<string, string>, filters: Record<string, string>): Promise<OlistApiOrder[]> {
+  const allItems: OlistApiOrder[] = [];
   const limit = 100;
   let offset = 0;
   let total = 0;
 
   do {
-    // Olist documents dataInicial/dataFinal as filters for order creation date.
     const params = new URLSearchParams({
-      dataInicial: dateFrom,
-      dataFinal: dateTo || dateFrom,
+      ...filters,
       orderBy: "desc",
       limit: String(limit),
       offset: String(offset),
@@ -48,14 +80,11 @@ export async function fetchOlistOrders({ token, dateFrom, dateTo }: FetchOrdersP
     if (!response.ok) throw new Error(`Tiny API returned ${response.status}`);
 
     const data = await response.json() as TinyListResponse;
-    allItems.push(...(data.itens || []).filter(isWooCommerceOrder));
+    allItems.push(...(data.itens || []));
     total = data.paginacao?.total || 0;
     offset += limit;
   } while (offset < total);
-
-  // Keep the initial request short. Internal notes are resolved in batches by
-  // the dedicated endpoint so a Vercel function never times out.
-  return allItems.map(toListOrder);
+  return allItems;
 }
 
 export async function resolveOlistOrders(token: string, orderIds: number[]): Promise<OlistOrder[]> {
@@ -84,6 +113,7 @@ function toListOrder(item: OlistApiOrder): OlistOrder {
     clientName: item.cliente?.nome || "",
     numeroPedido: item.numeroPedido || 0,
     dataCriacao: getCreationDate(item),
+    situacao: item.situacao ?? null,
   };
 }
 
@@ -96,6 +126,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
     clientName: item.cliente?.nome || "",
     numeroPedido,
     dataCriacao: getCreationDate(item),
+    situacao: item.situacao ?? null,
   };
   // The list endpoint normally does not contain internal notes. Always fetch
   // the detail unless the note was already supplied by the list response.
@@ -112,6 +143,7 @@ async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>
       clientName: detail.cliente?.nome || base.clientName,
       numeroPedido: detail.numeroPedido || numeroPedido,
       dataCriacao: getCreationDate(detail) || base.dataCriacao,
+      situacao: detail.situacao ?? base.situacao,
     };
   } catch {
     return { ...base, yampiId: null };
@@ -132,6 +164,17 @@ function getYampiIdFromDetail(detail: OlistApiOrder) {
 function getCreationDate(order: OlistApiOrder) {
   const value = order.dataCriacao || order.data;
   return typeof value === "string" && value.trim() ? value : null;
+}
+
+function enumerateDates(dateFrom: string, dateTo: string) {
+  const dates: string[] = [];
+  const cursor = new Date(`${dateFrom}T12:00:00.000Z`);
+  const end = new Date(`${dateTo}T12:00:00.000Z`);
+  while (cursor <= end) {
+    dates.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return dates;
 }
 
 async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {

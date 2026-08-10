@@ -18,7 +18,17 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/api/webhooks/olist/[ownerId]/[signature]",
+      "regex": "^/api/webhooks/olist/([^/]+?)/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPownerId": "nxtPownerId",
+        "nxtPsignature": "nxtPsignature"
+      },
+      "namedRegex": "^/api/webhooks/olist/(?<nxtPownerId>[^/]+?)/(?<nxtPsignature>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
