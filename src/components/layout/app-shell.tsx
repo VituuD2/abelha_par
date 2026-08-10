@@ -4,8 +4,9 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const isLoginPage = usePathname() === "/login";
-  if (isLoginPage) return <main className="min-h-screen">{children}</main>;
+  const pathname = usePathname();
+  const isAuthPage = ["/login", "/forgot-password", "/reset-password"].includes(pathname);
+  if (isAuthPage) return <main className="min-h-screen">{children}</main>;
 
   return (
     <div className="min-h-screen w-full">

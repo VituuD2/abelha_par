@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LockKeyhole } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -46,6 +47,11 @@ export default function LoginPage() {
         <label className="block text-sm font-medium text-[var(--color-text-secondary)]">Senha
           <input className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] px-3.5 py-3 text-[var(--color-text-primary)] transition-colors focus:border-[var(--color-accent-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/20" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
+        <div className="-mt-2 text-right">
+          <Link href="/forgot-password" className="text-sm font-medium text-[var(--color-accent-blue)] hover:underline">
+            Esqueci minha senha
+          </Link>
+        </div>
         {error && <p role="alert" className="text-sm text-[var(--color-accent-red)]">{error}</p>}
         <button className="btn-primary w-full py-3" disabled={isLoading}>{isLoading ? "Entrando..." : "Entrar"}</button>
       </form>

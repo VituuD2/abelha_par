@@ -1,16 +1,18 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/batches/route": "app/api/batches/route.js",
   "/api/auth/status/route": "app/api/auth/status/route.js",
-  "/api/olist/route": "app/api/olist/route.js",
+  "/api/batches/route": "app/api/batches/route.js",
   "/api/olist/resolve/route": "app/api/olist/resolve/route.js",
+  "/api/olist/route": "app/api/olist/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
   "/api/auth/callback/route": "app/api/auth/callback/route.js",
   "/api/internal/olist-sync/route": "app/api/internal/olist-sync/route.js",
   "/api/webhooks/olist/[ownerId]/[signature]/route": "app/api/webhooks/olist/[ownerId]/[signature]/route.js",
-  "/login/page": "app/login/page.js",
+  "/forgot-password/page": "app/forgot-password/page.js",
   "/page": "app/page.js",
+  "/reset-password/page": "app/reset-password/page.js",
+  "/login/page": "app/login/page.js",
   "/history/page": "app/history/page.js",
   "/scanner/page": "app/scanner/page.js"
 }
