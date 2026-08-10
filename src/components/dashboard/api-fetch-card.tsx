@@ -22,6 +22,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [needsReconnect, setNeedsReconnect] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fetchedCount, setFetchedCount] = useState<number | null>(null);
   const [webhookUrl, setWebhookUrl] = useState<string | null>(null);
@@ -141,6 +142,27 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
     window.location.assign(`/api/auth/login?t=${Date.now()}`);
   };
 
+  const handleDisconnect = async () => {
+    setError(null);
+    setIsDisconnecting(true);
+
+    try {
+      const response = await fetch("/api/auth/disconnect", { method: "POST" });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Não foi possível remover a conexão Tiny.");
+
+      setIsConnected(false);
+      setNeedsReconnect(false);
+      setAuthMessage(null);
+      setFetchedCount(null);
+      setWebhookUrl(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível remover a conexão Tiny.");
+    } finally {
+      setIsDisconnecting(false);
+    }
+  };
+
   const copyWebhookUrl = async () => {
     if (!webhookUrl) return;
     try {
@@ -205,6 +227,14 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
           >
             {isConnecting ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />}
             {isConnecting ? "Redirecionando..." : "Reconectar Tiny ERP"}
+          </button>
+          <button
+            type="button"
+            onClick={handleDisconnect}
+            disabled={isDisconnecting || isConnecting}
+            className="btn-ghost mt-3 w-full py-2.5 text-sm text-[var(--color-text-secondary)]"
+          >
+            {isDisconnecting ? "Removendo conexão..." : "Remover conexão"}
           </button>
           
           <AnimatePresence>
