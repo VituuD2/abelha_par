@@ -21,6 +21,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [isConnected, setIsConnected] = useState(false);
   const [needsReconnect, setNeedsReconnect] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fetchedCount, setFetchedCount] = useState<number | null>(null);
   const [webhookUrl, setWebhookUrl] = useState<string | null>(null);
@@ -40,7 +41,6 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
 
       // If we just detected disconnection while user thought they were connected
       if (!data.isConnected && data.needsReconnect) {
-        setError(null);
         setFetchedCount(null);
       }
     } catch (err) {
@@ -124,7 +124,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   };
 
   const handleConnect = () => {
-    window.location.href = `/api/auth/login?t=${Date.now()}`;
+    setError(null);
+    setIsConnecting(true);
+    window.location.assign(`/api/auth/login?t=${Date.now()}`);
   };
 
   const copyWebhookUrl = async () => {
@@ -186,10 +188,11 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
           </div>
           <button
             onClick={handleConnect}
+            disabled={isConnecting}
             className="btn-primary w-full shadow-md hover:shadow-lg transition-shadow mt-auto py-3 text-[15px]"
           >
-            <RefreshCw className="w-4 h-4 mr-1" />
-            Reconectar Tiny ERP
+            {isConnecting ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+            {isConnecting ? "Redirecionando..." : "Reconectar Tiny ERP"}
           </button>
           
           <AnimatePresence>

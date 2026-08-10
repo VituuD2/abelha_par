@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { encryptToken } from "@/lib/token-crypto";
-import { getAppUrl } from "@/lib/app-url";
+import { getRequestOrigin } from "@/lib/app-url";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const appUrl = getAppUrl(request);
+  const appUrl = getRequestOrigin(request);
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const state = searchParams.get("state");
@@ -23,6 +23,13 @@ export async function GET(request: Request) {
   };
 
   if (!code || !state || state !== expectedState || !user || user.id !== expectedUserId) {
+    console.warn("[auth/callback] OAuth validation failed", {
+      hasCode: Boolean(code),
+      hasState: Boolean(state),
+      hasExpectedState: Boolean(expectedState),
+      hasUser: Boolean(user),
+      hasExpectedUser: Boolean(expectedUserId),
+    });
     return clearCookies(NextResponse.redirect(`${appUrl}/?error=OAuthValidationFailed`));
   }
 
@@ -33,7 +40,10 @@ export async function GET(request: Request) {
   try {
     const params = new URLSearchParams({ grant_type: "authorization_code", code, client_id: clientId, client_secret: clientSecret, redirect_uri: `${appUrl}/api/auth/callback` });
     const tokenResponse = await fetch("https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
-    if (!tokenResponse.ok) return clearCookies(NextResponse.redirect(`${appUrl}/?error=TokenExchangeFailed`));
+    if (!tokenResponse.ok) {
+      console.error("[auth/callback] Tiny token exchange failed", { status: tokenResponse.status });
+      return clearCookies(NextResponse.redirect(`${appUrl}/?error=TokenExchangeFailed`));
+    }
 
     const data = await tokenResponse.json() as { access_token: string; refresh_token: string; expires_in: number; refresh_expires_in?: number };
     const payload = {

@@ -9,3 +9,12 @@ export function getAppUrl(request: Request) {
   const configured = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL;
   return (configured || new URL(request.url).origin).replace(/\/$/, "");
 }
+
+/**
+ * OAuth state is stored in cookies on the domain that starts the flow. Its
+ * callback must therefore return to that same domain, rather than a possibly
+ * different canonical URL configured for jobs or webhooks.
+ */
+export function getRequestOrigin(request: Request) {
+  return new URL(request.url).origin.replace(/\/$/, "");
+}
