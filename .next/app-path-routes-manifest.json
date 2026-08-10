@@ -1,18 +1,18 @@
 {
-  "/_not-found/page": "/_not-found",
   "/api/batches/route": "/api/batches",
+  "/_not-found/page": "/_not-found",
   "/api/olist/resolve/route": "/api/olist/resolve",
   "/api/olist/route": "/api/olist",
   "/favicon.ico/route": "/favicon.ico",
-  "/api/internal/olist-sync/route": "/api/internal/olist-sync",
-  "/api/auth/login/route": "/api/auth/login",
   "/api/auth/status/route": "/api/auth/status",
+  "/api/auth/login/route": "/api/auth/login",
   "/api/auth/callback/route": "/api/auth/callback",
+  "/api/internal/olist-sync/route": "/api/internal/olist-sync",
   "/api/webhooks/olist/[ownerId]/[signature]/route": "/api/webhooks/olist/[ownerId]/[signature]",
   "/forgot-password/page": "/forgot-password",
+  "/login/page": "/login",
   "/page": "/",
   "/reset-password/page": "/reset-password",
-  "/login/page": "/login",
   "/history/page": "/history",
   "/scanner/page": "/scanner"
 }
