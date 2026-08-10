@@ -28,7 +28,11 @@ interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: numb
 
 export async function testTinyConnection(token: string): Promise<{ ok: boolean; status: number }> {
   try {
-    const response = await fetch(`${API_BASE}/info`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
+    // Validate against the resource the application actually uses. `/info`
+    // requires the separate "Informações da Conta" permission and therefore
+    // produced a false disconnected state for applications allowed to read
+    // only orders.
+    const response = await fetch(`${API_BASE}/pedidos?limit=1`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
     return { ok: response.ok, status: response.status };
   } catch {
     return { ok: false, status: 0 };
