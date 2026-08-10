@@ -30,6 +30,8 @@ export interface TinyConnectionResult {
   ok: boolean;
   status: number;
   providerMessage: string | null;
+  providerRequestId: string | null;
+  wwwAuthenticate: string | null;
 }
 
 export async function testTinyConnection(token: string): Promise<TinyConnectionResult> {
@@ -43,10 +45,25 @@ export async function testTinyConnection(token: string): Promise<TinyConnectionR
       ok: response.ok,
       status: response.status,
       providerMessage: response.ok ? null : await getProviderErrorMessage(response),
+      providerRequestId: getProviderRequestId(response),
+      wwwAuthenticate: response.headers.get("www-authenticate"),
     };
   } catch {
-    return { ok: false, status: 0, providerMessage: "Falha de rede ao consultar a Tiny." };
+    return {
+      ok: false,
+      status: 0,
+      providerMessage: "Falha de rede ao consultar a Tiny.",
+      providerRequestId: null,
+      wwwAuthenticate: null,
+    };
   }
+}
+
+function getProviderRequestId(response: Response) {
+  return response.headers.get("x-request-id")
+    || response.headers.get("x-correlation-id")
+    || response.headers.get("x-amzn-requestid")
+    || null;
 }
 
 async function getProviderErrorMessage(response: Response) {

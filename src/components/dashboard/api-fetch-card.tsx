@@ -20,6 +20,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
   const [needsReconnect, setNeedsReconnect] = useState(false);
+  const [hasOrdersAccessDenied, setHasOrdersAccessDenied] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
@@ -49,6 +50,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
       
       setIsConnected(data.isConnected);
       setNeedsReconnect(data.needsReconnect || false);
+      setHasOrdersAccessDenied(data.status === "access_denied");
       setAuthMessage(data.message || null);
       setWebhookUrl(data.webhookUrl || null);
 
@@ -118,6 +120,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         if (response.status === 401 || data.needsReconnect) {
           setIsConnected(false);
           setNeedsReconnect(true);
+          setHasOrdersAccessDenied(false);
           setAuthMessage(data.error || "Sessão expirada. Reconecte sua conta.");
           setFetchedCount(null);
           return;
@@ -153,6 +156,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
 
       setIsConnected(false);
       setNeedsReconnect(false);
+      setHasOrdersAccessDenied(false);
       setAuthMessage(null);
       setFetchedCount(null);
       setWebhookUrl(null);
@@ -175,7 +179,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   };
 
   // Show reconnection UI when session expired
-  const showReconnect = !isConnected && (needsReconnect || authMessage);
+  const showReconnect = !isConnected && needsReconnect;
+  const showAccessDenied = !isConnected && hasOrdersAccessDenied;
 
   return (
     <section className="card p-5 sm:p-6 lg:p-8 flex flex-col h-full min-h-[380px]">
@@ -192,6 +197,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
               <span className="badge badge-checked bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)] px-2.5 py-1 text-[11px]">Conectado</span>
             ) : needsReconnect ? (
               <span className="badge badge-error bg-[var(--color-accent-orange,#f59e0b)]/10 text-[var(--color-accent-orange,#f59e0b)] px-2.5 py-1 text-[11px]">Sessão Expirada</span>
+            ) : hasOrdersAccessDenied ? (
+              <span className="badge badge-error bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)] px-2.5 py-1 text-[11px]">Acesso negado</span>
             ) : (
               <span className="badge badge-error bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)] px-2.5 py-1 text-[11px]">Desconectado</span>
             )}
@@ -250,6 +257,34 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+      ) : showAccessDenied ? (
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="text-center mb-8">
+            <AlertCircle className="w-10 h-10 text-[var(--color-accent-red)] mx-auto mb-4 opacity-70" />
+            <p className="text-[15px] text-[var(--color-text-secondary)] mb-2">
+              {authMessage}
+            </p>
+            <p className="text-[13px] text-[var(--color-text-tertiary)]">
+              A conexão foi salva. Autentique outra conta ou remova esta conexão para tentar novamente.
+            </p>
+          </div>
+          <button
+            onClick={handleConnect}
+            disabled={isConnecting}
+            className="btn-primary w-full shadow-md hover:shadow-lg transition-shadow mt-auto py-3 text-[15px]"
+          >
+            {isConnecting ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+            {isConnecting ? "Redirecionando..." : "Autenticar outra conta Olist"}
+          </button>
+          <button
+            type="button"
+            onClick={handleDisconnect}
+            disabled={isDisconnecting || isConnecting}
+            className="btn-ghost mt-3 w-full py-2.5 text-sm text-[var(--color-text-secondary)]"
+          >
+            {isDisconnecting ? "Removendo conexão..." : "Remover conexão"}
+          </button>
         </div>
       ) : !isConnected ? (
         /* Not connected at all — first-time connection */

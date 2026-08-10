@@ -46,12 +46,21 @@ export async function GET(request: Request) {
     });
   }
   if (connection.status === 401 || connection.status === 403) {
-    console.warn("[tiny-status] Tiny token rejected", {
+    console.warn("[tiny-status] Olist denied orders access", {
       requestId,
       status: connection.status,
       providerMessage: connection.providerMessage,
+      providerRequestId: connection.providerRequestId,
+      wwwAuthenticate: connection.wwwAuthenticate,
     });
-    return NextResponse.json({ isConnected: false, needsReconnect: true, status: "expired", message: "Token Tiny inválido. Reconecte a conta." });
+    // OAuth can issue an unexpired token that is denied by the Pedidos
+    // resource. Treating this as a local expiration causes a reconnect loop.
+    return NextResponse.json({
+      isConnected: false,
+      needsReconnect: false,
+      status: "access_denied",
+      message: "A Olist autenticou a conta, mas negou acesso à API de Pedidos.",
+    });
   }
   return NextResponse.json({ isConnected: true, needsReconnect: false, status: "valid", message: "Não foi possível confirmar a API agora." });
 }

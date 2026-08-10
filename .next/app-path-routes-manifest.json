@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "/_not-found",
   "/api/batches/route": "/api/batches",
-  "/api/olist/route": "/api/olist",
   "/api/olist/resolve/route": "/api/olist/resolve",
+  "/api/olist/route": "/api/olist",
   "/favicon.ico/route": "/favicon.ico",
   "/api/auth/disconnect/route": "/api/auth/disconnect",
   "/api/auth/login/route": "/api/auth/login",
@@ -11,9 +11,9 @@
   "/api/auth/callback/route": "/api/auth/callback",
   "/api/webhooks/olist/[ownerId]/[signature]/route": "/api/webhooks/olist/[ownerId]/[signature]",
   "/forgot-password/page": "/forgot-password",
-  "/login/page": "/login",
   "/page": "/",
   "/reset-password/page": "/reset-password",
+  "/login/page": "/login",
   "/history/page": "/history",
   "/scanner/page": "/scanner"
 }
