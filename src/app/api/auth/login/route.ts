@@ -16,6 +16,7 @@ export async function GET(request: Request) {
   if (!clientId) return NextResponse.json({ error: "TINY_CLIENT_ID não configurado" }, { status: 500 });
 
   const state = crypto.randomUUID();
+  const flowId = crypto.randomUUID();
   const appUrl = getRequestOrigin(request);
   const redirectUri = `${appUrl}/api/auth/callback`;
   // Parameters follow the Tiny/Olist confidential-client OAuth documentation.
@@ -24,5 +25,11 @@ export async function GET(request: Request) {
   const response = NextResponse.redirect(`https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?${params}`);
   response.cookies.set("tiny_oauth_state", state, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 600 });
   response.cookies.set("tiny_oauth_user", user.id, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 600 });
+  response.cookies.set("tiny_oauth_flow", flowId, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 600 });
+  console.info("[tiny-oauth] authorization started", {
+    flowId,
+    origin: appUrl,
+    requestId: request.headers.get("x-vercel-id") || null,
+  });
   return response;
 }

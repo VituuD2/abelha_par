@@ -4,15 +4,15 @@
   "/api/olist/route": "/api/olist",
   "/api/olist/resolve/route": "/api/olist/resolve",
   "/favicon.ico/route": "/favicon.ico",
+  "/api/auth/login/route": "/api/auth/login",
   "/api/auth/status/route": "/api/auth/status",
   "/api/auth/callback/route": "/api/auth/callback",
-  "/api/auth/login/route": "/api/auth/login",
   "/api/webhooks/olist/[ownerId]/[signature]/route": "/api/webhooks/olist/[ownerId]/[signature]",
   "/api/internal/olist-sync/route": "/api/internal/olist-sync",
   "/forgot-password/page": "/forgot-password",
   "/page": "/",
-  "/reset-password/page": "/reset-password",
   "/login/page": "/login",
-  "/scanner/page": "/scanner",
-  "/history/page": "/history"
+  "/reset-password/page": "/reset-password",
+  "/history/page": "/history",
+  "/scanner/page": "/scanner"
 }

@@ -15,15 +15,28 @@ export async function GET(request: Request) {
   const cookieStore = await cookies();
   const expectedState = cookieStore.get("tiny_oauth_state")?.value;
   const expectedUserId = cookieStore.get("tiny_oauth_user")?.value;
+  const flowId = cookieStore.get("tiny_oauth_flow")?.value || "missing-flow-cookie";
   const user = await getAuthenticatedUser();
   const clearCookies = (response: NextResponse) => {
     response.cookies.delete("tiny_oauth_state");
     response.cookies.delete("tiny_oauth_user");
+    response.cookies.delete("tiny_oauth_flow");
     return response;
   };
 
+  console.info("[tiny-oauth] callback received", {
+    flowId,
+    requestId: request.headers.get("x-vercel-id") || null,
+    hasCode: Boolean(code),
+    hasState: Boolean(state),
+    stateMatches: Boolean(state && expectedState && state === expectedState),
+    hasAppUser: Boolean(user),
+    userMatches: Boolean(user && expectedUserId && user.id === expectedUserId),
+  });
+
   if (!code || !state || state !== expectedState || !user || user.id !== expectedUserId) {
     console.warn("[auth/callback] OAuth validation failed", {
+      flowId,
       hasCode: Boolean(code),
       hasState: Boolean(state),
       hasExpectedState: Boolean(expectedState),
@@ -41,7 +54,7 @@ export async function GET(request: Request) {
     const params = new URLSearchParams({ grant_type: "authorization_code", code, client_id: clientId, client_secret: clientSecret, redirect_uri: `${appUrl}/api/auth/callback` });
     const tokenResponse = await fetch("https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
     if (!tokenResponse.ok) {
-      console.error("[auth/callback] Tiny token exchange failed", { status: tokenResponse.status });
+      console.error("[tiny-oauth] Tiny token exchange failed", { flowId, status: tokenResponse.status });
       return clearCookies(NextResponse.redirect(`${appUrl}/?error=TokenExchangeFailed`));
     }
 
@@ -56,9 +69,10 @@ export async function GET(request: Request) {
     };
     const { error } = await createAdminClient().from("tiny_integrations").upsert(payload, { onConflict: "owner_id" });
     if (error) throw error;
+    console.info("[tiny-oauth] connection saved", { flowId, requestId: request.headers.get("x-vercel-id") || null });
     return clearCookies(NextResponse.redirect(`${appUrl}/?success=TinyConnected`));
   } catch (error) {
-    console.error("[auth/callback] token persistence failed", error);
+    console.error("[tiny-oauth] token persistence failed", { flowId, error });
     return clearCookies(NextResponse.redirect(`${appUrl}/?error=CallbackError`));
   }
 }

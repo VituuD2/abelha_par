@@ -33,6 +33,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
     try {
       const res = await fetch("/api/auth/status", { cache: "no-store" });
       if (res.status === 401) {
+        console.error("[tiny-status] application session rejected", {
+          requestId: res.headers.get("x-vercel-id"),
+        });
         // The Tiny OAuth flow can complete while the application's Supabase
         // session has expired. Re-authenticate the app instead of presenting
         // this as a Tiny connection problem.
