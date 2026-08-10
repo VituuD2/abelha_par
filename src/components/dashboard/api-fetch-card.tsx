@@ -31,8 +31,17 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const checkAuthStatus = useCallback(async (showLoading = false) => {
     if (showLoading) setIsCheckingAuth(true);
     try {
-      const res = await fetch("/api/auth/status");
-      const data = await res.json();
+      const res = await fetch("/api/auth/status", { cache: "no-store" });
+      if (res.status === 401) {
+        // The Tiny OAuth flow can complete while the application's Supabase
+        // session has expired. Re-authenticate the app instead of presenting
+        // this as a Tiny connection problem.
+        window.location.replace("/login?next=%2F");
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Não foi possível verificar a conexão Tiny.");
       
       setIsConnected(data.isConnected);
       setNeedsReconnect(data.needsReconnect || false);

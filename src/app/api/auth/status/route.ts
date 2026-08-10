@@ -6,6 +6,9 @@ import { getValidTinyToken } from "@/lib/tiny-auth";
 import { getAppUrl } from "@/lib/app-url";
 import { getOlistWebhookUrl } from "@/lib/olist-webhook";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
