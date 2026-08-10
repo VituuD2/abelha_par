@@ -4,7 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { encryptToken } from "@/lib/token-crypto";
 import { getRequestOrigin } from "@/lib/app-url";
-import { testTinyConnection } from "@/lib/olist";
 
 export const dynamic = "force-dynamic";
 
@@ -60,16 +59,6 @@ export async function GET(request: Request) {
     }
 
     const data = await tokenResponse.json() as { access_token: string; refresh_token: string; expires_in: number; refresh_expires_in?: number };
-    const connection = await testTinyConnection(data.access_token);
-    if (!connection.ok) {
-      console.warn("[tiny-oauth] issued token rejected by orders API", {
-        flowId,
-        status: connection.status,
-        providerMessage: connection.providerMessage,
-      });
-      return clearCookies(NextResponse.redirect(`${appUrl}/?error=TinyAccessDenied`));
-    }
-
     const payload = {
       owner_id: user.id,
       access_token: encryptToken(data.access_token),
