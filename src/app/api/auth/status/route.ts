@@ -46,7 +46,11 @@ export async function GET(request: Request) {
     });
   }
   if (connection.status === 401 || connection.status === 403) {
-    console.warn("[tiny-status] Tiny token rejected", { requestId, status: connection.status });
+    console.warn("[tiny-status] Tiny token rejected", {
+      requestId,
+      status: connection.status,
+      providerMessage: connection.providerMessage,
+    });
     return NextResponse.json({ isConnected: false, needsReconnect: true, status: "expired", message: "Token Tiny inválido. Reconecte a conta." });
   }
   return NextResponse.json({ isConnected: true, needsReconnect: false, status: "valid", message: "Não foi possível confirmar a API agora." });

@@ -62,7 +62,11 @@ export async function GET(request: Request) {
     const data = await tokenResponse.json() as { access_token: string; refresh_token: string; expires_in: number; refresh_expires_in?: number };
     const connection = await testTinyConnection(data.access_token);
     if (!connection.ok) {
-      console.warn("[tiny-oauth] issued token rejected by orders API", { flowId, status: connection.status });
+      console.warn("[tiny-oauth] issued token rejected by orders API", {
+        flowId,
+        status: connection.status,
+        providerMessage: connection.providerMessage,
+      });
       return clearCookies(NextResponse.redirect(`${appUrl}/?error=TinyAccessDenied`));
     }
 

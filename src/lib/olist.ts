@@ -26,16 +26,40 @@ interface FetchOrdersParams {
 }
 interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
 
-export async function testTinyConnection(token: string): Promise<{ ok: boolean; status: number }> {
+export interface TinyConnectionResult {
+  ok: boolean;
+  status: number;
+  providerMessage: string | null;
+}
+
+export async function testTinyConnection(token: string): Promise<TinyConnectionResult> {
   try {
     // Validate against the resource the application actually uses. `/info`
     // requires the separate "Informações da Conta" permission and therefore
     // produced a false disconnected state for applications allowed to read
     // only orders.
     const response = await fetch(`${API_BASE}/pedidos?limit=1`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
-    return { ok: response.ok, status: response.status };
+    return {
+      ok: response.ok,
+      status: response.status,
+      providerMessage: response.ok ? null : await getProviderErrorMessage(response),
+    };
   } catch {
-    return { ok: false, status: 0 };
+    return { ok: false, status: 0, providerMessage: "Falha de rede ao consultar a Tiny." };
+  }
+}
+
+async function getProviderErrorMessage(response: Response) {
+  try {
+    const payload: unknown = await response.json();
+    if (!payload || typeof payload !== "object") return null;
+    const body = payload as Record<string, unknown>;
+    const candidate = [body.message, body.mensagem, body.error, body.detail, body.title].find(
+      (value): value is string => typeof value === "string" && value.trim().length > 0
+    );
+    return candidate ? candidate.slice(0, 500) : null;
+  } catch {
+    return null;
   }
 }
 
