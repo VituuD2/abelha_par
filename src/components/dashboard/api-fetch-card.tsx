@@ -12,6 +12,18 @@ interface ApiFetchCardProps {
 // Poll auth status every 10 minutes to detect token expiration proactively
 const AUTH_POLL_INTERVAL = 10 * 60 * 1000;
 
+function getOAuthErrorMessage(error: string) {
+  const messages: Record<string, string> = {
+    OAuthValidationFailed: "A tentativa de conexão expirou ou pertence a outra sessão. Clique em conectar novamente.",
+    OAuthProviderDenied: "A Olist não autorizou esta conexão. Confirme a conta e as permissões e tente novamente.",
+    OAuthCodeMissing: "A Olist não retornou o código de autorização. Tente conectar novamente.",
+    TokenExchangeFailed: "A Olist recusou a finalização da conexão. Tente novamente em alguns instantes.",
+    ConfigurationError: "A configuração da integração está incompleta no servidor.",
+    CallbackError: "A conexão foi autorizada, mas não pôde ser salva. Tente novamente.",
+  };
+  return messages[error] || "Não foi possível concluir a autenticação com a Olist.";
+}
+
 export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -74,8 +86,9 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
     
     // Check for success/error from OAuth redirect in URL
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("error")) {
-      setError(`Erro na autenticação: ${urlParams.get("error")}`);
+    const oauthError = urlParams.get("error");
+    if (oauthError) {
+      setError(getOAuthErrorMessage(oauthError));
       window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get("success")) {
       window.history.replaceState({}, document.title, window.location.pathname);

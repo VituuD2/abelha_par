@@ -22,6 +22,8 @@ type SyncJob = {
   attempts: number;
 };
 
+type StorageError = { code?: string; message?: string };
+
 const MAX_JOB_BATCH = 10;
 
 function fromCache(row: CacheRow): OlistOrder {
@@ -51,7 +53,19 @@ export async function resolveAndCacheOlistOrders(
     .select("olist_order_id, yampi_id, tracking_code, client_name, numero_pedido, data_criacao, situacao")
     .eq("owner_id", ownerId)
     .in("olist_order_id", uniqueIds);
-  if (cacheError) throw new Error("Não foi possível ler o cache de pedidos.");
+  const cacheAvailable = !cacheError;
+  if (cacheError && !isMissingCacheStorageError(cacheError)) {
+    throw new Error("Não foi possível ler o cache de pedidos.");
+  }
+  if (cacheError) {
+    // The cache was introduced after the initial integration schema. Do not
+    // block the operator's current work if a deployment reached Vercel before
+    // its optional cache migration was executed.
+    console.warn("[olist-sync] order cache unavailable; resolving without cache", {
+      code: cacheError.code,
+      message: cacheError.message,
+    });
+  }
 
   const cache = new Map(
     ((cacheData || []) as CacheRow[]).map((row) => [row.olist_order_id, fromCache(row)])
@@ -63,7 +77,7 @@ export async function resolveAndCacheOlistOrders(
   if (idsToResolve.length > 0) {
     const resolved = await resolveOlistOrders(token, idsToResolve);
     const now = new Date().toISOString();
-    const { error: upsertError } = await supabase.from("olist_order_cache").upsert(
+    const { error: upsertError } = cacheAvailable ? await supabase.from("olist_order_cache").upsert(
       resolved.map((order) => ({
         owner_id: ownerId,
         olist_order_id: order.id,
@@ -77,12 +91,19 @@ export async function resolveAndCacheOlistOrders(
         updated_at: now,
       })),
       { onConflict: "owner_id,olist_order_id" }
-    );
-    if (upsertError) throw new Error("Não foi possível atualizar o cache de pedidos.");
+    ) : { error: null };
+    if (upsertError && !isMissingCacheStorageError(upsertError)) {
+      throw new Error("Não foi possível atualizar o cache de pedidos.");
+    }
     for (const order of resolved) cache.set(order.id, order);
   }
 
   return uniqueIds.map((orderId) => cache.get(orderId)).filter((order): order is OlistOrder => Boolean(order));
+}
+
+function isMissingCacheStorageError(error: StorageError) {
+  if (error.code === "42P01" || error.code === "PGRST205") return true;
+  return /olist_order_cache/i.test(error.message || "") && /(does not exist|not find|schema cache)/i.test(error.message || "");
 }
 
 export async function enqueueOlistOrders(

@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { Package, ArrowDownUp } from "lucide-react";
 
 type OlistDateMode = "created" | "updated";
+const DETAIL_BATCH_SIZE = 5;
 
 export default function DashboardPage() {
   const [yampiIds, setYampiIds] = useState<Set<string> | null>(null);
@@ -54,7 +55,7 @@ export default function DashboardPage() {
         const sourceOrdersById = new Map(orders.map((order) => [order.id, order]));
         let start = 0;
         while (start < orders.length) {
-          const batch = orders.slice(start, start + 10);
+          const batch = orders.slice(start, start + DETAIL_BATCH_SIZE);
           const response = await fetch("/api/olist/resolve", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -103,7 +104,10 @@ export default function DashboardPage() {
       setYampiIds(ids);
       setYampiFileName(fileName);
       if (olistOrders.length > 0) {
-        void resolveAndCrossReference(olistOrders, ids, olistDateMode === "updated");
+        // Uploading a new spreadsheet does not change the Olist orders. Reuse
+        // cached details instead of forcing a new detail request for every
+        // order, which can exhaust the provider limit.
+        void resolveAndCrossReference(olistOrders, ids);
       }
     },
     [olistDateMode, olistOrders, resolveAndCrossReference]
@@ -125,7 +129,7 @@ export default function DashboardPage() {
       setOlistOrders(orders);
       setOlistDateMode(dateMode);
       if (yampiIds) {
-        void resolveAndCrossReference(orders, yampiIds, dateMode === "updated");
+        void resolveAndCrossReference(orders, yampiIds);
       }
     },
     [yampiIds, resolveAndCrossReference]

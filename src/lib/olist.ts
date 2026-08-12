@@ -16,6 +16,18 @@ export class TinyRateLimitError extends Error {
   }
 }
 
+export class TinyApiError extends Error {
+  constructor(
+    public readonly operation: "detail" | "list",
+    public readonly status: number,
+    public readonly providerMessage: string | null,
+    public readonly providerRequestId: string | null,
+    public readonly orderId?: number
+  ) {
+    super(`Tiny ${operation} request failed with status ${status}`);
+  }
+}
+
 export type OlistDateMode = "created" | "updated";
 
 interface FetchOrdersParams {
@@ -225,7 +237,15 @@ function enumerateDates(dateFrom: string, dateTo: string) {
 async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {
   await waitForDetailSlot();
   const response = await fetchTiny(`${API_BASE}/pedidos/${orderId}`, { headers });
-  if (!response.ok) throw new Error(`Tiny detail returned ${response.status}`);
+  if (!response.ok) {
+    throw new TinyApiError(
+      "detail",
+      response.status,
+      await getProviderErrorMessage(response),
+      getProviderRequestId(response),
+      orderId
+    );
+  }
   return response.json() as Promise<OlistApiOrder>;
 }
 

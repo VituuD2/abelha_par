@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { getRequestOrigin } from "@/lib/app-url";
+import { createTinyOAuthState } from "@/lib/tiny-oauth-state";
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +16,7 @@ export async function GET(request: Request) {
   const clientId = process.env.TINY_CLIENT_ID;
   if (!clientId) return NextResponse.json({ error: "TINY_CLIENT_ID não configurado" }, { status: 500 });
 
-  const state = crypto.randomUUID();
-  const flowId = crypto.randomUUID();
+  const { state, flowId } = createTinyOAuthState(user.id);
   const appUrl = getRequestOrigin(request);
   const redirectUri = `${appUrl}/api/auth/callback`;
   // Parameters follow the Tiny/Olist confidential-client OAuth documentation.
@@ -32,9 +32,13 @@ export async function GET(request: Request) {
     prompt: "login",
   });
   const response = NextResponse.redirect(`https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?${params}`);
-  response.cookies.set("tiny_oauth_state", state, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 600 });
-  response.cookies.set("tiny_oauth_user", user.id, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 600 });
-  response.cookies.set("tiny_oauth_flow", flowId, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 600 });
+  // Remove cookies used by previous versions of this flow. The signed state is
+  // now self-contained and bound to the authenticated application user.
+  for (const path of ["/", "/api/auth"]) {
+    response.cookies.set("tiny_oauth_state", "", { path, maxAge: 0 });
+    response.cookies.set("tiny_oauth_user", "", { path, maxAge: 0 });
+    response.cookies.set("tiny_oauth_flow", "", { path, maxAge: 0 });
+  }
   console.info("[tiny-oauth] authorization started", {
     flowId,
     origin: appUrl,

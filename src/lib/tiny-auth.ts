@@ -71,8 +71,22 @@ async function refreshToken(userId: string, integration: Integration, refreshTok
     });
 
     if (response.status === 400 || response.status === 401) {
-      await createAdminClient().from("tiny_integrations").delete().eq("id", integration.id).eq("owner_id", userId);
-      return { token: null, status: "expired", message: "A autorização Tiny foi revogada. Reconecte a conta." };
+      // Refresh tokens are rotated by the authorization server. Two requests
+      // that arrive together can therefore use the same old refresh token:
+      // one succeeds and saves the new pair while the other is rejected. Do
+      // not delete the integration from the losing request, or it can erase a
+      // connection that was just renewed by the winning one.
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      const { data: current } = await createAdminClient()
+        .from("tiny_integrations")
+        .select("id, access_token, refresh_token, expires_at, refresh_expires_at")
+        .eq("id", integration.id)
+        .eq("owner_id", userId)
+        .maybeSingle();
+      if (current && current.refresh_token !== integration.refresh_token) {
+        return getValidTinyToken(userId);
+      }
+      return { token: null, status: "expired", message: "A autorização Tiny expirou ou foi revogada. Reconecte a conta." };
     }
     if (!response.ok) return { token: null, status: "error", message: "Não foi possível renovar a conexão Tiny." };
 

@@ -19,5 +19,11 @@ export async function POST() {
   }
 
   console.info("[tiny-oauth] connection removed", { userId: user.id });
-  return NextResponse.json({ removed: true }, { headers: { "Cache-Control": "no-store" } });
+  const response = NextResponse.json({ removed: true }, { headers: { "Cache-Control": "no-store" } });
+  for (const path of ["/", "/api/auth"]) {
+    response.cookies.set("tiny_oauth_state", "", { path, maxAge: 0 });
+    response.cookies.set("tiny_oauth_user", "", { path, maxAge: 0 });
+    response.cookies.set("tiny_oauth_flow", "", { path, maxAge: 0 });
+  }
+  return response;
 }
