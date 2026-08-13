@@ -2,14 +2,39 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ScanBarcode, Clock, Package } from "lucide-react";
+import type { SVGProps } from "react";
+import { ScanBarcode } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
+function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M8 9a4 4 0 0 1 8 0" />
+      <path d="M6 13h12" />
+      <path d="M5 17h14" />
+      <path d="M7 21h10" />
+      <path d="M7 9h10l2 8H5l2-8Z" />
+      <path d="M12 13v.01" />
+    </svg>
+  );
+}
+
+function HoneycombIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="m8 3 3 1.75v3.5L8 10 5 8.25v-3.5L8 3Z" />
+      <path d="m14 6 3 1.75v3.5L14 13l-3-1.75v-3.5L14 6Z" />
+      <path d="m8 13 3 1.75v3.5L8 20l-3-1.75v-3.5L8 13Z" />
+      <path d="m14 16 3 1.75v3.5L14 23l-3-1.75v-3.5L14 16Z" transform="translate(0 -2)" />
+    </svg>
+  );
+}
+
 const navItems = [
-  { href: "/", label: "Dashboard", icon: Home },
+  { href: "/", label: "Colmeia", icon: BeehiveIcon },
   { href: "/scanner", label: "Scanner", icon: ScanBarcode },
-  { href: "/history", label: "Histórico", icon: Clock },
+  { href: "/history", label: "Favos de Mel", icon: HoneycombIcon },
 ];
 
 export function Sidebar() {
@@ -34,7 +59,7 @@ export function Sidebar() {
                 Abelha Par
               </h1>
               <p className="text-[12px] text-[var(--color-text-tertiary)] font-medium">
-                Conferência de Pedidos
+                bzzzzzzzzzzzzz
               </p>
             </div>
           </div>
@@ -79,7 +104,7 @@ export function Sidebar() {
               Abelha Par Logística
             </p>
             <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">
-              v1.0.0
+              v2.1.0 - 08132600
             </p>
           </div>
         </div>

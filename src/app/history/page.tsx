@@ -41,7 +41,7 @@ export default function HistoryPage() {
     <>
       <Header
         title="Histórico"
-        subtitle="Lotes de bipagem salvos"
+        subtitle="Lotes de Abelha Pars salvos"
         breadcrumbs={["Scanner Checkout", "Histórico"]}
       />
 
