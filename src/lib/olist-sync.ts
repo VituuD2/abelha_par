@@ -70,9 +70,14 @@ export async function resolveAndCacheOlistOrders(
   const cache = new Map(
     ((cacheData || []) as CacheRow[]).map((row) => [row.olist_order_id, fromCache(row)])
   );
+  // A tracking code may be generated after the order was first cached. Empty
+  // codes are therefore an incomplete cache entry, never a final result.
   const idsToResolve = forceRefresh
     ? uniqueIds
-    : uniqueIds.filter((orderId) => !cache.has(orderId));
+    : uniqueIds.filter((orderId) => {
+        const cachedOrder = cache.get(orderId);
+        return !cachedOrder || !cachedOrder.trackingCode.trim();
+      });
 
   if (idsToResolve.length > 0) {
     const resolved = await resolveOlistOrders(token, idsToResolve);
