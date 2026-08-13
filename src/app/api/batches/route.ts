@@ -29,7 +29,11 @@ export async function POST(request: Request) {
   if (!orders) return NextResponse.json({ error: "Lote inválido" }, { status: 400 });
 
   const supabase = await createClient();
-  const { error } = await supabase.from("lotes_bipagem").insert({ owner_id: user.id, data: new Date().toISOString().slice(0, 10), qtd_pedidos: orders.length, pedidos: orders });
+  const { data, error } = await supabase
+    .from("lotes_bipagem")
+    .insert({ owner_id: user.id, data: new Date().toISOString().slice(0, 10), qtd_pedidos: orders.length, pedidos: orders })
+    .select("id, numero_lote, data, qtd_pedidos, pedidos, created_at")
+    .single();
   if (error) return NextResponse.json({ error: "Não foi possível salvar o lote." }, { status: 500 });
-  return NextResponse.json({ ok: true }, { status: 201 });
+  return NextResponse.json({ ok: true, batch: data }, { status: 201 });
 }

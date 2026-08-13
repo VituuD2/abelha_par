@@ -2,17 +2,44 @@
 
 import { useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { PartyPopper, Save, RotateCcw } from "lucide-react";
+import { PartyPopper, Save, RotateCcw, Printer } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useScanStore } from "@/stores/scan-store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Batch } from "@/types";
+
+function escapeHtml(value: string | number | null | undefined) {
+  return String(value ?? "—")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function printBatch(batch: Batch) {
+  const rows = batch.pedidos.map(
+    (order, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(order.clientName)}</td><td class="code">${escapeHtml(order.trackingCode)}</td><td>${escapeHtml(order.yampiId)}</td></tr>`
+  ).join("");
+  const printFrame = document.createElement("iframe");
+  printFrame.setAttribute("aria-hidden", "true");
+  printFrame.style.cssText = "position:fixed;width:1px;height:1px;right:0;bottom:0;border:0;opacity:0;pointer-events:none;";
+  printFrame.srcdoc = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8" /><title>Abelha Par - Lote #${escapeHtml(batch.numero_lote)}</title><style>@page{size:A4;margin:16mm}body{color:#302518;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px}header{display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #d97706}h1{margin:0;font-size:23px}p{margin:5px 0 0;color:#6f6252}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{padding:10px 8px;border-bottom:1px solid #eadfce;text-align:left}th{color:#6f6252;font-size:10px;text-transform:uppercase}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}</style></head><body><header><div><h1>Abelha Par</h1><p>Resultado da conferência de pedidos</p></div><strong>Lote #${escapeHtml(batch.numero_lote)}</strong></header><p>${escapeHtml(batch.qtd_pedidos)} pedidos conferidos</p><table><thead><tr><th>#</th><th>Cliente</th><th>Rastreio</th><th>ID Yampi</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+  printFrame.onload = () => {
+    printFrame.contentWindow?.focus();
+    printFrame.contentWindow?.print();
+    window.setTimeout(() => printFrame.remove(), 60_000);
+  };
+  document.body.appendChild(printFrame);
+}
 
 export function Completion() {
   const orders = useScanStore((state) => state.orders);
   const reset = useScanStore((state) => state.reset);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [savedBatch, setSavedBatch] = useState<Batch | null>(null);
   const router = useRouter();
 
   // Fire confetti
@@ -59,7 +86,9 @@ export function Completion() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orders }),
       });
-      if (!response.ok) throw new Error("Não foi possível salvar o lote.");
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || !payload.batch) throw new Error("Não foi possível salvar o lote.");
+      setSavedBatch(payload.batch as Batch);
       setSaved(true);
     } catch (err) {
       console.error("Save error:", err);
@@ -136,11 +165,22 @@ export function Completion() {
               )}
             </button>
           ) : (
-            <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-accent-green)]/10 border border-[var(--color-accent-green)]/20">
-              <p className="text-[15px] font-semibold text-[var(--color-accent-green)]">
-                ✓ Lote salvo com sucesso!
-              </p>
-            </div>
+            <>
+              <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-accent-green)]/10 border border-[var(--color-accent-green)]/20">
+                <p className="text-[15px] font-semibold text-[var(--color-accent-green)]">
+                  ✓ Lote salvo com sucesso!
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => savedBatch && printBatch(savedBatch)}
+                disabled={!savedBatch}
+                className="btn-primary w-full py-3 text-[16px]"
+              >
+                <Printer className="w-5 h-5" />
+                Imprimir resultado
+              </button>
+            </>
           )}
 
           <button onClick={handleNewBatch} className="btn-ghost w-full">
