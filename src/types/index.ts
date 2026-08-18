@@ -19,6 +19,7 @@ export interface ScanOrder extends OlistOrder {
 export interface Batch {
   id: string;
   numero_lote: number;
+  responsavel: string;
   data: string;
   qtd_pedidos: number;
   pedidos: ScanOrder[];

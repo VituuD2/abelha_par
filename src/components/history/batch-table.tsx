@@ -81,7 +81,8 @@ function printBatch(batch: Batch) {
           <span class="badge">Lote #${escapeHtml(batch.numero_lote)}</span>
         </header>
         <section class="summary">
-          <div>Data da bipagem<strong>${escapeHtml(formatBatchDate(batch.created_at))}</strong></div>
+          <div>Responsável<strong>${escapeHtml(batch.responsavel)}</strong></div>
+          <div>Lote finalizado em<strong>${escapeHtml(formatBatchDate(batch.created_at))}</strong></div>
           <div>Pedidos conferidos<strong>${escapeHtml(batch.qtd_pedidos)}</strong></div>
         </section>
         <table>
@@ -203,7 +204,7 @@ export function BatchTable({ batches }: BatchTableProps) {
                   <div className="px-4 pb-4 border-t border-[var(--color-border-light)]">
                     <div className="pt-4 flex items-center justify-between gap-3">
                       <p className="text-[12px] text-[var(--color-text-secondary)]">
-                        {batch.qtd_pedidos} pedidos conferidos neste lote.
+                        {batch.qtd_pedidos} pedidos conferidos por <span className="font-semibold text-[var(--color-text-primary)]">{batch.responsavel}</span>.
                       </p>
                       <button
                         type="button"

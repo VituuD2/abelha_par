@@ -135,8 +135,8 @@ export default function DashboardPage() {
     [yampiIds, resolveAndCrossReference]
   );
 
-  const handleStartScanning = useCallback(() => {
-    setStoreOrders(matchedOrders);
+  const handleStartScanning = useCallback((responsible: string) => {
+    setStoreOrders(matchedOrders, responsible);
   }, [matchedOrders, setStoreOrders]);
 
   const bothLoaded = yampiIds !== null && olistOrders.length > 0;

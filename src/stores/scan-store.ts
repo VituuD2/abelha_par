@@ -5,6 +5,7 @@ import { normalizeTrackingForScan, trackingCodesMatch } from "@/lib/tracking";
 interface ScanStore {
   // Session data
   orders: ScanOrder[];
+  responsible: string;
   state: ScannerState;
   currentResult: ScanResult | null;
 
@@ -14,7 +15,7 @@ interface ScanStore {
   progress: number;
 
   // Actions
-  setOrders: (orders: ScanOrder[]) => void;
+  setOrders: (orders: ScanOrder[], responsible: string) => void;
   processBarcode: (code: string) => ScanResult;
   acknowledgeError: () => void;
   acknowledgeSuccess: () => void;
@@ -24,15 +25,17 @@ interface ScanStore {
 
 export const useScanStore = create<ScanStore>((set, get) => ({
   orders: [],
+  responsible: "",
   state: "idle",
   currentResult: null,
   scannedCount: 0,
   totalCount: 0,
   progress: 0,
 
-  setOrders: (orders) =>
+  setOrders: (orders, responsible) =>
     set({
       orders,
+      responsible,
       state: "scanning",
       scannedCount: 0,
       totalCount: orders.length,
@@ -120,6 +123,7 @@ export const useScanStore = create<ScanStore>((set, get) => ({
   reset: () =>
     set({
       orders: [],
+      responsible: "",
       state: "idle",
       currentResult: null,
       scannedCount: 0,

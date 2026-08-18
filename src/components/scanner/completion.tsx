@@ -18,6 +18,16 @@ function escapeHtml(value: string | number | null | undefined) {
     .replace(/'/g, "&#039;");
 }
 
+function formatCompletionDate(value: string) {
+  return new Date(value).toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 function printBatch(batch: Batch) {
   const rows = batch.pedidos.map(
     (order, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(order.clientName)}</td><td class="code">${escapeHtml(order.trackingCode)}</td><td>${escapeHtml(order.yampiId)}</td></tr>`
@@ -25,7 +35,11 @@ function printBatch(batch: Batch) {
   const printFrame = document.createElement("iframe");
   printFrame.setAttribute("aria-hidden", "true");
   printFrame.style.cssText = "position:fixed;width:1px;height:1px;right:0;bottom:0;border:0;opacity:0;pointer-events:none;";
-  printFrame.srcdoc = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8" /><title>Abelha Par - Lote #${escapeHtml(batch.numero_lote)}</title><style>@page{size:A4;margin:16mm}body{color:#302518;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px}header{display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #d97706}h1{margin:0;font-size:23px}p{margin:5px 0 0;color:#6f6252}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{padding:10px 8px;border-bottom:1px solid #eadfce;text-align:left}th{color:#6f6252;font-size:10px;text-transform:uppercase}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}</style></head><body><header><div><h1>Abelha Par</h1><p>Resultado da conferência de pedidos</p></div><strong>Lote #${escapeHtml(batch.numero_lote)}</strong></header><p>${escapeHtml(batch.qtd_pedidos)} pedidos conferidos</p><table><thead><tr><th>#</th><th>Cliente</th><th>Rastreio</th><th>ID Yampi</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+  printFrame.srcdoc = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8" /><title>Abelha Par - Lote #${escapeHtml(batch.numero_lote)}</title><style>@page{size:A4;margin:16mm}body{color:#302518;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px}header{display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #d97706}h1{margin:0;font-size:23px}p{margin:5px 0 0;color:#6f6252}.summary{display:flex;gap:28px;margin:18px 0;padding:13px 15px;background:#fffaf1;border:1px solid #f0ddbd;border-radius:10px}.summary strong{display:block;margin-top:3px;font-size:14px}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{padding:10px 8px;border-bottom:1px solid #eadfce;text-align:left}th{color:#6f6252;font-size:10px;text-transform:uppercase}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}</style></head><body><header><div><h1>Abelha Par</h1><p>Resultado da conferência de pedidos</p></div><strong>Lote #${escapeHtml(batch.numero_lote)}</strong></header><section class="summary"><div>Lote finalizado em<strong>${escapeHtml(formatCompletionDate(batch.created_at))}</strong></div><div>Pedidos conferidos<strong>${escapeHtml(batch.qtd_pedidos)}</strong></div></section><table><thead><tr><th>#</th><th>Cliente</th><th>Rastreio</th><th>ID Yampi</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+  printFrame.srcdoc = printFrame.srcdoc.replace(
+    '<section class="summary">',
+    `<section class="summary"><div>Responsável<strong>${escapeHtml(batch.responsavel)}</strong></div>`
+  );
   printFrame.onload = () => {
     printFrame.contentWindow?.focus();
     printFrame.contentWindow?.print();
@@ -36,6 +50,7 @@ function printBatch(batch: Batch) {
 
 export function Completion() {
   const orders = useScanStore((state) => state.orders);
+  const responsible = useScanStore((state) => state.responsible);
   const reset = useScanStore((state) => state.reset);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -84,7 +99,7 @@ export function Completion() {
       const response = await fetch("/api/batches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orders }),
+        body: JSON.stringify({ orders, responsible }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || !payload.batch) throw new Error("Não foi possível salvar o lote.");
