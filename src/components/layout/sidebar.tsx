@@ -114,7 +114,7 @@ export function Sidebar() {
               Abelha Par Logística
             </p>
             <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">
-              v2.1.0 - 08132600
+              v2.1.1 - 08182600
             </p>
           </div>
         </div>

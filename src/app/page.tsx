@@ -26,6 +26,8 @@ export default function DashboardPage() {
   const [resolutionError, setResolutionError] = useState<string | null>(null);
   const [olistDateMode, setOlistDateMode] = useState<OlistDateMode>("updated");
   const resolutionIdRef = useRef(0);
+  const yampiIdsRef = useRef<Set<string> | null>(null);
+  const olistOrdersRef = useRef<OlistOrder[]>([]);
   const setStoreOrders = useScanStore((state) => state.setOrders);
 
   const runCrossReference = useCallback(
@@ -86,6 +88,7 @@ export default function DashboardPage() {
         }
 
         if (resolutionId !== resolutionIdRef.current) return;
+        olistOrdersRef.current = resolvedOrders;
         setOlistOrders(resolvedOrders);
         runCrossReference(resolvedOrders, ids);
       } catch (error) {
@@ -101,20 +104,23 @@ export default function DashboardPage() {
 
   const handleUpload = useCallback(
     (ids: Set<string>, fileName: string) => {
+      yampiIdsRef.current = ids;
       setYampiIds(ids);
       setYampiFileName(fileName);
-      if (olistOrders.length > 0) {
+      const currentOrders = olistOrdersRef.current;
+      if (currentOrders.length > 0) {
         // Uploading a new spreadsheet does not change the Olist orders. Reuse
         // cached details instead of forcing a new detail request for every
         // order, which can exhaust the provider limit.
-        void resolveAndCrossReference(olistOrders, ids);
+        void resolveAndCrossReference(currentOrders, ids);
       }
     },
-    [olistDateMode, olistOrders, resolveAndCrossReference]
+    [resolveAndCrossReference]
   );
 
   const handleClearUpload = useCallback(() => {
     resolutionIdRef.current += 1;
+    yampiIdsRef.current = null;
     setYampiIds(null);
     setYampiFileName("");
     setMatchedOrders([]);
@@ -126,13 +132,15 @@ export default function DashboardPage() {
 
   const handleFetch = useCallback(
     (orders: OlistOrder[], dateMode: OlistDateMode) => {
+      olistOrdersRef.current = orders;
       setOlistOrders(orders);
       setOlistDateMode(dateMode);
-      if (yampiIds) {
-        void resolveAndCrossReference(orders, yampiIds);
+      const currentYampiIds = yampiIdsRef.current;
+      if (currentYampiIds) {
+        void resolveAndCrossReference(orders, currentYampiIds);
       }
     },
-    [yampiIds, resolveAndCrossReference]
+    [resolveAndCrossReference]
   );
 
   const handleStartScanning = useCallback((responsible: string) => {
