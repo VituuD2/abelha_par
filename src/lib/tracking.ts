@@ -17,5 +17,11 @@ export function normalizeTrackingForScan(value: string) {
 }
 
 export function trackingCodesMatch(expected: string, scanned: string) {
-  return normalizeTrackingForScan(expected) === normalizeTrackingForScan(scanned);
+  const normalizedExpected = normalizeTrackingForScan(expected);
+  const normalizedScanned = normalizeTrackingForScan(scanned);
+  return Boolean(normalizedExpected && normalizedScanned && normalizedExpected === normalizedScanned);
+}
+
+export function hasTrackingCode(value: string | null | undefined) {
+  return typeof value === "string" && Boolean(normalizeTrackingForScan(value));
 }

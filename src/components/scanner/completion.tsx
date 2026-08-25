@@ -30,7 +30,7 @@ function formatCompletionDate(value: string) {
 
 function printBatch(batch: Batch) {
   const rows = batch.pedidos.map(
-    (order, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(order.clientName)}</td><td class="code">${escapeHtml(order.trackingCode)}</td><td>${escapeHtml(order.yampiId)}</td></tr>`
+    (order, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(order.clientName)}</td><td class="code">${escapeHtml(order.trackingCode || "SEM CÓDIGO DE RASTREIO")}</td><td>${escapeHtml(order.yampiId)}</td></tr>`
   ).join("");
   const printFrame = document.createElement("iframe");
   printFrame.setAttribute("aria-hidden", "true");
