@@ -18,20 +18,25 @@ export function ErrorPopup({ visible, message, onDismiss }: ErrorPopupProps) {
     }
   }, [visible]);
 
-  // Handle keyboard dismiss
+  // A barcode scanner behaves like a keyboard. While the error is visible,
+  // discard every key event so a following scan cannot dismiss the modal.
   useEffect(() => {
     if (!visible) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" || e.key === "Enter") {
-        e.preventDefault();
-        onDismiss();
-      }
+    const blockKeyboardInput = (event: KeyboardEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [visible, onDismiss]);
+    window.addEventListener("keydown", blockKeyboardInput, true);
+    window.addEventListener("keypress", blockKeyboardInput, true);
+    window.addEventListener("keyup", blockKeyboardInput, true);
+    return () => {
+      window.removeEventListener("keydown", blockKeyboardInput, true);
+      window.removeEventListener("keypress", blockKeyboardInput, true);
+      window.removeEventListener("keyup", blockKeyboardInput, true);
+    };
+  }, [visible]);
 
   return (
     <AnimatePresence>
@@ -86,14 +91,22 @@ export function ErrorPopup({ visible, message, onDismiss }: ErrorPopupProps) {
               </p>
 
               {/* Dismiss Button */}
-              <button onClick={onDismiss} className="btn-danger w-full py-3">
+              <button
+                type="button"
+                onClick={(event) => {
+                  // Keyboard-triggered clicks have detail 0; only a pointer
+                  // click can acknowledge the error.
+                  if (event.detail > 0) onDismiss();
+                }}
+                onKeyDown={(event) => event.preventDefault()}
+                className="btn-danger w-full py-3"
+              >
                 <AlertTriangle className="w-4 h-4" />
                 Reconhecer Erro e Continuar
               </button>
 
               <p className="text-[11px] text-[var(--color-text-tertiary)] mt-3">
-                Pressione <kbd className="px-1.5 py-0.5 rounded bg-gray-100 text-[10px] font-mono">ESC</kbd> ou{" "}
-                <kbd className="px-1.5 py-0.5 rounded bg-gray-100 text-[10px] font-mono">Enter</kbd> para fechar
+                Clique no botão para reconhecer o erro e continuar.
               </p>
             </div>
           </motion.div>
