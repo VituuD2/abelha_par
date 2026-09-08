@@ -2,15 +2,7 @@ import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { normalizeResponsible } from "@/lib/responsible";
-
-type IncomingOrder = { id?: unknown; yampiId?: unknown; trackingCode?: unknown; clientName?: unknown; dataCriacao?: unknown; scannedAt?: unknown; status?: unknown };
-
-function sanitizeOrders(value: unknown) {
-  if (!Array.isArray(value) || value.length === 0 || value.length > 10_000) return null;
-  const orders = value as IncomingOrder[];
-  if (orders.some((order) => order.status !== "checked" || typeof order.id !== "number" || typeof order.yampiId !== "string" || typeof order.trackingCode !== "string" || typeof order.clientName !== "string")) return null;
-  return orders.map((order) => ({ id: order.id as number, yampiId: (order.yampiId as string).slice(0, 100), trackingCode: (order.trackingCode as string).slice(0, 200), clientName: (order.clientName as string).slice(0, 300), dataCriacao: typeof order.dataCriacao === "string" ? order.dataCriacao.slice(0, 64) : null, scannedAt: typeof order.scannedAt === "string" ? order.scannedAt : null }));
-}
+import { sanitizeOrders } from "@/lib/batch-orders";
 
 export async function GET() {
   const user = await getAuthenticatedUser();
@@ -28,7 +20,7 @@ export async function POST(request: Request) {
   try { body = await request.json(); } catch { return NextResponse.json({ error: "JSON inválido" }, { status: 400 }); }
   const orders = sanitizeOrders(body.orders);
   const responsible = normalizeResponsible(body.responsible);
-  if (!orders || !responsible) return NextResponse.json({ error: "Lote ou responsável inválido" }, { status: 400 });
+  if (!orders || !responsible) return NextResponse.json({ error: "Lote ou responsável inválido. Todos os pedidos precisam estar bipados e ter código de rastreio." }, { status: 400 });
 
   const supabase = await createClient();
   const { data, error } = await supabase

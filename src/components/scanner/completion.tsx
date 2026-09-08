@@ -8,6 +8,8 @@ import { useScanStore } from "@/stores/scan-store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Batch } from "@/types";
+import { displayTrackingCode } from "@/lib/tracking";
+import { sanitizeOrders } from "@/lib/batch-orders";
 
 function escapeHtml(value: string | number | null | undefined) {
   return String(value ?? "—")
@@ -30,7 +32,7 @@ function formatCompletionDate(value: string) {
 
 function printBatch(batch: Batch) {
   const rows = batch.pedidos.map(
-    (order, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(order.clientName)}</td><td class="code">${escapeHtml(order.trackingCode || "SEM CÓDIGO DE RASTREIO")}</td><td>${escapeHtml(order.yampiId)}</td></tr>`
+    (order, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(order.clientName)}</td><td class="code">${escapeHtml(displayTrackingCode(order.trackingCode))}</td><td>${escapeHtml(order.yampiId)}</td></tr>`
   ).join("");
   const printFrame = document.createElement("iframe");
   printFrame.setAttribute("aria-hidden", "true");
@@ -94,6 +96,10 @@ export function Completion() {
   }, []);
 
   const handleSave = useCallback(async () => {
+    if (!sanitizeOrders(orders)) {
+      alert("Todos os pedidos precisam estar bipados e ter código de rastreio para salvar o lote.");
+      return;
+    }
     setIsSaving(true);
     try {
       const response = await fetch("/api/batches", {
@@ -102,16 +108,16 @@ export function Completion() {
         body: JSON.stringify({ orders, responsible }),
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok || !payload.batch) throw new Error("Não foi possível salvar o lote.");
+      if (!response.ok || !payload.batch) throw new Error(payload.error || "Não foi possível salvar o lote.");
       setSavedBatch(payload.batch as Batch);
       setSaved(true);
     } catch (err) {
       console.error("Save error:", err);
-      alert("Erro ao salvar lote. Verifique a conexão com o Supabase.");
+      alert(err instanceof Error ? err.message : "Erro ao salvar lote. Verifique a conexão e tente novamente.");
     } finally {
       setIsSaving(false);
     }
-  }, [orders]);
+  }, [orders, responsible]);
 
   const handleNewBatch = useCallback(() => {
     reset();

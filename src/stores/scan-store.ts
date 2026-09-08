@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import type { ScanOrder, ScannerState, ScanResult } from "@/types";
-import { normalizeTrackingForScan, trackingCodesMatch } from "@/lib/tracking";
+import { hasTrackingCode, normalizeTrackingForScan, trackingCodesMatch } from "@/lib/tracking";
 
 interface ScanStore {
   // Session data
   orders: ScanOrder[];
   responsible: string;
+  sessionVersion: number;
   state: ScannerState;
   currentResult: ScanResult | null;
 
@@ -16,6 +17,7 @@ interface ScanStore {
 
   // Actions
   setOrders: (orders: ScanOrder[], responsible: string) => void;
+  updateTrackingCodes: (updates: { id: number; trackingCode: string }[], sessionVersion: number) => void;
   processBarcode: (code: string) => ScanResult;
   acknowledgeError: () => void;
   acknowledgeSuccess: () => void;
@@ -26,6 +28,7 @@ interface ScanStore {
 export const useScanStore = create<ScanStore>((set, get) => ({
   orders: [],
   responsible: "",
+  sessionVersion: 0,
   state: "idle",
   currentResult: null,
   scannedCount: 0,
@@ -33,15 +36,30 @@ export const useScanStore = create<ScanStore>((set, get) => ({
   progress: 0,
 
   setOrders: (orders, responsible) =>
-    set({
+    set((current) => ({
       orders,
       responsible,
+      sessionVersion: current.sessionVersion + 1,
       state: "scanning",
       scannedCount: 0,
       totalCount: orders.length,
       progress: 0,
       currentResult: null,
-    }),
+    })),
+
+  updateTrackingCodes: (updates, sessionVersion) => set((current) => {
+    // A late response must never change a new session or an already scanned order.
+    if (current.sessionVersion !== sessionVersion) return current;
+    const byId = new Map(updates.map((order) => [order.id, order.trackingCode]));
+    let changed = false;
+    const orders = current.orders.map((order) => {
+      const trackingCode = byId.get(order.id);
+      if (order.status !== "pending" || hasTrackingCode(order.trackingCode) || !hasTrackingCode(trackingCode)) return order;
+      changed = true;
+      return { ...order, trackingCode: trackingCode!.trim() };
+    });
+    return changed ? { orders } : current;
+  }),
 
   processBarcode: (code: string) => {
     const { orders } = get();
@@ -121,13 +139,14 @@ export const useScanStore = create<ScanStore>((set, get) => ({
   },
 
   reset: () =>
-    set({
+    set((current) => ({
       orders: [],
       responsible: "",
+      sessionVersion: current.sessionVersion + 1,
       state: "idle",
       currentResult: null,
       scannedCount: 0,
       totalCount: 0,
       progress: 0,
-    }),
+    })),
 }));

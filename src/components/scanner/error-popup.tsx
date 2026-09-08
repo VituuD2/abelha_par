@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, XCircle } from "lucide-react";
 import { playError } from "@/lib/sounds";
@@ -8,10 +8,12 @@ import { playError } from "@/lib/sounds";
 interface ErrorPopupProps {
   visible: boolean;
   message: string;
+  title?: string;
+  children?: ReactNode;
   onDismiss: () => void;
 }
 
-export function ErrorPopup({ visible, message, onDismiss }: ErrorPopupProps) {
+export function ErrorPopup({ visible, message, onDismiss, title = "Código Inválido", children }: ErrorPopupProps) {
   useEffect(() => {
     if (visible) {
       playError();
@@ -69,7 +71,7 @@ export function ErrorPopup({ visible, message, onDismiss }: ErrorPopupProps) {
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className="relative w-full max-w-sm"
           >
-            <div className="bg-white rounded-[var(--radius-2xl)] p-8 shadow-2xl text-center">
+            <div role="alertdialog" aria-modal="true" aria-label={title} className="bg-white rounded-[var(--radius-2xl)] p-8 shadow-2xl text-center max-h-[90vh] overflow-y-auto">
               {/* Error Icon */}
               <motion.div
                 initial={{ scale: 0, rotate: -20 }}
@@ -82,13 +84,15 @@ export function ErrorPopup({ visible, message, onDismiss }: ErrorPopupProps) {
 
               {/* Title */}
               <h2 className="text-[20px] font-bold text-[var(--color-text-primary)] mb-2">
-                Código Inválido
+                {title}
               </h2>
 
               {/* Message */}
               <p className="text-[14px] text-[var(--color-text-secondary)] mb-6 leading-relaxed">
                 {message}
               </p>
+
+              {children}
 
               {/* Dismiss Button */}
               <button

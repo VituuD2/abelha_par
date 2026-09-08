@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Package, Calendar, Hash, CheckCircle2, Printer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Batch } from "@/types";
+import { displayTrackingCode } from "@/lib/tracking";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface BatchTableProps {
@@ -42,7 +43,7 @@ function printBatch(batch: Batch) {
       return `<tr>
         <td>${index + 1}</td>
         <td>${escapeHtml(order.clientName)}</td>
-        <td class="code">${escapeHtml(order.trackingCode)}</td>
+        <td class="code">${escapeHtml(displayTrackingCode(order.trackingCode))}</td>
         <td>${escapeHtml(order.yampiId)}</td>
         <td>${escapeHtml(saleDate)}</td>
       </tr>`;
@@ -231,7 +232,7 @@ export function BatchTable({ batches }: BatchTableProps) {
                               {order.clientName}
                             </p>
                             <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono">
-                              {order.trackingCode}
+                              {displayTrackingCode(order.trackingCode)}
                             </p>
                             {formatOrderDate(order.dataCriacao) && (
                               <p className="text-[11px] text-[var(--color-text-tertiary)]">

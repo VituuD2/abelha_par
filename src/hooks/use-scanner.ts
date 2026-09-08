@@ -4,6 +4,7 @@ import { useScanStore } from "@/stores/scan-store";
 
 export function useScanner() {
   const state = useScanStore((state) => state.state);
+  const sessionVersion = useScanStore((state) => state.sessionVersion);
   const orders = useScanStore((state) => state.orders);
   const scannedCount = useScanStore((state) => state.scannedCount);
   const totalCount = useScanStore((state) => state.totalCount);
@@ -17,6 +18,7 @@ export function useScanner() {
 
   return {
     state,
+    sessionVersion,
     orders,
     scannedCount,
     totalCount,

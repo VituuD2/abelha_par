@@ -25,3 +25,7 @@ export function trackingCodesMatch(expected: string, scanned: string) {
 export function hasTrackingCode(value: string | null | undefined) {
   return typeof value === "string" && Boolean(normalizeTrackingForScan(value));
 }
+
+export function displayTrackingCode(value: string | null | undefined) {
+  return hasTrackingCode(value) ? value!.trim() : "SEM CÓDIGO DE RASTREIO";
+}

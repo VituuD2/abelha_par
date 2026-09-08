@@ -6,6 +6,7 @@ import type { ScanOrder, OlistOrder } from "@/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { normalizeResponsible } from "@/lib/responsible";
+import { hasTrackingCode } from "@/lib/tracking";
 
 interface MatchSummaryProps {
   matchedOrders: ScanOrder[];
@@ -24,6 +25,7 @@ export function MatchSummary({
   const [responsible, setResponsible] = useState("");
   const hasIssues = unmatchedOrders.length > 0 || missingFromOlist.length > 0;
   const normalizedResponsible = normalizeResponsible(responsible);
+  const missingTrackingCount = matchedOrders.filter((order) => !hasTrackingCode(order.trackingCode)).length;
 
   return (
     <motion.div
@@ -86,6 +88,13 @@ export function MatchSummary({
               Apenas os {matchedOrders.length} pedidos com match serão incluídos na bipagem.
             </p>
           </div>
+        </div>
+      )}
+
+      {missingTrackingCount > 0 && (
+        <div role="status" className="flex items-start gap-2 p-3 rounded-[var(--radius-md)] bg-[var(--color-accent-red)]/8 mb-5 text-[13px] text-[var(--color-accent-red)]">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <p>{missingTrackingCount} pedido(s) sem código de rastreio. Você pode iniciar a bipagem dos demais; o app buscará os códigos automaticamente durante a conferência.</p>
         </div>
       )}
 
