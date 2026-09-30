@@ -24,7 +24,7 @@ export default function LoginPage() {
       return;
     }
     const next = new URLSearchParams(window.location.search).get("next");
-    router.replace(next && next.startsWith("/") ? next : "/");
+    router.replace(next && /^\/(?![\\/])/.test(next) ? next : "/");
     router.refresh();
   };
 

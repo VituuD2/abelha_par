@@ -2,8 +2,10 @@ import "server-only";
 
 import type { OlistOrder } from "@/types";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { fetchOlistOrders, OlistDateMode, resolveOlistOrders, TinyRateLimitError } from "@/lib/olist";
+import { fetchOlistOrdersPage, resolveOlistOrders, TinyRateLimitError } from "@/lib/olist";
 import { getValidTinyToken } from "@/lib/tiny-auth";
+import { getReconciliationConfig } from "@/lib/reconciliation-config";
+import { saoPauloDate } from "@/lib/dates";
 
 type CacheRow = {
   olist_order_id: number;
@@ -13,6 +15,11 @@ type CacheRow = {
   numero_pedido: number | null;
   data_criacao: string | null;
   situacao: number | null;
+  ecommerce_id: number | null;
+  ecommerce_name: string | null;
+  ecommerce_order_number: string | null;
+  ecommerce_channel_order_number: string | null;
+  resolved_at: string;
 };
 
 type SyncJob = {
@@ -20,13 +27,16 @@ type SyncJob = {
   owner_id: string;
   olist_order_id: number;
   attempts: number;
+  lock_token: string;
 };
 
 type StorageError = { code?: string; message?: string };
 
-const MAX_JOB_BATCH = 10;
+const MAX_JOB_BATCH = 5;
 
-function fromCache(row: CacheRow): OlistOrder {
+export const OLIST_CACHE_FIELDS = "olist_order_id, yampi_id, tracking_code, client_name, numero_pedido, data_criacao, situacao, ecommerce_id, ecommerce_name, ecommerce_order_number, ecommerce_channel_order_number, resolved_at";
+
+export function fromOlistCache(row: CacheRow): OlistOrder {
   return {
     id: row.olist_order_id,
     yampiId: row.yampi_id,
@@ -35,6 +45,10 @@ function fromCache(row: CacheRow): OlistOrder {
     numeroPedido: row.numero_pedido || 0,
     dataCriacao: row.data_criacao,
     situacao: row.situacao,
+    ecommerceId: row.ecommerce_id,
+    ecommerceName: row.ecommerce_name || "",
+    ecommerceOrderNumber: row.ecommerce_order_number,
+    ecommerceChannelOrderNumber: row.ecommerce_channel_order_number,
   };
 }
 
@@ -50,7 +64,7 @@ export async function resolveAndCacheOlistOrders(
   const supabase = createAdminClient();
   const { data: cacheData, error: cacheError } = await supabase
     .from("olist_order_cache")
-    .select("olist_order_id, yampi_id, tracking_code, client_name, numero_pedido, data_criacao, situacao")
+    .select(OLIST_CACHE_FIELDS)
     .eq("owner_id", ownerId)
     .in("olist_order_id", uniqueIds);
   const cacheAvailable = !cacheError;
@@ -68,15 +82,16 @@ export async function resolveAndCacheOlistOrders(
   }
 
   const cache = new Map(
-    ((cacheData || []) as CacheRow[]).map((row) => [row.olist_order_id, fromCache(row)])
+    ((cacheData || []) as CacheRow[]).map((row) => [row.olist_order_id, fromOlistCache(row)])
   );
+  const resolvedTimes = new Map(((cacheData || []) as CacheRow[]).map(row => [row.olist_order_id, Date.parse(row.resolved_at)]));
   // A tracking code may be generated after the order was first cached. Empty
   // codes are therefore an incomplete cache entry, never a final result.
   const idsToResolve = forceRefresh
     ? uniqueIds
     : uniqueIds.filter((orderId) => {
         const cachedOrder = cache.get(orderId);
-        return !cachedOrder || !cachedOrder.trackingCode.trim();
+        return !cachedOrder || !cachedOrder.trackingCode.trim() || !cachedOrder.ecommerceId || Date.now() - (resolvedTimes.get(orderId) || 0) > 5 * 60_000;
       });
 
   if (idsToResolve.length > 0) {
@@ -92,6 +107,10 @@ export async function resolveAndCacheOlistOrders(
         numero_pedido: order.numeroPedido || null,
         data_criacao: order.dataCriacao,
         situacao: order.situacao,
+        ecommerce_id: order.ecommerceId,
+        ecommerce_name: order.ecommerceName,
+        ecommerce_order_number: order.ecommerceOrderNumber,
+        ecommerce_channel_order_number: order.ecommerceChannelOrderNumber,
         resolved_at: now,
         updated_at: now,
       })),
@@ -120,21 +139,7 @@ export async function enqueueOlistOrders(
   if (uniqueIds.length === 0) return 0;
 
   const supabase = createAdminClient();
-  const now = new Date().toISOString();
-  const rows = uniqueIds.map((olistOrderId) => ({
-    owner_id: ownerId,
-    olist_order_id: olistOrderId,
-    status: "queued",
-    attempts: 0,
-    requested_at: now,
-    locked_at: null,
-    completed_at: null,
-    next_attempt_at: now,
-    last_error: null,
-  }));
-  const { error } = refreshExisting
-    ? await supabase.from("olist_sync_jobs").upsert(rows, { onConflict: "owner_id,olist_order_id" })
-    : await supabase.from("olist_sync_jobs").upsert(rows, { onConflict: "owner_id,olist_order_id", ignoreDuplicates: true });
+  const { error } = await supabase.rpc("enqueue_olist_sync_jobs", { p_owner: ownerId, p_ids: uniqueIds, p_refresh: refreshExisting });
   if (error) throw new Error("Não foi possível enfileirar os pedidos Olist.");
   return uniqueIds.length;
 }
@@ -148,93 +153,33 @@ export async function recordWebhook(ownerId: string) {
   if (error) throw new Error("Não foi possível registrar o webhook.");
 }
 
-export async function processWebhookOrderNow(ownerId: string, orderId: number) {
-  const supabase = createAdminClient();
-  try {
-    const token = await getValidTinyToken(ownerId);
-    if (!token.token) throw new Error(token.message || "Conexão Tiny indisponível.");
-    await resolveAndCacheOlistOrders(ownerId, token.token, [orderId], true);
-
-    const completedAt = new Date().toISOString();
-    const { error } = await supabase
-      .from("olist_sync_jobs")
-      .update({ status: "completed", completed_at: completedAt, locked_at: null, last_error: null })
-      .eq("owner_id", ownerId)
-      .eq("olist_order_id", orderId);
-    if (error) throw new Error("Não foi possível concluir a sincronização recebida pelo webhook.");
-    await supabase.from("olist_sync_state").upsert(
-      { owner_id: ownerId, last_sync_at: completedAt, last_sync_error: null, updated_at: completedAt },
-      { onConflict: "owner_id" }
-    );
-  } catch (error) {
-    const retryAfterSeconds = error instanceof TinyRateLimitError ? error.retryAfterSeconds : 300;
-    const message = error instanceof Error ? error.message.slice(0, 500) : "Falha na sincronização do webhook.";
-    await supabase
-      .from("olist_sync_jobs")
-      .update({
-        status: "failed",
-        locked_at: null,
-        next_attempt_at: new Date(Date.now() + retryAfterSeconds * 1000).toISOString(),
-        last_error: message,
-      })
-      .eq("owner_id", ownerId)
-      .eq("olist_order_id", orderId);
-    throw error;
-  }
-}
-
-export async function discoverUpdatedOrders(ownerId: string, dateFrom: string, dateTo = dateFrom) {
-  const token = await getValidTinyToken(ownerId);
-  if (!token.token) throw new Error(token.message || "Conexão Tiny indisponível.");
-
-  const orders = await fetchOlistOrders({
-    token: token.token,
-    dateFrom,
-    dateTo,
-    dateMode: "updated" satisfies OlistDateMode,
-  });
-  await enqueueOlistOrders(ownerId, orders.map((order) => order.id));
-
-  const now = new Date().toISOString();
-  const { error } = await createAdminClient().from("olist_sync_state").upsert(
-    { owner_id: ownerId, last_discovery_at: now, last_sync_error: null, updated_at: now },
-    { onConflict: "owner_id" }
-  );
-  if (error) throw new Error("Não foi possível atualizar o cursor de sincronização.");
-  return orders.length;
-}
-
+/** One provider page per invocation; checkpointed so a timeout cannot skip a day. */
 export async function discoverCurrentUpdatesForAllIntegrations() {
   const supabase = createAdminClient();
   const { data, error } = await supabase.from("tiny_integrations").select("owner_id").not("owner_id", "is", null);
   if (error) throw new Error("Não foi possível carregar as integrações Tiny.");
-
   const today = saoPauloDate();
   let discovered = 0;
-  for (const row of data || []) {
-    const ownerId = (row as { owner_id: string }).owner_id;
+  // This installation has one account. Bound work to keep the cron under its runtime limit.
+  for (const row of (data || []).slice(0, 5)) {
+    const ownerId = row.owner_id as string;
     try {
-      const { data: syncState } = await supabase
-        .from("olist_sync_state")
-        .select("last_discovery_at")
-        .eq("owner_id", ownerId)
-        .maybeSingle();
-      const lastDiscovery = syncState?.last_discovery_at
-        ? new Date(syncState.last_discovery_at).getTime()
-        : 0;
-      // Webhooks enqueue the exact order immediately. This periodic discovery
-      // is only a safety net, so one scan every 30 minutes is enough.
-      if (Date.now() - lastDiscovery < 30 * 60 * 1000) continue;
-      discovered += await discoverUpdatedOrders(ownerId, today);
+      const { data: checkpoint, error: checkpointError } = await supabase.from("olist_sync_state").select("last_discovery_at, discovery_day, discovery_offset").eq("owner_id", ownerId).maybeSingle();
+      if (checkpointError) throw new Error("Atualize a estrutura da fila Olist no banco.");
+      const fallback = checkpoint?.last_discovery_at ? saoPauloDate(new Date(checkpoint.last_discovery_at)) : saoPauloDate(new Date(Date.now() - 86_400_000));
+      const day = checkpoint?.discovery_day || fallback;
+      if (day === today && Date.now() - Date.parse(checkpoint?.last_discovery_at || "") < 30 * 60_000 && !checkpoint?.discovery_offset) continue;
+      const token = await getValidTinyToken(ownerId);
+      if (!token.token) throw new Error(token.message || "Conexão Tiny indisponível.");
+      const page = await fetchOlistOrdersPage({ token: token.token, dateFrom: day, dateTo: day, dateMode: "updated", ecommerceId: getReconciliationConfig()?.ecommerceId, cursor: { day: 0, offset: checkpoint?.discovery_offset || 0 } });
+      await enqueueOlistOrders(ownerId, page.orders.map(order => order.id), true);
+      const nextDay = day < today ? saoPauloDate(new Date(new Date(`${day}T12:00:00-03:00`).getTime() + 86_400_000)) : day;
+      const now = new Date().toISOString();
+      const { error: savedError } = await supabase.from("olist_sync_state").upsert({ owner_id: ownerId, discovery_day: page.nextCursor ? day : nextDay, discovery_offset: page.nextCursor?.offset || 0, last_discovery_at: now, last_sync_error: null, updated_at: now }, { onConflict: "owner_id" });
+      if (savedError) throw new Error("Não foi possível atualizar o cursor Olist.");
+      discovered += page.orders.length;
     } catch (error) {
-      await supabase.from("olist_sync_state").upsert(
-        {
-          owner_id: ownerId,
-          last_sync_error: error instanceof Error ? error.message.slice(0, 500) : "Falha ao descobrir atualizações.",
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "owner_id" }
-      );
+      await supabase.from("olist_sync_state").upsert({ owner_id: ownerId, last_sync_error: error instanceof Error ? error.message.slice(0, 500) : "Falha ao consultar atualizações.", updated_at: new Date().toISOString() }, { onConflict: "owner_id" });
     }
   }
   return discovered;
@@ -262,11 +207,10 @@ export async function processQueuedOlistOrders(limit = MAX_JOB_BATCH) {
 
       await resolveAndCacheOlistOrders(ownerId, token.token, ids, true);
       const completedAt = new Date().toISOString();
-      const { error: completedError } = await supabase
-        .from("olist_sync_jobs")
-        .update({ status: "completed", completed_at: completedAt, locked_at: null, last_error: null })
-        .in("id", ownerJobs.map((job) => job.id));
-      if (completedError) throw new Error("Não foi possível concluir a fila de sincronização.");
+      for (const job of ownerJobs) {
+        const { error: completedError } = await supabase.rpc("finish_olist_sync_job", { p_id: job.id, p_lock: job.lock_token });
+        if (completedError) throw new Error("Não foi possível concluir a fila de sincronização.");
+      }
       await supabase.from("olist_sync_state").upsert(
         { owner_id: ownerId, last_sync_at: completedAt, last_sync_error: null, updated_at: completedAt },
         { onConflict: "owner_id" }
@@ -275,11 +219,7 @@ export async function processQueuedOlistOrders(limit = MAX_JOB_BATCH) {
     } catch (error) {
       const retryAfterSeconds = error instanceof TinyRateLimitError ? error.retryAfterSeconds : 300;
       const message = error instanceof Error ? error.message.slice(0, 500) : "Falha na sincronização.";
-      const nextAttemptAt = new Date(Date.now() + retryAfterSeconds * 1000).toISOString();
-      await supabase
-        .from("olist_sync_jobs")
-        .update({ status: "failed", locked_at: null, next_attempt_at: nextAttemptAt, last_error: message })
-        .in("id", ownerJobs.map((job) => job.id));
+      for (const job of ownerJobs) await supabase.rpc("finish_olist_sync_job", { p_id: job.id, p_lock: job.lock_token, p_error: message, p_retry: retryAfterSeconds });
       await supabase.from("olist_sync_state").upsert(
         { owner_id: ownerId, last_sync_error: message, updated_at: new Date().toISOString() },
         { onConflict: "owner_id" }
@@ -287,8 +227,4 @@ export async function processQueuedOlistOrders(limit = MAX_JOB_BATCH) {
     }
   }
   return { claimed: jobs.length, completed };
-}
-
-function saoPauloDate() {
-  return new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Sao_Paulo" }).format(new Date());
 }

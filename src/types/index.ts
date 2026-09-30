@@ -8,12 +8,47 @@ export interface OlistOrder {
   numeroPedido: number;
   dataCriacao: string | null;
   situacao: number | null;
+  ecommerceId?: number | null;
+  ecommerceName?: string;
+  ecommerceOrderNumber?: string | null;
+  ecommerceChannelOrderNumber?: string | null;
 }
 
 export interface ScanOrder extends OlistOrder {
-  yampiId: string; // guaranteed non-null after matching
+  nuvemshopId?: number;
+  nuvemshopNumber?: string;
+  nuvemshopStoreId?: string;
   status: 'pending' | 'checked';
   scannedAt?: string;
+}
+
+export interface NuvemshopOrder {
+  id: number;
+  storeId: string;
+  number: string;
+  clientName: string;
+  status: string;
+  paymentStatus: string;
+  shippingStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  total: string;
+  currency: string;
+}
+
+export interface ReconciliationConfig {
+  ecommerceId: number;
+  referenceField: "ecommerceOrderNumber" | "ecommerceChannelOrderNumber";
+  referenceKind: "id" | "number";
+}
+
+export interface StoredScanSession {
+  id: string;
+  orders: ScanOrder[];
+  responsible: string;
+  revision: number;
+  status: "active" | "completed";
+  batch_id: string | null;
 }
 
 export interface Batch {

@@ -11,9 +11,10 @@ interface ScanInputProps {
 export function ScanInput({ disabled = false }: ScanInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
-  const processBarcode = useScanStore((state) => state.processBarcode);
+  const processBarcode = useScanStore((state) => state.submitBarcode);
+  const busy = useScanStore((state) => state.busy);
   const scannerState = useScanStore((state) => state.state);
-  const isDisabled = disabled || scannerState === "error" || scannerState === "complete";
+  const isDisabled = disabled || busy || scannerState === "error" || scannerState === "complete";
 
   const focusInput = useCallback(() => {
     if (!isDisabled) inputRef.current?.focus();
@@ -68,7 +69,7 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
         />
         <button type="submit" disabled={isDisabled || !value.trim()} className="btn-primary px-5 sm:px-4">
           <ScanLine className="w-5 h-5" />
-          Bipar
+          {busy ? "Registrando…" : "Bipar"}
         </button>
       </form>
     </section>

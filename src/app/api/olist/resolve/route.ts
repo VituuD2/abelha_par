@@ -8,6 +8,7 @@ import { resolveAndCacheOlistOrders } from "@/lib/olist-sync";
 // Keeping each server request short avoids Vercel function timeouts while the
 // Tiny API detail endpoint is throttled deliberately.
 const MAX_BATCH_SIZE = 5;
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser();

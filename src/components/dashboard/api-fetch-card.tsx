@@ -3,10 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Cloud, Loader2, Check, AlertCircle, Link as LinkIcon, ExternalLink, RefreshCw, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { OlistOrder } from "@/types";
+import type { OlistOrder, ReconciliationConfig } from "@/types";
+import { isValidDateRange } from "@/lib/dates";
 
 interface ApiFetchCardProps {
-  onFetch: (orders: OlistOrder[], dateMode: "created" | "updated") => void;
+  onFetch: (orders: OlistOrder[], dateMode: "created" | "updated", mapping: ReconciliationConfig | null) => void;
+  onFetchStart: () => void;
+  disabled?: boolean;
 }
 
 // Poll auth status every 10 minutes to detect token expiration proactively
@@ -24,7 +27,7 @@ function getOAuthErrorMessage(error: string) {
   return messages[error] || "Não foi possível concluir a autenticação com a Olist.";
 }
 
-export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
+export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardProps) {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [dateMode, setDateMode] = useState<"created" | "updated">("updated");
@@ -41,6 +44,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   const [webhookUrl, setWebhookUrl] = useState<string | null>(null);
   const [copiedWebhook, setCopiedWebhook] = useState(false);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const fetchController = useRef<AbortController | null>(null);
+  useEffect(() => () => fetchController.current?.abort(), []);
 
   const checkAuthStatus = useCallback(async (showLoading = false) => {
     if (showLoading) setIsCheckingAuth(true);
@@ -107,26 +112,43 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
   }, [checkAuthStatus]);
 
   const handleFetch = async () => {
-    if (!dateFrom || !dateTo) return;
-    if (dateFrom > dateTo) {
-      setError("A data inicial não pode ser posterior à data final.");
+    if (disabled || isLoading) return;
+    if (!isValidDateRange(dateFrom, dateTo)) {
+      setError("Informe um período válido de até 31 dias.");
       return;
     }
     setIsLoading(true);
     setError(null);
+    onFetchStart();
+    const controller = new AbortController();
+    fetchController.current = controller;
 
     try {
-      const response = await fetch("/api/olist", {
+      const collected = new Map<number, OlistOrder>();
+      let cursor: { day: number; offset: number } | null = null;
+      let mapping: ReconciliationConfig | null = null;
+      let retries = 0;
+      do {
+      controller.signal.throwIfAborted();
+      const response: Response = await fetch("/api/olist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dateFrom,
           dateTo,
           dateMode,
+          cursor: cursor || undefined,
         }),
+        signal: controller.signal,
       });
 
-      const data = await response.json().catch(() => ({}));
+      const data: { orders: OlistOrder[]; nextCursor: { day: number; offset: number } | null; mapping: ReconciliationConfig | null; error?: string; retryAfterSeconds?: number; needsReconnect?: boolean } = await response.json().catch(() => ({}));
+      if (response.status === 429 && retries++ < 5) {
+        const delay = Math.min(300, Math.max(1, Number(data.retryAfterSeconds) || 60));
+        setError(`Limite de consultas. Retomando em ${delay} segundos…`);
+        await new Promise(resolve => setTimeout(resolve, delay * 1000));
+        continue;
+      }
 
       if (!response.ok) {
         // Check if the API is telling us we need to reconnect
@@ -143,10 +165,17 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
         );
       }
 
-      setFetchedCount(data.orders.length);
-      onFetch(data.orders, dateMode);
+      retries = 0;
+      setError(null);
+      for (const order of data.orders as OlistOrder[]) collected.set(order.id, order);
+      setFetchedCount(collected.size);
+      mapping = data.mapping;
+      cursor = data.nextCursor;
+      if (cursor) await new Promise(resolve => setTimeout(resolve, 2100));
+      } while (cursor || retries > 0);
+      if (!controller.signal.aborted) onFetch([...collected.values()], dateMode, mapping);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao buscar pedidos");
+      if (!controller.signal.aborted) setError(err instanceof Error ? err.message : "Erro ao buscar pedidos");
     } finally {
       setIsLoading(false);
     }
@@ -218,8 +247,8 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
           </h3>
           <p className="text-[14px] text-[var(--color-text-tertiary)] mt-1">
             {dateMode === "updated"
-              ? "Pedidos WooCommerce liberados ou alterados no período"
-              : "Pedidos WooCommerce por data de criação"}
+              ? "Pedidos Nuvemshop alterados no período"
+              : "Pedidos Nuvemshop por data de criação"}
           </p>
         </div>
       </div>
@@ -388,7 +417,7 @@ export function ApiFetchCard({ onFetch }: ApiFetchCardProps) {
             {/* Fetch Button */}
             <button
               onClick={handleFetch}
-              disabled={isLoading || !dateFrom || !dateTo}
+              disabled={disabled || isLoading || !dateFrom || !dateTo}
               className="btn-primary w-full mt-auto py-3 text-[15px]"
             >
               {isLoading ? (

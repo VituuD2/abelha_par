@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { ListChecks } from "lucide-react";
 
 function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -43,6 +44,7 @@ function HoneycombIcon(props: SVGProps<SVGSVGElement>) {
 
 const navItems = [
   { href: "/", label: "Colmeia", icon: BeehiveIcon },
+  { href: "/orders", label: "Pedidos do dia", icon: ListChecks },
   { href: "/scanner", label: "Inspeção", icon: InspectionIcon },
   { href: "/history", label: "Favos de Mel", icon: HoneycombIcon },
 ];

@@ -2,7 +2,7 @@ import { hasTrackingCode } from "@/lib/tracking";
 import type { ScanOrder } from "@/types";
 
 type TrackingUpdate = { id: number; trackingCode: string };
-type Session = { orders: ScanOrder[]; sessionVersion: number };
+type Session = { orders: ScanOrder[]; sessionVersion: number; sessionId?: string | null };
 
 /** One sequential queue: five orders per request, with no overlapping requests. */
 export function startTrackingRefresh({ getSession, applyUpdates, onError, fetcher = fetch }: {
@@ -36,7 +36,7 @@ export function startTrackingRefresh({ getSession, applyUpdates, onError, fetche
     controller.signal.addEventListener("abort", abortRequest, { once: true });
     try {
       timeout = setTimeout(abortRequest, 45_000);
-      const response = await fetcher("/api/olist/resolve", {
+      const response = await fetcher(session.sessionId ? `/api/scan-sessions/${session.sessionId}/tracking` : "/api/olist/resolve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderIds }),

@@ -1,21 +1,6 @@
 const { test, afterEach } = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const Module = require('node:module');
-const ts = require('typescript');
-
-// Run the actual application modules with the project's existing TypeScript dependency.
-const resolveFilename = Module._resolveFilename;
-Module._resolveFilename = function (name, ...args) {
-  return resolveFilename.call(this, name.startsWith('@/') ? path.join(__dirname, '../src', name.slice(2)) : name, ...args);
-};
-require.extensions['.ts'] = (module, filename) => {
-  const { outputText } = ts.transpileModule(fs.readFileSync(filename, 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2017, esModuleInterop: true },
-  });
-  module._compile(outputText, filename);
-};
+require('./setup.cjs');
 
 const { useScanStore: store } = require('../src/stores/scan-store.ts');
 const { startTrackingRefresh } = require('../src/lib/tracking-refresh.ts');

@@ -1,13 +1,13 @@
 import { extractYampiId } from "./regex";
 import { normalizeOrderId } from "./order-id";
+import { normalizeExternalReference } from "./reconciliation";
 import type { OlistApiOrder, OlistOrder } from "@/types";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
-const WOOCOMMERCE_ECOMMERCE_ID = Number(process.env.OLIST_WOOCOMMERCE_ECOMMERCE_ID || "20161");
 const DETAIL_CONCURRENCY = 2;
 // Some accounts have limits below the published account maximum. Keep detail
-// calls below ~55/minute; the dashboard resolves them in short requests.
-const DETAIL_REQUEST_INTERVAL_MS = 1_100;
+// calls below 30/minute per process; provider throttling is also respected.
+const DETAIL_REQUEST_INTERVAL_MS = 2_100;
 let nextDetailRequestAt = 0;
 
 export class TinyRateLimitError extends Error {
@@ -35,8 +35,23 @@ interface FetchOrdersParams {
   dateFrom: string;
   dateTo?: string;
   dateMode?: OlistDateMode;
+  ecommerceId?: number;
 }
 interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
+
+export async function fetchOlistOrdersPage({ token, dateFrom, dateTo = dateFrom, dateMode = "created", ecommerceId, cursor = { day: 0, offset: 0 } }: FetchOrdersParams & { cursor?: { day: number; offset: number } }) {
+  const dates = dateMode === "updated" ? enumerateDates(dateFrom, dateTo) : [dateFrom];
+  if (!dates[cursor.day]) throw new Error("Página de consulta inválida.");
+  const filters: Record<string, string> = dateMode === "updated" ? { dataAtualizacao: dates[cursor.day] } : { dataInicial: dateFrom, dataFinal: dateTo };
+  const params = new URLSearchParams({ ...filters, orderBy: "desc", limit: "100", offset: String(cursor.offset) });
+  const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers: { Authorization: `Bearer ${token}` } });
+  if (!response.ok) throw new TinyApiError("list", response.status, await getProviderErrorMessage(response), getProviderRequestId(response));
+  const data = await response.json() as TinyListResponse;
+  if (!Array.isArray(data.itens)) throw new Error("Resposta inválida da Olist.");
+  const hasMore = data.paginacao?.total !== undefined ? cursor.offset + 100 < data.paginacao.total : data.itens.length === 100;
+  const nextCursor = hasMore ? { day: cursor.day, offset: cursor.offset + 100 } : cursor.day + 1 < dates.length ? { day: cursor.day + 1, offset: 0 } : null;
+  return { orders: data.itens.filter(item => isNuvemshopOrder(item, ecommerceId)).map(normalizeOlistOrder), nextCursor };
+}
 
 export interface TinyConnectionResult {
   ok: boolean;
@@ -52,7 +67,7 @@ export async function testTinyConnection(token: string): Promise<TinyConnectionR
     // requires the separate "Informações da Conta" permission and therefore
     // produced a false disconnected state for applications allowed to read
     // only orders.
-    const response = await fetch(`${API_BASE}/pedidos?limit=1`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
+    const response = await fetchTiny(`${API_BASE}/pedidos?limit=1`, { headers: { Authorization: `Bearer ${token}` } });
     return {
       ok: response.ok,
       status: response.status,
@@ -97,6 +112,7 @@ export async function fetchOlistOrders({
   dateFrom,
   dateTo,
   dateMode = "created",
+  ecommerceId,
 }: FetchOrdersParams): Promise<OlistOrder[]> {
   const allItems = new Map<number, OlistApiOrder>();
   const headers = { Authorization: `Bearer ${token}` };
@@ -111,13 +127,13 @@ export async function fetchOlistOrders({
         : { dataAtualizacao: queryDate }
     );
     for (const item of items) {
-      if (isWooCommerceOrder(item)) allItems.set(item.id, item);
+      if (isNuvemshopOrder(item, ecommerceId)) allItems.set(item.id, item);
     }
   }
 
   // Keep the initial request short. Internal notes are resolved in batches by
   // the dedicated endpoint so a Vercel function never times out.
-  return Array.from(allItems.values()).map(toListOrder);
+  return Array.from(allItems.values()).map(normalizeOlistOrder);
 }
 
 async function fetchOrdersPageRange(headers: Record<string, string>, filters: Record<string, string>): Promise<OlistApiOrder[]> {
@@ -148,63 +164,34 @@ export async function resolveOlistOrders(token: string, orderIds: number[]): Pro
   const headers = { Authorization: `Bearer ${token}` };
   return mapWithConcurrency(orderIds, DETAIL_CONCURRENCY, async (id) => {
     const detail = await fetchOrderDetail(id, headers);
-    return toOlistOrder(detail, headers, false);
+    return normalizeOlistOrder(detail);
   });
 }
 
-function isWooCommerceOrder(item: OlistApiOrder) {
+export function isNuvemshopOrder(item: OlistApiOrder, ecommerceId = Number(process.env.OLIST_NUVEMSHOP_ECOMMERCE_ID)) {
   if (!item.ecommerce) return false;
   const channelName = item.ecommerce.nome
     ?.normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .toLowerCase();
-  return item.ecommerce.id === WOOCOMMERCE_ECOMMERCE_ID || channelName === "woocommerce";
+  return ecommerceId > 0 ? item.ecommerce.id === ecommerceId : Boolean(channelName?.includes("nuvemshop"));
 }
 
-function toListOrder(item: OlistApiOrder): OlistOrder {
+export function normalizeOlistOrder(item: OlistApiOrder): OlistOrder {
   return {
     id: item.id,
-    yampiId: getYampiIdFromDetail(item) || normalizeOrderId(item.ecommerce?.numeroPedidoEcommerce),
+    yampiId: getYampiIdFromDetail(item),
     trackingCode: item.transportador?.codigoRastreamento || "",
     clientName: item.cliente?.nome || "",
     numeroPedido: item.numeroPedido || 0,
     dataCriacao: getCreationDate(item),
     situacao: item.situacao ?? null,
+    ecommerceId: item.ecommerce?.id ?? null,
+    ecommerceName: item.ecommerce?.nome || "",
+    ecommerceOrderNumber: normalizeExternalReference(item.ecommerce?.numeroPedidoEcommerce) || null,
+    ecommerceChannelOrderNumber: normalizeExternalReference(item.ecommerce?.numeroPedidoCanalVenda) || null,
   };
-}
-
-async function toOlistOrder(item: OlistApiOrder, headers: Record<string, string>, fetchDetail = true): Promise<OlistOrder> {
-  const numeroPedido = item.numeroPedido || 0;
-  const base = {
-    id: item.id,
-    yampiId: getYampiIdFromDetail(item) || normalizeOrderId(item.ecommerce?.numeroPedidoEcommerce),
-    trackingCode: item.transportador?.codigoRastreamento || "",
-    clientName: item.cliente?.nome || "",
-    numeroPedido,
-    dataCriacao: getCreationDate(item),
-    situacao: item.situacao ?? null,
-  };
-  // The list endpoint normally does not contain internal notes. Always fetch
-  // the detail unless the note was already supplied by the list response.
-  if (getYampiIdFromDetail(item) || !fetchDetail) return base;
-
-  try {
-    const detail = await fetchOrderDetail(item.id, headers);
-    if (!isWooCommerceOrder(detail)) return { ...base, yampiId: null };
-    return {
-      id: detail.id,
-      // The business identifier comes from the Tiny internal notes, not numeroPedido.
-      yampiId: getYampiIdFromDetail(detail) || normalizeOrderId(detail.ecommerce?.numeroPedidoEcommerce) || base.yampiId,
-      trackingCode: detail.transportador?.codigoRastreamento || base.trackingCode,
-      clientName: detail.cliente?.nome || base.clientName,
-      numeroPedido: detail.numeroPedido || numeroPedido,
-      dataCriacao: getCreationDate(detail) || base.dataCriacao,
-      situacao: detail.situacao ?? base.situacao,
-    };
-  } catch {
-    return { ...base, yampiId: null };
-  }
 }
 
 function getYampiIdFromDetail(detail: OlistApiOrder) {
@@ -250,8 +237,9 @@ async function fetchOrderDetail(orderId: number, headers: Record<string, string>
 }
 
 async function fetchTiny(url: string, options: RequestInit): Promise<Response> {
+  const signal = options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(25_000)]) : AbortSignal.timeout(25_000);
   for (let attempt = 0; attempt < 3; attempt += 1) {
-    const response = await fetch(url, { ...options, cache: "no-store" });
+    const response = await fetch(url, { ...options, cache: "no-store", signal });
     if (response.status === 429) {
       const retryAfter = getRetryAfterSeconds(response);
       throw new TinyRateLimitError(retryAfter);
@@ -266,8 +254,14 @@ async function fetchTiny(url: string, options: RequestInit): Promise<Response> {
 }
 
 function getRetryAfterSeconds(response: Response) {
-  const candidate = Number(response.headers.get("retry-after") || response.headers.get("x-ratelimit-reset"));
-  return Number.isFinite(candidate) && candidate > 0 ? Math.ceil(candidate) : 60;
+  const retry = response.headers.get("retry-after");
+  let seconds = retry ? Number(retry) : NaN;
+  if (retry && !Number.isFinite(seconds)) seconds = (Date.parse(retry) - Date.now()) / 1000;
+  if (!retry) {
+    const reset = Number(response.headers.get("x-ratelimit-reset"));
+    seconds = reset > 1e12 ? (reset - Date.now()) / 1000 : reset > 1e9 ? reset - Date.now() / 1000 : reset;
+  }
+  return Number.isFinite(seconds) && seconds > 0 ? Math.min(3600, Math.ceil(seconds)) : 60;
 }
 
 async function waitForDetailSlot() {

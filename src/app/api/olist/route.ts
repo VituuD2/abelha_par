@@ -1,27 +1,22 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
-import { fetchOlistOrders, TinyRateLimitError } from "@/lib/olist";
+import { fetchOlistOrdersPage, TinyRateLimitError } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
+import { isValidDateRange } from "@/lib/dates";
+import { getReconciliationConfig } from "@/lib/reconciliation-config";
+import { getNuvemshopConnection } from "@/lib/nuvemshop";
 
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
-const MAX_RANGE_DAYS = 31;
-
-function isValidRange(dateFrom: string, dateTo: string) {
-  if (!ISO_DATE.test(dateFrom) || !ISO_DATE.test(dateTo)) return false;
-  const from = new Date(`${dateFrom}T00:00:00.000Z`);
-  const to = new Date(`${dateTo}T00:00:00.000Z`);
-  return !Number.isNaN(from.getTime()) && !Number.isNaN(to.getTime()) && to >= from && (to.getTime() - from.getTime()) / 86_400_000 <= MAX_RANGE_DAYS;
-}
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  if (isRateLimited(`olist:${user.id}`, 10, 60_000)) {
+  if (isRateLimited(`olist:${user.id}`, 30, 60_000)) {
     return NextResponse.json({ error: "Muitas consultas. Tente novamente em um minuto." }, { status: 429 });
   }
 
-  let body: { dateFrom?: unknown; dateTo?: unknown; dateMode?: unknown };
+  let body: { dateFrom?: unknown; dateTo?: unknown; dateMode?: unknown; cursor?: { day: number; offset: number } };
   try {
     body = await request.json();
   } catch {
@@ -30,9 +25,10 @@ export async function POST(request: Request) {
   const dateFrom = typeof body.dateFrom === "string" ? body.dateFrom : "";
   const dateTo = typeof body.dateTo === "string" && body.dateTo ? body.dateTo : dateFrom;
   const dateMode = body.dateMode === "created" ? "created" : body.dateMode === "updated" ? "updated" : null;
-  if (!dateMode || !isValidRange(dateFrom, dateTo)) {
+  if (!dateMode || !isValidDateRange(dateFrom, dateTo)) {
     return NextResponse.json({ error: "Informe datas válidas com intervalo máximo de 31 dias." }, { status: 400 });
   }
+  if (body.cursor && (!Number.isInteger(body.cursor.day) || body.cursor.day < 0 || body.cursor.day > 30 || !Number.isInteger(body.cursor.offset) || body.cursor.offset < 0 || body.cursor.offset > 100_000 || body.cursor.offset % 100 !== 0)) return NextResponse.json({ error: "Página inválida." }, { status: 400 });
 
   const tokenResult = await getValidTinyToken(user.id);
   if (!tokenResult.token) {
@@ -40,8 +36,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    const orders = await fetchOlistOrders({ token: tokenResult.token, dateFrom, dateTo, dateMode });
-    return NextResponse.json({ orders, total: orders.length, fetchedAt: new Date().toISOString() });
+    const connection = await getNuvemshopConnection(user.id);
+    const mapping = connection?.mapping || getReconciliationConfig();
+    const page = await fetchOlistOrdersPage({ token: tokenResult.token, dateFrom, dateTo, dateMode, ecommerceId: mapping?.ecommerceId, cursor: body.cursor });
+    return NextResponse.json({ ...page, mapping, fetchedAt: new Date().toISOString() });
   } catch (error) {
     console.error("[olist] request failed", error);
     if (error instanceof TinyRateLimitError) {

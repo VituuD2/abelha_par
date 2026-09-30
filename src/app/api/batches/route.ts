@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { normalizeResponsible } from "@/lib/responsible";
-import { sanitizeOrders } from "@/lib/batch-orders";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { UUID } from "@/lib/scan-session-server";
 
 export async function GET() {
   const user = await getAuthenticatedUser();
@@ -16,18 +16,10 @@ export async function GET() {
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  let body: { orders?: unknown; responsible?: unknown };
+  let body: { sessionId?: unknown };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "JSON inválido" }, { status: 400 }); }
-  const orders = sanitizeOrders(body.orders);
-  const responsible = normalizeResponsible(body.responsible);
-  if (!orders || !responsible) return NextResponse.json({ error: "Lote ou responsável inválido. Todos os pedidos precisam estar bipados e ter código de rastreio." }, { status: 400 });
-
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("lotes_bipagem")
-    .insert({ owner_id: user.id, responsavel: responsible, data: new Date().toISOString().slice(0, 10), qtd_pedidos: orders.length, pedidos: orders })
-    .select("id, numero_lote, responsavel, data, qtd_pedidos, pedidos, created_at")
-    .single();
-  if (error) return NextResponse.json({ error: "Não foi possível salvar o lote." }, { status: 500 });
+  if (typeof body.sessionId !== "string" || !UUID.test(body.sessionId)) return NextResponse.json({ error: "Sessão inválida." }, { status: 400 });
+  const { data, error } = await createAdminClient().rpc("finish_scan_session", { p_owner: user.id, p_session: body.sessionId });
+  if (error) return NextResponse.json({ error: "Não foi possível finalizar. Verifique se todos os pedidos foram bipados e tente novamente." }, { status: 409 });
   return NextResponse.json({ ok: true, batch: data }, { status: 201 });
 }

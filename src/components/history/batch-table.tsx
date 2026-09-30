@@ -1,5 +1,7 @@
 "use client";
 
+import { orderReference } from "@/lib/order-reference";
+
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Package, Calendar, Hash, CheckCircle2, Printer } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -44,7 +46,7 @@ function printBatch(batch: Batch) {
         <td>${index + 1}</td>
         <td>${escapeHtml(order.clientName)}</td>
         <td class="code">${escapeHtml(displayTrackingCode(order.trackingCode))}</td>
-        <td>${escapeHtml(order.yampiId)}</td>
+        <td>${escapeHtml(orderReference(order))}</td>
         <td>${escapeHtml(saleDate)}</td>
       </tr>`;
     })
@@ -87,7 +89,7 @@ function printBatch(batch: Batch) {
           <div>Pedidos conferidos<strong>${escapeHtml(batch.qtd_pedidos)}</strong></div>
         </section>
         <table>
-          <thead><tr><th>#</th><th>Cliente</th><th>Rastreio</th><th>ID Yampi</th><th>Data da venda</th></tr></thead>
+          <thead><tr><th>#</th><th>Cliente</th><th>Rastreio</th><th>Pedido na loja</th><th>Data da venda</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
         <footer>Documento gerado em ${escapeHtml(formatBatchDate(new Date().toISOString()))}.</footer>
@@ -241,7 +243,7 @@ export function BatchTable({ batches }: BatchTableProps) {
                             )}
                           </div>
                           <span className="text-[11px] text-[var(--color-text-tertiary)]">
-                            Yampi #{order.yampiId}
+                            {orderReference(order)}
                           </span>
                         </div>
                       ))}

@@ -38,6 +38,7 @@ export function extractOlistOrderId(payload: unknown): number | null {
   if (!payload || typeof payload !== "object") return null;
   const value = payload as Record<string, unknown>;
   const candidates = [
+    (value.dados as Record<string, unknown> | undefined)?.id,
     value.idPedido,
     value.id,
     (value.pedido as Record<string, unknown> | undefined)?.id,

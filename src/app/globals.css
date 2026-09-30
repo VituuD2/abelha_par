@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+.field {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+.field:focus-visible { outline: 2px solid var(--color-accent-blue); outline-offset: 2px; }
+button:disabled { cursor: not-allowed; opacity: 0.5; }
+
 /* Abelha Par — warm, precise and intentionally quiet. */
 @theme {
   --color-bg-primary: #f8f6f1;

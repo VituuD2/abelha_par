@@ -13,9 +13,15 @@ import { useTrackingRefresh } from "@/hooks/use-tracking-refresh";
 import { hasTrackingCode } from "@/lib/tracking";
 import { motion } from "framer-motion";
 import { ScanBarcode } from "lucide-react";
+import { useScanStore } from "@/stores/scan-store";
+import { orderReference } from "@/lib/order-reference";
 
 export default function ScannerPage() {
   const router = useRouter();
+  const sessionId = useScanStore(state => state.sessionId);
+  const restoreError = useScanStore(state => state.restoreError);
+  const busy = useScanStore(state => state.busy);
+  const restoreSession = useScanStore(state => state.restoreSession);
   const {
     state,
     sessionVersion,
@@ -28,6 +34,7 @@ export default function ScannerPage() {
     acknowledgeSuccess,
   } = useScanner();
   const refreshError = useTrackingRefresh();
+  useEffect(() => { if (sessionId && !useScanStore.getState().orders.length) void restoreSession(); }, [sessionId, restoreSession]);
   const missingTracking = orders.filter((order) => !hasTrackingCode(order.trackingCode));
   const [missingNotice, setMissingNotice] = useState(() => ({ sessionVersion, orders: missingTracking }));
   const [missingNoticeAcknowledged, setMissingNoticeAcknowledged] = useState(false);
@@ -41,7 +48,7 @@ export default function ScannerPage() {
 
   // Redirect to dashboard if no orders loaded
   useEffect(() => {
-    if (state === "idle" && orders.length === 0) {
+    if (!sessionId && state === "idle" && orders.length === 0) {
       // Give a moment to check if orders are being loaded
       const timer = setTimeout(() => {
         if (orders.length === 0) {
@@ -50,7 +57,7 @@ export default function ScannerPage() {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [state, orders.length, router]);
+  }, [sessionId, state, orders.length, router]);
 
   if (orders.length === 0) {
     return (
@@ -64,8 +71,9 @@ export default function ScannerPage() {
           <div className="text-center">
             <div className="w-8 h-8 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
             <p className="text-[14px] text-[var(--color-text-secondary)]">
-              Redirecionando para o Dashboard...
+              {restoreError || (sessionId ? "Recuperando sua conferência…" : "Redirecionando para a preparação…")}
             </p>
+            {restoreError && <button className="btn-primary mt-4" disabled={busy} onClick={() => void restoreSession()}>Tentar recuperar novamente</button>}
           </div>
         </div>
       </>
@@ -167,7 +175,7 @@ export default function ScannerPage() {
         <ul className="mb-6 max-h-48 overflow-y-auto space-y-2 text-left text-[13px]">
           {initialMissingTracking.map((order) => (
             <li key={order.id} className="rounded-lg bg-[var(--color-accent-red)]/8 p-3 text-[var(--color-accent-red)]">
-              <strong>{order.clientName}</strong> — Yampi #{order.yampiId}
+              <strong>{order.clientName}</strong> — {orderReference(order)}
               {orders.some((current) => current.id === order.id && hasTrackingCode(current.trackingCode)) && (
                 <span className="block text-[var(--color-accent-green)]">Rastreio recebido. Pronto para bipar.</span>
               )}

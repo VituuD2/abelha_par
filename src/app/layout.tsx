@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/layout/app-shell";
+import { getAuthenticatedUser } from "@/lib/auth";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,18 +12,19 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Abelha Par - Dashboard",
   description:
-    "Sistema de bipagem para conferência de pedidos Olist com dados Yampi. Garanta que apenas os pedidos corretos sejam despachados.",
+    "Conferência de pedidos Nuvemshop e Olist com seleção diária e bipagem.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getAuthenticatedUser();
   return (
     <html lang="pt-BR">
       <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`}>
-        <AppShell>{children}</AppShell>
+        <AppShell userId={user?.id || null}>{children}</AppShell>
       </body>
     </html>
   );

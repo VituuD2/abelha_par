@@ -31,7 +31,6 @@ export async function getValidTinyToken(userId: string): Promise<TokenResult> {
   const integration = data as Integration;
   const now = Date.now();
   if (integration.refresh_expires_at && now >= new Date(integration.refresh_expires_at).getTime()) {
-    await supabase.from("tiny_integrations").delete().eq("id", integration.id).eq("owner_id", userId);
     return { token: null, status: "expired", message: "Sessão Tiny expirada. Reconecte a conta." };
   }
 
@@ -42,9 +41,8 @@ export async function getValidTinyToken(userId: string): Promise<TokenResult> {
     }
     return refreshToken(userId, integration, decryptToken(integration.refresh_token));
   } catch {
-    // Plaintext/invalid legacy entries are never reused after the security migration.
-    await supabase.from("tiny_integrations").delete().eq("id", integration.id).eq("owner_id", userId);
-    return { token: null, status: "expired", message: "A conexão Tiny deve ser refeita com segurança." };
+    // A missing/rotated encryption key must not erase a recoverable connection.
+    return { token: null, status: "error", message: "Não foi possível abrir a credencial Tiny. Verifique a chave do servidor ou reconecte a conta." };
   }
 }
 

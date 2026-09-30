@@ -14,14 +14,13 @@ export async function GET(request: Request) {
   if (!isAuthorized(request)) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
   try {
-    const initial = await processQueuedOlistOrders();
     const discovered = await discoverCurrentUpdatesForAllIntegrations();
-    const recovered = discovered > 0 ? await processQueuedOlistOrders() : { claimed: 0, completed: 0 };
+    const recovered = await processQueuedOlistOrders();
     return NextResponse.json({
       ok: true,
       discovered,
-      claimed: initial.claimed + recovered.claimed,
-      completed: initial.completed + recovered.completed,
+      claimed: recovered.claimed,
+      completed: recovered.completed,
     });
   } catch (error) {
     console.error("[olist-sync] cron failed", error);

@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
-import { enqueueOlistOrders, processWebhookOrderNow, recordWebhook } from "@/lib/olist-sync";
+import { after, NextResponse } from "next/server";
+import { enqueueOlistOrders, processQueuedOlistOrders, recordWebhook } from "@/lib/olist-sync";
 import { extractOlistOrderId, isValidOlistWebhookSignature } from "@/lib/olist-webhook";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -29,7 +30,7 @@ export async function POST(
     const orderId = extractOlistOrderId(payload);
     if (orderId) {
       await enqueueOlistOrders(ownerId, [orderId], true);
-      await processWebhookOrderNow(ownerId, orderId);
+      after(async () => { try { await processQueuedOlistOrders(); } catch { console.error("[olist-sync] background processing failed; queued jobs retained"); } });
     }
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch {

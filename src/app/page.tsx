@@ -1,246 +1,114 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
-import { UploadCard } from "@/components/dashboard/upload-card";
 import { ApiFetchCard } from "@/components/dashboard/api-fetch-card";
-import { MatchSummary } from "@/components/dashboard/match-summary";
-import { matchOrders, getUnmatchedOrders, getMissingFromOlist } from "@/lib/matcher";
+import { usePreparationStore } from "@/stores/preparation-store";
 import { useScanStore } from "@/stores/scan-store";
-import type { OlistOrder, ScanOrder } from "@/types";
-import { motion } from "framer-motion";
-import { Package, ArrowDownUp } from "lucide-react";
-
-type OlistDateMode = "created" | "updated";
-const DETAIL_BATCH_SIZE = 5;
+import { reconcileOrders } from "@/lib/reconciliation";
+import { normalizeResponsible } from "@/lib/responsible";
+import { orderReference } from "@/lib/order-reference";
+import type { OlistOrder, ReconciliationConfig } from "@/types";
 
 export default function DashboardPage() {
-  const [yampiIds, setYampiIds] = useState<Set<string> | null>(null);
-  const [yampiFileName, setYampiFileName] = useState<string>("");
-  const [olistOrders, setOlistOrders] = useState<OlistOrder[]>([]);
-  const [matchedOrders, setMatchedOrders] = useState<ScanOrder[]>([]);
-  const [unmatchedOrders, setUnmatchedOrders] = useState<OlistOrder[]>([]);
-  const [missingFromOlist, setMissingFromOlist] = useState<string[]>([]);
-  const [isResolving, setIsResolving] = useState(false);
-  const [resolvedCount, setResolvedCount] = useState(0);
-  const [resolutionError, setResolutionError] = useState<string | null>(null);
-  const [olistDateMode, setOlistDateMode] = useState<OlistDateMode>("updated");
-  const resolutionIdRef = useRef(0);
-  const yampiIdsRef = useRef<Set<string> | null>(null);
-  const olistOrdersRef = useRef<OlistOrder[]>([]);
-  const setStoreOrders = useScanStore((state) => state.setOrders);
+  const prep = usePreparationStore();
+  const sessionId = useScanStore(state => state.sessionId);
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [starting, setStarting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState("");
+  const [responsible, setResponsible] = useState("");
+  const controller = useRef<AbortController | null>(null);
+  const attempt = useRef<{ key: string; id: string } | null>(null);
+  useEffect(() => () => controller.current?.abort(), []);
+  const selected = useMemo(() => prep.nuvemshopOrders.filter(order => prep.confirmedIds.includes(order.id)), [prep.nuvemshopOrders, prep.confirmedIds]);
+  const result = useMemo(() => prep.mapping && prep.confirmedAt && prep.olistFetchedAt
+    ? reconcileOrders(selected, prep.olistOrders, prep.mapping) : null,
+  [prep.mapping, prep.confirmedAt, prep.olistFetchedAt, selected, prep.olistOrders]);
 
-  const runCrossReference = useCallback(
-    (orders: OlistOrder[], ids: Set<string>) => {
-      const matched = matchOrders(orders, ids);
-      const unmatched = getUnmatchedOrders(orders, ids);
-      const missing = getMissingFromOlist(orders, ids);
-      setMatchedOrders(matched);
-      setUnmatchedOrders(unmatched);
-      setMissingFromOlist(missing);
-    },
-    []
-  );
-
-  const resolveAndCrossReference = useCallback(
-    async (orders: OlistOrder[], ids: Set<string>, forceRefresh = false) => {
-      const resolutionId = ++resolutionIdRef.current;
-      setIsResolving(true);
-      setResolvedCount(0);
-      setResolutionError(null);
-      setMatchedOrders([]);
-      setUnmatchedOrders([]);
-      setMissingFromOlist([]);
-
-      try {
-        const resolvedOrders: OlistOrder[] = [];
-        const sourceOrdersById = new Map(orders.map((order) => [order.id, order]));
-        let start = 0;
-        while (start < orders.length) {
-          const batch = orders.slice(start, start + DETAIL_BATCH_SIZE);
-          const response = await fetch("/api/olist/resolve", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderIds: batch.map((order) => order.id), forceRefresh }),
-          });
-          const payload = await response.json().catch(() => ({}));
-          if (response.status === 429) {
-            const retryAfterSeconds = Math.max(1, Number(payload.retryAfterSeconds) || 60);
-            setResolutionError(`A Tiny atingiu o limite. Retomando automaticamente em ${retryAfterSeconds} segundos...`);
-            await new Promise((resolve) => setTimeout(resolve, retryAfterSeconds * 1000));
-            if (resolutionId !== resolutionIdRef.current) return;
-            setResolutionError(null);
-            continue;
-          }
-          if (!response.ok) throw new Error(payload.error || "Não foi possível consultar os detalhes na Tiny.");
-          if (resolutionId !== resolutionIdRef.current) return;
-          resolvedOrders.push(
-            ...payload.orders.map((resolvedOrder: OlistOrder) => ({
-              ...resolvedOrder,
-              dataCriacao:
-                resolvedOrder.dataCriacao ||
-                sourceOrdersById.get(resolvedOrder.id)?.dataCriacao ||
-                null,
-            }))
-          );
-          setResolvedCount(resolvedOrders.length);
-          start += batch.length;
-        }
-
-        if (resolutionId !== resolutionIdRef.current) return;
-        olistOrdersRef.current = resolvedOrders;
-        setOlistOrders(resolvedOrders);
-        runCrossReference(resolvedOrders, ids);
-      } catch (error) {
-        if (resolutionId === resolutionIdRef.current) {
-          setResolutionError(error instanceof Error ? error.message : "Não foi possível cruzar os pedidos.");
-        }
-      } finally {
-        if (resolutionId === resolutionIdRef.current) setIsResolving(false);
-      }
-    },
-    [runCrossReference]
-  );
-
-  const handleUpload = useCallback(
-    (ids: Set<string>, fileName: string) => {
-      yampiIdsRef.current = ids;
-      setYampiIds(ids);
-      setYampiFileName(fileName);
-      const currentOrders = olistOrdersRef.current;
-      if (currentOrders.length > 0) {
-        // Uploading a new spreadsheet does not change the Olist orders. Reuse
-        // cached details instead of forcing a new detail request for every
-        // order, which can exhaust the provider limit.
-        void resolveAndCrossReference(currentOrders, ids);
-      }
-    },
-    [resolveAndCrossReference]
-  );
-
-  const handleClearUpload = useCallback(() => {
-    resolutionIdRef.current += 1;
-    yampiIdsRef.current = null;
-    setYampiIds(null);
-    setYampiFileName("");
-    setMatchedOrders([]);
-    setUnmatchedOrders([]);
-    setMissingFromOlist([]);
-    setIsResolving(false);
-    setResolutionError(null);
+  const onFetchStart = useCallback(() => {
+    controller.current?.abort();
+    usePreparationStore.setState({ olistOrders: [], olistFetchedAt: null });
+    setError(null);
+    setStatus("");
   }, []);
 
-  const handleFetch = useCallback(
-    (orders: OlistOrder[], dateMode: OlistDateMode) => {
-      olistOrdersRef.current = orders;
-      setOlistOrders(orders);
-      setOlistDateMode(dateMode);
-      const currentYampiIds = yampiIdsRef.current;
-      if (currentYampiIds) {
-        void resolveAndCrossReference(orders, currentYampiIds);
+  const onFetch = useCallback(async (orders: OlistOrder[], _mode: "created" | "updated", mapping: ReconciliationConfig | null) => {
+    const abort = new AbortController();
+    controller.current?.abort();
+    controller.current = abort;
+    setBusy(true);
+    setError(null);
+    usePreparationStore.getState().setMapping(mapping);
+    try {
+      const details: OlistOrder[] = [];
+      let retries = 0;
+      for (let start = 0; start < orders.length;) {
+        abort.signal.throwIfAborted();
+        setStatus(`Consultando detalhes na Olist: ${start} de ${orders.length}`);
+        const response = await fetch("/api/olist/resolve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderIds: orders.slice(start, start + 5).map(order => order.id), forceRefresh: true }), signal: abort.signal });
+        const data = await response.json();
+        if (response.status === 429 && retries++ < 5) {
+          const seconds = Math.min(300, Math.max(1, Number(data.retryAfterSeconds) || 60));
+          setStatus(`A Olist limitou as consultas. Retomando em ${seconds} segundos…`);
+          await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+          continue;
+        }
+        if (!response.ok) throw new Error(data.error || "Não foi possível carregar os detalhes da Olist.");
+        retries = 0;
+        details.push(...data.orders);
+        start += 5;
       }
-    },
-    [resolveAndCrossReference]
-  );
+      if (!abort.signal.aborted) usePreparationStore.getState().setOlistOrders(details);
+    } catch (err) {
+      if (!abort.signal.aborted) setError(err instanceof Error ? err.message : "Falha ao carregar pedidos.");
+    } finally { if (!abort.signal.aborted) { setBusy(false); setStatus(""); } }
+  }, []);
 
-  const handleStartScanning = useCallback((responsible: string) => {
-    setStoreOrders(matchedOrders, responsible);
-  }, [matchedOrders, setStoreOrders]);
+  async function startScanning() {
+    if (!result || result.issues.length || !result.orders.length || !normalizeResponsible(responsible) || starting) return;
+    setStarting(true);
+    setError(null);
+    const key = JSON.stringify([prep.confirmedAt, prep.olistFetchedAt, responsible.trim()]);
+    if (attempt.current?.key !== key) attempt.current = { key, id: crypto.randomUUID() };
+    try {
+      const response = await fetch("/api/scan-sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: attempt.current.id, responsible, nuvemshopIds: prep.confirmedIds, olistIds: result.orders.map(order => order.id) }), signal: AbortSignal.timeout(30_000) });
+      const data = await response.json();
+      if (!response.ok || !data.session) throw new Error(data.error || "Não foi possível iniciar a conferência.");
+      useScanStore.getState().setSession(data.session);
+      router.push("/scanner");
+    } catch (err) { setError(err instanceof Error ? err.message : "Falha ao iniciar conferência."); }
+    finally { setStarting(false); }
+  }
 
-  const bothLoaded = yampiIds !== null && olistOrders.length > 0;
-
-  return (
-    <>
-      <Header
-        title="Abelha Par - Dashboard"
-        subtitle="Carregue os dados para iniciar a conferência de pedidos"
-        breadcrumbs={["Abelha Par", "Dashboard"]}
-      />
-
-      {/* Hero Stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="card p-6 sm:p-8 mb-8 sm:mb-10 overflow-hidden relative"
-      >
-        <div className="absolute -right-10 -top-16 w-44 h-44 rounded-full bg-[var(--color-accent-yellow)]/15 blur-2xl pointer-events-none" />
-        <div className="relative flex items-center gap-4 sm:gap-6">
-          <div className="w-14 h-14 sm:w-[72px] sm:h-[72px] p-3 sm:p-4 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-accent-yellow)] to-[var(--color-accent-blue)] flex items-center justify-center shadow-lg shrink-0">
-            <Package className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-          </div>
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--color-accent-blue)] mb-1">Central de conferência</p>
-            <h2 className="text-[20px] font-bold text-[var(--color-text-primary)] tracking-tight">
-              Dashboard
-            </h2>
-            <p className="text-[14px] text-[var(--color-text-secondary)] mt-1">
-              {bothLoaded
-                ? `${olistOrders.length} pedidos Olist × ${yampiIds.size} IDs Yampi carregados`
-                : "Carregue os pedidos da API e a planilha Yampi para cruzar os dados"}
-            </p>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-6 mb-8 sm:mb-10">
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <ApiFetchCard onFetch={handleFetch} />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <UploadCard onUpload={handleUpload} onClear={handleClearUpload} />
-        </motion.div>
-      </div>
-
-      {/* Cross-reference indicator */}
-      {!bothLoaded && (yampiIds !== null || olistOrders.length > 0) && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center gap-3 p-6 sm:p-8 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/70 border border-dashed border-[var(--color-border-medium)] mb-10 text-center"
-        >
-          <ArrowDownUp className="w-5 h-5 text-[var(--color-text-tertiary)] animate-pulse-slow" />
-          <p className="text-[14px] text-[var(--color-text-secondary)]">
-            {yampiIds !== null
-              ? "Agora busque os pedidos na API para cruzar os dados"
-              : "Agora faça upload da planilha Yampi para cruzar os dados"}
-          </p>
-        </motion.div>
-      )}
-
-      {/* Match Summary */}
-      {bothLoaded && isResolving && (
-        <div className="flex items-center justify-center gap-3 p-6 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/70 border border-dashed border-[var(--color-border-medium)] text-center">
-          <div className="w-5 h-5 border-2 border-[var(--color-accent-blue)] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[14px] text-[var(--color-text-secondary)]">
-            {resolutionError || `Consultando observações internas na Tiny: ${resolvedCount} de ${olistOrders.length} pedidos`}
-          </p>
-        </div>
-      )}
-
-      {bothLoaded && resolutionError && !isResolving && (
-        <div role="alert" className="p-5 rounded-[var(--radius-lg)] bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)]">
-          {resolutionError} Tente buscar os pedidos novamente.
-        </div>
-      )}
-
-      {bothLoaded && !isResolving && !resolutionError && (
-        <MatchSummary
-          matchedOrders={matchedOrders}
-          unmatchedOrders={unmatchedOrders}
-          missingFromOlist={missingFromOlist}
-          onStartScanning={handleStartScanning}
-        />
-      )}
-    </>
-  );
+  const ready = result && !result.issues.length && result.orders.length === selected.length && selected.length > 0;
+  return <>
+    <Header title="Preparar conferência" subtitle="Selecione os pedidos do dia na Nuvemshop e confira a correspondência na Olist." breadcrumbs={["Abelha Par", "Preparação"]} />
+    {sessionId && <div className="card p-5 mb-6 flex flex-wrap items-center justify-between gap-3"><p>Existe uma conferência salva neste navegador.</p><Link href="/scanner" className="btn-primary">Retomar conferência</Link></div>}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <section className="card p-6 flex flex-col gap-4">
+        <h2 className="text-xl font-semibold">Pedidos do dia · Nuvemshop</h2>
+        <p className="text-[var(--color-text-secondary)]">Marque os pedidos preparados pela equipe. A confirmação define exatamente quais pedidos entram neste lote.</p>
+        <strong className="text-3xl">{prep.confirmedAt ? prep.confirmedIds.length : 0} <span className="text-base font-normal">pedidos confirmados</span></strong>
+        <p className="text-sm">{prep.confirmedAt ? `Seleção confirmada em ${new Date(prep.confirmedAt).toLocaleString("pt-BR")}.` : "Aguardando seleção e confirmação na aba Pedidos do dia."}</p>
+        <Link href="/orders" className="btn-primary self-start">{prep.confirmedAt ? "Revisar seleção" : "Selecionar pedidos"}</Link>
+      </section>
+      <ApiFetchCard onFetch={onFetch} onFetchStart={onFetchStart} disabled={busy || starting} />
+    </div>
+    {busy && <p role="status" className="card p-5 mb-5">{status}</p>}
+    {error && <p role="alert" className="card p-5 mb-5 text-[var(--color-accent-red)]">{error}</p>}
+    {!result && !busy && <p className="card p-6">{!prep.confirmedAt ? "Confirme a seleção dos pedidos na aba Pedidos do dia." : !prep.olistFetchedAt ? "Seleção confirmada. Busque os pedidos na Olist para liberar a bipagem." : "Configure o vínculo entre a Nuvemshop e a Olist no servidor para continuar."}</p>}
+    {result && !busy && <section className="card p-6 space-y-5">
+      <h2 className="text-xl font-semibold">Conferência entre plataformas</h2>
+      <p>{result.orders.length} de {selected.length} pedidos encontrados · {result.ignored} pedidos da Olist fora da seleção</p>
+      {result.issues.length > 0 && <div role="alert" className="rounded-lg p-4 bg-[var(--color-accent-red)]/10"><p className="font-semibold mb-2">Resolva as pendências para iniciar a bipagem:</p><ul className="list-disc pl-5 space-y-1">{result.issues.map((issue, i) => <li key={i}>Nuvemshop #{issue.orderNumber}: {issue.message}</li>)}</ul><p className="mt-3 text-sm">Aguarde a importação na Olist e busque novamente. Amplie o período para incluir pedidos criados em outros dias.</p></div>}
+      {result.orders.some(order => !order.trackingCode.trim()) && <p className="text-[var(--color-accent-orange)]">Há pedidos sem rastreio. Eles entrarão na conferência e aguardarão o código da Olist para serem bipados.</p>}
+      <div className="overflow-auto max-h-96"><table className="w-full text-sm text-left"><thead><tr><th className="p-3">Pedido</th><th className="p-3">Olist</th><th className="p-3">Cliente</th><th className="p-3">Rastreio</th></tr></thead><tbody>{result.orders.map(order => <tr key={order.id} className="border-t border-[var(--color-border-light)]"><td className="p-3">{orderReference(order)}</td><td className="p-3">#{order.numeroPedido}</td><td className="p-3">{order.clientName}</td><td className="p-3">{order.trackingCode || "Aguardando rastreio"}</td></tr>)}</tbody></table></div>
+      <label className="block">Responsável pela conferência<input className="field mt-2 max-w-md block" maxLength={100} value={responsible} onChange={event => setResponsible(event.target.value)} placeholder="Nome do responsável" disabled={starting} /></label>
+      <button className="btn-success" disabled={!ready || starting || !normalizeResponsible(responsible)} onClick={startScanning}>{starting ? "Validando e iniciando…" : "Iniciar bipagem"}</button>
+    </section>}
+  </>;
 }

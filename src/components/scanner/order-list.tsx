@@ -1,5 +1,7 @@
 "use client";
 
+import { orderReference } from "@/lib/order-reference";
+
 import { Check, Clock, CalendarDays, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ScanOrder } from "@/types";
@@ -94,7 +96,7 @@ export function OrderList({ orders }: OrderListProps) {
               )}
               <span className="text-[10px] text-[var(--color-text-tertiary)]">•</span>
               <p className="text-[11px] text-[var(--color-text-tertiary)]">
-                Yampi #{order.yampiId}
+                {orderReference(order)}
               </p>
               {formatOrderDate(order.dataCriacao) && (
                 <>
