@@ -6,10 +6,46 @@
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext {
-  if (!audioContext) {
+  if (!audioContext || audioContext.state === "closed") {
     audioContext = new AudioContext();
   }
   return audioContext;
+}
+
+/** Called from a user gesture so asynchronous scan confirmation can play audio. */
+export function prepareAudio(): void {
+  try {
+    const ctx = getAudioContext();
+    if (ctx.state === "suspended") void ctx.resume().catch(() => {});
+  } catch { /* Sound is optional on devices without Web Audio. */ }
+}
+
+/** Original short 8-bit victory fanfare; no game recording or melody is bundled. */
+export function playVictory(): void {
+  try {
+    const ctx = getAudioContext();
+    const schedule = () => {
+      const notes = [[74, 0.12], [78, 0.12], [81, 0.22], [79, 0.12], [83, 0.12], [86, 0.18], [85, 0.12], [86, 0.45]];
+      let start = ctx.currentTime + 0.02;
+      for (const [midi, duration] of notes) {
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(440 * 2 ** ((midi - 69) / 12), start);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.10, start + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+        oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.01);
+        start += duration + 0.025;
+      }
+    };
+    if (ctx.state === "suspended") void ctx.resume().then(schedule).catch(() => {});
+    else schedule();
+  } catch { /* Finishing a batch must not depend on audio support. */ }
 }
 
 /**

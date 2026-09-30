@@ -3,6 +3,8 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Barcode, ScanLine } from "lucide-react";
 import { useScanStore } from "@/stores/scan-store";
+import { isPasteShortcut, isTransferredInput } from "@/lib/scanner-input-guard";
+import { prepareAudio, playVictory } from "@/lib/sounds";
 
 interface ScanInputProps {
   disabled?: boolean;
@@ -11,6 +13,7 @@ interface ScanInputProps {
 export function ScanInput({ disabled = false }: ScanInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
+  const [transferNotice, setTransferNotice] = useState<string | null>(null);
   const processBarcode = useScanStore((state) => state.submitBarcode);
   const busy = useScanStore((state) => state.busy);
   const scannerState = useScanStore((state) => state.state);
@@ -26,16 +29,29 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
     return () => window.removeEventListener("focus", focusInput);
   }, [focusInput]);
 
-  const submit = useCallback(() => {
+  const blockTransfer = useCallback((event: { preventDefault(): void }) => {
+    event.preventDefault();
+    setValue("");
+    setTransferNotice("Colagem e arrastar códigos não são permitidos. Leia o código na etiqueta com o scanner.");
+    inputRef.current?.focus();
+  }, []);
+
+  const submit = useCallback(async () => {
     const code = value.trim();
     if (!code || isDisabled) return;
-    processBarcode(code);
+    // Unlock audio during the gesture, before waiting for the server response.
+    prepareAudio();
+    const sessionId = useScanStore.getState().sessionId;
     setValue("");
+    setTransferNotice(null);
+    await processBarcode(code);
+    const current = useScanStore.getState();
+    if (current.sessionId === sessionId && current.state === "complete" && current.currentResult?.type === "success") playVictory();
   }, [isDisabled, processBarcode, value]);
 
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    submit();
+    void submit();
   }, [submit]);
 
   return (
@@ -54,7 +70,12 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
         <input
           ref={inputRef}
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(event) => { setValue(event.target.value); setTransferNotice(null); }}
+          onPaste={blockTransfer}
+          onDrop={blockTransfer}
+          onDragOver={event => event.preventDefault()}
+          onBeforeInput={event => { if (isTransferredInput((event.nativeEvent as InputEvent).inputType)) blockTransfer(event); }}
+          onKeyDown={event => { if (isPasteShortcut(event)) blockTransfer(event); }}
           disabled={isDisabled}
           type="text"
           inputMode="text"
@@ -63,6 +84,8 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
           autoCapitalize="off"
           autoCorrect="off"
           spellCheck={false}
+          maxLength={200}
+          aria-describedby={transferNotice ? "scanner-transfer-notice" : undefined}
           placeholder="Aponte o scanner ou digite o código"
           className="flex-1 min-w-0 px-4 py-3 rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] text-[15px] font-mono text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/30 focus:border-[var(--color-accent-blue)] disabled:opacity-50"
           aria-label="Código de rastreamento"
@@ -72,6 +95,7 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
           {busy ? "Registrando…" : "Bipar"}
         </button>
       </form>
+      {transferNotice && <p id="scanner-transfer-notice" role="status" className="mt-3 text-sm text-[var(--color-accent-orange)]">{transferNotice}</p>}
     </section>
   );
 }

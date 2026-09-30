@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { ScanOrder } from "@/types";
 import { motion } from "framer-motion";
 import { hasTrackingCode } from "@/lib/tracking";
+import { preventTrackingTransfer } from "@/lib/scanner-input-guard";
 
 interface OrderListProps {
   orders: ScanOrder[];
@@ -90,7 +91,8 @@ export function OrderList({ orders }: OrderListProps) {
                   Pedido sem código de rastreio
                 </p>
               ) : (
-                <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono">
+                <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono select-none" draggable={false}
+                  onCopy={preventTrackingTransfer} onCut={preventTrackingTransfer} onDragStart={preventTrackingTransfer}>
                   {order.trackingCode}
                 </p>
               )}

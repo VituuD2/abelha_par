@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Package } from "lucide-react";
 import { playSuccess } from "@/lib/sounds";
+import { preventTrackingTransfer } from "@/lib/scanner-input-guard";
 import type { ScanOrder } from "@/types";
 
 interface SuccessPopupProps {
@@ -48,7 +49,8 @@ export function SuccessPopup({ visible, order, onDismiss }: SuccessPopupProps) {
                 <p className="text-[13px] text-[var(--color-text-secondary)] truncate">
                   {order.clientName}
                 </p>
-                <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono mt-0.5">
+                <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono mt-0.5 select-none" draggable={false}
+                  onCopy={preventTrackingTransfer} onCut={preventTrackingTransfer} onDragStart={preventTrackingTransfer}>
                   {order.trackingCode}
                 </p>
               </div>
