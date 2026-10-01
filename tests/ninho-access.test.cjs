@@ -56,6 +56,19 @@ test('an active operator fetches orders through workspace credentials and shares
   const response=await olistRoute.POST(new Request('https://app.test/api/olist',{method:'POST',body:JSON.stringify({dateFrom:'2026-10-01',dateMode:'created'})}));
   assert.equal(response.status,200);assert.ok(!(await response.text()).includes('private'));
 });
+
+test('live menu permissions identify the authenticated operator and cannot be cached',async t=>{
+  membership(t);
+  const route=require('../src/app/api/auth/access/route.ts');
+  const response=await route.GET();
+  assert.equal(response.status,200);
+  assert.deepEqual(await response.json(),{userId:'operator-id',role:'operator'});
+  assert.match(response.headers.get('cache-control'),/no-store/);
+  assert.equal(response.headers.get('vary'),'Cookie');
+  membership(t,{active:false});
+  const denied=await route.GET();assert.equal(denied.status,403);
+  assert.match(denied.headers.get('cache-control'),/no-store/);
+});
 test('webhook signatures retain the old URL initially and reject it after rotation',async t=>{
   const secret=process.env.OLIST_WEBHOOK_SECRET;
   process.env.OLIST_WEBHOOK_SECRET='test-secret-that-is-longer-than-thirty-two-characters';
