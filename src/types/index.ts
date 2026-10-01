@@ -1,5 +1,10 @@
 /* ===== Olist API Types ===== */
 
+export interface OlistWebhookStatus {
+  status: "active" | "pending" | "unknown";
+  lastReceivedAt: string | null;
+}
+
 export interface OlistOrder {
   id: number;
   /** List responses with omitted required fields must be resolved before scanning. */

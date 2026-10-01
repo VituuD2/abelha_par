@@ -46,10 +46,29 @@ test('a cache write failure prevents a successful preparation response',async t=
   const response=await route.POST(new Request('http://localhost/api/olist',{method:'POST',body:JSON.stringify({dateFrom:'2026-10-01',dateMode:'created'})}));
   assert.equal(response.status,502);
 });
-test('connection status does not spend orders API quota or wait for the provider',async t=>{
+test('connection status reports only this owner webhook receipt without spending orders API quota',async t=>{
   t.mock.method(server,'createClient',async()=>({auth:{getUser:async()=>({data:{user:{id:owner}},error:null})}}));
   t.mock.method(tinyAuth,'getValidTinyToken',async()=>({token:'private-token',status:'valid'}));
   t.mock.method(global,'fetch',()=>{throw Error('unnecessary provider request')});
-  const response=await statusRoute.GET(new Request('http://localhost/api/auth/status'));
-  assert.equal(response.status,200);const text=await response.text();assert.equal(JSON.parse(text).isConnected,true);assert.ok(!text.includes('private-token'));
+  for (const scenario of [
+    { name: 'first notification received', data: { last_webhook_at: '2026-10-01T16:30:00Z' }, status: 'active', timestamp: '2026-10-01T16:30:00.000Z' },
+    { name: 'no sync row yet', data: null, status: 'pending' },
+    { name: 'sync has run but no webhook received', data: { last_webhook_at: null }, status: 'pending' },
+    { name: 'database unavailable', data: null, error: { code: 'offline' }, status: 'unknown' },
+  ]) await t.test(scenario.name, async st => {
+    st.mock.method(admin,'createAdminClient',()=>({from(table){
+      assert.equal(table,'olist_sync_state');
+      const query = {
+        select(fields){assert.equal(fields,'last_webhook_at');return query;},
+        eq(key,value){assert.equal(key,'owner_id');assert.equal(value,owner);return query;},
+        abortSignal(){return query;},
+        async maybeSingle(){return{data:scenario.data,error:scenario.error||null};},
+      }; return query;
+    }}));
+    const response=await statusRoute.GET(new Request('http://localhost/api/auth/status'));
+    assert.equal(response.status,200);
+    const text=await response.text(), body=JSON.parse(text);
+    assert.equal(body.isConnected,true);assert.ok(!text.includes('private-token'));
+    assert.deepEqual(body.webhookStatus,{status:scenario.status,lastReceivedAt:scenario.timestamp||null});
+  });
 });

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Cloud, Loader2, Check, AlertCircle, Link as LinkIcon, ExternalLink, RefreshCw, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { OlistOrder, ReconciliationConfig } from "@/types";
+import type { OlistOrder, OlistWebhookStatus, ReconciliationConfig } from "@/types";
 import { isValidDateRange } from "@/lib/dates";
 
 interface ApiFetchCardProps {
@@ -42,6 +42,9 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
   const [error, setError] = useState<string | null>(null);
   const [fetchedCount, setFetchedCount] = useState<number | null>(null);
   const [webhookUrl, setWebhookUrl] = useState<string | null>(null);
+  const [webhookStatus, setWebhookStatus] = useState<OlistWebhookStatus>({ status: "unknown", lastReceivedAt: null });
+  const [showWebhookConfig, setShowWebhookConfig] = useState(false);
+  const [isCheckingWebhook, setIsCheckingWebhook] = useState(false);
   const [copiedWebhook, setCopiedWebhook] = useState(false);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const fetchController = useRef<AbortController | null>(null);
@@ -70,12 +73,14 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
       setHasOrdersAccessDenied(data.status === "access_denied");
       setAuthMessage(data.message || null);
       setWebhookUrl(data.webhookUrl || null);
+      setWebhookStatus(data.webhookStatus || { status: "unknown", lastReceivedAt: null });
 
       // If we just detected disconnection while user thought they were connected
       if (!data.isConnected && data.needsReconnect) {
         setFetchedCount(null);
       }
     } catch (err) {
+      setWebhookStatus({ status: "unknown", lastReceivedAt: null });
       console.error("Failed to check auth status", err);
     } finally {
       if (showLoading) setIsCheckingAuth(false);
@@ -103,8 +108,11 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
     pollTimerRef.current = setInterval(() => {
       checkAuthStatus(false);
     }, AUTH_POLL_INTERVAL);
+    const onFocus = () => { void checkAuthStatus(false); };
+    window.addEventListener("focus", onFocus);
 
     return () => {
+      window.removeEventListener("focus", onFocus);
       if (pollTimerRef.current) {
         clearInterval(pollTimerRef.current);
       }
@@ -202,6 +210,8 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
       setAuthMessage(null);
       setFetchedCount(null);
       setWebhookUrl(null);
+      setWebhookStatus({ status: "unknown", lastReceivedAt: null });
+      setShowWebhookConfig(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Não foi possível remover a conexão Tiny.");
     } finally {
@@ -471,14 +481,40 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
             </AnimatePresence>
 
             {webhookUrl && (
-              <div className="mt-4 p-3.5 rounded-[var(--radius-md)] bg-[var(--color-accent-yellow)]/10 border border-[var(--color-accent-yellow)]/25">
-                <p className="text-[12px] font-semibold text-[var(--color-text-primary)]">Automação de boletos</p>
+              <div className={`mt-4 p-3.5 rounded-[var(--radius-md)] border ${webhookStatus.status === "active"
+                ? "bg-[var(--color-accent-green)]/10 border-[var(--color-accent-green)]/25"
+                : "bg-[var(--color-accent-yellow)]/10 border-[var(--color-accent-yellow)]/25"}`}>
+                <div className="flex items-center justify-between gap-3">
+                  <p role="status" className="text-[12px] font-semibold text-[var(--color-text-primary)]">
+                    {webhookStatus.status === "active" ? "Webhook ativo" : webhookStatus.status === "pending" ? "Aguardando primeira notificação" : "Status do webhook indisponível"}
+                  </p>
+                  <button type="button" onClick={() => setShowWebhookConfig(value => !value)} aria-expanded={showWebhookConfig} aria-controls="olist-webhook-config" className="btn-ghost px-2 py-1 min-h-0 text-[12px]">
+                    {showWebhookConfig ? "Fechar" : "Configurar"}
+                  </button>
+                </div>
                 <p className="text-[12px] text-[var(--color-text-secondary)] mt-1">
-                  Cadastre esta URL no webhook de vendas da Olist para atualizar pedidos automaticamente.
+                  {webhookStatus.status === "active" && webhookStatus.lastReceivedAt
+                    ? <>Última notificação recebida: <time dateTime={webhookStatus.lastReceivedAt}>{new Date(webhookStatus.lastReceivedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</time> (Brasília).</>
+                    : webhookStatus.status === "pending"
+                      ? "Se já cadastrou a URL na Olist, aguarde a criação ou alteração de um pedido para confirmar o recebimento."
+                      : "Não foi possível consultar o recebimento de notificações. Tente verificar novamente."}
                 </p>
-                <button type="button" onClick={copyWebhookUrl} className="btn-ghost px-0 py-1.5 min-h-0 text-[12px] mt-1.5">
-                  {copiedWebhook ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copiedWebhook ? "URL copiada" : "Copiar URL do webhook"}
+                {showWebhookConfig && <div id="olist-webhook-config" className="mt-3 space-y-2">
+                  <p className="text-[12px] text-[var(--color-text-secondary)]">Cadastre esta URL em Notificações de vendas nos Webhooks da Olist para atualizar os pedidos automaticamente.</p>
+                  <label className="block text-[12px] text-[var(--color-text-secondary)]">URL do webhook
+                    <input readOnly value={webhookUrl} onFocus={event => event.currentTarget.select()} className="field mt-1 w-full text-[12px]" />
+                  </label>
+                  <button type="button" onClick={copyWebhookUrl} className="btn-ghost px-0 py-1.5 min-h-0 text-[12px]">
+                    {copiedWebhook ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedWebhook ? "URL copiada" : "Copiar URL do webhook"}
+                  </button>
+                </div>}
+                <button type="button" disabled={isCheckingWebhook} onClick={async () => {
+                  setIsCheckingWebhook(true);
+                  try { await checkAuthStatus(); } finally { setIsCheckingWebhook(false); }
+                }} className="btn-ghost px-0 py-1.5 min-h-0 text-[12px] mt-1.5">
+                  <RefreshCw className={`w-3.5 h-3.5 ${isCheckingWebhook ? "animate-spin" : ""}`} />
+                  {isCheckingWebhook ? "Verificando…" : "Verificar status"}
                 </button>
               </div>
             )}

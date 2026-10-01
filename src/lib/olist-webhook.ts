@@ -1,6 +1,24 @@
 import "server-only";
 
 import { createHmac, timingSafeEqual } from "crypto";
+import { createAdminClient } from "@/lib/supabase/admin";
+import type { OlistWebhookStatus } from "@/types";
+
+export async function getOlistWebhookStatus(ownerId: string): Promise<OlistWebhookStatus> {
+  try {
+    const { data, error } = await createAdminClient().from("olist_sync_state")
+      .select("last_webhook_at").eq("owner_id", ownerId)
+      .abortSignal(AbortSignal.timeout(3_000)).maybeSingle();
+    if (error) return { status: "unknown", lastReceivedAt: null };
+    if (!data?.last_webhook_at) return { status: "pending", lastReceivedAt: null };
+    const timestamp = Date.parse(data.last_webhook_at);
+    if (!Number.isFinite(timestamp)) return { status: "unknown", lastReceivedAt: null };
+    return { status: "active", lastReceivedAt: new Date(timestamp).toISOString() };
+  } catch {
+    // A webhook status read must not make a working OAuth connection look disconnected.
+    return { status: "unknown", lastReceivedAt: null };
+  }
+}
 
 function signingSecret() {
   const secret = process.env.OLIST_WEBHOOK_SECRET;

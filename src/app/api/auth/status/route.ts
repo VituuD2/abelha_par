@@ -4,7 +4,7 @@ import { testTinyConnection } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 import { getAppUrl } from "@/lib/app-url";
-import { getOlistWebhookUrl } from "@/lib/olist-webhook";
+import { getOlistWebhookUrl, getOlistWebhookStatus } from "@/lib/olist-webhook";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -37,13 +37,17 @@ export async function GET(request: Request) {
 
   // Normal polling checks the stored OAuth lifetime and renews it when needed.
   // The orders API is only contacted by an explicit diagnostic request.
+  const webhook = {
+    webhookUrl: getOlistWebhookUrl(getAppUrl(request), user.id),
+    webhookStatus: await getOlistWebhookStatus(user.id),
+  };
   if (new URL(request.url).searchParams.get("verify") !== "1") {
     return NextResponse.json({
       isConnected: true,
       needsReconnect: false,
       status: result.status,
       message: result.message || null,
-      webhookUrl: getOlistWebhookUrl(getAppUrl(request), user.id),
+      ...webhook,
     });
   }
   const connection = await testTinyConnection(result.token);
@@ -53,7 +57,7 @@ export async function GET(request: Request) {
       needsReconnect: false,
       status: result.status,
       message: null,
-      webhookUrl: getOlistWebhookUrl(getAppUrl(request), user.id),
+      ...webhook,
     });
   }
   if (connection.status === 401 || connection.status === 403) {
@@ -73,5 +77,5 @@ export async function GET(request: Request) {
       message: "A Olist autenticou a conta, mas negou acesso à API de Pedidos.",
     });
   }
-  return NextResponse.json({ isConnected: true, needsReconnect: false, status: "valid", message: "Não foi possível confirmar a API agora." });
+  return NextResponse.json({ isConnected: true, needsReconnect: false, status: "valid", message: "Não foi possível confirmar a API agora.", ...webhook });
 }
