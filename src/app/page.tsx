@@ -25,6 +25,11 @@ export default function DashboardPage() {
   const controller = useRef<AbortController | null>(null);
   const attempt = useRef<{ key: string; id: string } | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
+  useEffect(() => {
+    const scan = useScanStore.getState();
+    if (scan.sessionStatus === "completed") scan.reset();
+    else if (sessionId) void scan.restoreSession();
+  }, [sessionId]);
   const selected = useMemo(() => prep.nuvemshopOrders.filter(order => prep.confirmedIds.includes(order.id)), [prep.nuvemshopOrders, prep.confirmedIds]);
   const result = useMemo(() => prep.mapping && prep.confirmedAt && prep.olistFetchedAt
     ? reconcileOrders(selected, prep.olistOrders, prep.mapping) : null,
@@ -92,7 +97,6 @@ export default function DashboardPage() {
   const ready = result && !result.issues.length && result.orders.length === selected.length && selected.length > 0;
   return <>
     <Header title="Preparar conferência" subtitle="Selecione os pedidos do dia na Nuvemshop e confira a correspondência na Olist." breadcrumbs={["Abelha Par", "Preparação"]} />
-    {sessionId && <div className="card p-5 mb-6 flex flex-wrap items-center justify-between gap-3"><p>Existe uma conferência salva neste navegador.</p><Link href="/scanner" className="btn-primary">Retomar conferência</Link></div>}
     <ActiveSessions />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <section className="card p-6 flex flex-col gap-4">

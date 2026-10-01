@@ -54,6 +54,7 @@ function printBatch(batch: Batch) {
 export function Completion() {
   const orders = useScanStore((state) => state.orders);
   const sessionId = useScanStore((state) => state.sessionId);
+  const sessionBusy = useScanStore((state) => state.busy);
   const reset = useScanStore((state) => state.reset);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -97,10 +98,12 @@ export function Completion() {
   }, []);
 
   const handleSave = useCallback(async () => {
+    if (sessionBusy || isSaving) return;
     if (!sessionId || orders.some(order => order.status !== "checked" || !order.trackingCode.trim())) {
       alert("Todos os pedidos precisam estar bipados e ter código de rastreio para salvar o lote.");
       return;
     }
+    const sessionVersion = useScanStore.getState().sessionVersion;
     setIsSaving(true);
     try {
       const response = await fetch("/api/batches", {
@@ -110,6 +113,7 @@ export function Completion() {
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || !payload.batch) throw new Error(payload.error || "Não foi possível salvar o lote.");
+      useScanStore.getState().markCompleted(sessionId, sessionVersion);
       setSavedBatch(payload.batch as Batch);
       setSaved(true);
     } catch (err) {
@@ -118,7 +122,7 @@ export function Completion() {
     } finally {
       setIsSaving(false);
     }
-  }, [orders, sessionId]);
+  }, [orders, sessionId, sessionBusy, isSaving]);
 
   const handleNewBatch = useCallback(() => {
     usePreparationStore.getState().reset();
@@ -172,7 +176,7 @@ export function Completion() {
           {!saved ? (
             <button
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={isSaving || sessionBusy}
               className="btn-success w-full py-3 text-[16px]"
             >
               {isSaving ? (

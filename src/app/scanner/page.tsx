@@ -34,7 +34,11 @@ export default function ScannerPage() {
     acknowledgeSuccess,
   } = useScanner();
   const refreshError = useTrackingRefresh();
-  useEffect(() => { if (sessionId && !useScanStore.getState().orders.length) void restoreSession(); }, [sessionId, restoreSession]);
+  useEffect(() => { if (sessionId) void restoreSession(); }, [sessionId, restoreSession]);
+  useEffect(() => () => {
+    const scan = useScanStore.getState();
+    if (scan.sessionStatus === "completed") scan.reset();
+  }, []);
   const missingTracking = orders.filter((order) => !hasTrackingCode(order.trackingCode));
   const [missingNotice, setMissingNotice] = useState(() => ({ sessionVersion, orders: missingTracking }));
   const [missingNoticeAcknowledged, setMissingNoticeAcknowledged] = useState(false);
