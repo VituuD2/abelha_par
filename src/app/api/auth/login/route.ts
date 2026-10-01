@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/auth";
+import { authorize } from "@/lib/access";
 import { getRequestOrigin } from "@/lib/app-url";
 import { createTinyOAuthState } from "@/lib/tiny-oauth-state";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const user = await getAuthenticatedUser();
-  if (!user) {
-    const url = new URL("/login", request.url);
-    url.searchParams.set("next", "/");
-    return NextResponse.redirect(url);
+  const { access, response: denied } = await authorize(true);
+  if (denied) {
+    if (denied.status === 401) return NextResponse.redirect(new URL("/login?next=%2Fninho", request.url));
+    return denied;
   }
+  const user = access.user;
 
   const clientId = process.env.TINY_CLIENT_ID;
   if (!clientId) return NextResponse.json({ error: "TINY_CLIENT_ID não configurado" }, { status: 500 });

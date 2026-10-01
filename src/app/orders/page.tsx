@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
-import { NuvemshopConnection } from "@/components/dashboard/nuvemshop-connection";
+import Link from "next/link";
+import { useAppAccess } from "@/components/layout/app-shell";
 import { usePreparationStore } from "@/stores/preparation-store";
 import { saoPauloDate, isValidDateRange } from "@/lib/dates";
 import { searchText, toggleOrderSelection } from "@/lib/order-selection";
@@ -15,11 +16,13 @@ const shippingLabels: Record<string, string> = { unpacked: "Não embalado", unsh
 const PAGE_SIZE = 50;
 
 export default function OrdersPage() {
+  const { isAdmin } = useAppAccess();
   const router = useRouter();
   const orders = usePreparationStore(state => state.nuvemshopOrders);
   const selectedIds = usePreparationStore(state => state.selectedIds);
   const confirmedAt = usePreparationStore(state => state.confirmedAt);
   const [connected, setConnected] = useState(false);
+  const [checkingConnection, setCheckingConnection] = useState(true);
   const [from, setFrom] = useState(() => saoPauloDate());
   const [to, setTo] = useState(() => saoPauloDate());
   const [mode, setMode] = useState("updated");
@@ -34,6 +37,15 @@ export default function OrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const anchor = useRef<number | null>(null);
   const requestRef = useRef<AbortController | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/nuvemshop/connection", { cache: "no-store" }).then(async response => {
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Não foi possível verificar a conexão.");
+      if (!cancelled) { setConnected(data.connected); usePreparationStore.getState().setMapping(data.mapping); }
+    }).catch(reason => { if (!cancelled) setError(reason.message); }).finally(() => { if (!cancelled) setCheckingConnection(false); });
+    return () => { cancelled = true; };
+  }, []);
   useEffect(() => () => requestRef.current?.abort(), []);
   useEffect(() => { setPage(1); anchor.current = null; }, [search, payment, shipping, onlySelected, sort]);
   const selected = useMemo(() => new Set(selectedIds), [selectedIds]);
@@ -89,7 +101,7 @@ export default function OrdersPage() {
   };
   return <>
     <Header title="Pedidos Nuvemshop" subtitle="Selecione os pedidos preparados para o lote de hoje" breadcrumbs={["Abelha Par", "Pedidos Nuvemshop"]} />
-    <NuvemshopConnection onConnected={setConnected} />
+    {!checkingConnection && !connected && <section className="card p-5 mb-5"><p>A conexão Nuvemshop precisa estar disponível para buscar os pedidos.</p>{isAdmin ? <Link href="/ninho" className="btn-ghost mt-2">Configurar no Ninho</Link> : <p className="text-sm mt-2 text-[var(--color-text-secondary)]">Peça ao administrador para revisar a conexão no Ninho.</p>}</section>}
     <section className="card p-5 sm:p-6 mb-5">
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
         <label className="text-sm">Buscar por<select className="field mt-1" value={mode} onChange={event => setMode(event.target.value)}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></select></label>

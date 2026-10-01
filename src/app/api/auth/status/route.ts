@@ -1,35 +1,23 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { authorize } from "@/lib/access";
 import { testTinyConnection } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
-import { getAppUrl } from "@/lib/app-url";
-import { getOlistWebhookUrl, getOlistWebhookStatus } from "@/lib/olist-webhook";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function hasSupabaseSessionCookie(request: Request) {
-  return /(?:^|;\s*)sb-[^=;]+-auth-token(?:\.\d+)?=/.test(request.headers.get("cookie") || "");
-}
-
 export async function GET(request: Request) {
   const requestId = request.headers.get("x-vercel-id") || crypto.randomUUID();
-  const supabase = await createClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (!user) {
-    console.warn("[tiny-status] application session unavailable", {
-      requestId,
-      hasSupabaseSessionCookie: hasSupabaseSessionCookie(request),
-      authError: authError?.message || null,
-    });
-  }
-  if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  if (isRateLimited(`tiny-status:${user.id}`, 20, 60_000)) {
+  const { access, response: denied } = await authorize();
+  if (denied) return denied;
+  const verify = new URL(request.url).searchParams.get("verify") === "1";
+  if (verify && access.role !== "admin") return NextResponse.json({ error: "Diagnóstico disponível somente no Ninho." }, { status: 403 });
+  if (isRateLimited(`tiny-status:${access.workspaceId}`, 20, 60_000)) {
     return NextResponse.json({ error: "Muitas verificações. Tente novamente." }, { status: 429 });
   }
 
-  const result = await getValidTinyToken(user.id);
+  const result = await getValidTinyToken(access.workspaceId);
   if (!result.token) {
     console.warn("[tiny-status] Tiny connection unavailable", { requestId, status: result.status });
     return NextResponse.json({ isConnected: false, needsReconnect: result.status === "expired", status: result.status, message: result.message || null });
@@ -37,17 +25,12 @@ export async function GET(request: Request) {
 
   // Normal polling checks the stored OAuth lifetime and renews it when needed.
   // The orders API is only contacted by an explicit diagnostic request.
-  const webhook = {
-    webhookUrl: getOlistWebhookUrl(getAppUrl(request), user.id),
-    webhookStatus: await getOlistWebhookStatus(user.id),
-  };
-  if (new URL(request.url).searchParams.get("verify") !== "1") {
+  if (!verify) {
     return NextResponse.json({
       isConnected: true,
       needsReconnect: false,
       status: result.status,
       message: result.message || null,
-      ...webhook,
     });
   }
   const connection = await testTinyConnection(result.token);
@@ -57,7 +40,6 @@ export async function GET(request: Request) {
       needsReconnect: false,
       status: result.status,
       message: null,
-      ...webhook,
     });
   }
   if (connection.status === 401 || connection.status === 403) {
@@ -77,5 +59,5 @@ export async function GET(request: Request) {
       message: "A Olist autenticou a conta, mas negou acesso à API de Pedidos.",
     });
   }
-  return NextResponse.json({ isConnected: true, needsReconnect: false, status: "valid", message: "Não foi possível confirmar a API agora.", ...webhook });
+  return NextResponse.json({ isConnected: true, needsReconnect: false, status: "valid", message: "Não foi possível confirmar a API agora." });
 }

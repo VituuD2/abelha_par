@@ -23,21 +23,21 @@ const expired = (): TokenResult => ({ token: null, status: "expired", message: "
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 /** Coalesce calls locally; the database lease also covers other instances. */
-export function getValidTinyToken(userId: string, minimumValidityMs = 300_000): Promise<TokenResult> {
-  const existing = inFlight.get(userId);
+export function getValidTinyToken(workspaceId: string, minimumValidityMs = 300_000): Promise<TokenResult> {
+  const existing = inFlight.get(workspaceId);
   if (existing) return existing;
-  const pending = getToken(userId, minimumValidityMs)
+  const pending = getToken(workspaceId, minimumValidityMs)
     .catch(() => failure("Não foi possível consultar ou renovar a conexão Olist. Tente novamente."))
-    .finally(() => { inFlight.delete(userId); });
-  inFlight.set(userId, pending);
+    .finally(() => { inFlight.delete(workspaceId); });
+  inFlight.set(workspaceId, pending);
   return pending;
 }
-async function readIntegration(userId: string) {
-  return createAdminClient().from("tiny_integrations").select(FIELDS).eq("owner_id", userId)
+async function readIntegration(workspaceId: string) {
+  return createAdminClient().from("tiny_integrations").select(FIELDS).eq("workspace_id", workspaceId)
     .abortSignal(AbortSignal.timeout(3_000)).maybeSingle();
 }
-async function getToken(userId: string, minimumValidityMs: number): Promise<TokenResult> {
-  const { data, error } = await readIntegration(userId);
+async function getToken(workspaceId: string, minimumValidityMs: number): Promise<TokenResult> {
+  const { data, error } = await readIntegration(workspaceId);
   if (error) return failure("Não foi possível consultar a conexão Olist no banco. Tente novamente.");
   if (!data) return expired();
   const integration = data as Integration;
@@ -53,7 +53,7 @@ async function getToken(userId: string, minimumValidityMs: number): Promise<Toke
     if (accessRemaining >= minimumValidityMs && refreshRemaining > REFRESH_MARGIN_MS) {
       return { token: accessToken, status: "valid" };
     }
-    const refreshed = await refreshToken(userId, integration);
+    const refreshed = await refreshToken(workspaceId, integration);
     if (refreshed.status === "error" && Date.parse(integration.expires_at) - Date.now() > 30_000) {
       return { token: accessToken, status: "valid", message: refreshed.message };
     }
@@ -62,7 +62,7 @@ async function getToken(userId: string, minimumValidityMs: number): Promise<Toke
     return failure("Não foi possível abrir a credencial Olist. Verifique a chave de criptografia do servidor.");
   }
 }
-async function refreshToken(userId: string, integration: Integration): Promise<TokenResult> {
+async function refreshToken(workspaceId: string, integration: Integration): Promise<TokenResult> {
   const clientId = process.env.TINY_CLIENT_ID;
   const clientSecret = process.env.TINY_CLIENT_SECRET;
   if (!clientId || !clientSecret) return failure("Credenciais Olist ausentes no servidor.");
@@ -72,7 +72,7 @@ async function refreshToken(userId: string, integration: Integration): Promise<T
   const now = new Date();
   const { data: claimed, error: claimError } = await db.from("tiny_integrations")
     .update({ refresh_lock: lock, refresh_locked_until: new Date(now.getTime() + 90_000).toISOString() })
-    .eq("id", integration.id).eq("owner_id", userId).eq("refresh_token", integration.refresh_token)
+    .eq("id", integration.id).eq("workspace_id", workspaceId).eq("refresh_token", integration.refresh_token)
     .or(`refresh_locked_until.is.null,refresh_locked_until.lt.${now.toISOString()}`)
     .select("id").abortSignal(AbortSignal.timeout(3_000)).maybeSingle();
   if (claimError) return failure("Não foi possível reservar a renovação Olist. Verifique a migração v8 do banco.");
@@ -81,7 +81,7 @@ async function refreshToken(userId: string, integration: Integration): Promise<T
     const waitUntil = Date.now() + 10_000;
     while (Date.now() < waitUntil) {
       await sleep(500);
-      const { data: current, error } = await readIntegration(userId);
+      const { data: current, error } = await readIntegration(workspaceId);
       if (error) return failure("Não foi possível acompanhar a renovação Olist.");
       if (!current) return expired();
       if (current.refresh_token !== integration.refresh_token || current.access_token !== integration.access_token) {
@@ -106,7 +106,7 @@ async function refreshToken(userId: string, integration: Integration): Promise<T
     if (!response.ok) {
       // invalid_client, rate limits and outages do not require a new login.
       if (response.status === 400 && data?.error === "invalid_grant") {
-        const { data: current, error } = await readIntegration(userId);
+        const { data: current, error } = await readIntegration(workspaceId);
         if (error) return failure("Não foi possível verificar a autorização Olist.");
         if (current && current.refresh_token !== integration.refresh_token && Date.parse(current.expires_at) > Date.now() + 30_000) {
           return { token: decryptToken(current.access_token), status: "valid" };
@@ -134,11 +134,11 @@ async function refreshToken(userId: string, integration: Integration): Promise<T
     // Retry persistence of the SAME pair; do not repeat a successful OAuth exchange.
     for (let attempt = 0; attempt < 3; attempt++) {
       const { data: saved, error } = await db.from("tiny_integrations").update(payload)
-        .eq("id", integration.id).eq("owner_id", userId).eq("refresh_lock", lock)
+        .eq("id", integration.id).eq("workspace_id", workspaceId).eq("refresh_lock", lock)
         .eq("refresh_token", integration.refresh_token).select("id").abortSignal(AbortSignal.timeout(3_000)).maybeSingle();
       if (!error && saved) return { token: data.access_token, status: "refreshed" };
       // A DB timeout may occur after commit, or the user may have reconnected/disconnected.
-      const { data: current, error: readError } = await readIntegration(userId);
+      const { data: current, error: readError } = await readIntegration(workspaceId);
       if (!readError && current?.refresh_token === payload.refresh_token) return { token: data.access_token, status: "refreshed" };
       if (!readError && (!current || current.refresh_token !== integration.refresh_token)) {
         return failure("A conexão Olist mudou durante a renovação. Atualize a página.");
@@ -151,7 +151,7 @@ async function refreshToken(userId: string, integration: Integration): Promise<T
   } finally {
     // A late worker cannot clear another worker's lease.
     await db.from("tiny_integrations").update({ refresh_lock: null, refresh_locked_until: null })
-      .eq("id", integration.id).eq("owner_id", userId).eq("refresh_lock", lock)
+      .eq("id", integration.id).eq("workspace_id", workspaceId).eq("refresh_lock", lock)
       .abortSignal(AbortSignal.timeout(3_000));
   }
 }

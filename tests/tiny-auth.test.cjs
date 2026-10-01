@@ -16,7 +16,7 @@ function fixture(t, options = {}) {
   const prevId = process.env.TINY_CLIENT_ID, prevSecret = process.env.TINY_CLIENT_SECRET;
   process.env.TINY_CLIENT_ID = 'test-id'; process.env.TINY_CLIENT_SECRET = 'test-secret';
   t.after(() => { for (const [k,v] of [['TINY_CLIENT_ID',prevId],['TINY_CLIENT_SECRET',prevSecret]]) { if(v===undefined) delete process.env[k]; else process.env[k]=v; } });
-  const state = { row: { id: 'connection', owner_id: owner, access_token: 'encrypted:old-access', refresh_token: 'encrypted:old-refresh', expires_at: future(-1000), refresh_expires_at: future(hours(20)), refresh_lock: null, refresh_locked_until: null, ...options.row }, calls: 0, saves: 0, claims: 0 };
+  const state = { row: { id: 'connection', workspace_id: owner, access_token: 'encrypted:old-access', refresh_token: 'encrypted:old-refresh', expires_at: future(-1000), refresh_expires_at: future(hours(20)), refresh_lock: null, refresh_locked_until: null, ...options.row }, calls: 0, saves: 0, claims: 0 };
   t.mock.method(admin, 'createAdminClient', () => ({ from(table) {
     assert.equal(table, 'tiny_integrations');
     let patch, lease = false; const filters = [];
@@ -26,7 +26,7 @@ function fixture(t, options = {}) {
       maybeSingle() { return query; }, abortSignal() { return query; },
       then(resolve, reject) {
         return Promise.resolve().then(() => {
-          assert.ok(filters.some(([k,v])=>k==='owner_id'&&v===owner));
+          assert.ok(filters.some(([k,v])=>k==='workspace_id'&&v===owner));
           if (!patch && options.readError) return { data: null, error: { code: 'network' } };
           let matched=state.row&&filters.every(([k,v])=>state.row[k]===v);
           if (lease && state.row.refresh_locked_until && Date.parse(state.row.refresh_locked_until) >= Date.now()) matched=false;
@@ -105,7 +105,7 @@ test('cron rejects unauthorized requests and only renews due integrations withou
   assert.equal((await route.POST(new Request('https://example.test/api/internal/olist-token-refresh',{method:'POST'}))).status,401);
   let renewed=0;
   t.mock.method(auth,'getValidTinyToken',async(id,margin)=>{assert.equal(id,owner);assert.equal(margin,65*60000);renewed++;return{status:'refreshed',token:'private'};});
-  t.mock.method(admin,'createAdminClient',()=>({from(){const q={select(){return q},not(){return q},or(filter){assert.match(filter,/expires_at.lte/);return q},order(){return q},limit(){return q},abortSignal(){return Promise.resolve({data:[{owner_id:owner}],error:null})}};return q;}}));
+  t.mock.method(admin,'createAdminClient',()=>({from(){const q={select(){return q},not(){return q},or(filter){assert.match(filter,/expires_at.lte/);return q},order(){return q},limit(){return q},abortSignal(){return Promise.resolve({data:[{workspace_id:owner}],error:null})}};return q;}}));
   t.mock.method(global,'fetch',()=>{throw Error('must not query orders')});
   const request=()=>new Request('https://example.test/api/internal/olist-token-refresh',{method:'POST',headers:{Authorization:'Bearer cron-test-secret'}});
   const response=await route.POST(request());assert.equal(response.status,200);assert.equal(renewed,1);

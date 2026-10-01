@@ -1,6 +1,7 @@
 import { after, NextResponse } from "next/server";
 import { enqueueOlistOrders, processQueuedOlistOrders, recordWebhook } from "@/lib/olist-sync";
 import { extractOlistOrderId, isValidOlistWebhookSignature } from "@/lib/olist-webhook";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +14,13 @@ export async function POST(
   { params }: { params: Promise<{ ownerId: string; signature: string }> }
 ) {
   const { ownerId, signature } = await params;
-  if (!UUID.test(ownerId) || !isValidOlistWebhookSignature(ownerId, signature)) {
+  if (!UUID.test(ownerId)) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+  const { data: workspace, error } = await createAdminClient().from("workspaces")
+    .select("olist_webhook_enabled, olist_webhook_revision").eq("id", ownerId).maybeSingle();
+  if (error) return NextResponse.json({ error: "Não foi possível verificar o webhook." }, { status: 503 });
+  if (!workspace?.olist_webhook_enabled || !isValidOlistWebhookSignature(ownerId, signature, workspace.olist_webhook_revision)) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
 

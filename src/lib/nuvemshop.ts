@@ -41,8 +41,8 @@ export function normalizeNuvemshopOrder(value: unknown, storeId: string): Nuvems
   };
 }
 
-export async function getNuvemshopConnection(ownerId: string) {
-  const { data, error } = await createAdminClient().from("nuvemshop_integrations").select("store_id, access_token, olist_ecommerce_id, reference_field, reference_kind").eq("owner_id", ownerId).maybeSingle();
+export async function getNuvemshopConnection(workspaceId: string) {
+  const { data, error } = await createAdminClient().from("nuvemshop_integrations").select("store_id, access_token, olist_ecommerce_id, reference_field, reference_kind").eq("workspace_id", workspaceId).maybeSingle();
   if (error) throw new NuvemshopError("A conexão Nuvemshop ainda não está disponível no banco. Solicite a atualização da aplicação.", 503);
   if (!data) return null;
   const mapping: ReconciliationConfig | null = data.olist_ecommerce_id && data.reference_kind && data.reference_field
@@ -52,8 +52,8 @@ export async function getNuvemshopConnection(ownerId: string) {
   catch { throw new NuvemshopError("Não foi possível abrir a credencial Nuvemshop. Verifique a configuração do servidor ou conecte novamente.", 503); }
 }
 
-export async function cacheNuvemshopOrders(ownerId: string, orders: NuvemshopOrder[]) {
+export async function cacheNuvemshopOrders(workspaceId: string, orders: NuvemshopOrder[]) {
   if (!orders.length) return;
-  const { error } = await createAdminClient().from("nuvemshop_order_cache").upsert(orders.map(order => ({ owner_id: ownerId, store_id: order.storeId, order_id: order.id, payload: order, fetched_at: new Date().toISOString() })), { onConflict: "owner_id,store_id,order_id" });
+  const { error } = await createAdminClient().from("nuvemshop_order_cache").upsert(orders.map(order => ({ workspace_id: workspaceId, store_id: order.storeId, order_id: order.id, payload: order, fetched_at: new Date().toISOString() })), { onConflict: "workspace_id,store_id,order_id" });
   if (error) throw new NuvemshopError("Não foi possível guardar os pedidos consultados. Tente novamente.", 503);
 }

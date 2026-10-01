@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { ApiFetchCard } from "@/components/dashboard/api-fetch-card";
+import { ActiveSessions } from "@/components/dashboard/active-sessions";
 import { usePreparationStore } from "@/stores/preparation-store";
 import { useScanStore } from "@/stores/scan-store";
 import { reconcileOrders } from "@/lib/reconciliation";
@@ -92,6 +93,7 @@ export default function DashboardPage() {
   return <>
     <Header title="Preparar conferência" subtitle="Selecione os pedidos do dia na Nuvemshop e confira a correspondência na Olist." breadcrumbs={["Abelha Par", "Preparação"]} />
     {sessionId && <div className="card p-5 mb-6 flex flex-wrap items-center justify-between gap-3"><p>Existe uma conferência salva neste navegador.</p><Link href="/scanner" className="btn-primary">Retomar conferência</Link></div>}
+    <ActiveSessions />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <section className="card p-6 flex flex-col gap-4">
         <h2 className="text-xl font-semibold">Pedidos do dia · Nuvemshop</h2>
@@ -104,7 +106,7 @@ export default function DashboardPage() {
     </div>
     {busy && <p role="status" className="card p-5 mb-5">{status}</p>}
     {error && <p role="alert" className="card p-5 mb-5 text-[var(--color-accent-red)]">{error}</p>}
-    {!result && !busy && <p className="card p-6">{!prep.confirmedAt ? "Confirme a seleção dos pedidos na aba Pedidos do dia." : !prep.olistFetchedAt ? "Seleção confirmada. Busque os pedidos na Olist para liberar a bipagem." : "Configure o vínculo entre a Nuvemshop e a Olist no servidor para continuar."}</p>}
+    {!result && !busy && <p className="card p-6">{!prep.confirmedAt ? "Confirme a seleção dos pedidos na aba Pedidos do dia." : !prep.olistFetchedAt ? "Seleção confirmada. Busque os pedidos na Olist para liberar a bipagem." : "O vínculo entre a Nuvemshop e a Olist precisa ser revisado pelo administrador no Ninho."}</p>}
     {result && !busy && <section className="card p-6 space-y-5">
       <h2 className="text-xl font-semibold">Conferência entre plataformas</h2>
       <p>{result.orders.length} de {selected.length} pedidos encontrados · {result.ignored} pedidos da Olist fora da seleção</p>

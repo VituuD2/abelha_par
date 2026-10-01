@@ -4,10 +4,10 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { OlistWebhookStatus } from "@/types";
 
-export async function getOlistWebhookStatus(ownerId: string): Promise<OlistWebhookStatus> {
+export async function getOlistWebhookStatus(workspaceId: string): Promise<OlistWebhookStatus> {
   try {
     const { data, error } = await createAdminClient().from("olist_sync_state")
-      .select("last_webhook_at").eq("owner_id", ownerId)
+      .select("last_webhook_at").eq("workspace_id", workspaceId)
       .abortSignal(AbortSignal.timeout(3_000)).maybeSingle();
     if (error) return { status: "unknown", lastReceivedAt: null };
     if (!data?.last_webhook_at) return { status: "pending", lastReceivedAt: null };
@@ -28,15 +28,15 @@ function signingSecret() {
   return secret;
 }
 
-export function getOlistWebhookSignature(ownerId: string) {
+export function getOlistWebhookSignature(workspaceId: string, revision = 0) {
   return createHmac("sha256", signingSecret())
-    .update(`olist-webhook:${ownerId}`)
+    .update(`olist-webhook:${workspaceId}${revision ? `:${revision}` : ""}`)
     .digest("base64url");
 }
 
-export function isValidOlistWebhookSignature(ownerId: string, signature: string) {
+export function isValidOlistWebhookSignature(workspaceId: string, signature: string, revision = 0) {
   try {
-    const expected = Buffer.from(getOlistWebhookSignature(ownerId));
+    const expected = Buffer.from(getOlistWebhookSignature(workspaceId, revision));
     const received = Buffer.from(signature);
     return expected.length === received.length && timingSafeEqual(expected, received);
   } catch {
@@ -44,9 +44,9 @@ export function isValidOlistWebhookSignature(ownerId: string, signature: string)
   }
 }
 
-export function getOlistWebhookUrl(appUrl: string, ownerId: string) {
+export function getOlistWebhookUrl(appUrl: string, workspaceId: string, revision = 0) {
   try {
-    return `${appUrl}/api/webhooks/olist/${ownerId}/${getOlistWebhookSignature(ownerId)}`;
+    return `${appUrl}/api/webhooks/olist/${workspaceId}/${getOlistWebhookSignature(workspaceId, revision)}`;
   } catch {
     return null;
   }

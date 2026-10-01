@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/auth";
+import { authorize } from "@/lib/access";
 import { fetchOlistOrdersPage, TinyApiError, TinyRateLimitError } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
@@ -11,9 +11,9 @@ import { cacheOlistOrders } from "@/lib/olist-sync";
 export const maxDuration = 60;
 
 export async function POST(request: Request) {
-  const user = await getAuthenticatedUser();
-  if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  if (isRateLimited(`olist:${user.id}`, 30, 60_000)) {
+  const { access, response: denied } = await authorize();
+  if (denied) return denied;
+  if (isRateLimited(`olist:${access.workspaceId}`, 30, 60_000)) {
     return NextResponse.json({ error: "Muitas consultas. Tente novamente em um minuto." }, { status: 429 });
   }
 
@@ -31,16 +31,16 @@ export async function POST(request: Request) {
   }
   if (body.cursor && (!Number.isInteger(body.cursor.day) || body.cursor.day < 0 || body.cursor.day > 30 || !Number.isInteger(body.cursor.offset) || body.cursor.offset < 0 || body.cursor.offset > 100_000 || body.cursor.offset % 100 !== 0)) return NextResponse.json({ error: "Página inválida." }, { status: 400 });
 
-  const tokenResult = await getValidTinyToken(user.id);
+  const tokenResult = await getValidTinyToken(access.workspaceId);
   if (!tokenResult.token) {
     return NextResponse.json({ error: tokenResult.message || "Conexão Tiny indisponível.", needsReconnect: tokenResult.status === "expired" }, { status: tokenResult.status === "expired" ? 401 : 503 });
   }
 
   try {
-    const connection = await getNuvemshopConnection(user.id);
+    const connection = await getNuvemshopConnection(access.workspaceId);
     const mapping = connection?.mapping || getReconciliationConfig();
     const page = await fetchOlistOrdersPage({ token: tokenResult.token, dateFrom, dateTo, dateMode, ecommerceId: mapping?.ecommerceId, cursor: body.cursor });
-    await cacheOlistOrders(user.id, page.orders);
+    await cacheOlistOrders(access.workspaceId, page.orders);
     return NextResponse.json({ ...page, mapping, fetchedAt: new Date().toISOString() });
   } catch (error) {
     console.error("[olist] request failed", error);

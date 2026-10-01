@@ -1,13 +1,14 @@
 require('./setup.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const auth = require('../src/lib/auth.ts');
+const auth = require('../src/lib/access.ts');
 const admin = require('../src/lib/supabase/admin.ts');
 const nuvemshop = require('../src/lib/nuvemshop.ts');
 const sessions = require('../src/lib/scan-session-server.ts');
 const createRoute = require('../src/app/api/scan-sessions/route.ts');
 const scanRoute = require('../src/app/api/scan-sessions/[id]/route.ts');
 const owner = '10000000-0000-4000-8000-000000000001';
+const workspace = '10000000-0000-4000-8000-000000000005';
 const id = '20000000-0000-4000-8000-000000000001';
 const mapping = { ecommerceId: 23257, referenceKind: 'number', referenceField: 'ecommerceOrderNumber' };
 const shopOrder = { id: 2083401789, number: '116', storeId: '8255405', status: 'open', paymentStatus: 'paid', clientName: 'Servidor' };
@@ -17,8 +18,8 @@ const body = { id, responsible: 'Operador', nuvemshopIds: [2083401789], olistIds
 
 function fixture(t, { duplicates = false, stale = false } = {}) {
   let saved;
-  t.mock.method(auth, 'getAuthenticatedUser', async () => ({ id: owner }));
-  t.mock.method(sessions, 'readScanSession', async requestedOwner => { assert.equal(requestedOwner, owner); return null; });
+  t.mock.method(auth, 'authorize', async () => ({ access: { user: {id:owner}, workspaceId:workspace, role:'operator' } }));
+  t.mock.method(sessions, 'readScanSession', async requestedOwner => { assert.equal(requestedOwner, workspace); return null; });
   t.mock.method(nuvemshop, 'getNuvemshopConnection', async () => ({ storeId: '8255405', mapping }));
   t.mock.method(admin, 'createAdminClient', () => ({ from(table) {
     const filters = [];
@@ -26,7 +27,7 @@ function fixture(t, { duplicates = false, stale = false } = {}) {
       select() { return chain; }, eq(key, value) { filters.push([key, value]); return chain; }, in() { return chain; }, limit() { return chain; },
       insert(value) { saved = value; return chain; }, single() { return Promise.resolve({ data: saved, error: null }); },
       then(resolve, reject) {
-        assert.ok(filters.some(([key, value]) => key === 'owner_id' && value === owner));
+        assert.ok(filters.some(([key, value]) => key === 'workspace_id' && value === workspace));
         if (table === 'nuvemshop_order_cache') {
           assert.ok(filters.some(([key, value]) => key === 'store_id' && value === '8255405'));
           return Promise.resolve({ data: [{ payload: shopOrder, fetched_at: stale ? '2020-01-01' : new Date().toISOString() }], error: null }).then(resolve, reject);
@@ -41,12 +42,13 @@ function fixture(t, { duplicates = false, stale = false } = {}) {
   return () => saved;
 }
 
-test('creation ignores forged client snapshot and uses only account-scoped server records', async t => {
+test('creation ignores forged client snapshot and uses only workspace-scoped server records while retaining the creator', async t => {
   const saved = fixture(t);
   const response = await createRoute.POST(request({ ...body, orders: [{ trackingCode: 'FORGED', status: 'checked' }] }));
   assert.equal(response.status, 201);
   assert.equal(saved().orders[0].trackingCode, 'SERVER-CODE');
   assert.equal(saved().orders[0].status, 'pending');
+  assert.equal(saved().workspace_id, workspace);
   assert.equal(saved().owner_id, owner);
   assert.equal(saved().orders[0].nuvemshopNumber, '116');
 });
@@ -63,18 +65,18 @@ test('creation rejects an omitted duplicate candidate and expired selection', as
   });
 });
 test('unauthenticated creation and scans are rejected without reading or writing orders', async t => {
-  t.mock.method(auth, 'getAuthenticatedUser', async () => null);
+  t.mock.method(auth, 'authorize', async () => ({response: Response.json({error:'Unauthorized'},{status:401})}));
   t.mock.method(sessions, 'readScanSession', async () => { throw new Error('must not read'); });
   assert.equal((await createRoute.POST(request(body))).status, 401);
   assert.equal((await scanRoute.POST(request({ code: 'CODE' }), { params: Promise.resolve({ id }) })).status, 401);
 });
 test('scan retries a concurrent revision safely; a foreign session returns 404', async t => {
-  t.mock.method(auth, 'getAuthenticatedUser', async () => ({ id: owner }));
+  t.mock.method(auth, 'authorize', async () => ({ access: { user: {id:owner}, workspaceId:workspace, role:'operator' } }));
   const session = { id, responsible: 'Operador', status: 'active', revision: 0, orders: [{ id: 1, trackingCode: 'CODE', status: 'pending', clientName: 'Teste' }] };
-  t.mock.method(sessions, 'readScanSession', async requestedOwner => { assert.equal(requestedOwner, owner); return session; });
+  t.mock.method(sessions, 'readScanSession', async requestedOwner => { assert.equal(requestedOwner, workspace); return session; });
   let writes = 0;
   t.mock.method(sessions, 'updateSessionOrders', async (requestedOwner, previous, orders) => {
-    assert.equal(requestedOwner, owner);
+    assert.equal(requestedOwner, workspace);
     if (++writes === 1) { session.revision++; return null; }
     return { ...previous, orders, revision: previous.revision + 1 };
   });

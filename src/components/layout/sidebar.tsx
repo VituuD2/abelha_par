@@ -6,6 +6,7 @@ import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ListChecks } from "lucide-react";
+import { BeeSettingsIcon } from "@/components/layout/bee-settings-icon";
 
 function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -49,8 +50,9 @@ const navItems = [
   { href: "/history", label: "Favos de Mel", icon: HoneycombIcon },
 ];
 
-export function Sidebar() {
+export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
+  const items = isAdmin ? [...navItems, { href: "/ninho", label: "Ninho", icon: BeeSettingsIcon }] : navItems;
 
   return (
     <>
@@ -78,7 +80,7 @@ export function Sidebar() {
 
           {/* Navigation */}
           <nav className="flex flex-col gap-1">
-            {navItems.map((item) => {
+            {items.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
               return (
@@ -125,7 +127,7 @@ export function Sidebar() {
       {/* Mobile Bottom Nav */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-[var(--color-border-light)]">
         <div className="flex items-center justify-around px-2 py-2.5 max-w-md mx-auto">
-          {navItems.map((item) => {
+          {items.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
             return (
@@ -133,7 +135,7 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative flex flex-col items-center gap-1 px-4 py-1.5 rounded-[var(--radius-md)] transition-all duration-200",
+                  "relative flex flex-1 min-w-0 flex-col items-center gap-1 px-1 sm:px-3 py-1.5 rounded-[var(--radius-md)] transition-all duration-200",
                   isActive
                     ? "text-[var(--color-accent-blue)]"
                     : "text-[var(--color-text-tertiary)]"
@@ -151,7 +153,7 @@ export function Sidebar() {
                   />
                 )}
                 <Icon className="w-5 h-5 relative z-10" />
-                <span className="text-[10px] font-semibold relative z-10">
+                <span className="text-[9px] sm:text-[10px] font-semibold relative z-10 w-full text-center truncate">
                   {item.label}
                 </span>
               </Link>

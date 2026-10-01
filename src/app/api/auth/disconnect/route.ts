@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/auth";
+import { authorize } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
 export async function POST() {
-  const user = await getAuthenticatedUser();
-  if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  const { access, response: denied } = await authorize(true);
+  if (denied) return denied;
+  const user = access.user;
 
   const { error } = await createAdminClient()
     .from("tiny_integrations")
     .delete()
-    .eq("owner_id", user.id);
+    .eq("workspace_id", access.workspaceId);
 
   if (error) {
     console.error("[tiny-oauth] failed to remove connection", { userId: user.id, error });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/auth";
+import { authorize } from "@/lib/access";
 import { TinyApiError, TinyRateLimitError } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
@@ -11,9 +11,9 @@ const MAX_BATCH_SIZE = 5;
 export const maxDuration = 60;
 
 export async function POST(request: Request) {
-  const user = await getAuthenticatedUser();
-  if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  if (isRateLimited(`olist-resolve:${user.id}`, 30, 60_000)) return NextResponse.json({ error: "Muitas consultas. Aguarde um minuto." }, { status: 429 });
+  const { access, response: denied } = await authorize();
+  if (denied) return denied;
+  if (isRateLimited(`olist-resolve:${access.workspaceId}`, 30, 60_000)) return NextResponse.json({ error: "Muitas consultas. Aguarde um minuto." }, { status: 429 });
 
   let body: { orderIds?: unknown; forceRefresh?: unknown };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "JSON inválido" }, { status: 400 }); }
@@ -21,12 +21,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: `Informe entre 1 e ${MAX_BATCH_SIZE} IDs de pedido válidos.` }, { status: 400 });
   }
 
-  const token = await getValidTinyToken(user.id);
+  const token = await getValidTinyToken(access.workspaceId);
   if (!token.token) return NextResponse.json({ error: token.message || "Conexão Tiny indisponível.", needsReconnect: token.status === "expired" }, { status: token.status === "expired" ? 401 : 503 });
 
   try {
     const orders = await resolveAndCacheOlistOrders(
-      user.id,
+      access.workspaceId,
       token.token,
       body.orderIds as number[],
       body.forceRefresh === true
