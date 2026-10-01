@@ -2,6 +2,8 @@
 
 export interface OlistOrder {
   id: number;
+  /** List responses with omitted required fields must be resolved before scanning. */
+  needsDetail?: boolean;
   yampiId: string | null;
   trackingCode: string;
   clientName: string;

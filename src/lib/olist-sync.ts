@@ -52,6 +52,30 @@ export function fromOlistCache(row: CacheRow): OlistOrder {
   };
 }
 
+/** Only call with provider-derived records, never with client-supplied order data. */
+export async function cacheOlistOrders(ownerId: string, orders: OlistOrder[]) {
+  const complete = orders.filter(order => !order.needsDetail);
+  if (!complete.length) return;
+  const now = new Date().toISOString();
+  const { error } = await createAdminClient().from("olist_order_cache").upsert(complete.map(order => ({
+    owner_id: ownerId,
+    olist_order_id: order.id,
+    yampi_id: order.yampiId,
+    tracking_code: order.trackingCode.slice(0, 200),
+    client_name: order.clientName.slice(0, 300),
+    numero_pedido: order.numeroPedido || null,
+    data_criacao: order.dataCriacao,
+    situacao: order.situacao,
+    ecommerce_id: order.ecommerceId,
+    ecommerce_name: order.ecommerceName,
+    ecommerce_order_number: order.ecommerceOrderNumber,
+    ecommerce_channel_order_number: order.ecommerceChannelOrderNumber,
+    resolved_at: now,
+    updated_at: now,
+  })), { onConflict: "owner_id,olist_order_id" });
+  if (error) throw new Error("Não foi possível salvar os pedidos Olist para a conferência.");
+}
+
 export async function resolveAndCacheOlistOrders(
   ownerId: string,
   token: string,
@@ -172,7 +196,8 @@ export async function discoverCurrentUpdatesForAllIntegrations() {
       const token = await getValidTinyToken(ownerId);
       if (!token.token) throw new Error(token.message || "Conexão Tiny indisponível.");
       const page = await fetchOlistOrdersPage({ token: token.token, dateFrom: day, dateTo: day, dateMode: "updated", ecommerceId: getReconciliationConfig()?.ecommerceId, cursor: { day: 0, offset: checkpoint?.discovery_offset || 0 } });
-      await enqueueOlistOrders(ownerId, page.orders.map(order => order.id), true);
+      await cacheOlistOrders(ownerId, page.orders);
+      await enqueueOlistOrders(ownerId, page.orders.filter(order => order.needsDetail).map(order => order.id), true);
       const nextDay = day < today ? saoPauloDate(new Date(new Date(`${day}T12:00:00-03:00`).getTime() + 86_400_000)) : day;
       const now = new Date().toISOString();
       const { error: savedError } = await supabase.from("olist_sync_state").upsert({ owner_id: ownerId, discovery_day: page.nextCursor ? day : nextDay, discovery_offset: page.nextCursor?.offset || 0, last_discovery_at: now, last_sync_error: null, updated_at: now }, { onConflict: "owner_id" });

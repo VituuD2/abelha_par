@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
-import { fetchOlistOrdersPage, TinyRateLimitError } from "@/lib/olist";
+import { fetchOlistOrdersPage, TinyApiError, TinyRateLimitError } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
 import { isValidDateRange } from "@/lib/dates";
 import { getReconciliationConfig } from "@/lib/reconciliation-config";
 import { getNuvemshopConnection } from "@/lib/nuvemshop";
+import { cacheOlistOrders } from "@/lib/olist-sync";
 
 export const maxDuration = 60;
 
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
     const connection = await getNuvemshopConnection(user.id);
     const mapping = connection?.mapping || getReconciliationConfig();
     const page = await fetchOlistOrdersPage({ token: tokenResult.token, dateFrom, dateTo, dateMode, ecommerceId: mapping?.ecommerceId, cursor: body.cursor });
+    await cacheOlistOrders(user.id, page.orders);
     return NextResponse.json({ ...page, mapping, fetchedAt: new Date().toISOString() });
   } catch (error) {
     console.error("[olist] request failed", error);
@@ -47,6 +49,9 @@ export async function POST(request: Request) {
         { error: "A Tiny limitou temporariamente as consultas. Aguarde e tente novamente.", retryAfterSeconds: error.retryAfterSeconds },
         { status: 429, headers: { "Retry-After": String(error.retryAfterSeconds) } }
       );
+    }
+    if (error instanceof TinyApiError && (error.status === 401 || error.status === 403)) {
+      return NextResponse.json({ error: "A Olist recusou o acesso aos pedidos. Confira as permissões do aplicativo e da conta no ERP.", needsReconnect: false }, { status: 403 });
     }
     return NextResponse.json({ error: "Não foi possível buscar os pedidos na Tiny." }, { status: 502 });
   }

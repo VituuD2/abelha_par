@@ -63,6 +63,8 @@ export async function GET(request: Request) {
       expires_at: new Date(Date.now() + data.expires_in * 1000).toISOString(),
       refresh_expires_at: data.refresh_expires_in ? new Date(Date.now() + data.refresh_expires_in * 1000).toISOString() : null,
       updated_at: new Date().toISOString(),
+      refresh_lock: null,
+      refresh_locked_until: null,
     };
     const { error } = await createAdminClient().from("tiny_integrations").upsert(payload, { onConflict: "owner_id" });
     if (error) throw error;

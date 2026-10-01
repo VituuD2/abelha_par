@@ -35,6 +35,17 @@ export async function GET(request: Request) {
     return NextResponse.json({ isConnected: false, needsReconnect: result.status === "expired", status: result.status, message: result.message || null });
   }
 
+  // Normal polling checks the stored OAuth lifetime and renews it when needed.
+  // The orders API is only contacted by an explicit diagnostic request.
+  if (new URL(request.url).searchParams.get("verify") !== "1") {
+    return NextResponse.json({
+      isConnected: true,
+      needsReconnect: false,
+      status: result.status,
+      message: result.message || null,
+      webhookUrl: getOlistWebhookUrl(getAppUrl(request), user.id),
+    });
+  }
   const connection = await testTinyConnection(result.token);
   if (connection.ok) {
     return NextResponse.json({

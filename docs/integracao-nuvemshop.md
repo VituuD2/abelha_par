@@ -1,5 +1,7 @@
 # Nuvemshop + Olist — implantação e operação
 
+Atualização de 01/10/2026: veja [renovação automática da Olist e redução de consultas](olist-renovacao-e-desempenho.md) para a migração v8 e a ativação do agendamento no plano gratuito da Vercel. Os registros abaixo descrevem a implantação anterior.
+
 Implementação local em 30/09/2026. Na checagem final, as tabelas e colunas das migrações v6/v7 e a função de finalização já estavam disponíveis no Supabase. Nenhuma migração foi executada por esta revisão no banco remoto. A loja `8255405` ainda não estava conectada, e os novos endpoints do aplicativo publicado retornavam 404; falta publicar esta versão e informar o token.
 
 ## Vínculo validado

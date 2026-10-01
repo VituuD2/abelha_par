@@ -50,7 +50,23 @@ export async function fetchOlistOrdersPage({ token, dateFrom, dateTo = dateFrom,
   if (!Array.isArray(data.itens)) throw new Error("Resposta inválida da Olist.");
   const hasMore = data.paginacao?.total !== undefined ? cursor.offset + 100 < data.paginacao.total : data.itens.length === 100;
   const nextCursor = hasMore ? { day: cursor.day, offset: cursor.offset + 100 } : cursor.day + 1 < dates.length ? { day: cursor.day + 1, offset: 0 } : null;
-  return { orders: data.itens.filter(item => isNuvemshopOrder(item, ecommerceId)).map(normalizeOlistOrder), nextCursor };
+  return {
+    orders: data.itens.filter(item => isNuvemshopOrder(item, ecommerceId)).map(item => ({
+      ...normalizeOlistOrder(item),
+      // Explicit nulls are valid (e.g. a label not generated yet). Missing fields
+      // require a detail lookup; do not silently turn an incomplete list into a fresh snapshot.
+      needsDetail: !hasReconciliationFields(item),
+    })),
+    nextCursor,
+  };
+}
+
+export function hasReconciliationFields(item: OlistApiOrder) {
+  return typeof item.situacao === "number" && !!item.cliente && typeof item.cliente.nome === "string"
+    && !!item.ecommerce && Object.hasOwn(item.ecommerce, "numeroPedidoEcommerce")
+    && Object.hasOwn(item.ecommerce, "numeroPedidoCanalVenda")
+    && Object.hasOwn(item, "transportador")
+    && (!item.transportador || Object.hasOwn(item.transportador, "codigoRastreamento"));
 }
 
 export interface TinyConnectionResult {

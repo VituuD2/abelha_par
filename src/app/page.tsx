@@ -44,12 +44,13 @@ export default function DashboardPage() {
     setError(null);
     usePreparationStore.getState().setMapping(mapping);
     try {
-      const details: OlistOrder[] = [];
+      const details = new Map(orders.map(order => [order.id, order]));
+      const incomplete = orders.filter(order => order.needsDetail);
       let retries = 0;
-      for (let start = 0; start < orders.length;) {
+      for (let start = 0; start < incomplete.length;) {
         abort.signal.throwIfAborted();
-        setStatus(`Consultando detalhes na Olist: ${start} de ${orders.length}`);
-        const response = await fetch("/api/olist/resolve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderIds: orders.slice(start, start + 5).map(order => order.id), forceRefresh: true }), signal: abort.signal });
+        setStatus(`Completando dados na Olist: ${start} de ${incomplete.length}`);
+        const response = await fetch("/api/olist/resolve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderIds: incomplete.slice(start, start + 5).map(order => order.id), forceRefresh: true }), signal: abort.signal });
         const data = await response.json();
         if (response.status === 429 && retries++ < 5) {
           const seconds = Math.min(300, Math.max(1, Number(data.retryAfterSeconds) || 60));
@@ -58,11 +59,14 @@ export default function DashboardPage() {
           continue;
         }
         if (!response.ok) throw new Error(data.error || "Não foi possível carregar os detalhes da Olist.");
+        if (!Array.isArray(data.orders) || incomplete.slice(start, start + 5).some(order => !data.orders.some((detail: OlistOrder) => detail.id === order.id))) {
+          throw new Error("A Olist retornou detalhes incompletos. Busque os pedidos novamente.");
+        }
         retries = 0;
-        details.push(...data.orders);
+        for (const order of data.orders as OlistOrder[]) details.set(order.id, order);
         start += 5;
       }
-      if (!abort.signal.aborted) usePreparationStore.getState().setOlistOrders(details);
+      if (!abort.signal.aborted) usePreparationStore.getState().setOlistOrders([...details.values()]);
     } catch (err) {
       if (!abort.signal.aborted) setError(err instanceof Error ? err.message : "Falha ao carregar pedidos.");
     } finally { if (!abort.signal.aborted) { setBusy(false); setStatus(""); } }

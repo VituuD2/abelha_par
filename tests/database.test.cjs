@@ -19,10 +19,26 @@ before(async () => {
   await db.exec('GRANT ALL ON ALL TABLES IN SCHEMA public TO service_role, authenticated; GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO service_role;');
   await db.query('INSERT INTO auth.users(id) VALUES ($1),($2)', [owner, other]);
   await db.query("INSERT INTO lotes_bipagem(owner_id, responsavel, qtd_pedidos, pedidos) VALUES ($1, 'Legado', 1, '[{\"yampiId\":\"legacy\"}]')", [owner]);
-  for (const file of ['migration_v6_nuvemshop_sessions.sql', 'migration_v7_olist_queue.sql']) {
+  for (const file of ['migration_v6_nuvemshop_sessions.sql', 'migration_v7_olist_queue.sql', 'migration_v8_olist_token_refresh.sql']) {
     await db.exec(migration(file));
     await db.exec(migration(file)); // Deployment retry must preserve existing data.
   }
+});
+
+test('OAuth refresh lease is exclusive and stale workers cannot overwrite a reconnect or release a newer lease', async () => {
+  const lockA = '30000000-0000-4000-8000-000000000001';
+  const lockB = '30000000-0000-4000-8000-000000000002';
+  await db.query("INSERT INTO tiny_integrations(owner_id,access_token,refresh_token,expires_at) VALUES ($1,'encrypted-access','encrypted-refresh',now())", [owner]);
+  const claim = lock => db.query(`UPDATE tiny_integrations SET refresh_lock=$1,refresh_locked_until=now()+interval '90 seconds'
+    WHERE owner_id=$2 AND refresh_token='encrypted-refresh' AND (refresh_locked_until IS NULL OR refresh_locked_until<now()) RETURNING id`, [lock,owner]);
+  const claims = await Promise.all([claim(lockA),claim(lockB)]);
+  assert.equal(claims.reduce((n,r)=>n+r.rows.length,0),1);
+  await db.query("UPDATE tiny_integrations SET refresh_locked_until=now()-interval '1 second' WHERE owner_id=$1", [owner]);
+  assert.equal((await claim(lockB)).rows.length,1);
+  assert.equal((await db.query('UPDATE tiny_integrations SET refresh_lock=null WHERE owner_id=$1 AND refresh_lock=$2 RETURNING id',[owner,lockA])).rows.length,0);
+  await db.query("UPDATE tiny_integrations SET refresh_token='reconnected',refresh_lock=null,refresh_locked_until=null WHERE owner_id=$1",[owner]);
+  assert.equal((await db.query("UPDATE tiny_integrations SET refresh_token='stale' WHERE owner_id=$1 AND refresh_token='encrypted-refresh' AND refresh_lock=$2 RETURNING id",[owner,lockB])).rows.length,0);
+  assert.equal((await db.query("SELECT has_table_privilege('authenticated','tiny_integrations','SELECT') AS allowed")).rows[0].allowed,false);
 });
 after(async () => db.close());
 
