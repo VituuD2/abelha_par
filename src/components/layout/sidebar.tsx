@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ListChecks } from "lucide-react";
 import { BeeSettingsIcon } from "@/components/layout/bee-settings-icon";
+import { NectarIcon } from "@/components/layout/nectar-icon";
+import { NECTAR_MODULE } from "@/lib/analytics/config";
 
 function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -48,6 +50,7 @@ const navItems = [
   { href: "/orders", label: "Pedidos do dia", icon: ListChecks },
   { href: "/scanner", label: "Inspeção", icon: InspectionIcon },
   { href: "/history", label: "Favos de Mel", icon: HoneycombIcon },
+  { href: NECTAR_MODULE.href, label: NECTAR_MODULE.name, icon: NectarIcon },
 ];
 
 export function Sidebar({ isAdmin }: { isAdmin: boolean }) {

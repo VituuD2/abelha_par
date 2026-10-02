@@ -6,6 +6,7 @@ import { Cloud, Copy, Link2, RefreshCw, ShieldCheck, Users } from "lucide-react"
 import { BeeSettingsIcon } from "@/components/layout/bee-settings-icon";
 import { NuvemshopConnection } from "@/components/ninho/nuvemshop-connection";
 import { NinhoUsers } from "@/components/ninho/ninho-users";
+import { AnalyticsConnections } from "@/components/ninho/analytics-connections";
 import type { OlistWebhookStatus } from "@/types";
 
 type OlistStatus = { isConnected: boolean; needsReconnect?: boolean; message?: string | null };
@@ -68,6 +69,7 @@ export function NinhoSettings() {
         <div className="flex flex-wrap gap-3"><a className={`btn-primary ${busy ? "pointer-events-none opacity-50" : ""}`} href="/api/auth/login">{olist?.isConnected || olist?.needsReconnect ? "Reconectar Olist" : "Conectar Olist"}</a><button className="btn-ghost" disabled={busy || !olist} onClick={() => action("verify")}><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} />Verificar acesso</button><button className="btn-ghost text-[var(--color-accent-red)]" disabled={busy || !olist} onClick={() => action("disconnect")}>Remover conexão</button></div>
       </section>
       <NuvemshopConnection />
+      <AnalyticsConnections />
       <section className="card p-6 sm:p-7 space-y-5"><div className="flex items-center gap-3"><div className="p-3 rounded-xl bg-[var(--color-accent-green)]/10"><Link2 className="w-6 h-6 text-[var(--color-accent-green)]" /></div><div><h2 className="text-lg font-semibold">Webhook Olist</h2><p className="text-sm text-[var(--color-text-secondary)]">Atualize os pedidos quando a Olist enviar uma notificação.</p></div></div>
         {webhook ? <><p className="text-sm">{!webhook.enabled ? "Recebimento pausado." : webhook.status.status === "active" ? `Última notificação: ${new Date(webhook.status.lastReceivedAt!).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })} (Brasília).` : webhook.status.status === "pending" ? "Aguardando a primeira notificação da Olist." : "Status de recebimento indisponível."}</p>
           {webhook.url ? <><label className="block text-sm">URL para Notificações de vendas na Olist<input readOnly className="field mt-2 text-xs" value={webhook.url} onFocus={event => event.target.select()} /></label><button className="btn-ghost" onClick={async () => { try { await navigator.clipboard.writeText(webhook.url!); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setError("Selecione a URL e copie manualmente."); } }}><Copy className="w-4 h-4" />{copied ? "URL copiada" : "Copiar URL"}</button></> : <p className="text-sm text-[var(--color-accent-orange)]">A chave do webhook precisa ser configurada no servidor.</p>}

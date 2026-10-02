@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.cjs",
+    "lint": "eslint src next.config.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -27,15 +28,21 @@
     "zustand": "^5.0.5"
   },
   "overrides": {
-    "next": { "postcss": "8.5.25" }
+    "next": {
+      "postcss": "8.5.25"
+    }
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
+    "@eslint/eslintrc": "^3.3.7",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.27",
+    "jsdom": "^26.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3"
