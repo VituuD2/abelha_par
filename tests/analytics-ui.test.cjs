@@ -217,3 +217,35 @@ test("missing coverage stays visibly partial and a server error does not leave a
     0,
   );
 });
+
+test("Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked", async t => {
+  const { AnalyticsConnections } = require("../src/components/ninho/analytics-connections.tsx");
+  dom.window.history.replaceState(null, "", "/ninho?analyticsError=account_unavailable");
+  const oauthState = {
+    companies: [{ id: "company-3", name: "Olist 3", tax_id: "37201039000187" }],
+    connections: [{
+      id: "connection-3", company_id: "company-3", name: "Olist 3",
+      credential_kind: "oauth", enabled: true, client_id: "client-3",
+      expires_at: null, verified_at: null, verified_tax_id: null,
+      last_error: null, last_synced_at: null,
+    }],
+    jobs: [], sources: [],
+  };
+  const calls = [];
+  t.mock.method(global, "fetch", async (url, options = {}) => {
+    calls.push({ url, options });
+    return Response.json(oauthState);
+  });
+  await act(async () => root.render(React.createElement(AnalyticsConnections)));
+  assert.match(document.querySelector('[role="alert"]').textContent, /consulta do CNPJ.*timeout/);
+  assert.ok(document.body.textContent.includes("Autorização pendente"));
+  assert.equal(button("Validar CNPJ na API").disabled, true);
+  assert.equal(document.querySelector('a[href="/api/analytics/oauth/login?connection=connection-3"]').textContent, "Autorizar esta conta");
+  await click(button("Validar CNPJ na API"));
+  assert.equal(calls.filter(c => c.options.method === "POST").length, 0);
+  oauthState.connections[0].expires_at = "2026-10-03T03:00:00Z";
+  oauthState.connections[0].verified_at = "2026-10-02T23:00:00Z";
+  await click(document.querySelector('button[aria-label="Atualizar conexões analíticas"]'));
+  assert.equal(button("Validar CNPJ na API").disabled, false);
+  assert.ok(document.body.textContent.includes("CNPJ validado"));
+});

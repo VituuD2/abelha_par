@@ -125,10 +125,13 @@ export function verifyAnalyticsState(
   }
 }
 export function tokenPayload(
-  data: Record<string, unknown>,
+  response: unknown,
   issuedAt: number,
   previousRefreshExpiry: string | null = null,
 ) {
+  if (!response || typeof response !== "object" || Array.isArray(response))
+    throw new Error("Resposta OAuth inválida.");
+  const data = response as Record<string, unknown>;
   if (
     typeof data.access_token !== "string" ||
     !data.access_token ||

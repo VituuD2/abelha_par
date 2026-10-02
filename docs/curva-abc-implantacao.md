@@ -11,7 +11,7 @@ O código está implementado. Estes passos ativam o módulo no ambiente escolhid
 5. Cadastrar **Olist 1**, CNPJ **13.397.731/0001-64**, e **Olist 3**, CNPJ **37.201.039/0001-87**, empresas do mesmo grupo autorizado informado pelo responsável. Cadastrar desde o início permite que o painel mostre a ausência de conexão/histórico como escopo parcial.
 6. Criar um aplicativo privado na conta ERP de cada empresa adicional, conforme a documentação oficial. Não reutilizar automaticamente as credenciais da Olist 2. Autorizar leitura de pedidos, produtos, notas, marcadores e informações da conta, conforme as permissões efetivamente disponibilizadas no aplicativo.
 7. Cadastrar a URL exata de retorno: `https://SEU-DOMINIO/api/analytics/oauth/callback`. A autorização operacional existente conserva sua própria URL `/api/auth/callback`.
-8. Informar Client ID e Client Secret nos campos protegidos do Ninho. O servidor criptografa os segredos. Clicar em **Autorizar esta conta**, entrar na empresa correspondente e concluir OAuth. O callback consulta `/info` e exige correspondência com o CNPJ escolhido antes de salvar os tokens.
+8. Informar Client ID e Client Secret nos campos protegidos do Ninho. O servidor criptografa os segredos. Clicar em **Autorizar esta conta**, entrar na empresa correspondente e concluir OAuth. O callback consulta `/info` e exige correspondência com o CNPJ escolhido antes de salvar os tokens. Falhas temporárias nessa consulta recebem uma nova tentativa com o mesmo token, sem repetir a troca do código OAuth. Se não concluir, o Ninho mostra a etapa que falhou e registra uma mensagem na conexão; a validação manual continua bloqueada enquanto não houver autorização salva.
 9. Programar um período histórico por conexão, começando por um dia com pedidos conhecidos. Conferir quantidade, valores, situações, origens e notas antes de ampliar para meses/anos.
 10. Ativar `pg_cron` e `pg_net` no Supabase e aplicar `supabase/setup_analytics_cron.sql`. Usa os segredos Vault já utilizados pela renovação Olist: `abelha_par_app_url` e `abelha_par_cron_secret`. O valor deste último deve corresponder ao `CRON_SECRET` do servidor. Não inserir valores secretos em arquivos SQL versionados.
 
@@ -63,6 +63,14 @@ Se duas conexões representam comprovadamente **a mesma conta de venda externa**
 A alteração de identidade em vendas existentes passa pela RPC administrativa transacional. Remover uma conta canônica já usada é bloqueado porque as cópias deduplicadas não formam um arquivo de payloads recuperável; exige recuperação/reimportação assistida das fontes. Validar a identidade antes de confirmar a reconciliação. Não há deduplicação probabilística por cliente, nome, valor ou data.
 
 ## Sincronização e recuperação
+
+### Falha no retorno da autorização
+
+O retorno `analyticsError=configuration` de versões anteriores era genérico: não distinguia falha na troca dos tokens de falha na consulta do CNPJ. Uma tentativa que terminou assim não permite concluir que faltam permissões no aplicativo.
+
+O callback agora distingue `token_request` (rede/timeout na autenticação), `exchange` (troca recusada), `token_response` (tokens inválidos), `account_permission` (HTTP 403 em `/info`), `account_authorization` (HTTP 401), `account_rate_limit` (HTTP 429), `account_unavailable` (falha temporária após nova tentativa), `account_response` (CNPJ ausente/inválido), `company` (CNPJ diferente) e `save` (persistência/conexão alterada). Os logs `[analytics-oauth]` contêm somente etapa, código interno, status HTTP e ID da conexão; os tokens e os segredos não são registrados.
+
+O código OAuth é de uso único. Após corrigir a causa indicada, use **Autorizar esta conta** para obter outro código. Não recarregue a URL antiga do callback. Não é necessário salvar novamente o aplicativo se as credenciais não mudaram. Se as permissões forem alteradas, siga a orientação oficial da Olist para renovar o Client Secret, atualize-o no Ninho e autorize novamente.
 
 Backfill consulta pedidos criados em cada dia, com paginação de 100, de todas as origens. Incremental usa `dataAtualizacao` por dia, watermark persistente e sobreposição do dia anterior. O primeiro incremental começa na data de início do backfill, para não perder alterações ocorridas enquanto o histórico era importado.
 

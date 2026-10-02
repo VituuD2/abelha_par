@@ -1,6 +1,10 @@
 ﻿"use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
+import {
+  analyticsOAuthErrors,
+  type AnalyticsOAuthErrorCode,
+} from "@/lib/analytics/oauth-errors";
 type Company = { id: string; name: string; tax_id: string | null };
 type Connection = {
   id: string;
@@ -43,17 +47,6 @@ type State = {
   connections: Connection[];
   sources: Source[];
   jobs: Job[];
-};
-const errors: Record<string, string> = {
-  authorization:
-    "A autorização foi negada, expirou ou já foi utilizada. Inicie novamente.",
-  exchange:
-    "O aplicativo não autorizou a troca de código. Confira as credenciais e a URL de retorno.",
-  company:
-    "O CNPJ retornado pela Olist difere da empresa escolhida. Nenhuma credencial foi vinculada.",
-  save: "A conexão mudou ou o banco não salvou a autorização. Tente novamente.",
-  configuration:
-    "Não foi possível concluir ou validar a conta. Confira as permissões do aplicativo e tente novamente.",
 };
 async function call(path: string, body?: unknown) {
   const response = await fetch(
@@ -196,7 +189,10 @@ export function AnalyticsConnections() {
     setClientSecret("");
     if (applicationForm.current) {
       applicationForm.current.open = true;
-      applicationForm.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      applicationForm.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   };
   const load = useCallback(async () => {
@@ -212,8 +208,13 @@ export function AnalyticsConnections() {
     setCallbackOrigin(window.location.origin);
     void load();
     const query = new URLSearchParams(window.location.search);
-    if (query.has("analyticsError"))
-      setError(errors[query.get("analyticsError")!] || errors.configuration);
+    const code = query.get("analyticsError");
+    if (code !== null)
+      setError(
+        Object.hasOwn(analyticsOAuthErrors, code)
+          ? analyticsOAuthErrors[code as AnalyticsOAuthErrorCode]
+          : analyticsOAuthErrors.configuration,
+      );
     if (query.has("analyticsConnected"))
       setNotice("Conexão da Curva ABC autorizada e CNPJ validado.");
   }, [load]);
@@ -306,97 +307,97 @@ export function AnalyticsConnections() {
       <div className="space-y-3">
         {state?.connections.map((c) => {
           const configured = c.credential_kind === "legacy" || !!c.client_id;
-          const authorized = c.credential_kind === "legacy" ||
-            (configured && !!c.expires_at);
+          const authorized =
+            c.credential_kind === "legacy" || (configured && !!c.expires_at);
           return (
-          <div
-            key={c.id}
-            className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2"
-          >
-            <div className="flex flex-wrap justify-between gap-2">
-              <h3 className="font-semibold">
-                {c.name} ·{" "}
-                {
-                  state.companies.find((company) => company.id === c.company_id)
-                    ?.name
-                }
-              </h3>
-              <span className="badge">
-                {!configured
-                  ? "Aplicativo pendente"
-                  : !authorized
-                    ? "Autorização pendente"
-                    : !c.enabled
-                  ? "Pausada"
-                  : c.verified_at
-                    ? "CNPJ validado"
-                    : "Validação pendente"}
-              </span>
-            </div>
-            <p className="text-xs text-[var(--color-text-secondary)]">
-              CNPJ:{" "}
-              {c.verified_tax_id ||
-                state.companies.find((company) => company.id === c.company_id)
-                  ?.tax_id ||
-                "Informe o CNPJ da empresa"}{" "}
-              ·{" "}
-              {c.last_synced_at
-                ? `Importado em ${new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}`
-                : "Histórico pendente"}
-            </p>
-            {c.last_error && (
-              <p className="text-xs text-red-800">{c.last_error}</p>
-            )}
-            {!configured ? (
-              <p className="text-xs text-[var(--color-text-secondary)]">
-                Salve o Client ID e o Client Secret do aplicativo desta empresa.
-                Depois autorize esta conta para validar o CNPJ.
-              </p>
-            ) : !authorized ? (
-              <p className="text-xs text-[var(--color-text-secondary)]">
-                Aplicativo salvo. Clique em Autorizar esta conta e entre na Olist
-                desta empresa para concluir a conexão e validar o CNPJ.
-              </p>
-            ) : null}
-            <div className="flex flex-wrap gap-2">
-              {c.credential_kind === "legacy" ? (
-                <span className="text-xs py-3">
-                  Usa a autorização Olist operacional atual.
+            <div
+              key={c.id}
+              className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2"
+            >
+              <div className="flex flex-wrap justify-between gap-2">
+                <h3 className="font-semibold">
+                  {c.name} ·{" "}
+                  {
+                    state.companies.find((company) => company.id === c.company_id)
+                      ?.name
+                  }
+                </h3>
+                <span className="badge">
+                  {!configured
+                    ? "Aplicativo pendente"
+                    : !authorized
+                      ? "Autorização pendente"
+                      : !c.enabled
+                        ? "Pausada"
+                        : c.verified_at
+                          ? "CNPJ validado"
+                          : "Validação pendente"}
                 </span>
-              ) : !configured ? (
+              </div>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                CNPJ:{" "}
+                {c.verified_tax_id ||
+                  state.companies.find((company) => company.id === c.company_id)
+                    ?.tax_id ||
+                  "Informe o CNPJ da empresa"}{" "}
+                ·{" "}
+                {c.last_synced_at
+                  ? `Importado em ${new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}`
+                  : "Histórico pendente"}
+              </p>
+              {c.last_error && (
+                <p className="text-xs text-red-800">{c.last_error}</p>
+              )}
+              {!configured ? (
+                <p className="text-xs text-[var(--color-text-secondary)]">
+                  Salve o Client ID e o Client Secret do aplicativo desta empresa.
+                  Depois autorize esta conta para validar o CNPJ.
+                </p>
+              ) : !authorized ? (
+                <p className="text-xs text-[var(--color-text-secondary)]">
+                  Aplicativo salvo. Clique em Autorizar esta conta e entre na Olist
+                  desta empresa para concluir a conexão e validar o CNPJ.
+                </p>
+              ) : null}
+              <div className="flex flex-wrap gap-2">
+                {c.credential_kind === "legacy" ? (
+                  <span className="text-xs py-3">
+                    Usa a autorização Olist operacional atual.
+                  </span>
+                ) : !configured ? (
+                  <button
+                    disabled={busy}
+                    className="btn-primary"
+                    onClick={() => configureApplication(c)}
+                  >
+                    Configurar aplicativo
+                  </button>
+                ) : c.enabled ? (
+                  <a
+                    href={`/api/analytics/oauth/login?connection=${c.id}`}
+                    className="btn-primary"
+                  >
+                    Autorizar esta conta
+                  </a>
+                ) : null}
+                <button
+                  disabled={busy || !c.enabled || !authorized}
+                  className="btn-ghost"
+                  onClick={() => save({ action: "verify", id: c.id })}
+                >
+                  Validar CNPJ na API
+                </button>
                 <button
                   disabled={busy}
-                  className="btn-primary"
-                  onClick={() => configureApplication(c)}
+                  className="btn-ghost"
+                  onClick={() =>
+                    save({ action: c.enabled ? "pause" : "resume", id: c.id })
+                  }
                 >
-                  Configurar aplicativo
+                  {c.enabled ? "Pausar análise" : "Ativar análise"}
                 </button>
-              ) : c.enabled ? (
-                <a
-                  href={`/api/analytics/oauth/login?connection=${c.id}`}
-                  className="btn-primary"
-                >
-                  Autorizar esta conta
-                </a>
-              ) : null}
-              <button
-                disabled={busy || !c.enabled || !authorized}
-                className="btn-ghost"
-                onClick={() => save({ action: "verify", id: c.id })}
-              >
-                Validar CNPJ na API
-              </button>
-              <button
-                disabled={busy}
-                className="btn-ghost"
-                onClick={() =>
-                  save({ action: c.enabled ? "pause" : "resume", id: c.id })
-                }
-              >
-                {c.enabled ? "Pausar análise" : "Ativar análise"}
-              </button>
+              </div>
             </div>
-          </div>
           );
         })}
       </div>
