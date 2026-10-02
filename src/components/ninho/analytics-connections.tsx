@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
 type Company = { id: string; name: string; tax_id: string | null };
 type Connection = {
@@ -189,6 +189,16 @@ export function AnalyticsConnections() {
     [from, setFrom] = useState(""),
     [to, setTo] = useState("");
   const [callbackOrigin, setCallbackOrigin] = useState("");
+  const applicationForm = useRef<HTMLDetailsElement>(null);
+  const configureApplication = (connection: Connection) => {
+    setCredentialConnection(connection.id);
+    setClientId(connection.client_id || "");
+    setClientSecret("");
+    if (applicationForm.current) {
+      applicationForm.current.open = true;
+      applicationForm.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
   const load = useCallback(async () => {
     try {
       setState(await call("/api/analytics/connections"));
@@ -294,7 +304,11 @@ export function AnalyticsConnections() {
         </p>
       )}
       <div className="space-y-3">
-        {state?.connections.map((c) => (
+        {state?.connections.map((c) => {
+          const configured = c.credential_kind === "legacy" || !!c.client_id;
+          const authorized = c.credential_kind === "legacy" ||
+            (configured && !!c.expires_at);
+          return (
           <div
             key={c.id}
             className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2"
@@ -308,7 +322,11 @@ export function AnalyticsConnections() {
                 }
               </h3>
               <span className="badge">
-                {!c.enabled
+                {!configured
+                  ? "Aplicativo pendente"
+                  : !authorized
+                    ? "Autorização pendente"
+                    : !c.enabled
                   ? "Pausada"
                   : c.verified_at
                     ? "CNPJ validado"
@@ -329,21 +347,40 @@ export function AnalyticsConnections() {
             {c.last_error && (
               <p className="text-xs text-red-800">{c.last_error}</p>
             )}
+            {!configured ? (
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                Salve o Client ID e o Client Secret do aplicativo desta empresa.
+                Depois autorize esta conta para validar o CNPJ.
+              </p>
+            ) : !authorized ? (
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                Aplicativo salvo. Clique em Autorizar esta conta e entre na Olist
+                desta empresa para concluir a conexão e validar o CNPJ.
+              </p>
+            ) : null}
             <div className="flex flex-wrap gap-2">
               {c.credential_kind === "legacy" ? (
                 <span className="text-xs py-3">
                   Usa a autorização Olist operacional atual.
                 </span>
-              ) : (
+              ) : !configured ? (
+                <button
+                  disabled={busy}
+                  className="btn-primary"
+                  onClick={() => configureApplication(c)}
+                >
+                  Configurar aplicativo
+                </button>
+              ) : c.enabled ? (
                 <a
                   href={`/api/analytics/oauth/login?connection=${c.id}`}
                   className="btn-primary"
                 >
                   Autorizar esta conta
                 </a>
-              )}
+              ) : null}
               <button
-                disabled={busy}
+                disabled={busy || !c.enabled || !authorized}
                 className="btn-ghost"
                 onClick={() => save({ action: "verify", id: c.id })}
               >
@@ -360,7 +397,8 @@ export function AnalyticsConnections() {
               </button>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
       <details>
         <summary className="cursor-pointer font-semibold text-sm">
@@ -425,7 +463,7 @@ export function AnalyticsConnections() {
           </button>
         </form>
       </details>
-      <details>
+      <details ref={applicationForm}>
         <summary className="cursor-pointer font-semibold text-sm">
           Adicionar conta Olist ou atualizar aplicativo
         </summary>
