@@ -20,7 +20,7 @@ export function SuccessPopup({ visible, order, onDismiss }: SuccessPopupProps) {
       const timer = setTimeout(onDismiss, 2000);
       return () => clearTimeout(timer);
     }
-  }, [visible, onDismiss]);
+  }, [visible, order?.id, order?.scannedAt, onDismiss]);
 
   return (
     <AnimatePresence>
@@ -30,7 +30,7 @@ export function SuccessPopup({ visible, order, onDismiss }: SuccessPopupProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md pointer-events-none"
         >
           <div className="glass rounded-[var(--radius-xl)] p-4 shadow-xl border border-[var(--color-accent-green)]/20 bg-gradient-to-r from-[var(--color-accent-green)]/10 to-transparent">
             <div className="flex items-center gap-3">

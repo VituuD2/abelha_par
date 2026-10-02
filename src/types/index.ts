@@ -58,6 +58,13 @@ export interface StoredScanSession {
   batch_id: string | null;
 }
 
+/** A scan normally returns only the changed order; a stale revision gets a snapshot. */
+export interface ScanSubmission {
+  result: ScanResult;
+  confirmation?: { sessionId: string; revision: number; scannedCount: number; totalCount: number };
+  session?: StoredScanSession;
+}
+
 export interface Batch {
   id: string;
   numero_lote: number;

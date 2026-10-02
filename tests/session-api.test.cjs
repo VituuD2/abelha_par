@@ -67,24 +67,71 @@ test('creation rejects an omitted duplicate candidate and expired selection', as
 test('unauthenticated creation and scans are rejected without reading or writing orders', async t => {
   t.mock.method(auth, 'authorize', async () => ({response: Response.json({error:'Unauthorized'},{status:401})}));
   t.mock.method(sessions, 'readScanSession', async () => { throw new Error('must not read'); });
+  t.mock.method(sessions, 'submitSessionScan', async () => { throw new Error('must not write'); });
   assert.equal((await createRoute.POST(request(body))).status, 401);
   assert.equal((await scanRoute.POST(request({ code: 'CODE' }), { params: Promise.resolve({ id }) })).status, 401);
 });
-test('scan retries a concurrent revision safely; a foreign session returns 404', async t => {
+test('scan uses one atomic RPC with server identity and exposes timings; a foreign session returns 404', async t => {
   t.mock.method(auth, 'authorize', async () => ({ access: { user: {id:owner}, workspaceId:workspace, role:'operator' } }));
   const session = { id, responsible: 'Operador', status: 'active', revision: 0, orders: [{ id: 1, trackingCode: 'CODE', status: 'pending', clientName: 'Teste' }] };
   t.mock.method(sessions, 'readScanSession', async requestedOwner => { assert.equal(requestedOwner, workspace); return session; });
-  let writes = 0;
-  t.mock.method(sessions, 'updateSessionOrders', async (requestedOwner, previous, orders) => {
-    assert.equal(requestedOwner, workspace);
-    if (++writes === 1) { session.revision++; return null; }
-    return { ...previous, orders, revision: previous.revision + 1 };
-  });
-  const response = await scanRoute.POST(request({ code: 'CODE' }), { params: Promise.resolve({ id }) });
+  let calls = 0;
+  t.mock.method(admin, 'createAdminClient', () => ({ rpc: async (name, params) => {
+    calls++;
+    assert.equal(name, 'submit_workspace_scan');
+    assert.deepEqual(params, { p_workspace: workspace, p_actor: owner, p_session: id, p_code: 'CODE', p_revision: 0 });
+    return { data: { confirmation: { sessionId: id, revision: 1, scannedCount: 1, totalCount: 1 }, result: { type: 'success', order: { ...session.orders[0], status: 'checked' } } }, error: null };
+  } }));
+  const response = await scanRoute.POST(request({ code: 'CODE', revision: 0, actorId: 'forged' }), { params: Promise.resolve({ id }) });
   assert.equal(response.status, 200);
   const payload = await response.json();
-  assert.equal(payload.session.orders[0].status, 'checked');
-  assert.equal(payload.session.revision, 2);
+  assert.equal(payload.result.order.status, 'checked');
+  assert.equal(payload.confirmation.revision, 1);
+  assert.equal(payload.session, undefined);
+  assert.equal(calls, 1);
+  assert.match(response.headers.get('Server-Timing'), /authorize;dur=.*save;dur=.*atomic/);
   t.mock.method(sessions, 'readScanSession', async () => null);
   assert.equal((await scanRoute.GET(request({}), { params: Promise.resolve({ id }) })).status, 404);
+});
+
+test('invalid scans never call the database and atomic errors retain their HTTP status', async t => {
+  t.mock.method(auth, 'authorize', async () => ({ access: { user: {id:owner}, workspaceId:workspace } }));
+  t.mock.method(admin, 'createAdminClient', () => { throw new Error('must not reach database'); });
+  for (const body of [null, {}, { code: '' }, { code: ' '.repeat(10) }, { code: 'A'.repeat(201) }]) {
+    assert.equal((await scanRoute.POST(request(body), { params: Promise.resolve({ id }) })).status, 400);
+  }
+  for (const [message, status] of [['SESSION_NOT_FOUND',404], ['SESSION_CLOSED',409], ['MEMBER_REQUIRED',403]]) {
+    t.mock.method(admin, 'createAdminClient', () => ({ rpc: async () => ({ data: null, error: { code: 'P0001', message } }) }));
+    assert.equal((await scanRoute.POST(request({ code: 'CODE' }), { params: Promise.resolve({ id }) })).status, status);
+  }
+});
+
+test('missing migration falls back with revision retry; uncertain writes never trigger fallback', async t => {
+  const session = { id, status: 'active', revision: 0, orders: [{ id: 1, trackingCode: 'CODE', status: 'pending', clientName: 'Teste' }] };
+  let writes = 0, reads = 0;
+  t.mock.method(admin, 'createAdminClient', () => ({
+    rpc: async () => ({ data: null, error: { code: 'PGRST202', message: 'missing function' } }),
+    from: table => {
+      assert.equal(table, 'scan_sessions');
+      let update;
+      const filters = [];
+      const chain = { select: () => chain, eq: (key, value) => { filters.push([key,value]); return chain; }, update: value => { update = value; return chain; },
+        maybeSingle: async () => {
+          assert.ok(filters.some(([key,value]) => key === 'workspace_id' && value === workspace));
+          if (!update) { reads++; return { data: { ...session }, error: null }; }
+          if (++writes === 1) { session.revision++; return { data: null, error: null }; }
+          assert.ok(filters.some(([key,value]) => key === 'revision' && value === 1));
+          return { data: { ...session, ...update }, error: null };
+        } };
+      return chain;
+    },
+  }));
+  const saved = await sessions.submitSessionScan(workspace, id, owner, 'CODE', 0);
+  assert.equal(saved.mode, 'legacy'); assert.equal(reads, 2); assert.equal(writes, 2);
+  assert.equal(saved.payload.session.revision, 2); assert.equal(saved.payload.session.orders[0].status, 'checked');
+  t.mock.method(admin, 'createAdminClient', () => ({
+    rpc: async () => ({ data: null, error: { code: '08006', message: 'connection lost' } }),
+    from: () => { throw new Error('unsafe fallback'); },
+  }));
+  await assert.rejects(sessions.submitSessionScan(workspace, id, owner, 'CODE', 0), /gravar a conferência/);
 });

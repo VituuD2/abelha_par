@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { ScanOrder, ScannerState, ScanResult, StoredScanSession } from "@/types";
+import type { ScanOrder, ScannerState, ScanResult, ScanSubmission, StoredScanSession } from "@/types";
 import { hasTrackingCode } from "@/lib/tracking";
 import { applyScan } from "@/lib/scan-session";
 
@@ -65,23 +65,32 @@ export const useScanStore = create<ScanStore>()(persist((set, get) => ({
       get().setSession(payload.session);
     } catch (error) {
       if (get().sessionVersion === sessionVersion) set({ restoreError: error instanceof Error ? error.message : "Falha ao recuperar lote." });
-    } finally { if (get().sessionVersion === sessionVersion) set({ busy: false }); }
+    } finally { if (get().sessionVersion === sessionVersion && get().busy) set({ busy: false }); }
   },
   submitBarcode: async code => {
-    const { sessionId, sessionVersion, busy } = get();
-    if (!sessionId || busy || get().sessionStatus === "completed") return;
+    const { sessionId, sessionVersion, busy, revision, state } = get();
+    if (!sessionId || busy || state === "error" || state === "complete" || get().sessionStatus === "completed") return;
     set({ busy: true });
     try {
-      const response = await fetch(`/api/scan-sessions/${sessionId}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }), signal: AbortSignal.timeout(30_000) });
+      const response = await fetch(`/api/scan-sessions/${sessionId}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code, revision }), signal: AbortSignal.timeout(30_000) });
       const payload = await response.json();
       if (get().sessionVersion !== sessionVersion) return;
-      if (!response.ok || !payload.session || !payload.result) throw new Error(payload.error || "Não foi possível registrar a bipagem. Tente novamente.");
-      const session = payload.session as StoredScanSession;
-      const complete = session.orders.every(order => order.status === "checked");
-      set({ ...counts(session.orders), revision: session.revision, currentResult: payload.result, state: complete ? "complete" : payload.result.type });
+      if (!response.ok || (!payload.session && !payload.confirmation) || !payload.result) throw new Error(payload.error || "Não foi possível registrar a bipagem. Tente novamente.");
+      const { session, confirmation, result } = payload as ScanSubmission;
+      if (session) {
+        if (session.id !== sessionId) throw new Error("Resposta de confirmação inválida.");
+        const complete = session.orders.every(order => order.status === "checked");
+        set({ ...counts(session.orders), revision: session.revision, currentResult: result, state: result.type === "success" && complete ? "complete" : result.type, busy: false });
+      } else {
+        if (!confirmation || confirmation.sessionId !== sessionId || (result.type === "success" && !result.order)) throw new Error("Resposta de confirmação inválida.");
+        const orders = result.type === "success" ? get().orders.map(order => order.id === result.order!.id ? result.order! : order) : get().orders;
+        const { scannedCount, totalCount } = confirmation;
+        set({ orders, scannedCount, totalCount, progress: totalCount ? scannedCount / totalCount * 100 : 0,
+          revision: confirmation.revision, currentResult: result, state: result.type === "success" && scannedCount === totalCount ? "complete" : result.type, busy: false });
+      }
     } catch (error) {
-      if (get().sessionVersion === sessionVersion) set({ state: "error", currentResult: { type: "error", message: error instanceof Error ? error.message : "Falha ao registrar bipagem." } });
-    } finally { if (get().sessionVersion === sessionVersion) set({ busy: false }); }
+      if (get().sessionVersion === sessionVersion) set({ busy: false, state: "error", currentResult: { type: "error", message: error instanceof Error ? error.message : "Falha ao registrar bipagem." } });
+    }
   },
   updateTrackingCodes: (updates, sessionVersion) => set(current => {
     if (current.sessionVersion !== sessionVersion) return current;
@@ -99,7 +108,7 @@ export const useScanStore = create<ScanStore>()(persist((set, get) => ({
     return result;
   },
   acknowledgeError: () => set({ currentResult: null, state: "scanning" }),
-  acknowledgeSuccess: () => { if (get().state !== "complete") set({ currentResult: null, state: "scanning" }); },
+  acknowledgeSuccess: () => { if (get().state === "success") set({ currentResult: null, state: "scanning" }); },
   reset: () => set(current => ({ ...initial, sessionVersion: current.sessionVersion + 1 })),
 }), {
   name: "abelha-scan-session-v1", storage: createJSONStorage(() => localStorage), skipHydration: true,

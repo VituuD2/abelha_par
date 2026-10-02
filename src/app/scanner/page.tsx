@@ -147,7 +147,7 @@ export default function ScannerPage() {
             <div className="absolute inset-0 w-2 h-2 rounded-full bg-[var(--color-accent-green)] animate-ping" />
           </div>
           <p className="text-[12px] text-[var(--color-text-secondary)]">
-            {showMissingNotice || state === "error" ? "Scanner pausado — reconheça o aviso para continuar" : state === "complete" ? "Conferência concluída" : "Scanner ativo — aguardando bipagem"}
+            {showMissingNotice || state === "error" ? "Scanner pausado — reconheça o aviso para continuar" : state === "complete" ? "Conferência concluída" : busy ? "Salvando conferência…" : "Scanner ativo — aguardando bipagem"}
           </p>
         </div>
       </motion.div>

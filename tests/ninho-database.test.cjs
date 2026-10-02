@@ -30,6 +30,61 @@ before(async () => {
   await db.exec(migration);
   await db.query('INSERT INTO workspaces(id) VALUES ($1)', [foreignWorkspace]);
   await db.query("INSERT INTO workspace_members(user_id,workspace_id,role) VALUES ($1,$2,'admin')", [outsider, foreignWorkspace]);
+  await db.exec(migrations('migration_v10_atomic_scan.sql'));
+  await db.exec(migrations('migration_v10_atomic_scan.sql'));
+});
+
+test('atomic scans preserve tracking rules, reject duplicates and return small confirmations', async () => {
+  require('./setup.cjs');
+  const { normalizeTrackingForScan } = require('../src/lib/tracking.ts');
+  for (const code of ['', ' \t\n ', ' aa123456789br ', 'PREFIX12345612345678', '01234567890112345678', 'SHORT', '\u00a0\u2003\ufeffaa123456789br\u2028']) {
+    const actual = (await db.query('SELECT normalize_scan_tracking($1) AS value', [code])).rows[0].value;
+    assert.equal(actual, normalizeTrackingForScan(code), code);
+  }
+  const scanId = '20000000-0000-4000-8000-000000000010';
+  const orders = Array.from({ length: 1000 }, (_, i) => ({ id: i + 1, clientName: `Cliente ${i + 1}`, trackingCode: i === 0 ? 'AA123456789BR' : `CODE${i + 1}`, status: 'pending' }));
+  await db.query('INSERT INTO scan_sessions(id,owner_id,workspace_id,responsible,orders) VALUES ($1,$2,$2,$3,$4)', [scanId,owner,'Equipe',JSON.stringify(orders)]);
+  const scan = async (code, revision) => (await db.query('SELECT submit_workspace_scan($1,$2,$3,$4,$5) AS payload', [owner,operator,scanId,code,revision])).rows[0].payload;
+  const first = await scan(' aa123456789br ', 0);
+  assert.equal(first.session, undefined); assert.equal(first.result.type, 'success');
+  assert.equal(first.result.order.status, 'checked'); assert.ok(first.result.order.scannedAt);
+  assert.deepEqual(first.confirmation, { sessionId: scanId, revision: 1, scannedCount: 1, totalCount: 1000 });
+  assert.ok(JSON.stringify(first).length < 1000);
+  const duplicate = await scan('AA123456789BR', 1);
+  assert.equal(duplicate.result.type, 'error'); assert.match(duplicate.result.message, /já bipado/);
+  assert.equal(duplicate.confirmation.revision, 1);
+  const missing = await scan('UNKNOWN', 1);
+  assert.equal(missing.result.type, 'error'); assert.equal(missing.confirmation.scannedCount, 1);
+  const stale = await scan('CODE2', 0);
+  assert.equal(stale.session.orders[0].status, 'checked'); assert.equal(stale.session.orders[1].status, 'checked');
+  assert.equal(stale.confirmation.revision, 2);
+  const stored = (await db.query('SELECT * FROM scan_sessions WHERE id=$1', [scanId])).rows[0];
+  assert.equal(stored.owner_id, owner); assert.equal(stored.last_updated_by, operator);
+});
+
+test('atomic scans serialize competing readers, reject ambiguous labels and protect workspace access', async () => {
+  const scanId = '20000000-0000-4000-8000-000000000011';
+  const orders = [{ id: 1, clientName: 'A', trackingCode: '01234567890112345678', status: 'pending' }, { id: 2, trackingCode: 'OTHER', status: 'pending' }];
+  await db.query('INSERT INTO scan_sessions(id,owner_id,workspace_id,responsible,orders) VALUES ($1,$2,$2,$3,$4)', [scanId,owner,'Equipe',JSON.stringify(orders)]);
+  const scan = (actor, code, revision = 0, workspace = owner) => db.query('SELECT submit_workspace_scan($1,$2,$3,$4,$5) AS payload', [workspace,actor,scanId,code,revision]);
+  const [a,b] = await Promise.all([scan(operator,'12345678'), scan(owner,'12345678')]);
+  assert.deepEqual([a.rows[0].payload.result.type,b.rows[0].payload.result.type].sort(), ['error','success']);
+  const stale = await db.query("UPDATE scan_sessions SET orders=$1 WHERE id=$2 AND revision=0 RETURNING id", [JSON.stringify(orders),scanId]);
+  assert.equal(stale.rows.length, 0);
+  await assert.rejects(scan(outsider,'OTHER'), /MEMBER_REQUIRED/);
+  await assert.rejects(scan(outsider,'OTHER',0,foreignWorkspace), /SESSION_NOT_FOUND/);
+  await db.query('UPDATE workspace_members SET active=false WHERE user_id=$1', [operator]);
+  await assert.rejects(scan(operator,'OTHER'), /MEMBER_REQUIRED/);
+  await db.query('UPDATE workspace_members SET active=true WHERE user_id=$1', [operator]);
+  for (const role of ['anon','authenticated']) {
+    assert.equal((await db.query("SELECT has_function_privilege($1,'submit_workspace_scan(uuid,uuid,uuid,text,integer)','EXECUTE') AS allowed", [role])).rows[0].allowed, false);
+  }
+  assert.equal((await scan(owner,'OTHER',null)).rows[0].payload.session.orders.length, 2);
+  await db.query("UPDATE scan_sessions SET status='completed' WHERE id=$1", [scanId]);
+  await assert.rejects(scan(owner,'OTHER'), /SESSION_CLOSED/);
+  await db.query("UPDATE scan_sessions SET status='active',orders=$1 WHERE id=$2", [JSON.stringify([{ ...orders[0], trackingCode: '12345678' }, orders[0]]),scanId]);
+  const ambiguous = (await scan(owner,'12345678')).rows[0].payload;
+  assert.equal(ambiguous.result.type, 'error'); assert.match(ambiguous.result.message, /mais de um pedido/);
 });
 after(async () => db.close());
 
