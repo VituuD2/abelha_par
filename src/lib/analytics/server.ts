@@ -51,18 +51,11 @@ export async function analyticsStatus(workspace: string, actor: string) {
     db
       .from("analytics_connections")
       .select(
-        "id,company_id,name,enabled,credential_kind,legacy_integration_id,verified_tax_id,verified_at,expires_at,last_synced_at,last_error,client_id",
+        "id,company_id,name,enabled,credential_kind,legacy_integration_id,verified_tax_id,verified_at,expires_at,last_synced_at,last_error,error_code,client_id",
       )
       .eq("workspace_id", workspace)
       .order("name"),
-    db
-      .from("analytics_sync_jobs")
-      .select(
-        "id,connection_id,mode,from_date,to_date,cursor_date,page_offset,pending_index,processed,pages,status,last_error,updated_at,next_at",
-      )
-      .eq("workspace_id", workspace)
-      .order("created_at", { ascending: false })
-      .limit(200),
+    db.rpc("analytics_job_status", { p_workspace: workspace, p_actor: actor }),
     db
       .from("analytics_sources")
       .select(
@@ -74,7 +67,7 @@ export async function analyticsStatus(workspace: string, actor: string) {
   ]);
   if ([companies, connections, jobs, sources, coverage].some((r) => r.error))
     throw new Error(
-      "Curva ABC ainda não disponível no banco. Aplique a migração v11.",
+      "Curva ABC ainda não disponível no banco. Aplique as migrações v11 e v12.",
     );
   return {
     companies: companies.data || [],

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorize } from "@/lib/access";
 import { parseABCFilters } from "@/lib/analytics/filters";
 import { report, analyticsError } from "@/lib/analytics/server";
+import { ensureFilterCoverage } from "@/lib/analytics/sync";
 export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const auth = await authorize();
@@ -28,15 +29,23 @@ export async function POST(request: Request) {
       !["asc", "desc"].includes(body.direction || "asc")
     )
       throw new Error("Paginação ou ordenação inválida.");
-    return NextResponse.json(
-      await report(
+    const result = await report(
         auth.access,
         filters,
         (page - 1) * size,
         size,
         body.sort || "rank",
         body.direction || "asc",
-      ),
+      );
+    // Return existing data even if scheduling is temporarily unavailable.
+    let sync;
+    try {
+      sync = await ensureFilterCoverage(auth.access.workspaceId, auth.access.user.id, filters);
+    } catch (reason) {
+      sync = { error: reason instanceof Error ? reason.message : "Agendamento indisponível." };
+    }
+    return NextResponse.json(
+      { ...result, sync },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (reason) {

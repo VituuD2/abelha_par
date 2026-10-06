@@ -31,12 +31,14 @@ export async function POST(request: Request) {
           attempts: 0,
           next_at: new Date().toISOString(),
           last_error: null,
+          error_code: null,
           lease_token: null,
           lease_until: null,
         })
         .eq("workspace_id", auth.access.workspaceId)
         .eq("id", b.job)
         .eq("status", "failed")
+        .is("error_code", null)
         .select("id")
         .single();
       if (retried.error)

@@ -199,6 +199,10 @@ test("coverage joins adjacent complete backfills and never claims gaps or increm
     ),
     false,
   );
+  assert.equal(coversPeriod([
+    span("2026-09-01", "2026-09-15"),
+    { ...span("2026-09-16", "2026-09-30"), mode: "incremental", covers_sales: true },
+  ], "x", "2026-09-01", "2026-09-30"), true);
 });
 test("OAuth state binds user, workspace, connection and configuration version; rejects tampering and expiry", () => {
   const previous = process.env.TOKEN_ENCRYPTION_KEY;

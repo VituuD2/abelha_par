@@ -6,6 +6,18 @@ DO $$ DECLARE job bigint; BEGIN
   FOR job IN SELECT jobid FROM cron.job WHERE jobname='abelha-par-analytics-sync' LOOP PERFORM cron.unschedule(job); END LOOP;
  END IF;
 END $$;
+DROP FUNCTION IF EXISTS public.invoke_analytics_sync();
+DROP TABLE IF EXISTS public.analytics_cron_runs;
+DROP FUNCTION IF EXISTS public.analytics_ensure_coverage(uuid,uuid,jsonb);
+DROP FUNCTION IF EXISTS public.analytics_job_status(uuid,uuid);
+DROP FUNCTION IF EXISTS public.analytics_schedule_range(uuid,uuid,date,date,text);
+DROP FUNCTION IF EXISTS public.analytics_relink_legacy(uuid,uuid,uuid,integer,uuid,text,text,text);
+DO $$ BEGIN
+ IF to_regclass('public.analytics_connections') IS NOT NULL THEN
+  DROP TRIGGER IF EXISTS analytics_resume_verified ON public.analytics_connections;
+ END IF;
+END $$;
+DROP FUNCTION IF EXISTS public.analytics_resume_verified_jobs();
 DROP FUNCTION IF EXISTS public.analytics_options(uuid,uuid,text,text);
 DROP FUNCTION IF EXISTS public.analytics_drilldown(uuid,uuid,jsonb,text,integer);
 DROP FUNCTION IF EXISTS public.analytics_abc(uuid,uuid,jsonb,integer,integer,text,text);

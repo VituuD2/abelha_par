@@ -10,9 +10,9 @@ export class AnalyticsApiError extends Error {
       status === 429
         ? "Limite da API Olist atingido; retomada programada."
         : status === 401
-          ? "A autorização Olist precisa ser renovada."
+          ? "A autorização Olist foi recusada. Reconecte esta conta no Ninho."
           : status === 403
-            ? "O aplicativo Olist não tem permissão para esta consulta."
+            ? "O aplicativo Olist não tem permissão para esta consulta. Confira as permissões e reconecte esta conta no Ninho."
             : `Consulta Olist indisponível (HTTP ${status}).`,
     );
   }

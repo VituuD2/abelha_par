@@ -43,6 +43,11 @@ const query = async (
     ])
   ).rows[0].result;
 let job, source1, source2, source3;
+async function expectDbError(action, pattern) {
+  await db.exec("SAVEPOINT expected_error");
+  await assert.rejects(action(),pattern);
+  await db.exec("ROLLBACK TO SAVEPOINT expected_error; RELEASE SAVEPOINT expected_error");
+}
 before(async () => {
   await db.exec(
     `CREATE ROLE anon;CREATE ROLE authenticated;CREATE ROLE service_role BYPASSRLS;CREATE SCHEMA auth;CREATE TABLE auth.users(id uuid PRIMARY KEY,created_at timestamptz DEFAULT now(),raw_user_meta_data jsonb DEFAULT '{}');CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql AS $$SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;`,
@@ -73,6 +78,8 @@ before(async () => {
   );
   await db.exec(sql("migration_v11_analytics_abc.sql"));
   await db.exec(sql("migration_v11_analytics_abc.sql"));
+  await db.exec(sql("migration_v12_analytics_automation.sql"));
+  await db.exec(sql("migration_v12_analytics_automation.sql"));
   for (const [i, c] of [conn1, conn2, conn3].entries()) {
     await db.query(
       "INSERT INTO analytics_companies(id,workspace_id,name) VALUES($1,$2,$3)",
@@ -465,6 +472,114 @@ test("coverage merges completed intervals independently of recent incremental jo
   assert.equal(ranges[0].to_date, "2026-01-31");
   assert.equal(ranges[1].from_date, "2026-02-02");
 });
+test("missing-history scheduling subtracts covered and reserved spans, retains failed checkpoints and validates member scope", async () => {
+  await db.exec("BEGIN");
+  try {
+    const c = "33000000-0000-4000-8000-000000000001";
+    await db.query("INSERT INTO analytics_connections(id,workspace_id,company_id,name) VALUES($1,$2,$3,'Automation')", [c,ws,conn1]);
+    for (const [a,b,status] of [["01","05","completed"],["10","15","queued"],["20","22","failed"]])
+      await db.query("INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date,status) VALUES($1,$2,'backfill',$3,$4,$3,$5)", [ws,c,`2026-08-${a}`,`2026-08-${b}`,status]);
+    const f = { ...filters, from:"2026-08-01",to:"2026-08-31",selections:{connections:[c],companies:[conn1]} };
+    const schedule = async actor => (await db.query("SELECT analytics_ensure_coverage($1,$2,$3) result",[ws,actor,JSON.stringify(f)])).rows[0].result;
+    assert.equal((await schedule(operator)).scheduled,3);
+    assert.equal((await schedule(operator)).scheduled,0);
+    const spans = (await db.query("SELECT from_date::text,to_date::text FROM analytics_sync_jobs WHERE connection_id=$1 AND status='queued' ORDER BY from_date",[c])).rows;
+    assert.deepEqual(spans.map(s=>[s.from_date,s.to_date]),[["2026-08-06","2026-08-09"],["2026-08-10","2026-08-15"],["2026-08-16","2026-08-19"],["2026-08-23","2026-08-31"]]);
+    await expectDbError(()=>schedule(foreign),/MEMBER_REQUIRED/);
+    // The forged connection selection cannot import a connection from another workspace.
+    assert.equal((await db.query("SELECT analytics_ensure_coverage($1,$2,$3) result",[foreign,foreign,JSON.stringify(f)])).rows[0].result.scheduled,0);
+  } finally { await db.exec("ROLLBACK"); }
+});
+
+test("coverage includes proven incrementals and checkpoint days, but never update-only scans or gaps", async () => {
+  await db.exec("BEGIN");
+  try {
+    const c = "33000000-0000-4000-8000-000000000002";
+    await db.query("INSERT INTO analytics_connections(id,workspace_id,company_id,name) VALUES($1,$2,$3,'Coverage')",[c,ws,conn1]);
+    for (const [a,b,cursor,mode,status,proven] of [
+      ["01","10","10","backfill","completed",false],
+      ["11","20","20","incremental","completed",true],
+      ["21","22","22","incremental","completed",false],
+      ["23","31","25","backfill","retry",false],
+    ]) await db.query("INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date,status,covers_sales) VALUES($1,$2,$3,$4,$5,$6,$7,$8)",[ws,c,mode,`2026-08-${a}`,`2026-08-${b}`,`2026-08-${cursor}`,status,proven]);
+    const coverage = (await db.query("SELECT analytics_coverage($1,$2) result",[ws,operator])).rows[0].result.filter(s=>s.connection_id===c);
+    assert.deepEqual(coverage.map(s=>[s.from_date,s.to_date]),[["2026-08-01","2026-08-20"],["2026-08-23","2026-08-24"]]);
+    const { coversPeriod } = require("../src/lib/analytics/coverage.ts");
+    assert.equal(coversPeriod(coverage,c,"2026-08-01","2026-08-24"),false);
+    assert.equal(coversPeriod(coverage,c,"2026-08-01","2026-08-20"),true);
+  } finally { await db.exec("ROLLBACK"); }
+});
+
+test("incremental scheduling refreshes the current day without duplicate active or minute-by-minute completed jobs", async () => {
+  await db.exec("BEGIN");
+  try {
+    const c="33000000-0000-4000-8000-000000000004";
+    await db.query("INSERT INTO analytics_connections(id,workspace_id,company_id,name) VALUES($1,$2,$3,'Incremental')",[c,ws,conn1]);
+    const schedule=async()=> (await db.query("SELECT analytics_schedule_range($1,$2,'2026-10-05','2026-10-06','incremental') count",[ws,c])).rows[0].count;
+    assert.equal(await schedule(),1);
+    const j=(await db.query("SELECT * FROM analytics_sync_jobs WHERE connection_id=$1",[c])).rows[0];
+    assert.equal(j.covers_sales,true); assert.equal(j.query_phase,"sales");
+    assert.equal(await schedule(),0);
+    await db.query("UPDATE analytics_sync_jobs SET status='completed',updated_at=now() WHERE id=$1",[j.id]);
+    assert.equal(await schedule(),0);
+    await db.query("UPDATE analytics_sync_jobs SET updated_at=now()-interval '61 minutes' WHERE id=$1",[j.id]);
+    assert.equal(await schedule(),1);
+    // Long recent history never hides an old pending checkpoint.
+    await db.query("UPDATE analytics_sync_jobs SET updated_at='2020-01-01' WHERE connection_id=$1 AND status='queued'",[c]);
+    await db.query("INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date,status) SELECT $1,$2,'incremental','2026-01-01','2026-01-01','2026-01-01','completed' FROM generate_series(1,220)",[ws,c]);
+    const visible=(await db.query("SELECT analytics_job_status($1,$2) result",[ws,operator])).rows[0].result.filter(s=>s.connection_id===c);
+    assert.equal(visible.length,11);
+    assert.equal(visible.filter(s=>s.status==='queued').length,1);
+    assert.equal(visible.some(s=>s.pending_ids!==undefined),false);
+  } finally {await db.exec("ROLLBACK");}
+});
+
+test("legacy relink verifies workspace, operational snapshot and CNPJ, then resumes the original cursor without changing scanner tokens", async () => {
+  await db.exec("BEGIN");
+  try {
+    const c = "33000000-0000-4000-8000-000000000003";
+    const integration = (await db.query("SELECT id,access_token,refresh_token FROM tiny_integrations WHERE workspace_id=$1",[ws])).rows[0];
+    await db.query("UPDATE analytics_connections SET legacy_integration_id=null WHERE workspace_id=$1",[ws]);
+    await db.query("UPDATE analytics_companies SET tax_id='36965322000112' WHERE id=$1",[conn1]);
+    await db.query("INSERT INTO analytics_connections(id,workspace_id,company_id,name,credential_kind) VALUES($1,$2,$3,'Lost legacy','legacy')",[c,ws,conn1]);
+    const original = (await db.query("INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date,pending_ids,pending_index,processed,status,error_code) VALUES($1,$2,'backfill','2026-08-01','2026-10-02','2026-08-01','[\"123\",\"456\"]',1,3,'failed','authorization_required') RETURNING id",[ws,c])).rows[0];
+    const relink = (actor=ws,tax="36965322000112",token=integration.access_token) => db.query("SELECT analytics_relink_legacy($1,$2,$3,1,$4,$5,$6,'safe-fingerprint')",[ws,actor,c,integration.id,token,tax]);
+    await expectDbError(()=>relink(operator),/ADMIN_REQUIRED/);
+    await expectDbError(()=>relink(ws,"13397731000164"),/CNPJ_MISMATCH/);
+    await expectDbError(()=>relink(ws,"36965322000112","changed-token"),/INTEGRATION_CHANGED/);
+    await relink();
+    const j=(await db.query("SELECT * FROM analytics_sync_jobs WHERE id=$1",[original.id])).rows[0];
+    assert.equal(j.status,"queued"); assert.equal(j.processed,3); assert.equal(j.pending_index,1); assert.deepEqual(j.pending_ids,["123","456"]);
+    assert.equal(j.error_code,null);
+    assert.deepEqual((await db.query("SELECT id,access_token,refresh_token FROM tiny_integrations WHERE workspace_id=$1",[ws])).rows[0],integration);
+    assert.equal((await db.query("SELECT legacy_integration_id FROM analytics_connections WHERE id=$1",[c])).rows[0].legacy_integration_id,integration.id);
+  } finally { await db.exec("ROLLBACK"); }
+});
+
+test("cron SQL validates Vault, is repeatable, restricts invocation and records only request identifiers", async () => {
+  await db.exec("BEGIN");
+  try {
+    // PGlite has no pg_net/pg_cron workers. Stub their documented SQL signatures
+    // to execute the deployment function and privilege checks locally.
+    await db.exec(`CREATE SCHEMA vault;CREATE SCHEMA net;CREATE SCHEMA cron;
+      CREATE TABLE vault.decrypted_secrets(name text,decrypted_secret text);
+      CREATE TABLE cron.job(jobid bigserial,jobname text UNIQUE,schedule text,command text);
+      CREATE SEQUENCE net.request_ids;
+      CREATE FUNCTION net.http_post(url text,headers jsonb,body jsonb,timeout_milliseconds integer) RETURNS bigint LANGUAGE sql AS $$SELECT nextval('net.request_ids')$$;
+      CREATE FUNCTION cron.schedule(name text,timing text,command text) RETURNS bigint LANGUAGE sql AS $$INSERT INTO cron.job(jobname,schedule,command) VALUES(name,timing,command) ON CONFLICT(jobname) DO UPDATE SET schedule=excluded.schedule,command=excluded.command RETURNING jobid$$;
+      INSERT INTO vault.decrypted_secrets VALUES('abelha_par_app_url','https://example.test'),('abelha_par_cron_secret','fake-secret-with-at-least-32-characters');`);
+    const setup=sql("setup_analytics_cron.sql").replace(/^CREATE EXTENSION[^\n]+\n/gm,"").replace(/^BEGIN;\s*$/gm,"").replace(/^COMMIT;\s*$/gm,"");
+    await db.exec(setup); await db.exec(setup);
+    assert.equal((await db.query("SELECT * FROM cron.job")).rows.length,1);
+    assert.equal((await db.query("SELECT command FROM cron.job")).rows[0].command,"SELECT public.invoke_analytics_sync();");
+    assert.equal((await db.query("SELECT * FROM analytics_cron_runs")).rows.length,2);
+    assert.equal((await db.query("SELECT has_function_privilege('authenticated','invoke_analytics_sync()','EXECUTE') allowed")).rows[0].allowed,false);
+    assert.equal((await db.query("SELECT has_table_privilege('authenticated','analytics_cron_runs','SELECT') allowed")).rows[0].allowed,false);
+    await db.exec("UPDATE vault.decrypted_secrets SET decrypted_secret='short' WHERE name='abelha_par_cron_secret'");
+    await expectDbError(()=>db.query("SELECT invoke_analytics_sync()"),/Configure.*Vault/);
+  } finally {await db.exec("ROLLBACK");}
+});
+
 test("large analytical data is aggregated on SQL and returns only a bounded page and Pareto", async (t) => {
   await db.exec("BEGIN");
   // Synthetic benchmark seeding only; FK/security/ingestion are tested above with normal constraints.

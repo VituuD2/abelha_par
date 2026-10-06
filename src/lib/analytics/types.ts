@@ -94,6 +94,8 @@ export interface SyncJob {
   pages: number;
   attempts: number;
   lease_token: string;
+  query_phase?: "sales" | "updates";
+  covers_sales?: boolean;
 }
 export interface Option {
   value: string;

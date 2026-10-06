@@ -5,6 +5,7 @@ const admin = require("../src/lib/supabase/admin.ts"),
   auth = require("../src/lib/analytics/auth.ts"),
   provider = require("../src/lib/analytics/olist-client.ts");
 const { processAnalyticsBatch } = require("../src/lib/analytics/sync.ts");
+const { AnalyticsActionError } = require("../src/lib/analytics/sync-errors.ts");
 function fixture() {
   const job = {
     id: "job",
@@ -201,4 +202,55 @@ test("an incremental job uses update date; inaccessible optional enrichment is f
     f.tables.analytics_connections[0].incremental_through,
     "2026-09-01",
   );
+});
+
+test("new incremental coverage waits for both sale and update scans to complete", async (t) => {
+  const f = fixture(), paths = [];
+  f.job.mode = "incremental";
+  f.job.query_phase = "sales";
+  f.job.covers_sales = true;
+  t.mock.method(admin, "createAdminClient", () => f.db);
+  t.mock.method(auth, "analyticsToken", async () => "token");
+  t.mock.method(auth, "ensureAnalyticsIdentity", async () => {});
+  t.mock.method(provider, "olistRequest", async (_t, _c, path) => {
+    paths.push(path);
+    return { itens: [], paginacao: { total: 0 } };
+  });
+  await processAnalyticsBatch("workspace");
+  assert.equal(f.job.status, "queued");
+  assert.equal(f.job.query_phase, "updates");
+  assert.equal(f.job.cursor_date, "2026-09-01");
+  // Simulate the next cron lease, independent of any browser request.
+  f.job.lease_token = "lease";
+  f.job.lease_until = "2099-01-01T00:00:00Z";
+  f.tables.analytics_connections[0].sync_lock = "lease";
+  await processAnalyticsBatch();
+  assert.equal(f.job.status, "completed");
+  assert.match(paths[0], /dataInicial=2026-09-01/);
+  assert.match(paths[1], /dataAtualizacao=2026-09-01/);
+});
+
+test("expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying", async (t) => {
+  const f = fixture();
+  f.job.attempts = 12;
+  f.job.pending_ids = ["123"];
+  f.job.pending_index = 0;
+  t.mock.method(admin, "createAdminClient", () => f.db);
+  t.mock.method(auth, "ensureAnalyticsIdentity", async () => {});
+  t.mock.method(auth, "analyticsToken", async () => {
+    throw new AnalyticsActionError("authorization_required", "Reconecte esta conta no Ninho.");
+  });
+  const result = await processAnalyticsBatch();
+  assert.match(result.error, /Reconecte/);
+  assert.equal(f.job.status, "failed");
+  assert.equal(f.job.error_code, "authorization_required");
+  assert.deepEqual(f.job.pending_ids, ["123"]);
+  assert.equal(f.tables.analytics_connections[0].error_code, "authorization_required");
+  f.job.lease_token = "lease";
+  f.job.lease_until = "2099-01-01T00:00:00Z";
+  t.mock.method(auth, "analyticsToken", async () => { throw new Error("Falha temporária."); });
+  await processAnalyticsBatch();
+  assert.equal(f.job.status, "retry");
+  assert.equal(f.job.error_code, null);
+  assert.deepEqual(f.job.pending_ids, ["123"]);
 });

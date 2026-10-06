@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { authorize } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { encryptToken } from "@/lib/token-crypto";
+import { decryptToken, encryptToken } from "@/lib/token-crypto";
+import { createHash } from "crypto";
+import { getValidTinyToken } from "@/lib/tiny-auth";
 import { analyticsToken } from "@/lib/analytics/auth";
 import { olistRequest } from "@/lib/analytics/olist-client";
 import { object, string } from "@/lib/analytics/normalize";
@@ -172,6 +174,32 @@ export async function POST(request: Request) {
       .eq("id", b.id)
       .single();
     if (current.error) throw new Error("Conexão não autorizada.");
+    if (b.action === "relink") {
+      if (current.data.credential_kind !== "legacy")
+        throw new Error("Esta conta usa autorização própria. Reconecte esta conta pela ação de autorização.");
+      const result = await getValidTinyToken(workspace);
+      if (!result.token)
+        throw new Error("Reconecte a Olist operacional no Ninho antes de restabelecer o vínculo.");
+      const integration = await db.from("tiny_integrations")
+        .select("id,access_token").eq("workspace_id", workspace).single();
+      if (integration.error || decryptToken(integration.data.access_token) !== result.token)
+        throw new Error("A integração operacional mudou. Tente restabelecer o vínculo novamente.");
+      const info = await olistRequest(result.token, current.data.id, "/info");
+      const tax = string(info.cpfCnpj).replace(/\D/g, "");
+      if (!/^\d{14}$/.test(tax))
+        throw new Error("Libere Informações da conta no aplicativo Olist para validar o CNPJ antes de restabelecer o vínculo.");
+      const saved = await db.rpc("analytics_relink_legacy", {
+        p_workspace: workspace, p_actor: auth.access.user.id,
+        p_connection: current.data.id, p_version: current.data.version,
+        p_integration: integration.data.id, p_access_token: integration.data.access_token,
+        p_tax: tax, p_fingerprint: createHash("sha256").update(result.token).digest("hex"),
+      });
+      if (saved.error)
+        throw new Error(saved.error.message.includes("CNPJ_MISMATCH")
+          ? "O CNPJ da Olist operacional difere da empresa cadastrada. O vínculo e o histórico foram preservados."
+          : "Não foi possível restabelecer o vínculo. Aguarde o lote atual e confira a migração v12.");
+      return NextResponse.json({ ok: true });
+    }
     if (b.action === "verify") {
       const token = await analyticsToken(workspace, current.data.id),
         info = await olistRequest(token, current.data.id, "/info");
@@ -190,7 +218,7 @@ export async function POST(request: Request) {
         throw new Error("O CNPJ da conta Olist difere da empresa cadastrada.");
       const saved = await db
         .from("analytics_connections")
-        .update({ verified_tax_id: tax, verified_at: new Date().toISOString() })
+        .update({ verified_tax_id: tax, verified_at: new Date().toISOString(), last_error: null, error_code: null })
         .eq("workspace_id", workspace)
         .eq("id", b.id)
         .eq("version", current.data.version)

@@ -195,6 +195,26 @@ test("drilldown traces orders and native dialog closes; client tab changes group
     "customer",
   );
 });
+test("dashboard polls existing reports as imports advance without asking the browser to run a worker", async t => {
+  let tick;
+  t.mock.method(global,"setInterval",callback=>{tick=callback;return 999;});
+  t.mock.method(global,"clearInterval",()=>{});
+  const pending = { connection_id:"c1",mode:"backfill",status:"queued",from_date:"2026-08-01",to_date:"2026-10-02",cursor_date:"2026-08-01",processed:3 };
+  state.jobs.push(pending);
+  await click(button("Atualizar"));
+  assert.equal(typeof tick,"function");
+  assert.match(document.body.textContent,/3 pedidos processados/);
+  const before=requests.filter(r=>r.url.endsWith("/abc")).length;
+  pending.processed=6;
+  pending.cursor_date="2026-08-02";
+  await act(async()=>tick());
+  assert.ok(requests.filter(r=>r.url.endsWith("/abc")).length>before);
+  assert.match(document.body.textContent,/6 pedidos processados/);
+  assert.equal(requests.some(r=>r.url.includes("/analytics/sync")),false);
+  state.jobs.pop();
+  await click(button("Atualizar"));
+});
+
 test("missing coverage stays visibly partial and a server error does not leave a misleading old result", async () => {
   state.connections[0].verified_at = null;
   await click(button("Atualizar"));
@@ -248,4 +268,18 @@ test("Ninho explains a failed OAuth callback and keeps reauthorization available
   await click(document.querySelector('button[aria-label="Atualizar conexões analíticas"]'));
   assert.equal(button("Validar CNPJ na API").disabled, false);
   assert.ok(document.body.textContent.includes("CNPJ validado"));
+});
+
+test("Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow", async t => {
+  const { AnalyticsConnections } = require("../src/components/ninho/analytics-connections.tsx");
+  dom.window.history.replaceState(null,"","/ninho");
+  const calls=[];
+  const legacy={companies:[{id:"company2",name:"Olist 2",tax_id:"36965322000112"}],connections:[{id:"legacy2",company_id:"company2",name:"Olist 2",credential_kind:"legacy",legacy_integration_id:null,enabled:true,verified_at:null}],jobs:[],sources:[],coverage:[]};
+  t.mock.method(global,"fetch",async(url,options={})=>{calls.push({url,body:options.body && JSON.parse(options.body)});return Response.json(legacy);});
+  await act(async()=>{root.render(React.createElement(AnalyticsConnections,{key:"legacy"}));});
+  assert.match(document.body.textContent,/Vínculo operacional perdido/);
+  assert.equal(button("Validar CNPJ na API").disabled,true);
+  await click(button("Restabelecer vínculo operacional"));
+  assert.deepEqual(calls.find(c=>c.body)?.body,{action:"relink",id:"legacy2"});
+  assert.equal(calls.some(c=>c.url.includes("oauth")||c.url.includes("/auth/disconnect")),false);
 });

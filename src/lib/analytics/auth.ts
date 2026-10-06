@@ -6,6 +6,7 @@ import { getValidTinyToken } from "@/lib/tiny-auth";
 import type { AnalyticsConnection } from "./types";
 import { olistRequest } from "./olist-client";
 import { string } from "./normalize";
+import { AnalyticsActionError } from "./sync-errors";
 
 export const TOKEN_URL =
   "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
@@ -47,7 +48,7 @@ export async function ensureAnalyticsIdentity(
   const info = await olistRequest(token, c.id, "/info"),
     tax = string(info.cpfCnpj).replace(/\D/g, "");
   if (tax !== company.data.tax_id)
-    throw new Error(
+    throw new AnalyticsActionError("identity_mismatch",
       "O CNPJ da autorização Olist mudou ou não corresponde à empresa. Importação bloqueada para preservar a separação dos dados.",
     );
   const saved = await db
@@ -161,11 +162,13 @@ export function tokenPayload(
 const flights = new Map<string, Promise<string>>();
 export async function refreshDueAnalyticsTokens() {
   const now = Date.now();
+  let reconnect = 0, failed = 0;
   const { data, error } = await createAdminClient()
     .from("analytics_connections")
     .select("id,workspace_id")
     .eq("enabled", true)
     .eq("credential_kind", "oauth")
+    .is("error_code", null)
     .not("access_token", "is", null)
     .or(
       `expires_at.lt.${new Date(now + 65 * 60000).toISOString()},refresh_expires_at.lt.${new Date(now + 6 * 3600000).toISOString()}`,
@@ -176,27 +179,32 @@ export async function refreshDueAnalyticsTokens() {
     throw new Error("Não foi possível consultar as renovações analíticas.");
   for (const c of data || []) {
     try {
-      await analyticsToken(c.workspace_id, c.id);
+      await analyticsToken(c.workspace_id, c.id, 65 * 60000);
     } catch (reason) {
+      if (reason instanceof AnalyticsActionError && reason.code === "authorization_required") reconnect++;
+      else failed++;
       await createAdminClient()
         .from("analytics_connections")
         .update({
           last_error:
             reason instanceof Error ? reason.message : "Renovação pendente.",
+          error_code: reason instanceof AnalyticsActionError ? reason.code : null,
         })
         .eq("workspace_id", c.workspace_id)
         .eq("id", c.id);
     }
   }
+  return { checked: data?.length || 0, reconnect, failed };
 }
 export function analyticsToken(
   workspace: string,
   connectionId: string,
+  minimumValidityMs = 300000,
 ): Promise<string> {
   const key = workspace + connectionId,
     prior = flights.get(key);
   if (prior) return prior;
-  const pending = getToken(workspace, connectionId).finally(() =>
+  const pending = getToken(workspace, connectionId, minimumValidityMs).finally(() =>
     flights.delete(key),
   );
   flights.set(key, pending);
@@ -217,6 +225,7 @@ async function read(workspace: string, connectionId: string) {
 async function getToken(
   workspace: string,
   connectionId: string,
+  minimumValidityMs: number,
 ): Promise<string> {
   const c = await read(workspace, connectionId);
   // A removed legacy integration must never fall through to a different OAuth account.
@@ -225,18 +234,25 @@ async function getToken(
     "legacy"
   ) {
     if (!c.legacy_integration_id)
-      throw new Error(
-        "A conexão operacional foi removida. Configure novamente no Ninho.",
+      throw new AnalyticsActionError("authorization_required",
+        "O vínculo operacional foi removido. Use Restabelecer vínculo operacional no Ninho.",
       );
+    const linked = await createAdminClient().from("tiny_integrations")
+      .select("id").eq("workspace_id", workspace).eq("id", c.legacy_integration_id).maybeSingle();
+    if (linked.error || !linked.data)
+      throw new AnalyticsActionError("authorization_required", "O vínculo operacional mudou. Restabeleça o vínculo no Ninho após validar o CNPJ.");
     const result = await getValidTinyToken(workspace);
-    if (!result.token)
-      throw new Error(result.message || "Reconecte a Olist atual.");
+    if (!result.token) {
+      if (result.status === "expired")
+        throw new AnalyticsActionError("authorization_required", "Reconecte a Olist operacional no Ninho e restabeleça o vínculo analítico.");
+      throw new Error(result.message || "Falha temporária ao renovar a Olist atual.");
+    }
     return result.token;
   }
   if (!c.access_token || !c.refresh_token || !c.client_id || !c.client_secret)
-    throw new Error("Autorize esta conexão Olist no Ninho.");
+    throw new AnalyticsActionError("authorization_required", "Reconecte esta conta Olist no Ninho.");
   if (
-    Date.parse(c.expires_at || "") > Date.now() + 300000 &&
+    Date.parse(c.expires_at || "") > Date.now() + minimumValidityMs &&
     (!c.refresh_expires_at ||
       Date.parse(c.refresh_expires_at) > Date.now() + 6 * 3600000)
   )
@@ -244,7 +260,7 @@ async function getToken(
   if (c.refresh_expires_at && Date.parse(c.refresh_expires_at) < Date.now()) {
     if (Date.parse(c.expires_at || "") > Date.now() + 30000)
       return decryptToken(c.access_token);
-    throw new Error("A autorização expirou. Reconecte esta empresa no Ninho.");
+    throw new AnalyticsActionError("authorization_required", "A autorização expirou. Reconecte esta empresa no Ninho.");
   }
   const db = createAdminClient(),
     lease = randomUUID();
@@ -292,12 +308,11 @@ async function getToken(
       signal: AbortSignal.timeout(12000),
     });
     const body = await response.json().catch(() => null);
-    if (!response.ok)
-      throw new Error(
-        body?.error === "invalid_grant"
-          ? "Reconecte esta conta Olist; autorização expirada ou revogada."
-          : "Falha temporária na renovação Olist. Verifique as credenciais do aplicativo.",
-      );
+    if (!response.ok) {
+      if (body?.error === "invalid_grant")
+        throw new AnalyticsActionError("authorization_required", "Reconecte esta conta Olist no Ninho; autorização expirada ou revogada.");
+      throw new Error("Falha temporária na renovação Olist. Verifique as credenciais do aplicativo.");
+    }
     const payload = tokenPayload(body, issuedAt, c.refresh_expires_at);
     for (let attempt = 0; attempt < 3; attempt++) {
       const saved = await db

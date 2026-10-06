@@ -149,6 +149,7 @@ export async function GET(request: Request) {
         verified_at: new Date().toISOString(),
         version: c.version + 1,
         last_error: null,
+        error_code: null,
       })
       .eq("workspace_id", auth.access.workspaceId)
       .eq("id", c.id)

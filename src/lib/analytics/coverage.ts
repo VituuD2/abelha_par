@@ -4,6 +4,7 @@ export interface CoverageJob {
   status: string;
   from_date: string;
   to_date: string;
+  covers_sales?: boolean;
 }
 /** Completed adjacent intervals may cover a requested range; gaps must remain visible. */
 export function coversPeriod(
@@ -16,7 +17,7 @@ export function coversPeriod(
     .filter(
       (j) =>
         j.connection_id === connection &&
-        j.mode === "backfill" &&
+        (j.mode === "backfill" || j.covers_sales === true) &&
         j.status === "completed",
     )
     .sort((a, b) => a.from_date.localeCompare(b.from_date));

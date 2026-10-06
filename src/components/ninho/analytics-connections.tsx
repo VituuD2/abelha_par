@@ -1,6 +1,8 @@
 ﻿"use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
+import { ConnectionProgress } from "@/components/analytics/connection-progress";
+import type { CoverageJob } from "@/lib/analytics/coverage";
 import {
   analyticsOAuthErrors,
   type AnalyticsOAuthErrorCode,
@@ -12,6 +14,8 @@ type Connection = {
   name: string;
   enabled: boolean;
   credential_kind: string;
+  legacy_integration_id?: string | null;
+  error_code?: string | null;
   verified_tax_id: string | null;
   verified_at: string | null;
   client_id: string | null;
@@ -41,12 +45,14 @@ type Job = {
   status: string;
   last_error: string | null;
   next_at: string;
+  error_code?: string | null;
 };
 type State = {
   companies: Company[];
   connections: Connection[];
   sources: Source[];
   jobs: Job[];
+  coverage?: CoverageJob[];
 };
 async function call(path: string, body?: unknown) {
   const response = await fetch(
@@ -308,7 +314,7 @@ export function AnalyticsConnections() {
         {state?.connections.map((c) => {
           const configured = c.credential_kind === "legacy" || !!c.client_id;
           const authorized =
-            c.credential_kind === "legacy" || (configured && !!c.expires_at);
+            c.credential_kind === "legacy" ? !!c.legacy_integration_id : (configured && !!c.expires_at);
           return (
             <div
               key={c.id}
@@ -323,7 +329,7 @@ export function AnalyticsConnections() {
                   }
                 </h3>
                 <span className="badge">
-                  {!configured
+                  {c.error_code ? "Reconexão / ação necessária" : c.credential_kind === "legacy" && !c.legacy_integration_id ? "Vínculo operacional perdido" : !configured
                     ? "Aplicativo pendente"
                     : !authorized
                       ? "Autorização pendente"
@@ -348,12 +354,13 @@ export function AnalyticsConnections() {
               {c.last_error && (
                 <p className="text-xs text-red-800">{c.last_error}</p>
               )}
+              <ConnectionProgress connection={c.id} jobs={state.jobs} coverage={state.coverage || []} />
               {!configured ? (
                 <p className="text-xs text-[var(--color-text-secondary)]">
                   Salve o Client ID e o Client Secret do aplicativo desta empresa.
                   Depois autorize esta conta para validar o CNPJ.
                 </p>
-              ) : !authorized ? (
+              ) : !authorized && c.credential_kind !== "legacy" ? (
                 <p className="text-xs text-[var(--color-text-secondary)]">
                   Aplicativo salvo. Clique em Autorizar esta conta e entre na Olist
                   desta empresa para concluir a conexão e validar o CNPJ.
@@ -361,9 +368,12 @@ export function AnalyticsConnections() {
               ) : null}
               <div className="flex flex-wrap gap-2">
                 {c.credential_kind === "legacy" ? (
-                  <span className="text-xs py-3">
-                    Usa a autorização Olist operacional atual.
-                  </span>
+                  <>
+                    <button disabled={busy} className="btn-primary" onClick={() => save({ action: "relink", id: c.id })}>
+                      Restabelecer vínculo operacional
+                    </button>
+                    <p className="text-xs py-2">Valida o CNPJ da conexão que atende a bipagem e retoma o histórico. Se a autorização operacional venceu, reconecte-a nas configurações Olist deste Ninho primeiro.</p>
+                  </>
                 ) : !configured ? (
                   <button
                     disabled={busy}
@@ -377,7 +387,7 @@ export function AnalyticsConnections() {
                     href={`/api/analytics/oauth/login?connection=${c.id}`}
                     className="btn-primary"
                   >
-                    Autorizar esta conta
+                    {c.error_code || c.last_error ? "Reconectar esta conta" : "Autorizar esta conta"}
                   </a>
                 ) : null}
                 <button
@@ -695,7 +705,7 @@ export function AnalyticsConnections() {
               {j.last_error && (
                 <p className="mt-1 text-red-800">{j.last_error}</p>
               )}
-              {j.status === "failed" && (
+              {j.status === "failed" && !j.error_code && (
                 <button
                   className="btn-ghost mt-2"
                   disabled={busy}

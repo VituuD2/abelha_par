@@ -81,11 +81,52 @@ test("report ignores forged workspace/user, validates filters and caps browser p
     (await abc.POST(request({ filters, size: 100000 }))).status,
     400,
   );
-  assert.equal(calls.length, 1);
+  assert.equal(calls[1].name, "analytics_ensure_coverage");
+  assert.equal(calls[1].args.p_workspace, "trusted-workspace");
+  assert.equal(calls[1].args.p_actor, "trusted-user");
+  assert.equal(calls.length, 2);
   assert.equal(
     (await abc.POST(request({ filters: { ...filters, thresholdA: 100 } })))
       .status,
     400,
   );
-  assert.equal(calls.length, 1);
+  assert.equal(calls.length, 2);
+});
+
+test("a scheduling outage remains actionable while returning the report already available", async t => {
+  t.mock.method(access,"authorize",async()=>({access:{workspaceId:"trusted",user:{id:"member"},role:"operator"}}));
+  t.mock.method(admin,"createAdminClient",()=>({rpc:async(name)=>name==="analytics_abc"
+    ? {data:{rows:[],total:0,revenue:"0"},error:null}
+    : {data:null,error:{message:"sensitive database diagnostic"}}}));
+  const response=await abc.POST(request({filters}));
+  assert.equal(response.status,200);
+  const body=await response.json();
+  assert.equal(body.revenue,"0");
+  assert.match(body.sync.error,/histórico faltante.*v12/);
+  assert.equal(JSON.stringify(body).includes("sensitive"),false);
+});
+
+test("legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials", async t => {
+  const tiny=require("../src/lib/tiny-auth.ts"), provider=require("../src/lib/analytics/olist-client.ts");
+  const {encryptToken}=require("../src/lib/token-crypto.ts");
+  const previous=process.env.TOKEN_ENCRYPTION_KEY;
+  process.env.TOKEN_ENCRYPTION_KEY=Buffer.alloc(32,3).toString("base64");
+  t.after(()=>{if(previous===undefined)delete process.env.TOKEN_ENCRYPTION_KEY;else process.env.TOKEN_ENCRYPTION_KEY=previous;});
+  const encrypted=encryptToken("test-operational-token"), reads=[],calls=[];
+  t.mock.method(access,"authorize",async()=>({access:{workspaceId:"trusted",user:{id:"admin"},role:"admin"}}));
+  t.mock.method(tiny,"getValidTinyToken",async workspace=>{assert.equal(workspace,"trusted");return {token:"test-operational-token",status:"valid"};});
+  t.mock.method(provider,"olistRequest",async(_token,connection,path)=>{assert.equal(connection,"legacy");assert.equal(path,"/info");return {cpfCnpj:"36.965.322/0001-12"};});
+  t.mock.method(admin,"createAdminClient",()=>({
+    from(table){const scoped=[];const chain={select(){return chain;},eq(key,value){scoped.push([key,value]);return chain;},async single(){reads.push({table,scoped});return {data:table==="analytics_connections"?{id:"legacy",company_id:"company",version:3,credential_kind:"legacy"}:{id:"operational",access_token:encrypted},error:null};}};return chain;},
+    async rpc(name,args){calls.push({name,args});return {error:null};},
+  }));
+  const response=await connections.POST(request({action:"relink",id:"legacy",workspaceId:"foreign",integration:"forged",taxId:"13397731000164"}));
+  assert.equal(response.status,200);
+  assert.ok(reads.every(r=>r.scoped.some(([k,v])=>k==="workspace_id"&&v==="trusted")));
+  assert.equal(calls[0].name,"analytics_relink_legacy");
+  assert.equal(calls[0].args.p_integration,"operational");
+  assert.equal(calls[0].args.p_tax,"36965322000112");
+  assert.equal(calls[0].args.p_access_token,encrypted);
+  assert.equal(calls[0].args.p_version,3);
+  assert.equal(JSON.stringify(await response.json()).includes("token"),false);
 });

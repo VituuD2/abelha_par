@@ -174,7 +174,7 @@ test("legacy analytics references the existing authorization; removal never fall
       credential_kind: "legacy",
       legacy_integration_id: "integration",
     },
-    store = database([c]);
+    store = database([c, { id: "integration", workspace_id: "workspace" }]);
   t.mock.method(admin, "createAdminClient", () => store.db);
   const seen = [];
   t.mock.method(tiny, "getValidTinyToken", async (workspace) => {
@@ -184,7 +184,10 @@ test("legacy analytics references the existing authorization; removal never fall
   assert.equal(await analyticsToken("workspace", "legacy"), "shared-token");
   assert.deepEqual(seen, ["workspace"]);
   c.legacy_integration_id = null;
-  await assert.rejects(analyticsToken("workspace", "legacy"), /removida/);
+  await assert.rejects(analyticsToken("workspace", "legacy"), { code: "authorization_required" });
+  assert.equal(seen.length, 1);
+  c.legacy_integration_id = "foreign-integration";
+  await assert.rejects(analyticsToken("workspace", "legacy"), { code: "authorization_required" });
   assert.equal(seen.length, 1);
 });
 

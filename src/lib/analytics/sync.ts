@@ -4,7 +4,8 @@ import { saoPauloDate } from "@/lib/dates";
 import { analyticsToken, ensureAnalyticsIdentity } from "./auth";
 import { AnalyticsApiError, olistRequest } from "./olist-client";
 import { id, normalizeOrder, nullable, object, string } from "./normalize";
-import type { SyncJob } from "./types";
+import type { ABCFilters, SyncJob } from "./types";
+import { AnalyticsActionError } from "./sync-errors";
 
 class YieldBatch extends Error {}
 const tomorrow = (day: string) =>
@@ -28,18 +29,22 @@ export async function enqueueSync(
     .maybeSingle();
   if (existing.error || !existing.data)
     throw new Error("Conexão não autorizada ou pausada.");
-  const { error } = await db.from("analytics_sync_jobs").insert({
-    workspace_id: workspace,
-    connection_id: connection,
-    mode,
-    from_date: from,
-    to_date: to,
-    cursor_date: from,
+  const { error } = await db.rpc("analytics_schedule_range", {
+    p_workspace: workspace, p_connection: connection,
+    p_from: from, p_to: to, p_mode: mode,
   });
-  if (error && error.code !== "23505")
+  if (error)
     throw new Error(
-      "Não foi possível programar a importação. Confira a migração v11.",
+      "Não foi possível programar a importação. Confira a migração v12.",
     );
+}
+/** Only the server's authenticated scope can schedule missing history. */
+export async function ensureFilterCoverage(workspace: string, actor: string, filters: ABCFilters) {
+  const { data, error } = await createAdminClient().rpc("analytics_ensure_coverage", {
+    p_workspace: workspace, p_actor: actor, p_filters: filters,
+  });
+  if (error) throw new Error("Não foi possível programar o histórico faltante. Confira a migração v12 e a rotina analítica.");
+  return data;
 }
 export async function enqueueIncremental() {
   const db = createAdminClient(),
@@ -65,7 +70,7 @@ export async function enqueueIncremental() {
     if (!watermark) {
       const history = await db
         .from("analytics_sync_jobs")
-        .select("created_at")
+        .select("created_at,to_date")
         .eq("workspace_id", c.workspace_id)
         .eq("connection_id", c.id)
         .eq("mode", "backfill")
@@ -77,6 +82,9 @@ export async function enqueueIncremental() {
       watermark = saoPauloDate(
         new Date(history.data?.[0]?.created_at || c.last_synced_at),
       );
+      // Also fetch sales from the days between a historical end and its completion.
+      if (history.data?.[0]?.to_date && history.data[0].to_date < watermark)
+        watermark = history.data[0].to_date;
     }
     const from = new Date(Date.parse(watermark + "T12:00:00Z") - 86400000)
       .toISOString()
@@ -99,6 +107,7 @@ export async function processAnalyticsBatch(
   if (!job) return { processed: 0, pending: false };
   const lease = job.lease_token;
   let processed = 0;
+  let failed = false;
   const checkpoint = async (patch: Record<string, unknown>) => {
     const result = await db
       .from("analytics_sync_jobs")
@@ -126,7 +135,7 @@ export async function processAnalyticsBatch(
         offset: String(job.page_offset),
         orderBy: "asc",
       });
-      if (job.mode === "incremental")
+      if (job.mode === "incremental" && job.query_phase !== "sales")
         params.set("dataAtualizacao", job.cursor_date);
       else {
         params.set("dataInicial", job.cursor_date);
@@ -356,12 +365,20 @@ export async function processAnalyticsBatch(
       });
     }
     if (job.pending_index >= job.pending_ids.length) {
+      // A scan by update date alone cannot prove that all sales from a day exist.
+      // New incrementals scan sales first, then changes/cancellations for that day.
+      if (job.mode === "incremental" && job.query_phase === "sales" && job.page_done) {
+        await checkpoint({ query_phase: "updates", page_offset: 0, pending_ids: [], pending_index: 0, page_done: false });
+        await checkpoint({ status: "queued", lease_token: null, lease_until: null });
+        return { processed, pending: true };
+      }
       if (job.page_done && job.cursor_date >= job.to_date) {
         const saved = await db
           .from("analytics_connections")
           .update({
             last_synced_at: new Date().toISOString(),
             last_error: null,
+            error_code: null,
             ...(job.mode === "incremental"
               ? { incremental_through: job.to_date }
               : {}),
@@ -390,6 +407,8 @@ export async function processAnalyticsBatch(
         page_offset: job.page_done ? 0 : job.page_offset + 100,
         pending_ids: [],
         pending_index: 0,
+        ...(job.mode === "incremental" && job.page_done && job.covers_sales
+          ? { query_phase: "sales" } : {}),
       });
     }
     await checkpoint({
@@ -399,7 +418,11 @@ export async function processAnalyticsBatch(
     });
     return { processed, pending: true };
   } catch (reason) {
+    failed = !(reason instanceof YieldBatch);
     const yielded = reason instanceof YieldBatch;
+    const errorCode = reason instanceof AnalyticsActionError ? reason.code
+      : reason instanceof AnalyticsApiError && reason.status === 401 ? "authorization_required"
+      : reason instanceof AnalyticsApiError && reason.status === 403 ? "permission_required" : null;
     const delay = yielded
       ? 1
       : reason instanceof AnalyticsApiError
@@ -407,11 +430,16 @@ export async function processAnalyticsBatch(
         : Math.min(3600, 30 * 2 ** Math.min(job.attempts, 7));
     const message = yielded
       ? null
+      : errorCode === "authorization_required" && reason instanceof AnalyticsApiError
+        ? "A Olist recusou a autorização. Reconecte esta conta no Ninho; o checkpoint será preservado."
+      : errorCode === "permission_required"
+        ? "Libere a leitura de pedidos e informações da conta no aplicativo Olist e reconecte no Ninho."
       : reason instanceof Error
         ? reason.message
         : "Falha na importação.";
     await checkpoint({
-      status: yielded ? "queued" : job.attempts >= 9 ? "failed" : "retry",
+      status: yielded ? "queued" : errorCode ? "failed" : "retry",
+      error_code: errorCode,
       attempts: yielded ? job.attempts : job.attempts + 1,
       next_at: new Date(Date.now() + delay * 1000).toISOString(),
       last_error: message,
@@ -421,14 +449,18 @@ export async function processAnalyticsBatch(
     if (message)
       await db
         .from("analytics_connections")
-        .update({ last_error: message })
+        .update({ last_error: message, error_code: errorCode })
         .eq("workspace_id", job.workspace_id)
         .eq("id", job.connection_id);
     return { processed, pending: true, error: message };
   } finally {
     await db
       .from("analytics_connections")
-      .update({ sync_lock: null, sync_locked_until: null })
+      .update({
+        sync_lock: null, sync_locked_until: null,
+        ...(processed > 0 ? { last_synced_at: new Date().toISOString() } : {}),
+        ...(!failed ? { last_error: null, error_code: null } : {}),
+      })
       .eq("workspace_id", job.workspace_id)
       .eq("id", job.connection_id)
       .eq("sync_lock", lease);

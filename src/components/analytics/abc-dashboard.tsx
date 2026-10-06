@@ -17,6 +17,7 @@ import {
   ORDER_STATUSES,
 } from "@/lib/analytics/config";
 import { coversPeriod, type CoverageJob } from "@/lib/analytics/coverage";
+import { ConnectionProgress } from "./connection-progress";
 import type {
   ABCFilters,
   ABCResult,
@@ -28,6 +29,7 @@ import type {
 type Status = {
   coverage?: CoverageJob[];
   companies: { id: string; name: string; tax_id: string | null }[];
+  sources?: { id: string; connection_id: string }[];
   connections: {
     id: string;
     company_id: string;
@@ -37,7 +39,7 @@ type Status = {
     last_synced_at: string | null;
     last_error: string | null;
   }[];
-  jobs: (CoverageJob & { processed: number; last_error: string | null })[];
+  jobs: (CoverageJob & { processed: number; last_error: string | null; cursor_date?: string; page_offset?: number; pending_index?: number })[];
   options: Partial<Record<Dimension, Option[]>>;
 };
 type Drill = {
@@ -362,6 +364,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
     [drillPage, setDrillPage] = useState(1),
     [drillError, setDrillError] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const resultScope = useRef("");
   useEffect(() => {
     const abort = new AbortController();
     jsonRequest("/api/analytics/options", undefined, abort.signal)
@@ -375,6 +378,11 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
   }, [refresh]);
   useEffect(() => {
     const abort = new AbortController();
+    const scope = JSON.stringify({ filters, page, size, sort, direction });
+    if (resultScope.current !== scope) {
+      setResult(null);
+      resultScope.current = scope;
+    }
     setLoading(true);
     setError(null);
     jsonRequest(
@@ -383,7 +391,14 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
       abort.signal,
     )
       .then((data) => {
-        if (!abort.signal.aborted) setResult(data);
+        if (!abort.signal.aborted) {
+          setResult(data);
+          if (data.sync?.error) setError(data.sync.error);
+          // Scheduling may have added jobs after the initial status request.
+          jsonRequest("/api/analytics/options", undefined, abort.signal)
+            .then((next) => { if (!abort.signal.aborted) setStatus(next); })
+            .catch((e) => { if (e.name !== "AbortError") setError(e.message); });
+        }
       })
       .catch((e) => {
         if (e.name !== "AbortError") {
@@ -396,6 +411,12 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
       });
     return () => abort.abort();
   }, [filters, page, size, sort, direction, refresh]);
+  const pendingImports = status?.jobs.some((j) => ["queued", "running", "retry"].includes(j.status));
+  useEffect(() => {
+    if (!pendingImports) return;
+    const timer = setInterval(() => setRefresh((value) => value + 1), 5000);
+    return () => clearInterval(timer);
+  }, [pendingImports]);
   useEffect(() => {
     if (!entity) return;
     const abort = new AbortController();
@@ -420,13 +441,17 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
         (!filters.selections.companies?.length ||
           filters.selections.companies.includes(c.company_id)) &&
         (!filters.selections.connections?.length ||
-          filters.selections.connections.includes(c.id)),
+          filters.selections.connections.includes(c.id)) &&
+        (!filters.selections.sources?.length ||
+          status?.sources?.some((source) => source.connection_id === c.id && filters.selections.sources?.includes(source.id))),
     ) || [];
   const companies =
     status?.companies.filter(
       (c) =>
-        !filters.selections.companies?.length ||
-        filters.selections.companies.includes(c.id),
+        (!filters.selections.companies?.length ||
+        filters.selections.companies.includes(c.id)) &&
+        (!(filters.selections.connections?.length || filters.selections.sources?.length) ||
+          selectedConnections.some((connection) => connection.company_id === c.id)),
     ) || [];
   const incomplete =
     companies.some(
@@ -917,6 +942,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
                 {c.last_error && (
                   <p className="text-red-700 max-w-72 mt-1">{c.last_error}</p>
                 )}
+                <ConnectionProgress connection={c.id} jobs={status.jobs} coverage={status.coverage || status.jobs.filter((j) => j.status === "completed" && (j.mode === "backfill" || j.covers_sales))} />
               </div>
             ))}
           </div>
@@ -925,6 +951,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               Gerenciar empresas, conexões e importação histórica
             </Link>
           )}
+          <p className="text-xs">O histórico faltante é programado automaticamente. Os dados já disponíveis aparecem durante a importação e o painel acompanha o progresso. Contas com falha de autorização precisam ser reconectadas no Ninho.</p>
         </section>
       )}
       {loading && (
@@ -932,7 +959,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
           Calculando a Curva ABC…
         </p>
       )}
-      {result && !loading && (
+      {result && (
         <>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {[
