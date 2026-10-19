@@ -1,6 +1,6 @@
 # Componentes e rateio pelo CMV — 19/10/2026
 
-Catálogo 2026-10-19.5: 41 combos com vários componentes; 39 com todos os custos válidos.
+Catálogo 2026-10-19.6: 41 combos com vários componentes; 39 com todos os custos válidos.
 
 Fonte: produtos_2026-10-19-14-00-16.xls; aba Produtos; coluna L (Preço de custo); SHA-256 64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c.
 
@@ -30,6 +30,8 @@ Sem custo válido de todos os componentes, o valor inteiro da linha fica sinaliz
 - EBBF001-001 continua excluída como embalagem auxiliar nos kits aprovados; os SKUs de origem são preservados.
 - KITGR-M001S e AKGMR-R001 → 1 × SBGF00M-K001 (Garrafa SoulBM Martelada) + 1 × SBLL001-K001 (Raspador PREMIUM).
 - KITGR-G001S → 1 × SBGF00G-K001 (Garrafa SoulBM Grafias) + 1 × SBLL001-K001 (Raspador PREMIUM).
+- CMNV150-K002 → 2 × CMNV150-K001 (Nivea 150g), inclusive nos itens sem vínculo de catálogo explicitamente confirmados pelo responsável.
+- 2165 → 1 × DDCO00N-K001 (Colbert Noir), inclusive nos itens sem vínculo de catálogo explicitamente confirmados pelo responsável.
 
 ## Composições resolvidas
 
@@ -79,6 +81,6 @@ Sem custo válido de todos os componentes, o valor inteiro da linha fica sinaliz
 
 ## Aplicação
 
-Para o projeto cuja última migração aplicada é a v13, executar somente [migration_v14_v15_analytics_complete.sql](../supabase/migration_v14_v15_analytics_complete.sql), inteiro, no SQL Editor do Supabase. Ele reúne v14 + v15 em uma única transação e solicita atualização do cache da API após concluir. Não executar os dois arquivos individuais além do consolidado. Depois, publicar a versão correspondente do aplicativo. As funções v14 são preservadas para compatibilidade; tela, detalhamento e exportação atuais usam as funções novas. Nenhuma migração ou publicação foi executada em produção nesta entrega.
+Se a última migração aplicada ainda é a v13, executar primeiro [migration_v14_v15_analytics_complete.sql](../supabase/migration_v14_v15_analytics_complete.sql), inteiro, no SQL Editor do Supabase. Se v15 já foi aplicada, não precisa reaplicar esse consolidado. Em seguida, executar [migration_v16_analytics_confirmed_unlinked.sql](../supabase/migration_v16_analytics_confirmed_unlinked.sql) para permitir apenas os vínculos explicitamente confirmados de itens sem catálogo, e publicar o aplicativo correspondente. A v16 preserva os dados e checkpoints originais. As novas rotas de consulta exigem a v16 para não ignorar silenciosamente as regras. Nenhuma migração ou publicação foi executada em produção nesta entrega.
 
 Os filtros continuam incidindo sobre os itens originais antes do desmembramento. O total usa pedidos distintos. Produtos sem composição confirmada continuam separados, com seu valor original; essa pendência difere da falta de CMV de uma composição conhecida.

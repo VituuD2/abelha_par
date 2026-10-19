@@ -77,7 +77,9 @@ export function exportCoverageMetadata(filters: ABCFilters, status: CoverageStat
     ["Cobertura no período", scope.complete ? "Importada" : "Parcial ou não confirmada"],
     ["Estado de sincronização", scope.state],
     ["Empresas selecionadas", scope.companies.map(c => c.name).join(" + ")],
-    ["Itens sem vínculo", "Separados por pedido; não consolidados por SKU/nome; identificados na tabela"],
+    ["Itens sem vínculo", filters.grouping === "composition"
+      ? "Identidade original por pedido preservada; somente SKUs com regra explícita allowUnlinked confirmada podem contribuir para o produto base"
+      : "Separados por pedido; não consolidados por SKU/nome; identificados na tabela"],
     ...scope.companies.filter(c => !scope.connections.some(conn => conn.company_id === c.id))
       .map(c => ["Empresa pendente", c.name + ": sem conexão"]),
     ...scope.connections.flatMap(c => [

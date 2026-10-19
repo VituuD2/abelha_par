@@ -3,6 +3,8 @@ export type CompositionKit = {
   name: string;
   components: { sku: string; name: string; quantity: string }[];
   auxiliaryComponents?: string[];
+  /** Explicit business approval to map this exact SKU even without an ERP catalog ID. */
+  allowUnlinked?: boolean;
 };
 export type CompositionOptions = {
   baseProducts?: { sku: string; name: string; referenceCostCents?: string }[];
@@ -13,6 +15,8 @@ export type CompositionRules = {
   version: string;
   rules: Record<string, CompositionComponent & { ignoredComponents?: string[] }>;
   bundles: Record<string, { components: CompositionComponent[]; ignoredComponents?: string[] }>;
+  unlinkedRules: CompositionRules["rules"];
+  unlinkedBundles: CompositionRules["bundles"];
   pending: Record<string, string>;
   ignoredComponentSkus: string[];
   revenuePolicy: "cost";
@@ -39,7 +43,7 @@ function add(a: string, b: string) {
 export function buildCompositionRules(kits: CompositionKit[], version: string, ignoredComponentSkus: string[] = [], options: CompositionOptions = {}): CompositionRules {
   const ignored = new Set(ignoredComponentSkus.map(compositionSku));
   const result: CompositionRules = {
-    version, rules: {}, bundles: {}, pending: Object.fromEntries(Object.entries(options.pending || {}).map(([sku, reason]) => [compositionSku(sku), reason])),
+    version, rules: {}, bundles: {}, unlinkedRules: {}, unlinkedBundles: {}, pending: Object.fromEntries(Object.entries(options.pending || {}).map(([sku, reason]) => [compositionSku(sku), reason])),
     ignoredComponentSkus: [...ignored], revenuePolicy: "cost",
     referenceCosts: Object.fromEntries((options.baseProducts || []).filter(p => p.referenceCostCents && /^\d+$/.test(p.referenceCostCents) && BigInt(p.referenceCostCents) > BigInt(0)).map(p => [compositionSku(p.sku), p.referenceCostCents!])),
   };
@@ -108,6 +112,12 @@ export function buildCompositionRules(kits: CompositionKit[], version: string, i
   for (const product of options.baseProducts || []) {
     const sku = compositionSku(product.sku);
     if (!sources.has(sku) && !result.pending[sku]) result.rules[sku] ||= { target: sku, name: product.name, factor: "1" };
+  }
+  // Approval never propagates to other SKUs, nested sources or base identities.
+  for (const [sku, source] of sources) {
+    if (source.allowUnlinked !== true || result.pending[sku]) continue;
+    if (result.rules[sku]) result.unlinkedRules[sku] = result.rules[sku];
+    if (result.bundles[sku]) result.unlinkedBundles[sku] = result.bundles[sku];
   }
   return result;
 }

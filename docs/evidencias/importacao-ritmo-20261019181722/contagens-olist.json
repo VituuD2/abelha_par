@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-19T18:19:01.631Z",
+  "readOnly": true,
+  "from": "2026-08-01",
+  "to": "2026-10-19",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "error": "Olist_TIMEOUT"
+    },
+    {
+      "name": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "error": "Olist_TIMEOUT"
+    },
+    {
+      "name": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "error": "Olist_TIMEOUT"
+    }
+  ]
+}

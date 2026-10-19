@@ -1,9 +1,29 @@
 {
-  "version": "2026-10-19.5",
+  "version": "2026-10-19.6",
   "baseSource": "produtos_2026-10-19-14-00-16.xls",
   "baseSourceSha256": "64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c",
   "decision": "Inferencias de negocio avaliadas em 19/10/2026 a partir de cadastro simples, nome da variacao, quantidade e referencia visual. Sem heuristica global por sufixo.",
   "aliases": [
+    {
+      "sku": "CMNV150-K002",
+      "name": "2 Und. Nivea Creme 150ml Lata Azul - Tipo De Embalagem Pote - Pote",
+      "components": [
+        { "sku": "CMNV150-K001", "name": "Nivea Creme 150ml", "quantity": "2" }
+      ],
+      "allowUnlinked": true,
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Responsável confirmou duas unidades de CMNV150-K001 para este SKU, inclusive nas vendas sem vínculo de catálogo. Identidade original do item preservada para rastreabilidade."
+    },
+    {
+      "sku": "2165",
+      "name": "Desodorante Colbert Preto Noir Argentino Masc 250ml Grande Colbert Noir - Colbert Noir",
+      "components": [
+        { "sku": "DDCO00N-K001", "name": "Colbert Noir", "quantity": "1" }
+      ],
+      "allowUnlinked": true,
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Responsável confirmou uma unidade de DDCO00N-K001 para o SKU 2165, inclusive nas vendas sem vínculo de catálogo. Identidade original do item preservada para rastreabilidade."
+    },
     {
       "sku": "ACAI000-K002",
       "name": "Kit 2 unidades Camel Toe",

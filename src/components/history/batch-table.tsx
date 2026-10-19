@@ -4,13 +4,13 @@ import { orderReference } from "@/lib/order-reference";
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Package, Calendar, Hash, CheckCircle2, Printer } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { Batch } from "@/types";
 import { displayTrackingCode } from "@/lib/tracking";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface BatchTableProps {
   batches: Batch[];
+  searching?: boolean;
 }
 
 function formatOrderDate(value: string | null) {
@@ -124,7 +124,7 @@ function printBatch(batch: Batch) {
   document.body.appendChild(printFrame);
 }
 
-export function BatchTable({ batches }: BatchTableProps) {
+export function BatchTable({ batches, searching = false }: BatchTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   if (batches.length === 0) {
@@ -134,10 +134,10 @@ export function BatchTable({ batches }: BatchTableProps) {
           <Package className="w-8 h-8 text-[var(--color-text-tertiary)]" />
         </div>
         <h3 className="text-[16px] font-semibold text-[var(--color-text-primary)] mb-1">
-          Nenhum lote registrado
+          {searching ? "Nenhum pedido encontrado" : "Nenhum lote registrado"}
         </h3>
         <p className="text-[13px] text-[var(--color-text-secondary)]">
-          Complete uma sessão de bipagem para ver o histórico aqui.
+          {searching ? "Tente outro número de pedido, nome de cliente ou código de rastreio." : "Complete uma sessão de bipagem para ver o histórico aqui."}
         </p>
       </div>
     );
@@ -146,7 +146,8 @@ export function BatchTable({ batches }: BatchTableProps) {
   return (
     <div className="space-y-2">
       {batches.map((batch, index) => {
-        const isExpanded = expandedId === batch.id;
+        const isExpanded = expandedId === batch.id || (searching && expandedId === null && index === 0);
+        const orders = searching ? batch.matchedOrders || [] : batch.pedidos || [];
         const formattedDate = formatBatchDate(batch.created_at);
 
         return (
@@ -159,8 +160,9 @@ export function BatchTable({ batches }: BatchTableProps) {
           >
             {/* Row Header */}
             <button
+              aria-expanded={isExpanded}
               onClick={() =>
-                setExpandedId(isExpanded ? null : batch.id)
+                setExpandedId(isExpanded ? "" : batch.id)
               }
             className="w-full flex items-center gap-3 p-4 sm:p-5 text-left hover:bg-[var(--color-accent-yellow)]/10 transition-colors"
             >
@@ -182,7 +184,7 @@ export function BatchTable({ batches }: BatchTableProps) {
                   </span>
                   <span className="flex items-center gap-1 text-[12px] text-[var(--color-text-tertiary)]">
                     <Hash className="w-3 h-3" />
-                    {batch.qtd_pedidos} pedidos
+                    {searching ? `${orders.length} de ${batch.qtd_pedidos} pedidos encontrados` : `${batch.qtd_pedidos} pedidos`}
                   </span>
                 </div>
               </div>
@@ -207,7 +209,7 @@ export function BatchTable({ batches }: BatchTableProps) {
                   <div className="px-4 pb-4 border-t border-[var(--color-border-light)]">
                     <div className="pt-4 flex items-center justify-between gap-3">
                       <p className="text-[12px] text-[var(--color-text-secondary)]">
-                        {batch.qtd_pedidos} pedidos conferidos por <span className="font-semibold text-[var(--color-text-primary)]">{batch.responsavel}</span>.
+                        {searching ? `${orders.length} pedidos encontrados neste lote` : `${batch.qtd_pedidos} pedidos conferidos`} · <span className="font-semibold text-[var(--color-text-primary)]">{batch.responsavel}</span>.
                       </p>
                       <button
                         type="button"
@@ -215,11 +217,11 @@ export function BatchTable({ batches }: BatchTableProps) {
                         className="btn-primary min-h-0 px-4 py-2 text-[13px]"
                       >
                         <Printer className="w-4 h-4" />
-                        Imprimir resultado
+                        {searching ? "Imprimir lote completo" : "Imprimir resultado"}
                       </button>
                     </div>
                     <div className="pt-3 space-y-2">
-                      {(batch.pedidos || []).map((order, idx) => (
+                      {orders.map((order, idx) => (
                         <div
                           key={`${order.id}-${order.yampiId}`}
                           className="flex items-center gap-3 p-2.5 rounded-[var(--radius-sm)] bg-[var(--color-bg-primary)]"

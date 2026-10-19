@@ -1,6 +1,6 @@
 # Composições pendentes
 
-Atualização: 19/10/2026. Catálogo 2026-10-19.5. Fonte: produtos_2026-10-19-14-00-16.xls; aba Produtos; coluna L (Preço de custo); SHA-256 64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c.
+Atualização: 19/10/2026. Catálogo 2026-10-19.6. Fonte: produtos_2026-10-19-14-00-16.xls; aba Produtos; coluna L (Preço de custo); SHA-256 64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c.
 
 Os 41 combos documentados com componentes diferentes agora são desmembrados nos produtos simples. Os três Corega foram confirmados em bisnagas, e os três kits de garrafa foram confirmados com garrafas SoulBM e raspador premium. Restam **1 cadastros para revisão**, dos quais 0 aparecem no snapshot de 2026-10-19T17:03:32.006Z.
 
@@ -24,11 +24,13 @@ O responsável solicitou manter a Fita Seios zerada, pois acredita que não há 
 - EBBF001-001 continua excluída como embalagem auxiliar nos kits aprovados; os SKUs de origem são preservados.
 - KITGR-M001S e AKGMR-R001 → 1 × SBGF00M-K001 (Garrafa SoulBM Martelada) + 1 × SBLL001-K001 (Raspador PREMIUM).
 - KITGR-G001S → 1 × SBGF00G-K001 (Garrafa SoulBM Grafias) + 1 × SBLL001-K001 (Raspador PREMIUM).
+- CMNV150-K002 → 2 × CMNV150-K001 (Nivea 150g), inclusive nos itens sem vínculo de catálogo explicitamente confirmados pelo responsável.
+- 2165 → 1 × DDCO00N-K001 (Colbert Noir), inclusive nos itens sem vínculo de catálogo explicitamente confirmados pelo responsável.
 
 ## Alerta histórico separado
 
 - ACESG15-K001: Componente da planilha antiga ausente da exportacao atual de produtos simples; manter referencia historica e solicitar confirmacao do cadastro. Afeta ACESG15-K001S. Sem substituir por outro modelo.
 
-7 registros sem vínculo ao catálogo permanecem identificados por pedido/posição; não representam necessariamente produtos físicos distintos.
+7 registros sem vínculo ao catálogo no snapshot mantêm a identidade original por pedido/posição; não representam necessariamente produtos físicos distintos. Na visão Produtos base, apenas SKUs com allowUnlinked=true, confirmados pelo responsável, podem contribuir para o produto padrão. Os demais continuam separados.
 
 Detalhes: [componentes e CMV](curva-abc-componentes-cmv-2026-10-19.md).

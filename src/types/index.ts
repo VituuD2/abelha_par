@@ -72,6 +72,8 @@ export interface Batch {
   data: string;
   qtd_pedidos: number;
   pedidos: ScanOrder[];
+  /** Search hits only; pedidos retains the complete saved batch for printing. */
+  matchedOrders?: ScanOrder[];
   created_at: string;
 }
 

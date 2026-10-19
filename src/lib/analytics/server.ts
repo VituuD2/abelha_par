@@ -25,7 +25,7 @@ export async function report(
   direction = "asc",
 ) {
   const composed = filters.grouping === "composition";
-  const { data, error } = await createAdminClient().rpc(composed ? "analytics_abc_components" : "analytics_abc", {
+  const { data, error } = await createAdminClient().rpc(composed ? "analytics_abc_components_v16" : "analytics_abc", {
     p_workspace: access.workspaceId,
     p_actor: access.user.id,
     p_filters: filters,
@@ -42,7 +42,7 @@ export async function report(
         : composed && error.message.includes("CMV_REQUIRED:")
           ? `Informe o CMV unitário dos produtos ${error.message.split("CMV_REQUIRED:")[1]}. Para consultar as quantidades enquanto isso, selecione a métrica Quantidade.`
         : composed
-          ? "Não foi possível consultar os produtos base. Confira a migração v15 e tente novamente."
+          ? "Não foi possível consultar os produtos base. Confira a migração v16 e tente novamente."
           : "Não foi possível consultar a Curva ABC. Confira a migração v11 e tente novamente.",
     );
   return data;

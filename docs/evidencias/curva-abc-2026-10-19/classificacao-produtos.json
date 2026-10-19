@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-19T17:59:30.222Z",
-  "catalogVersion": "2026-10-19.5",
+  "generatedAt": "2026-10-19T19:10:57.807Z",
+  "catalogVersion": "2026-10-19.6",
   "snapshotAt": "2026-10-19T17:03:32.006Z",
   "source": {
     "file": "produtos_2026-10-19-14-00-16.xls",
@@ -12,8 +12,8 @@
   },
   "simpleProducts": 120,
   "acceptedSimpleProducts": 119,
-  "acceptedKits": 446,
-  "executableSingleRules": 525,
+  "acceptedKits": 448,
+  "executableSingleRules": 527,
   "mixedKits": 41,
   "mixedKitsWithValidCMV": 39,
   "importedProductRecords": 489,

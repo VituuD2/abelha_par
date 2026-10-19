@@ -19,6 +19,9 @@ before(async () => {
   db = await isolatedDatabase();
   await db.exec(migration);
   await db.exec(migration);
+  const unlinkedMigration=readFileSync('supabase/migration_v16_analytics_confirmed_unlinked.sql','utf8');
+  await db.exec(unlinkedMigration);
+  await db.exec(unlinkedMigration);
   let id = 100;
   sale = async function(connection, items, { status = 1, date = '2026-09-10', invoiced = false } = {}) {
     const external = String(++id), total = items.reduce((sum, item) => sum + BigInt(item.cents), 0n).toString();
@@ -42,7 +45,7 @@ before(async () => {
 });
 after(async () => db?.close());
 async function report(f = composedFilters, limit = 50, sort = 'rank', direction = 'asc', ruleSet = rules, actor = ws) {
-  return (await db.query('SELECT analytics_abc_components($1,$2,$3,$4,0,$5,$6,$7) result', [ws,actor,JSON.stringify(f),JSON.stringify(ruleSet),limit,sort,direction])).rows[0].result;
+  return (await db.query('SELECT analytics_abc_components_v16($1,$2,$3,$4,0,$5,$6,$7) result', [ws,actor,JSON.stringify(f),JSON.stringify(ruleSet),limit,sort,direction])).rows[0].result;
 }
 
 test('catalog accepts only documented links, exact quantities and the authorized workspace', () => {
@@ -86,7 +89,7 @@ test('approved packaging exclusion consolidates the tape while preserving packag
     assert.equal(Number(r.quantity),4);
     assert.equal(r.orders,1);
     assert.deepEqual(r.composition.ignoredComponentSkus,['EBBF001-001']);
-    const drill=(await db.query('SELECT analytics_drilldown_components($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(f),JSON.stringify(rules),'composition:ACBF000-K050'])).rows[0].result;
+    const drill=(await db.query('SELECT analytics_drilldown_components_v16($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(f),JSON.stringify(rules),'composition:ACBF000-K050'])).rows[0].result;
     assert.equal(drill.sources.length,3);
     assert.equal(drill.sources.filter(s=>s.ignoredComponents.length).length,2);
     assert.equal(drill.sources.find(s=>s.sku==='ACBF000-K100ES').factor,'2');
@@ -159,7 +162,7 @@ test('original product/SKU, company and invoice filters apply before composition
 });
 
 test('drilldown traces original SKUs, conversion factors and order amounts without double counting', async () => {
-  const r = (await db.query('SELECT analytics_drilldown_components($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(composedFilters),JSON.stringify(rules),'composition:HBCOMAX-K001'])).rows[0].result;
+  const r = (await db.query('SELECT analytics_drilldown_components_v16($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(composedFilters),JSON.stringify(rules),'composition:HBCOMAX-K001'])).rows[0].result;
   assert.equal(r.total,2);
   assert.equal(r.companies.length,2);
   assert.equal(r.sources.length,3);
@@ -196,7 +199,7 @@ test('ABC classes and cumulative percentages are recalculated after consolidatio
 });
 
 test('composition functions are read-only, browser-restricted and enforce membership', async () => {
-  const privileges = await db.query(`SELECT p.proname,p.provolatile,has_function_privilege('authenticated',p.oid,'execute') browser,has_function_privilege('anon',p.oid,'execute') anonymous FROM pg_proc p WHERE proname IN ('analytics_composition_lines','analytics_abc_components','analytics_drilldown_components')`);
+  const privileges = await db.query(`SELECT p.proname,p.provolatile,has_function_privilege('authenticated',p.oid,'execute') browser,has_function_privilege('anon',p.oid,'execute') anonymous FROM pg_proc p WHERE proname IN ('analytics_composition_lines','analytics_abc_components_v16','analytics_drilldown_components_v16')`);
   assert.equal(privileges.rows.length,3);
   assert.ok(privileges.rows.every(row=>row.provolatile==='s'&&!row.browser&&!row.anonymous));
   await assert.rejects(report(composedFilters,50,'rank','asc',rules,'99999999-0000-4000-8000-000000000001'),/MEMBER_REQUIRED/);
@@ -245,7 +248,7 @@ test('tape plus silicone pair and Ponds combo conserve cents, quantities and dis
     assert.equal(row('ACTM001-K002').orders,1);
     assert.equal(row('CMPO00B-K001').revenue,'1001');assert.equal(row('CMPO00C-K001').revenue,'1000');
     assert.equal(Number(row('HBCOMAX-K001').quantity),3);
-    const drill=(await db.query('SELECT analytics_drilldown_components($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(companyThree),JSON.stringify(rules),'composition:ACTM001-K002'])).rows[0].result;
+    const drill=(await db.query('SELECT analytics_drilldown_components_v16($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(companyThree),JSON.stringify(rules),'composition:ACTM001-K002'])).rows[0].result;
     const kit=drill.sources.find(s=>s.sku==='ACTM001-K052');
     assert.equal(kit.revenue,'4186');assert.equal(kit.originalRevenue,'10001');assert.equal(kit.referenceCostCents,'360');
     assert.equal(drill.total,1);assert.equal(drill.orders[0].revenue,'4686');
@@ -272,6 +275,38 @@ test('CMV weights include component quantities rather than only comparing unit c
     assert.equal(tape.revenue,'7354');assert.equal(silicone.revenue,'2647');
     assert.equal(Number(tape.quantity),6);assert.equal(Number(silicone.quantity),3);
     assert.equal(r.revenue,'10001');
+  });
+});
+
+test('only explicitly approved unlinked SKUs consolidate, preserving values, filters and source traceability',async()=>{
+  assert.deepEqual(Object.keys(rules.unlinkedRules).sort(),['2165','CMNV150-K002']);
+  assert.equal(rules.unlinkedRules['CMNV150-K001'],undefined);
+  assert.equal(rules.unlinkedRules['HBCOMAX-K001S'],undefined);
+  await fixture([
+    {sku:'CMNV150-K002',qty:3,cents:6000,unlinked:true},
+    {sku:'2165',qty:2,cents:2000,unlinked:true},
+    {product:501,sku:'CMNV150-K001',qty:1,cents:1000},
+    {product:502,sku:'CMNV150-K002',qty:1,cents:2000},
+    {sku:'HBCOMAX-K001S',qty:1,cents:100,unlinked:true},
+  ],async()=>{
+    const r=await report(companyThree), raw=await query(db,{...companyThree,grouping:'product'});
+    assert.equal(r.revenue,'11100');assert.equal(r.revenue,raw.revenue);
+    assert.equal(r.orders,1);assert.equal(r.total,3);assert.equal(Number(r.quantity),12);
+    const nivea=r.rows.find(row=>row.sku==='CMNV150-K001'), colbert=r.rows.find(row=>row.sku==='DDCO00N-K001');
+    assert.equal(Number(nivea.quantity),9);assert.equal(nivea.revenue,'9000');assert.equal(nivea.orders,1);
+    assert.equal(Number(colbert.quantity),2);assert.equal(colbert.revenue,'2000');
+    assert.ok(r.rows.some(row=>row.sku==='HBCOMAX-K001S'&&row.entityId.includes(':order:')));
+    assert.ok(raw.rows.some(row=>row.sku==='2165'&&row.entityId.includes(':order:')));
+    const f={...companyThree,selections:{...companyThree.selections,skus:['CMNV150-K002']}};
+    const selected=await report(f);assert.equal(selected.total,1);assert.equal(Number(selected.quantity),8);assert.equal(selected.revenue,'8000');
+    const drill=(await db.query('SELECT analytics_drilldown_components_v16($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(companyThree),JSON.stringify(rules),nivea.entityId])).rows[0].result;
+    assert.equal(drill.sources.find(s=>s.sku==='CMNV150-K002').factor,'2');
+    assert.equal(drill.sources.find(s=>s.sku==='CMNV150-K002').revenue,'8000');
+    assert.equal(drill.sources.reduce((sum,s)=>sum+Number(s.baseQuantity),0),9);
+    const denied=structuredClone(rules);denied.unlinkedRules={};
+    const safe=await report(companyThree,-1,'rank','asc',denied);
+    assert.equal(safe.rows.filter(row=>row.entityId.includes(':order:')).length,3);
+    assert.equal(safe.revenue,r.revenue);
   });
 });
 

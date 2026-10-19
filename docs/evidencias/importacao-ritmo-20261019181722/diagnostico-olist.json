@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-19T18:18:23.335Z",
+  "readOnly": true,
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "identityConfirmed": true,
+      "apiLimits": {},
+      "infoFields": [
+        "razaoSocial",
+        "cpfCnpj",
+        "fantasia",
+        "enderecoEmpresa",
+        "fone",
+        "email",
+        "inscricaoEstadual",
+        "regimeTributario"
+      ]
+    },
+    {
+      "name": "Olist 2",
+      "identityConfirmed": true,
+      "apiLimits": {},
+      "infoFields": [
+        "razaoSocial",
+        "cpfCnpj",
+        "fantasia",
+        "enderecoEmpresa",
+        "fone",
+        "email",
+        "inscricaoEstadual",
+        "regimeTributario"
+      ],
+      "blocker": {
+        "job": "1af1f19a-24cf-427e-b4bb-3fb317c051c0",
+        "orderId": "382643017",
+        "number": 7925,
+        "date": "2026-08-10",
+        "cursor": "2026-08-10",
+        "attempts": 8,
+        "totals": {
+          "valorTotalPedido": 1429.19,
+          "valorTotalProdutos": 1429.18,
+          "valorDesconto": 0
+        },
+        "items": [
+          {
+            "position": 0,
+            "sku": "SBCC000-K001",
+            "quantity": 1,
+            "unitPrice": 32.05
+          },
+          {
+            "position": 1,
+            "sku": "SBGF00M-K001S",
+            "quantity": 4,
+            "unitPrice": 350.77
+          },
+          {
+            "position": 2,
+            "sku": "SBLL001-K001",
+            "quantity": 1,
+            "unitPrice": -5.94
+          }
+        ],
+        "normalizes": false,
+        "error": "Valor decimal inválido ou negativo."
+      }
+    },
+    {
+      "name": "Olist 3",
+      "identityConfirmed": true,
+      "apiLimits": {},
+      "infoFields": [
+        "razaoSocial",
+        "cpfCnpj",
+        "fantasia",
+        "enderecoEmpresa",
+        "fone",
+        "email",
+        "inscricaoEstadual",
+        "regimeTributario"
+      ]
+    }
+  ]
+}
