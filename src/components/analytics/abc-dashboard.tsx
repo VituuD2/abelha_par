@@ -225,13 +225,13 @@ function MultiFilter({
   );
 }
 
-export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
+export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin: boolean; initialGrouping?: "composition" | "product" }) {
   const [draft, setDraft] = useState<ABCFilters>(() => ({
     from: dayBefore(today(), 29),
     to: today(),
     metric: "revenue",
     mode: ABC_DEFAULTS.mode,
-    grouping: "product",
+    grouping: initialGrouping,
     thresholdA: ABC_DEFAULTS.thresholdA,
     thresholdB: ABC_DEFAULTS.thresholdB,
     basis: "orders",
@@ -476,7 +476,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               setPage(1);
             }}
           >
-            Produtos
+            Produtos Olist
           </button>
           <button
             role="tab"
@@ -504,6 +504,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
             Clientes
           </button>
         </div>
+        {(filters.grouping === "product" || filters.grouping === "parent") && <p className="text-sm text-stone-600">Produtos Olist apresenta os cadastros por conta. Para somar vendas diretas e kits nos produtos simples, selecione Produtos base.</p>}
       </section>
       <form
         className="card p-5 sm:p-6 space-y-4"

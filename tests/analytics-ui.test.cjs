@@ -342,3 +342,35 @@ test("quantity analysis discloses missing CMV and separates attributed value fro
   assert.match(detail,/rateio pendente por falta de CMV/);
   await click(document.querySelector('button[aria-label="Fechar detalhes"]'));
 });
+
+test("the reviewed workspace opens consolidated products for admin and operator; raw Olist view stays explicit", async t => {
+  const access=require('../src/lib/access.ts');
+  const catalog=require('../src/lib/analytics/data/composition-catalog.json');
+  const {default:ABCPage}=require('../src/app/analytics/abc/page.tsx');
+  let workspaceId=catalog.workspaceIds[0],role='operator';
+  t.mock.method(access,'getAccessContext',async()=>({workspaceId,role,user:{id:'trusted-user'}}));
+  for(role of ['admin','operator']) {
+    const page=await ABCPage();
+    const dashboard=React.Children.toArray(page.props.children).find(child=>child.type===ABCDashboard);
+    assert.equal(dashboard.props.initialGrouping,'composition');
+    assert.equal(dashboard.props.isAdmin,role==='admin');
+  }
+  workspaceId='workspace-without-reviewed-catalog';
+  const other=await ABCPage();
+  assert.equal(React.Children.toArray(other.props.children).find(child=>child.type===ABCDashboard).props.initialGrouping,'product');
+
+  const calls=[];
+  t.mock.method(global,'fetch',async(url,options={})=>{
+    const body=options.body&&JSON.parse(options.body);calls.push({url,body});
+    if(!url.endsWith('/abc'))return Response.json(state);
+    return Response.json({rows:[rows[0]],total:1,revenue:'100',quantity:'1',orders:1,classes:{},pareto:[rows[0]],top10:100,generatedAt:'2026-10-19'});
+  });
+  await act(async()=>root.render(React.createElement(ABCDashboard,{key:'default-consolidated',isAdmin:false,initialGrouping:'composition'})));
+  assert.equal(calls.find(c=>c.url.endsWith('/abc')).body.filters.grouping,'composition');
+  assert.equal(document.querySelector('[role="tab"][aria-selected="true"]').textContent,'Produtos base');
+  await click(button('Produtos Olist'));
+  assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.grouping,'product');
+  assert.match(document.body.textContent,/Produtos Olist apresenta os cadastros por conta/);
+  await click(button('Produtos base'));
+  assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.grouping,'composition');
+});

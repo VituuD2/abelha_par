@@ -16,8 +16,12 @@ const rules = buildCompositionRules(
 rules.costSource = { file: baseCatalog.source.file, sheet: baseCatalog.source.sheet, column: baseCatalog.source.costColumn, sha256: baseCatalog.source.sha256 };
 
 /** This catalog belongs to one operation. Identical SKUs in other workspaces are unrelated. */
+export function hasCompositionCatalog(workspaceId: string) {
+  return catalog.workspaceIds.includes(workspaceId);
+}
+
 export function compositionRulesForWorkspace(workspaceId: string) {
-  if (!catalog.workspaceIds.includes(workspaceId))
+  if (!hasCompositionCatalog(workspaceId))
     throw new Error("Ainda não há regras de composição revisadas para este espaço de trabalho.");
   return rules;
 }
