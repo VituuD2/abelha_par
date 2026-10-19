@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { AccessContext } from "@/lib/access";
 import type { ABCFilters } from "./types";
+import { compositionRulesForWorkspace } from "./composition-server";
 
 export function analyticsError(reason: unknown, status = 400) {
   return NextResponse.json(
@@ -23,10 +24,12 @@ export async function report(
   sort = "rank",
   direction = "asc",
 ) {
-  const { data, error } = await createAdminClient().rpc("analytics_abc", {
+  const composed = filters.grouping === "composition";
+  const { data, error } = await createAdminClient().rpc(composed ? "analytics_abc_components" : "analytics_abc", {
     p_workspace: access.workspaceId,
     p_actor: access.user.id,
     p_filters: filters,
+    ...(composed ? { p_rules: compositionRulesForWorkspace(access.workspaceId) } : {}),
     p_offset: offset,
     p_limit: limit,
     p_sort: sort,
@@ -36,7 +39,11 @@ export async function report(
     throw new Error(
       error.message.includes("MEMBER_REQUIRED")
         ? "Seu acesso mudou. Entre novamente."
-        : "Não foi possível consultar a Curva ABC. Confira a migração v11 e tente novamente.",
+        : composed && error.message.includes("CMV_REQUIRED:")
+          ? `Informe o CMV unitário dos produtos ${error.message.split("CMV_REQUIRED:")[1]}. Para consultar as quantidades enquanto isso, selecione a métrica Quantidade.`
+        : composed
+          ? "Não foi possível consultar os produtos base. Confira a migração v15 e tente novamente."
+          : "Não foi possível consultar a Curva ABC. Confira a migração v11 e tente novamente.",
     );
   return data;
 }

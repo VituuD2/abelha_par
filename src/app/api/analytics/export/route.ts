@@ -33,6 +33,9 @@ export async function POST(request: Request) {
       ...exportCoverageMetadata(filters, status),
     ];
     const name = `curva-abc-${filters.from}-${filters.to}.${b.format}`;
+    const columns = EXPORT_COLUMNS.map((column, index) =>
+      index === 3 && result.composition ? "Valor atribuído ao produto (R$)" : column,
+    );
     if (b.format === "xlsx") {
       if (result.total > 50000)
         throw new Error(
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
       XLSX.utils.book_append_sheet(
         book,
         XLSX.utils.aoa_to_sheet([
-          EXPORT_COLUMNS,
+          columns,
           ...result.rows.map(exportRow),
         ]),
         "Curva ABC",
@@ -79,7 +82,7 @@ export async function POST(request: Request) {
           );
         else if (index === -1)
           controller.enqueue(
-            encoder.encode(EXPORT_COLUMNS.map(csvCell).join(";") + "\r\n"),
+            encoder.encode(columns.map(csvCell).join(";") + "\r\n"),
           );
         else if (index < result.rows.length)
           controller.enqueue(

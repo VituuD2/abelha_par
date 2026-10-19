@@ -53,6 +53,20 @@ export function exportMetadata(filters: ABCFilters, result: ABCResult) {
     ["Base", filters.basis],
     ["Filtros", JSON.stringify(filters.selections)],
     ["Entidades", String(result.total)],
+    ...(result.composition ? [
+      ["Composição · versão", result.composition.version],
+      ["Composição · quantidade", "Unidades do produto base = quantidade vendida × fator documentado"],
+      ["Composição · valor", "Rateio por CMV de referência × quantidade de cada componente; centavos residuais pelos maiores restos, com desempate por SKU"],
+      ["Composição · fonte do CMV", result.composition.costSource ? `${result.composition.costSource.file}; aba ${result.composition.costSource.sheet}; coluna ${result.composition.costSource.column}; SHA-256 ${result.composition.costSource.sha256}` : "Não informada"],
+      ["Composição · valor original (centavos)", result.composition.originalRevenue],
+      ["Composição · valor atribuído (centavos)", result.revenue],
+      ["Composição · valor sem rateio (centavos)", result.composition.unallocatedRevenue],
+      ["Composição · linhas sem rateio", String(result.composition.unallocatedLines)],
+      ["Composição · CMV pendente", (result.composition.missingCostSkus || []).join(", ")],
+      ["Composição · filtros", "SKU/produto/pai selecionam registros originais antes da consolidação"],
+      ["Composição · SKUs pendentes", String(result.composition.pendingTotal)],
+      ["Composição · componentes auxiliares desconsiderados", (result.composition.ignoredComponentSkus || []).join(", ")],
+    ] : []),
   ];
 }
 

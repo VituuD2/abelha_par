@@ -1,0 +1,2808 @@
+{
+  "startedAt": "2026-10-19T15:05:42.713Z",
+  "timezone": "America/Sao_Paulo",
+  "from": "2026-08-01",
+  "to": "2026-10-19",
+  "today": "2026-10-19",
+  "readOnly": true,
+  "outputDirectory": "docs/evidencias/importacoes-20261019120542",
+  "before": {
+    "at": "2026-10-19T15:05:43.068Z",
+    "connections": [
+      {
+        "id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+        "company_id": "31009cb5-fd2d-4c97-8510-0467d48e938f",
+        "name": "Olist 1",
+        "enabled": true,
+        "verified_at": "2026-10-19T14:03:03.033+00:00",
+        "last_synced_at": "2026-10-19T15:05:34.145+00:00",
+        "last_error": null,
+        "error_code": null,
+        "incremental_through": null
+      },
+      {
+        "id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+        "company_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "name": "Olist 2",
+        "enabled": true,
+        "verified_at": "2026-10-19T14:02:58.39+00:00",
+        "last_synced_at": "2026-10-19T15:05:34.791+00:00",
+        "last_error": null,
+        "error_code": null,
+        "incremental_through": null
+      },
+      {
+        "id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+        "company_id": "b54b3248-b426-467e-9cd9-c57d7109edbb",
+        "name": "Olist 3",
+        "enabled": true,
+        "verified_at": "2026-10-19T14:03:04.834+00:00",
+        "last_synced_at": "2026-10-19T15:05:33.552+00:00",
+        "last_error": null,
+        "error_code": null,
+        "incremental_through": null
+      }
+    ],
+    "jobs": [
+      {
+        "id": "2c88fc37-6cb3-4cb9-b20d-bd24f389a632",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "incremental",
+        "status": "queued",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-01",
+        "pending_index": 47,
+        "page_offset": 100,
+        "processed": 196,
+        "pages": 3,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:05:34.414+00:00",
+        "next_at": "2026-10-19T15:05:35.414+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:05:02.92316+00:00"
+      },
+      {
+        "id": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "incremental",
+        "status": "queued",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-01",
+        "pending_index": 88,
+        "page_offset": 0,
+        "processed": 231,
+        "pages": 3,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:05:33.986+00:00",
+        "next_at": "2026-10-19T15:05:34.986+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:05:02.92316+00:00"
+      },
+      {
+        "id": "c85c83f7-97bf-4713-b703-e826709efc7c",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "incremental",
+        "status": "queued",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-01",
+        "pending_index": 74,
+        "page_offset": 100,
+        "processed": 249,
+        "pages": 3,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:05:33.401+00:00",
+        "next_at": "2026-10-19T15:05:34.401+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:05:02.92316+00:00"
+      },
+      {
+        "id": "1af1f19a-24cf-427e-b4bb-3fb317c051c0",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "queued",
+        "from_date": "2026-08-01",
+        "to_date": "2026-10-02",
+        "cursor_date": "2026-08-04",
+        "pending_index": 40,
+        "page_offset": 0,
+        "processed": 244,
+        "pages": 4,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:04:35.374+00:00",
+        "next_at": "2026-10-19T15:04:36.374+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": false,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:04:01.920734+00:00"
+      },
+      {
+        "id": "6799cacd-ef03-43e4-afa1-fc93988c0dde",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "queued",
+        "from_date": "2026-10-03",
+        "to_date": "2026-10-06",
+        "cursor_date": "2026-10-06",
+        "pending_index": 35,
+        "page_offset": 0,
+        "processed": 198,
+        "pages": 4,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:04:34.62+00:00",
+        "next_at": "2026-10-19T15:04:35.62+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": "2026-10-19T15:04:01.920734+00:00"
+      },
+      {
+        "id": "737e7bf5-3a10-4447-90fa-b989810aa1b7",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "queued",
+        "from_date": "2026-08-01",
+        "to_date": "2026-10-02",
+        "cursor_date": "2026-08-24",
+        "pending_index": 61,
+        "page_offset": 0,
+        "processed": 2697,
+        "pages": 42,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:04:33.248+00:00",
+        "next_at": "2026-10-19T15:04:34.248+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": false,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:04:01.920734+00:00"
+      },
+      {
+        "id": "3712abb0-f700-4f54-8a9e-f3e6330d5353",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-03",
+        "to_date": "2026-10-06",
+        "cursor_date": "2026-10-06",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 200,
+        "pages": 4,
+        "attempts": 0,
+        "updated_at": "2026-10-19T14:51:19.959+00:00",
+        "next_at": "2026-10-19T14:49:35.585+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": "2026-10-19T14:51:01.121167+00:00"
+      },
+      {
+        "id": "b565c900-e4ad-476e-9347-5ad3e358cf67",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-03",
+        "to_date": "2026-10-06",
+        "cursor_date": "2026-10-06",
+        "pending_index": 0,
+        "page_offset": 100,
+        "processed": 482,
+        "pages": 7,
+        "attempts": 0,
+        "updated_at": "2026-10-19T13:58:21.175+00:00",
+        "next_at": "2026-10-19T13:56:04.483+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": "2026-10-19T13:58:02.286619+00:00"
+      },
+      {
+        "id": "795e4e26-f925-47b4-bcdd-90998370f8ef",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-08",
+        "to_date": "2026-10-08",
+        "cursor_date": "2026-10-08",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 54,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-08T15:50:04.974+00:00",
+        "next_at": "2026-10-08T15:49:35.8+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "c6357f47-c1aa-4604-a23d-50373ee23692",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-08",
+        "to_date": "2026-10-08",
+        "cursor_date": "2026-10-08",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 16,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-08T15:42:08.34+00:00",
+        "next_at": "2026-10-08T15:39:35.169+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "6c64e3fb-8d7e-472d-be65-d72280d13692",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-08",
+        "to_date": "2026-10-08",
+        "cursor_date": "2026-10-08",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 19,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-08T15:41:05.395+00:00",
+        "next_at": "2026-10-08T15:38:34.996+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "d49d0440-ecd6-47a8-9a53-5c7fcac9c82e",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-07",
+        "to_date": "2026-10-07",
+        "cursor_date": "2026-10-07",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 82,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-07T17:49:20.269+00:00",
+        "next_at": "2026-10-07T17:48:35.192+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "a31b6966-09a4-407a-9d1e-038ae0dc0e60",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-07",
+        "to_date": "2026-10-07",
+        "cursor_date": "2026-10-07",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 35,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-07T17:41:10.258+00:00",
+        "next_at": "2026-10-07T17:35:34.194+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "5b654bbe-0cc0-4ad3-8a7f-3b67254eba61",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-07",
+        "to_date": "2026-10-07",
+        "cursor_date": "2026-10-07",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 40,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-07T17:40:21.2+00:00",
+        "next_at": "2026-10-07T17:37:36.056+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "81e609bc-7c08-4bcb-bbdd-c82520a006d4",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-08-01",
+        "to_date": "2026-10-02",
+        "cursor_date": "2026-10-02",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 3528,
+        "pages": 64,
+        "attempts": 0,
+        "updated_at": "2026-10-07T16:26:24.419+00:00",
+        "next_at": "2026-10-07T16:25:35.268+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": false,
+        "query_phase": "updates",
+        "last_claimed_at": null
+      }
+    ],
+    "cron": [
+      {
+        "requested_at": "2026-10-19T15:05:00.038369+00:00",
+        "request_id": 19091
+      },
+      {
+        "requested_at": "2026-10-19T15:04:00.046117+00:00",
+        "request_id": 19090
+      },
+      {
+        "requested_at": "2026-10-19T15:03:00.139094+00:00",
+        "request_id": 19089
+      },
+      {
+        "requested_at": "2026-10-19T15:02:00.059576+00:00",
+        "request_id": 19088
+      },
+      {
+        "requested_at": "2026-10-19T15:01:00.01517+00:00",
+        "request_id": 19087
+      },
+      {
+        "requested_at": "2026-10-19T15:00:00.037963+00:00",
+        "request_id": 19086
+      },
+      {
+        "requested_at": "2026-10-19T14:59:00.014945+00:00",
+        "request_id": 19085
+      },
+      {
+        "requested_at": "2026-10-19T14:58:00.023165+00:00",
+        "request_id": 19084
+      },
+      {
+        "requested_at": "2026-10-19T14:57:00.014885+00:00",
+        "request_id": 19083
+      },
+      {
+        "requested_at": "2026-10-19T14:56:00.040598+00:00",
+        "request_id": 19082
+      }
+    ],
+    "orderCount": 7398
+  },
+  "coverage": [
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-08-03",
+      "from_date": "2026-08-01",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-10-03",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-10-07",
+      "covers_sales": true,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-08-23",
+      "from_date": "2026-08-01",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-05",
+      "from_date": "2026-08-01",
+      "covers_sales": true,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-10-03",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    }
+  ],
+  "databaseReadAt": "2026-10-19T15:05:44.102Z",
+  "importedRows": 7398,
+  "daily": [
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-01",
+      "imported": 83,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-02",
+      "imported": 100,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-03",
+      "imported": 123,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-04",
+      "imported": 115,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-05",
+      "imported": 127,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-06",
+      "imported": 117,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-07",
+      "imported": 100,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-08",
+      "imported": 108,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-09",
+      "imported": 108,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-10",
+      "imported": 98,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-11",
+      "imported": 117,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-12",
+      "imported": 118,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-13",
+      "imported": 99,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-14",
+      "imported": 112,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-15",
+      "imported": 80,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-16",
+      "imported": 99,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-17",
+      "imported": 122,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-18",
+      "imported": 125,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-19",
+      "imported": 135,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-20",
+      "imported": 113,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-21",
+      "imported": 84,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-22",
+      "imported": 95,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-23",
+      "imported": 90,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-24",
+      "imported": 56,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-25",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-26",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-27",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-28",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-29",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-30",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-08-31",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-01",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-02",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-03",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-04",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-05",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-06",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-07",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-08",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-09",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-10",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-11",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-12",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-13",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-14",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-15",
+      "imported": 2,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-16",
+      "imported": 3,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-17",
+      "imported": 8,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-18",
+      "imported": 11,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-19",
+      "imported": 17,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-20",
+      "imported": 20,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-21",
+      "imported": 3,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-22",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-23",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-24",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-25",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-26",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-27",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-28",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-29",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-09-30",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-01",
+      "imported": 137,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-02",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-03",
+      "imported": 96,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-04",
+      "imported": 89,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-05",
+      "imported": 124,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-06",
+      "imported": 151,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-07",
+      "imported": 80,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-08",
+      "imported": 54,
+      "covered": true
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-09",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-10",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-11",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-12",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-13",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-14",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-15",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-16",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-17",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-18",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "date": "2026-10-19",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-01",
+      "imported": 59,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-02",
+      "imported": 58,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-03",
+      "imported": 76,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-04",
+      "imported": 37,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-05",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-06",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-07",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-08",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-09",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-10",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-11",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-12",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-13",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-14",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-15",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-16",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-17",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-18",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-19",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-20",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-21",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-22",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-23",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-24",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-25",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-26",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-27",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-28",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-29",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-30",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-08-31",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-01",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-02",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-03",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-04",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-05",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-06",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-07",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-08",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-09",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-10",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-11",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-12",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-13",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-14",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-15",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-16",
+      "imported": 2,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-17",
+      "imported": 3,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-18",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-19",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-20",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-21",
+      "imported": 1,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-22",
+      "imported": 3,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-23",
+      "imported": 4,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-24",
+      "imported": 7,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-25",
+      "imported": 19,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-26",
+      "imported": 17,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-27",
+      "imported": 25,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-28",
+      "imported": 50,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-29",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-09-30",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-01",
+      "imported": 45,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-02",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-03",
+      "imported": 44,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-04",
+      "imported": 42,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-05",
+      "imported": 53,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-06",
+      "imported": 45,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-07",
+      "imported": 33,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-08",
+      "imported": 16,
+      "covered": true
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-09",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-10",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-11",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-12",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-13",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-14",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-15",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-16",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-17",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-18",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "date": "2026-10-19",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-01",
+      "imported": 30,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-02",
+      "imported": 34,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-03",
+      "imported": 40,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-04",
+      "imported": 45,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-05",
+      "imported": 34,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-06",
+      "imported": 34,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-07",
+      "imported": 33,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-08",
+      "imported": 41,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-09",
+      "imported": 24,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-10",
+      "imported": 35,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-11",
+      "imported": 30,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-12",
+      "imported": 34,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-13",
+      "imported": 33,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-14",
+      "imported": 32,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-15",
+      "imported": 22,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-16",
+      "imported": 26,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-17",
+      "imported": 40,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-18",
+      "imported": 45,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-19",
+      "imported": 47,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-20",
+      "imported": 53,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-21",
+      "imported": 39,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-22",
+      "imported": 36,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-23",
+      "imported": 43,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-24",
+      "imported": 46,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-25",
+      "imported": 63,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-26",
+      "imported": 84,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-27",
+      "imported": 49,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-28",
+      "imported": 52,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-29",
+      "imported": 68,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-30",
+      "imported": 72,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-08-31",
+      "imported": 81,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-01",
+      "imported": 83,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-02",
+      "imported": 73,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-03",
+      "imported": 64,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-04",
+      "imported": 63,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-05",
+      "imported": 63,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-06",
+      "imported": 49,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-07",
+      "imported": 63,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-08",
+      "imported": 65,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-09",
+      "imported": 103,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-10",
+      "imported": 62,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-11",
+      "imported": 46,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-12",
+      "imported": 53,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-13",
+      "imported": 42,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-14",
+      "imported": 47,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-15",
+      "imported": 60,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-16",
+      "imported": 59,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-17",
+      "imported": 52,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-18",
+      "imported": 41,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-19",
+      "imported": 31,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-20",
+      "imported": 41,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-21",
+      "imported": 58,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-22",
+      "imported": 50,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-23",
+      "imported": 50,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-24",
+      "imported": 59,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-25",
+      "imported": 37,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-26",
+      "imported": 41,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-27",
+      "imported": 49,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-28",
+      "imported": 82,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-29",
+      "imported": 67,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-09-30",
+      "imported": 63,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-01",
+      "imported": 69,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-02",
+      "imported": 68,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-03",
+      "imported": 55,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-04",
+      "imported": 39,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-05",
+      "imported": 53,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-06",
+      "imported": 30,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-07",
+      "imported": 39,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-08",
+      "imported": 19,
+      "covered": true
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-09",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-10",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-11",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-12",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-13",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-14",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-15",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-16",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-17",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-18",
+      "imported": 0,
+      "covered": false
+    },
+    {
+      "company": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "date": "2026-10-19",
+      "imported": 0,
+      "covered": false
+    }
+  ],
+  "companies": [
+    {
+      "name": "Olist 1",
+      "connection": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "imported": 3323,
+      "firstSale": "2026-08-01",
+      "lastSale": "2026-10-08",
+      "coveredRanges": [
+        {
+          "from": "2026-08-01",
+          "to": "2026-08-23"
+        },
+        {
+          "from": "2026-10-03",
+          "to": "2026-10-08"
+        }
+      ],
+      "uncoveredRanges": [
+        {
+          "from": "2026-08-24",
+          "to": "2026-10-02"
+        },
+        {
+          "from": "2026-10-09",
+          "to": "2026-10-19"
+        }
+      ],
+      "source": [],
+      "identityConfirmed": true,
+      "sourceError": "Source timeout; no further requests for this account"
+    },
+    {
+      "name": "Olist 2",
+      "connection": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "imported": 642,
+      "firstSale": "2026-08-01",
+      "lastSale": "2026-10-08",
+      "coveredRanges": [
+        {
+          "from": "2026-08-01",
+          "to": "2026-08-03"
+        },
+        {
+          "from": "2026-10-03",
+          "to": "2026-10-08"
+        }
+      ],
+      "uncoveredRanges": [
+        {
+          "from": "2026-08-04",
+          "to": "2026-10-02"
+        },
+        {
+          "from": "2026-10-09",
+          "to": "2026-10-19"
+        }
+      ],
+      "source": [
+        {
+          "from": "2026-08-01",
+          "to": "2026-08-31",
+          "observedAt": "2026-10-19T15:06:00.353Z",
+          "total": 1471,
+          "imported": 231,
+          "countDifference": 1240,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 1471
+          }
+        },
+        {
+          "from": "2026-09-01",
+          "to": "2026-09-30",
+          "observedAt": "2026-10-19T15:06:05.764Z",
+          "total": 1262,
+          "imported": 133,
+          "countDifference": 1129,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 1262
+          }
+        },
+        {
+          "from": "2026-10-01",
+          "to": "2026-10-18",
+          "observedAt": "2026-10-19T15:06:06.694Z",
+          "total": 920,
+          "imported": 278,
+          "countDifference": 642,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 920
+          }
+        },
+        {
+          "from": "2026-10-19",
+          "to": "2026-10-19",
+          "observedAt": "2026-10-19T15:06:11.147Z",
+          "total": 21,
+          "imported": 0,
+          "countDifference": 21,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 21
+          }
+        }
+      ],
+      "identityConfirmed": true,
+      "sourceTotal": 3674,
+      "countDifference": 3032
+    },
+    {
+      "name": "Olist 3",
+      "connection": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "imported": 3433,
+      "firstSale": "2026-08-01",
+      "lastSale": "2026-10-08",
+      "coveredRanges": [
+        {
+          "from": "2026-08-01",
+          "to": "2026-10-05"
+        },
+        {
+          "from": "2026-10-07",
+          "to": "2026-10-08"
+        }
+      ],
+      "uncoveredRanges": [
+        {
+          "from": "2026-10-06",
+          "to": "2026-10-06"
+        },
+        {
+          "from": "2026-10-09",
+          "to": "2026-10-19"
+        }
+      ],
+      "source": [
+        {
+          "from": "2026-08-01",
+          "to": "2026-08-31",
+          "observedAt": "2026-10-19T15:05:52.815Z",
+          "total": 1502,
+          "imported": 1345,
+          "countDifference": 157,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 1502
+          }
+        },
+        {
+          "from": "2026-09-01",
+          "to": "2026-09-30",
+          "observedAt": "2026-10-19T15:05:59.528Z",
+          "total": 1880,
+          "imported": 1716,
+          "countDifference": 164,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 1880
+          }
+        },
+        {
+          "from": "2026-10-01",
+          "to": "2026-10-18",
+          "observedAt": "2026-10-19T15:06:00.650Z",
+          "total": 1273,
+          "imported": 372,
+          "countDifference": 901,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 1273
+          }
+        },
+        {
+          "from": "2026-10-19",
+          "to": "2026-10-19",
+          "observedAt": "2026-10-19T15:06:04.850Z",
+          "total": 13,
+          "imported": 0,
+          "countDifference": 13,
+          "pagination": {
+            "limit": 1,
+            "offset": 0,
+            "total": 13
+          }
+        }
+      ],
+      "identityConfirmed": true,
+      "sourceTotal": 4668,
+      "countDifference": 1235
+    }
+  ],
+  "after": {
+    "at": "2026-10-19T15:06:11.411Z",
+    "connections": [
+      {
+        "id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+        "company_id": "31009cb5-fd2d-4c97-8510-0467d48e938f",
+        "name": "Olist 1",
+        "enabled": true,
+        "verified_at": "2026-10-19T14:03:03.033+00:00",
+        "last_synced_at": "2026-10-19T15:05:34.145+00:00",
+        "last_error": null,
+        "error_code": null,
+        "incremental_through": null
+      },
+      {
+        "id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+        "company_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "name": "Olist 2",
+        "enabled": true,
+        "verified_at": "2026-10-19T14:02:58.39+00:00",
+        "last_synced_at": "2026-10-19T15:05:34.791+00:00",
+        "last_error": null,
+        "error_code": null,
+        "incremental_through": null
+      },
+      {
+        "id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+        "company_id": "b54b3248-b426-467e-9cd9-c57d7109edbb",
+        "name": "Olist 3",
+        "enabled": true,
+        "verified_at": "2026-10-19T14:03:04.834+00:00",
+        "last_synced_at": "2026-10-19T15:05:33.552+00:00",
+        "last_error": null,
+        "error_code": null,
+        "incremental_through": null
+      }
+    ],
+    "jobs": [
+      {
+        "id": "6799cacd-ef03-43e4-afa1-fc93988c0dde",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "running",
+        "from_date": "2026-10-03",
+        "to_date": "2026-10-06",
+        "cursor_date": "2026-10-06",
+        "pending_index": 38,
+        "page_offset": 0,
+        "processed": 201,
+        "pages": 4,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:06:19.64+00:00",
+        "next_at": "2026-10-19T15:04:35.62+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": "2026-10-19T15:06:01.362192+00:00"
+      },
+      {
+        "id": "737e7bf5-3a10-4447-90fa-b989810aa1b7",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "running",
+        "from_date": "2026-08-01",
+        "to_date": "2026-10-02",
+        "cursor_date": "2026-08-24",
+        "pending_index": 64,
+        "page_offset": 0,
+        "processed": 2700,
+        "pages": 42,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:06:19.27+00:00",
+        "next_at": "2026-10-19T15:04:34.248+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": false,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:06:01.362192+00:00"
+      },
+      {
+        "id": "1af1f19a-24cf-427e-b4bb-3fb317c051c0",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "running",
+        "from_date": "2026-08-01",
+        "to_date": "2026-10-02",
+        "cursor_date": "2026-08-04",
+        "pending_index": 43,
+        "page_offset": 0,
+        "processed": 247,
+        "pages": 4,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:06:17.824+00:00",
+        "next_at": "2026-10-19T15:04:36.374+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": false,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:06:01.362192+00:00"
+      },
+      {
+        "id": "2c88fc37-6cb3-4cb9-b20d-bd24f389a632",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "incremental",
+        "status": "queued",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-01",
+        "pending_index": 47,
+        "page_offset": 100,
+        "processed": 196,
+        "pages": 3,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:05:34.414+00:00",
+        "next_at": "2026-10-19T15:05:35.414+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:05:02.92316+00:00"
+      },
+      {
+        "id": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "incremental",
+        "status": "queued",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-01",
+        "pending_index": 88,
+        "page_offset": 0,
+        "processed": 231,
+        "pages": 3,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:05:33.986+00:00",
+        "next_at": "2026-10-19T15:05:34.986+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:05:02.92316+00:00"
+      },
+      {
+        "id": "c85c83f7-97bf-4713-b703-e826709efc7c",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "incremental",
+        "status": "queued",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-01",
+        "pending_index": 74,
+        "page_offset": 100,
+        "processed": 249,
+        "pages": 3,
+        "attempts": 0,
+        "updated_at": "2026-10-19T15:05:33.401+00:00",
+        "next_at": "2026-10-19T15:05:34.401+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "updates",
+        "last_claimed_at": "2026-10-19T15:05:02.92316+00:00"
+      },
+      {
+        "id": "3712abb0-f700-4f54-8a9e-f3e6330d5353",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-03",
+        "to_date": "2026-10-06",
+        "cursor_date": "2026-10-06",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 200,
+        "pages": 4,
+        "attempts": 0,
+        "updated_at": "2026-10-19T14:51:19.959+00:00",
+        "next_at": "2026-10-19T14:49:35.585+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": "2026-10-19T14:51:01.121167+00:00"
+      },
+      {
+        "id": "b565c900-e4ad-476e-9347-5ad3e358cf67",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-03",
+        "to_date": "2026-10-06",
+        "cursor_date": "2026-10-06",
+        "pending_index": 0,
+        "page_offset": 100,
+        "processed": 482,
+        "pages": 7,
+        "attempts": 0,
+        "updated_at": "2026-10-19T13:58:21.175+00:00",
+        "next_at": "2026-10-19T13:56:04.483+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": "2026-10-19T13:58:02.286619+00:00"
+      },
+      {
+        "id": "795e4e26-f925-47b4-bcdd-90998370f8ef",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-08",
+        "to_date": "2026-10-08",
+        "cursor_date": "2026-10-08",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 54,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-08T15:50:04.974+00:00",
+        "next_at": "2026-10-08T15:49:35.8+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "c6357f47-c1aa-4604-a23d-50373ee23692",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-08",
+        "to_date": "2026-10-08",
+        "cursor_date": "2026-10-08",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 16,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-08T15:42:08.34+00:00",
+        "next_at": "2026-10-08T15:39:35.169+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "6c64e3fb-8d7e-472d-be65-d72280d13692",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-08",
+        "to_date": "2026-10-08",
+        "cursor_date": "2026-10-08",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 19,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-08T15:41:05.395+00:00",
+        "next_at": "2026-10-08T15:38:34.996+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "d49d0440-ecd6-47a8-9a53-5c7fcac9c82e",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-07",
+        "to_date": "2026-10-07",
+        "cursor_date": "2026-10-07",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 82,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-07T17:49:20.269+00:00",
+        "next_at": "2026-10-07T17:48:35.192+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "a31b6966-09a4-407a-9d1e-038ae0dc0e60",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-07",
+        "to_date": "2026-10-07",
+        "cursor_date": "2026-10-07",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 35,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-07T17:41:10.258+00:00",
+        "next_at": "2026-10-07T17:35:34.194+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "5b654bbe-0cc0-4ad3-8a7f-3b67254eba61",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-10-07",
+        "to_date": "2026-10-07",
+        "cursor_date": "2026-10-07",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 40,
+        "pages": 1,
+        "attempts": 0,
+        "updated_at": "2026-10-07T17:40:21.2+00:00",
+        "next_at": "2026-10-07T17:37:36.056+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": true,
+        "query_phase": "sales",
+        "last_claimed_at": null
+      },
+      {
+        "id": "81e609bc-7c08-4bcb-bbdd-c82520a006d4",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "backfill",
+        "status": "completed",
+        "from_date": "2026-08-01",
+        "to_date": "2026-10-02",
+        "cursor_date": "2026-10-02",
+        "pending_index": 0,
+        "page_offset": 0,
+        "processed": 3528,
+        "pages": 64,
+        "attempts": 0,
+        "updated_at": "2026-10-07T16:26:24.419+00:00",
+        "next_at": "2026-10-07T16:25:35.268+00:00",
+        "last_error": null,
+        "error_code": null,
+        "covers_sales": false,
+        "query_phase": "updates",
+        "last_claimed_at": null
+      }
+    ],
+    "cron": [
+      {
+        "requested_at": "2026-10-19T15:06:00.045571+00:00",
+        "request_id": 19092
+      },
+      {
+        "requested_at": "2026-10-19T15:05:00.038369+00:00",
+        "request_id": 19091
+      },
+      {
+        "requested_at": "2026-10-19T15:04:00.046117+00:00",
+        "request_id": 19090
+      },
+      {
+        "requested_at": "2026-10-19T15:03:00.139094+00:00",
+        "request_id": 19089
+      },
+      {
+        "requested_at": "2026-10-19T15:02:00.059576+00:00",
+        "request_id": 19088
+      },
+      {
+        "requested_at": "2026-10-19T15:01:00.01517+00:00",
+        "request_id": 19087
+      },
+      {
+        "requested_at": "2026-10-19T15:00:00.037963+00:00",
+        "request_id": 19086
+      },
+      {
+        "requested_at": "2026-10-19T14:59:00.014945+00:00",
+        "request_id": 19085
+      },
+      {
+        "requested_at": "2026-10-19T14:58:00.023165+00:00",
+        "request_id": 19084
+      },
+      {
+        "requested_at": "2026-10-19T14:57:00.014885+00:00",
+        "request_id": 19083
+      }
+    ],
+    "orderCount": 7406
+  },
+  "finishedAt": "2026-10-19T15:06:11.411Z",
+  "progress": [
+    {
+      "company": "Olist 2",
+      "mode": "incremental",
+      "processedBefore": 196,
+      "processedAfter": 196,
+      "delta": 0,
+      "cursorBefore": "2026-10-01",
+      "cursorAfter": "2026-10-01",
+      "statusAfter": "queued"
+    },
+    {
+      "company": "Olist 1",
+      "mode": "incremental",
+      "processedBefore": 231,
+      "processedAfter": 231,
+      "delta": 0,
+      "cursorBefore": "2026-10-01",
+      "cursorAfter": "2026-10-01",
+      "statusAfter": "queued"
+    },
+    {
+      "company": "Olist 3",
+      "mode": "incremental",
+      "processedBefore": 249,
+      "processedAfter": 249,
+      "delta": 0,
+      "cursorBefore": "2026-10-01",
+      "cursorAfter": "2026-10-01",
+      "statusAfter": "queued"
+    },
+    {
+      "company": "Olist 2",
+      "mode": "backfill",
+      "processedBefore": 244,
+      "processedAfter": 247,
+      "delta": 3,
+      "cursorBefore": "2026-08-04",
+      "cursorAfter": "2026-08-04",
+      "statusAfter": "running"
+    },
+    {
+      "company": "Olist 3",
+      "mode": "backfill",
+      "processedBefore": 198,
+      "processedAfter": 201,
+      "delta": 3,
+      "cursorBefore": "2026-10-06",
+      "cursorAfter": "2026-10-06",
+      "statusAfter": "running"
+    },
+    {
+      "company": "Olist 1",
+      "mode": "backfill",
+      "processedBefore": 2697,
+      "processedAfter": 2700,
+      "delta": 3,
+      "cursorBefore": "2026-08-24",
+      "cursorAfter": "2026-08-24",
+      "statusAfter": "running"
+    }
+  ]
+}

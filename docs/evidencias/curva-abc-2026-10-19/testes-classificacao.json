@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-19T17:12:22.453Z",
+  "command": "node --test --test-reporter=tap tests/*.test.cjs",
+  "exitCode": 1,
+  "summary": [
+    "not ok 90 - dashboard polls existing reports as imports advance without asking the browser to run a worker",
+    "not ok 91 - missing coverage stays visibly partial and a server error does not leave a misleading old result",
+    "# tests 184",
+    "# pass 182",
+    "# fail 2",
+    "# cancelled 0",
+    "# skipped 0",
+    "# duration_ms 23251.7128"
+  ]
+}

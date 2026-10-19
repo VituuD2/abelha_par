@@ -20,7 +20,7 @@ export function parseABCFilters(value: unknown): ABCFilters {
     throw new Error("Métrica inválida.");
   if (f.mode !== "TINY_LEGACY" && f.mode !== "STRICT_CUMULATIVE")
     throw new Error("Modo ABC inválido.");
-  if (!["product", "parent", "customer"].includes(String(f.grouping)))
+  if (!["product", "parent", "customer", "composition"].includes(String(f.grouping)))
     throw new Error("Agrupamento inválido.");
   if (!["orders", "invoiced"].includes(String(f.basis)))
     throw new Error("Base de venda inválida.");

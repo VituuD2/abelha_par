@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-19T17:53:14.932Z",
+  "migration": "supabase/migration_v14_v15_analytics_complete.sql",
+  "baseline": "v13",
+  "appliedInIsolatedDatabase": 2,
+  "tests": 18,
+  "passed": 18,
+  "failed": 0,
+  "productionApplied": false
+}

@@ -323,3 +323,22 @@ test("Ninho exposes a clear lost legacy link repair and keeps OAuth credentials 
   assert.deepEqual(calls.find(c=>c.body)?.body,{action:"relink",id:"legacy2"});
   assert.equal(calls.some(c=>c.url.includes("oauth")||c.url.includes("/auth/disconnect")),false);
 });
+
+test("quantity analysis discloses missing CMV and separates attributed value from original kit value in drilldown", async t => {
+  dom.window.history.replaceState(null,"","/analytics/abc");
+  const row={...rows[0],entityId:"composition:ACBF000-K050",sku:"ACBF000-K050",quantity:"2",revenue:"0"};
+  const composition={version:"test-cost",revenuePolicy:"cost",costSource:{file:"produtos.xls",column:"L"},originalRevenue:"10000",unallocatedRevenue:"10000",unallocatedLines:1,mixedLines:1,missingCostSkus:["ACFS000-K001"],mappedEntities:1,pendingTotal:0,pending:[]};
+  t.mock.method(global,"fetch",async(url)=>Response.json(url.includes("options")||url.endsWith("/sync")?state:url.includes("drilldown")?{
+    total:1,companies:[],channels:[],orders:[],sources:[{sku:"ACTM011-K011",name:"Kit",factor:"1",quantity:"2",baseQuantity:"2",revenue:"0",originalRevenue:"10000",referenceCostCents:"500",unallocatedLines:1}],
+  }:{rows:[row],total:1,revenue:"0",quantity:"2",orders:1,classes:{},pareto:[row],top10:100,generatedAt:"2026-10-19",composition}));
+  await act(async()=>root.render(React.createElement(ABCDashboard,{key:"missing-cmv",isAdmin:false})));
+  assert.match(document.querySelector('[role="alert"]').textContent,/Rateio incompleto.*ACFS000-K001/);
+  assert.match(document.body.textContent,/Valor atribuído aos produtos/);
+  assert.match(document.body.textContent,/coluna L.*produtos.xls/);
+  await click(button("Produto 0"));
+  const detail=document.querySelector("dialog").textContent;
+  assert.match(detail,/Valor original dos itens de origem:/);
+  assert.match(detail,/CMV por unidade base:/);
+  assert.match(detail,/rateio pendente por falta de CMV/);
+  await click(document.querySelector('button[aria-label="Fechar detalhes"]'));
+});

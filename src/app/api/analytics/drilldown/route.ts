@@ -3,6 +3,7 @@ import { authorize } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { parseABCFilters } from "@/lib/analytics/filters";
 import { analyticsError } from "@/lib/analytics/server";
+import { compositionRulesForWorkspace } from "@/lib/analytics/composition-server";
 export async function POST(request: Request) {
   const auth = await authorize("analytics:read");
   if (auth.response) return auth.response;
@@ -17,12 +18,14 @@ export async function POST(request: Request) {
       page < 1
     )
       throw new Error("Entidade inválida.");
+    const composed = filters.grouping === "composition";
     const { data, error } = await createAdminClient().rpc(
-      "analytics_drilldown",
+      composed ? "analytics_drilldown_components" : "analytics_drilldown",
       {
         p_workspace: auth.access.workspaceId,
         p_actor: auth.access.user.id,
         p_filters: filters,
+        ...(composed ? { p_rules: compositionRulesForWorkspace(auth.access.workspaceId) } : {}),
         p_entity: body.entity,
         p_offset: (page - 1) * 50,
       },

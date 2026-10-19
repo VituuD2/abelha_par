@@ -1,6 +1,6 @@
 export type ABCMode = "TINY_LEGACY" | "STRICT_CUMULATIVE";
 export type ABCMetric = "revenue" | "quantity";
-export type ABCGrouping = "product" | "parent" | "customer";
+export type ABCGrouping = "product" | "parent" | "customer" | "composition";
 export type Dimension =
   | "companies"
   | "connections"
@@ -58,6 +58,20 @@ export interface ABCResult {
   top10: number;
   pareto: ABCRow[];
   generatedAt: string;
+  composition?: {
+    version: string;
+    revenuePolicy: "cost";
+    costSource: { file: string; sheet: string; column: string; sha256: string };
+    originalRevenue: string;
+    unallocatedRevenue: string;
+    unallocatedLines: number;
+    mixedLines: number;
+    missingCostSkus: string[];
+    ignoredComponentSkus?: string[];
+    mappedEntities: number;
+    pendingTotal: number;
+    pending: { sku: string; name: string; reason: string; orders: number }[];
+  };
 }
 export interface AnalyticsConnection {
   id: string;

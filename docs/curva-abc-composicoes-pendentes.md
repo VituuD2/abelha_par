@@ -1,0 +1,34 @@
+# Composições pendentes
+
+Atualização: 19/10/2026. Catálogo 2026-10-19.5. Fonte: produtos_2026-10-19-14-00-16.xls; aba Produtos; coluna L (Preço de custo); SHA-256 64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c.
+
+Os 41 combos documentados com componentes diferentes agora são desmembrados nos produtos simples. Os três Corega foram confirmados em bisnagas, e os três kits de garrafa foram confirmados com garrafas SoulBM e raspador premium. Restam **1 cadastros para revisão**, dos quais 0 aparecem no snapshot de 2026-10-19T17:03:32.006Z.
+
+| SKU | Produto | O que falta | No snapshot |
+| --- | --- | --- | --- |
+| 00000 | TESTE | Cadastro simples nomeado TESTE: confirmar se e venda valida ou cadastro de teste; permanece individual, sem exclusao automatica das vendas. | Não |
+
+## Custo mantido zerado
+
+| SKU | Produto | Custo na coluna L | Linha | Combos afetados |
+| --- | --- | --- | --- | --- |
+| ACFS000-K001 | Fita Seios | Mantido zerado por decisão do responsável | 53 | ACTM011-K011, TSTM-1 |
+
+O responsável solicitou manter a Fita Seios zerada, pois acredita que não há vendas. Essa ausência de vendas não foi comprovada por nova consulta. Se aparecer venda de combo afetado, suas quantidades continuam disponíveis e o valor fica sinalizado como não rateado; não atribuir custo por suposição.
+
+## Unidades confirmadas
+
+- ACTM001-K052 → 1 × ACBF000-K050 + 1 × ACTM001-K002. O silicone é um par de estoque; não multiplicar novamente por dois.
+- CMPO0BC-K002 → 1 × CMPO00B-K001 + 1 × CMPO00C-K001.
+- HBCOMAX-K003/K004/K006 → respectivamente 3, 4 e 6 bisnagas de HBCOMAX-K001. A caixa do fornecedor contém duas bisnagas; a unidade da análise é a bisnaga.
+- EBBF001-001 continua excluída como embalagem auxiliar nos kits aprovados; os SKUs de origem são preservados.
+- KITGR-M001S e AKGMR-R001 → 1 × SBGF00M-K001 (Garrafa SoulBM Martelada) + 1 × SBLL001-K001 (Raspador PREMIUM).
+- KITGR-G001S → 1 × SBGF00G-K001 (Garrafa SoulBM Grafias) + 1 × SBLL001-K001 (Raspador PREMIUM).
+
+## Alerta histórico separado
+
+- ACESG15-K001: Componente da planilha antiga ausente da exportacao atual de produtos simples; manter referencia historica e solicitar confirmacao do cadastro. Afeta ACESG15-K001S. Sem substituir por outro modelo.
+
+7 registros sem vínculo ao catálogo permanecem identificados por pedido/posição; não representam necessariamente produtos físicos distintos.
+
+Detalhes: [componentes e CMV](curva-abc-componentes-cmv-2026-10-19.md).

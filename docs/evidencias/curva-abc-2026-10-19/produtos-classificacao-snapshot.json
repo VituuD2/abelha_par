@@ -1,0 +1,4407 @@
+{
+  "at": "2026-10-19T17:03:32.006Z",
+  "readOnly": true,
+  "products": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342210742",
+      "sku": "ACBF000-K050",
+      "name": "Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527786",
+      "sku": "ACTM000-K010",
+      "name": "Tapa Mamilo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527790",
+      "sku": "CMNV00S-K001",
+      "name": "Nivea Soft",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527794",
+      "sku": "CMPO0B3-K001",
+      "name": "Pond's B3",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527798",
+      "sku": "SBGF00G-K001",
+      "name": "Garrafa SoulBM Grafias",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527802",
+      "sku": "SBGF00M-K001",
+      "name": "Garrafa SoulBM Martelada",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527823",
+      "sku": "DDCO00A-K001",
+      "name": "Colbert Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527844",
+      "sku": "CMTOCRG-K001",
+      "name": "Tortulan Gel",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527848",
+      "sku": "HBCOTB3-K030",
+      "name": "Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527852",
+      "sku": "HBCOP20-K001",
+      "name": "Ultra Corega Pó 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527856",
+      "sku": "HBCO40M-K001",
+      "name": "Corega 40g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527860",
+      "sku": "HBCOP50-K001",
+      "name": "Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527872",
+      "sku": "HBCO70M-K001",
+      "name": "Corega 70g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527876",
+      "sku": "ACPE000-K001",
+      "name": "Pente Inox",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527881",
+      "sku": "CMATX00-K001",
+      "name": "Atrix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527885",
+      "sku": "CMTOCRC-K001",
+      "name": "Tortulan Creme Antirugas C + Retinol",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527890",
+      "sku": "DDFA00A-K001",
+      "name": "Fa Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527894",
+      "sku": "ACESG03-K001",
+      "name": "Espelho 3X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527899",
+      "sku": "ACESG05-K001",
+      "name": "Espelho  5X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527907",
+      "sku": "CMPO00D-K001",
+      "name": "Pond's Dia",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527911",
+      "sku": "CMTO00R-K001",
+      "name": "Tortulan Rosa",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527915",
+      "sku": "CMPO00B-K001",
+      "name": "Pond's Bio",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527920",
+      "sku": "CMPO00N-K001",
+      "name": "Pond's Noite",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527929",
+      "sku": "CMPO00C-K001",
+      "name": "Pond's C",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527936",
+      "sku": "CMPO00S-K001",
+      "name": "Pond's S",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527947",
+      "sku": "DDCM000-K001",
+      "name": "Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527953",
+      "sku": "ACESG10-K001",
+      "name": "Espelho 10X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527958",
+      "sku": "DDCO00N-K001",
+      "name": "Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527999",
+      "sku": "DDFA0SP-K001",
+      "name": "Fa Sport",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528003",
+      "sku": "DDFA00C-K001",
+      "name": "Fa Caribbean",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528011",
+      "sku": "DDFA00P-K001",
+      "name": "Fa Pink",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528024",
+      "sku": "DDCO00U-K001",
+      "name": "Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528028",
+      "sku": "ACPE001-K001",
+      "name": "Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528046",
+      "sku": "DDCO00V-K001",
+      "name": "Colbert Verde",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528050",
+      "sku": "HBCOTBB-K030",
+      "name": "Corega Tabs Branqueador",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528054",
+      "sku": "ACESP15-K001",
+      "name": "Espelho 15X PEQUENO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528058",
+      "sku": "SBES000-K001",
+      "name": "Escova Seca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528064",
+      "sku": "SBCC000-K001",
+      "name": "Copo de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528093",
+      "sku": "SBKW000-K001",
+      "name": "Kansa Wand",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528101",
+      "sku": "SBES002-K001",
+      "name": "Escova Seca Oval",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528129",
+      "sku": "HBCOP22-K001",
+      "name": "Corega Pó 3 em 1",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528156",
+      "sku": "DDCO00C-K001",
+      "name": "Colbert Code",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528160",
+      "sku": "SBES003-K001",
+      "name": "Escova Seca Facial SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528178",
+      "sku": "SBEC000-K001",
+      "name": "Escova Seca de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528182",
+      "sku": "ACAI000-K001",
+      "name": "Adesivo Intimo Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528194",
+      "sku": "ACBFR03-K001",
+      "name": "Rolo 3m Fita BelezaFix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528205",
+      "sku": "ACESM15-K001",
+      "name": "Espelho 15X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528209",
+      "sku": "SBSR00S-K001",
+      "name": "Saffron Supreme® Sérum",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342616240",
+      "sku": "ACBF000-K100",
+      "name": "KIT 100 - Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342966931",
+      "sku": "ACTM000-K050",
+      "name": "KIT 50 - Tapa-mamilo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342966947",
+      "sku": "ACTM000-K100",
+      "name": "KIT 100 - Tapa-mamilo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342966977",
+      "sku": "DDCO00N-K005",
+      "name": "KIT 5 - Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342966982",
+      "sku": "DDCM000-K003",
+      "name": "KIT 3 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967033",
+      "sku": "CMNV150-K002S",
+      "name": "Kit Nivea 150g - 2un",
+      "parent_id": "344689210",
+      "parent_name": "Kit Nivea 150g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967046",
+      "sku": "CMTO00R-K004",
+      "name": "KIT 4 - Tortulan Rosa",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967104",
+      "sku": "HBCOP50-K002",
+      "name": "KIT 2 - Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967141",
+      "sku": "HBCO70S-K003",
+      "name": "KIT 3 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967148",
+      "sku": "HBCOP50-K003",
+      "name": "KIT 3 - Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967157",
+      "sku": "HBCOMAX-K002",
+      "name": "KIT 2 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967166",
+      "sku": "HBCOTB3-K060",
+      "name": "KIT 60 - Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967207",
+      "sku": "CMPO00C-K002",
+      "name": "KIT 2 - Pond's C",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967212",
+      "sku": "CMPO00C-K003",
+      "name": "KIT 3 - Pond's C",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967246",
+      "sku": "ACPE000-K002",
+      "name": "KIT 2 - Pente Inox",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967254",
+      "sku": "ACPE001-K002",
+      "name": "KIT 2 - Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967401",
+      "sku": "CMPO0BC-K002",
+      "name": "KIT - Pond's Bio (1) + Pond's C (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967459",
+      "sku": "CMPO00S-K003",
+      "name": "KIT 3 - Pond's S",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967472",
+      "sku": "ACPE001-K010",
+      "name": "Kit 10 pentes colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967492",
+      "sku": "ACUN001-K024",
+      "name": "KIT 24 - Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967516",
+      "sku": "ACUN001-K072",
+      "name": "KIT 72 - Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967540",
+      "sku": "ACNV000-K012",
+      "name": "KIT 12 - Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967543",
+      "sku": "SBLL000-K006",
+      "name": "Kit Raspador De Lingua Simples - 6un",
+      "parent_id": "344689188",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967546",
+      "sku": "SBLL000-K012",
+      "name": "Kit Raspador De Lingua Simples - 12un",
+      "parent_id": "344689188",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967552",
+      "sku": "SBLL000-K002",
+      "name": "KIT 2 - Raspador de Lingua SIMPLES",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967557",
+      "sku": "SBLL000-K005",
+      "name": "KIT 5 - Raspador de Lingua SIMPLES",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967560",
+      "sku": "DDCO00U-K002",
+      "name": "KIT 2 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967575",
+      "sku": "DDFA00P-K003",
+      "name": "KIT 3 - Fa Pink",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967578",
+      "sku": "DDFA00C-K003",
+      "name": "KIT 3 - Fa Caribbean",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967593",
+      "sku": "DDFA00A-K003",
+      "name": "KIT 3 - Fa Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967612",
+      "sku": "DDCO00U-K003",
+      "name": "KIT 3 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967615",
+      "sku": "DDCO00U-K006",
+      "name": "KIT 6 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967620",
+      "sku": "DDCO00V-K003",
+      "name": "KIT 3 - Colbert Verde",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967637",
+      "sku": "DDCO00N-K002",
+      "name": "KIT 2 - Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967643",
+      "sku": "DDCM000-K006",
+      "name": "KIT 6 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967654",
+      "sku": "CMPO0DN-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967685",
+      "sku": "DDCO00S-K002",
+      "name": "KIT 2 - Colbert Space",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967700",
+      "sku": "DDCO00N-K006",
+      "name": "KIT 6 - Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967703",
+      "sku": "DDCO00V-K004",
+      "name": "KIT 4 - Colbert Verde",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967745",
+      "sku": "HBCOMAX-K004",
+      "name": "KIT - Corega 70g MAX (2 Combos)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967748",
+      "sku": "SBCC000-K002",
+      "name": "KIT 2 - Copo de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967765",
+      "sku": "HBCOP20-K002",
+      "name": "KIT 2 - Ultra Corega Pó 20g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967783",
+      "sku": "ACUN000-K036",
+      "name": "KIT 36 - Cortador de Unha DISCO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967802",
+      "sku": "DDCM000-K002",
+      "name": "KIT 2 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967809",
+      "sku": "ACPE001-K020",
+      "name": "KIT 20 - Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967812",
+      "sku": "DDCM000-K010",
+      "name": "KIT 10 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967815",
+      "sku": "CMPO0B3-K002",
+      "name": "KIT 2 - Pond's B3",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967827",
+      "sku": "DDCO00U-K004",
+      "name": "KIT 4 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967837",
+      "sku": "HBCO70S-K004",
+      "name": "KIT 4 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967846",
+      "sku": "DDCO00A-K003",
+      "name": "KIT 3 - Colbert Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967906",
+      "sku": "DDFA0SO-K006",
+      "name": "KIT 6 - Fa Soft",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967962",
+      "sku": "ACTM070-K070",
+      "name": "KIT - Tapa Mamilo (20) + Fita Adesiva (50)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967965",
+      "sku": "SBES000-K002",
+      "name": "KIT 2 - Escova Seca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968003",
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968011",
+      "sku": "HBCOP22-K002",
+      "name": "KIT 2 - Corega Pó 3 em 1 – 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968015",
+      "sku": "HBCOP22-K003",
+      "name": "KIT 3 - Corega Pó 3 em 1 – 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968019",
+      "sku": "HBCOP22-K004",
+      "name": "KIT 4 - Corega Pó 3 em 1 – 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968027",
+      "sku": "HBCOP22-K006",
+      "name": "KIT 6 - Corega Pó 3 em 1 – 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968039",
+      "sku": "HBCOTB3-K120",
+      "name": "KIT 120 - Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "343646950",
+      "sku": "HBCOTBB-K030S",
+      "name": "Kit Corega Tabs Branqueador - 30un",
+      "parent_id": "344689037",
+      "parent_name": "Kit Corega Tabs Branqueador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688799",
+      "sku": "ACBFR03-K001S",
+      "name": "Kit Rolo Fita Belezafix - ROLO3m",
+      "parent_id": "344688796",
+      "parent_name": "Kit Rolo Fita Belezafix"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688807",
+      "sku": "ACBF000-K050S",
+      "name": "Kit Fita Belezafix - Fita 50un",
+      "parent_id": "344688804",
+      "parent_name": "Kit Fita Belezafix"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688812",
+      "sku": "ACBF000-K100S",
+      "name": "Kit Fita Belezafix - Fita 100un",
+      "parent_id": "344688804",
+      "parent_name": "Kit Fita Belezafix"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688820",
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "parent_id": "344688817",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688824",
+      "sku": "ACBF000-K100ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 100un",
+      "parent_id": "344688817",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688838",
+      "sku": "DDCO00U-K002S",
+      "name": "Kit Desodorante Colbert US - 2un",
+      "parent_id": "344688828",
+      "parent_name": "Kit Desodorante Colbert US"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688843",
+      "sku": "DDCO00U-K003S",
+      "name": "Kit Desodorante Colbert US - 3un",
+      "parent_id": "344688828",
+      "parent_name": "Kit Desodorante Colbert US"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688866",
+      "sku": "DDCO00N-K002S",
+      "name": "Kit Colbert Noir - 2un",
+      "parent_id": "344688863",
+      "parent_name": "Kit Colbert Noir"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688870",
+      "sku": "DDCO00N-K003S",
+      "name": "Kit Colbert Noir - 3un",
+      "parent_id": "344688863",
+      "parent_name": "Kit Colbert Noir"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688881",
+      "sku": "DDCO00V-K002S",
+      "name": "Kit Colbert Verde - 2un",
+      "parent_id": "344688878",
+      "parent_name": "Kit Colbert Verde"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688885",
+      "sku": "DDCO00V-K003S",
+      "name": "Kit Colbert Verde - 3un",
+      "parent_id": "344688878",
+      "parent_name": "Kit Colbert Verde"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688911",
+      "sku": "DDCM000-K003S",
+      "name": "Kit Cannon Musk - 3un",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688919",
+      "sku": "DDCM000-K002S",
+      "name": "Kit Cannon Musk - 2un",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688926",
+      "sku": "PFCO00U-K001S",
+      "name": "Kit Perfume Colbert Us - 1un",
+      "parent_id": "344688923",
+      "parent_name": "Kit Perfume Colbert Us"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688937",
+      "sku": "CMST001-K001S",
+      "name": "Kit St.ives - 1un",
+      "parent_id": "344688930",
+      "parent_name": "Kit St.ives"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688975",
+      "sku": "HBCO40S-K001S",
+      "name": "Kit Corega Menta 40g & Corega Sem Sabor 40g - Sem Sabor 1un",
+      "parent_id": "344688962",
+      "parent_name": "Kit Corega Menta 40g & Corega Sem Sabor 40g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688983",
+      "sku": "HBCO70M-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 1un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688987",
+      "sku": "HBCOMAX-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - MAX Combo 2un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688992",
+      "sku": "HBCOMAX-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 1un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689016",
+      "sku": "HBCO40S-K003S",
+      "name": "Kit Corega Sem Sabor 40g - Sem Sabor 3un",
+      "parent_id": "344689008",
+      "parent_name": "Kit Corega Sem Sabor 40g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689024",
+      "sku": "HBCOP50-K003S",
+      "name": "Kit Ultra Corega 50g - 3un",
+      "parent_id": "344689021",
+      "parent_name": "Kit Ultra Corega 50g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689032",
+      "sku": "HBCOP50-K002S",
+      "name": "Kit Ultra Corega 50g - 2un",
+      "parent_id": "344689021",
+      "parent_name": "Kit Ultra Corega 50g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689049",
+      "sku": "HBCOTB3-K030S",
+      "name": "Kit Corega Tabs 3 Minutos - 30un",
+      "parent_id": "344689046",
+      "parent_name": "Kit Corega Tabs 3 Minutos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689053",
+      "sku": "HBCOTB3-K060S",
+      "name": "Kit Corega Tabs 3 Minutos - 60un",
+      "parent_id": "344689046",
+      "parent_name": "Kit Corega Tabs 3 Minutos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689060",
+      "sku": "ACESP05-K001S",
+      "name": "Kit Todos os Espelhos - P5 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689065",
+      "sku": "ACESP10-K001S",
+      "name": "Kit Todos os Espelhos - P10 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689070",
+      "sku": "ACESP15-K001S",
+      "name": "Kit Todos os Espelhos - P15 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689075",
+      "sku": "ACESP03-K001S",
+      "name": "Kit Todos os Espelhos - P3 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689084",
+      "sku": "ACESG15-K001S",
+      "name": "Kit Todos os Espelhos - G15 - 1un",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689089",
+      "sku": "ACESG03-K001S",
+      "name": "Kit Todos os Espelhos - G3 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689094",
+      "sku": "ACESG05-K001S",
+      "name": "Kit Todos os Espelhos - G5 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689099",
+      "sku": "ACESG10-K001S",
+      "name": "Kit Todos os Espelhos - G10 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689107",
+      "sku": "SHGF00M-K001S",
+      "name": "Kit Garrafa Soulbm Shopee - Martelada - 1un",
+      "parent_id": "344689104",
+      "parent_name": "Kit Garrafa Soulbm Shopee"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689112",
+      "sku": "SHGF00G-K001S",
+      "name": "Kit Garrafa Soulbm Shopee - Grafias - 1un",
+      "parent_id": "344689104",
+      "parent_name": "Kit Garrafa Soulbm Shopee"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689120",
+      "sku": "SBCC000-K001S",
+      "name": "Kit Copo De Cobre - 1un",
+      "parent_id": "344689117",
+      "parent_name": "Kit Copo De Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689124",
+      "sku": "SBCC000-K002S",
+      "name": "Kit Copo De Cobre - 2un",
+      "parent_id": "344689117",
+      "parent_name": "Kit Copo De Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689128",
+      "sku": "SBCC000-K004S",
+      "name": "Kit Copo De Cobre - 4un",
+      "parent_id": "344689117",
+      "parent_name": "Kit Copo De Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689141",
+      "sku": "ACPE000-K010S",
+      "name": "Kit Pente Inox - 10un",
+      "parent_id": "344689133",
+      "parent_name": "Kit Pente Inox"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689173",
+      "sku": "SBES002-K001S",
+      "name": "Kit Escova Oval - 1un",
+      "parent_id": "344689166",
+      "parent_name": "Kit Escova Oval"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689184",
+      "sku": "SBES000-K001S",
+      "name": "Kit Escova Soulbm - 1un",
+      "parent_id": "344689177",
+      "parent_name": "Kit Escova Soulbm"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689198",
+      "sku": "SBLL000-K001S",
+      "name": "Kit Raspador De Lingua Simples - 1un",
+      "parent_id": "344689195",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689202",
+      "sku": "SBLL000-K002S",
+      "name": "Kit Raspador De Lingua Simples - 2un",
+      "parent_id": "344689195",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344689226",
+      "sku": "CMNV00S-K001S",
+      "name": "Kit Nivea Soft - 1un",
+      "parent_id": "344689219",
+      "parent_name": "Kit Nivea Soft"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344881045",
+      "sku": "CMST001-K001",
+      "name": "St.Ives",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344886229",
+      "sku": "CMNV150-K001",
+      "name": "Nivea 150g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "345804129",
+      "sku": "ACAI000-K001S",
+      "name": "Kit Camel toe - 1un",
+      "parent_id": "345804098",
+      "parent_name": "Kit Camel toe"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "345948170",
+      "sku": "HBCOMAX-K004S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 4un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "345965306",
+      "sku": "HBCO40M-K001SS",
+      "name": "Kit Corega Menta 40g & Corega Sem Sabor 40g - Menta 1un",
+      "parent_id": "344688962",
+      "parent_name": "Kit Corega Menta 40g & Corega Sem Sabor 40g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "351076612",
+      "sku": "CMPO00S-K001S",
+      "name": "Kit Pond's  - S 1un",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "351383646",
+      "sku": "SBGF00G-K001S",
+      "name": "Garrafas SoulBM - Grafias",
+      "parent_id": "351383639",
+      "parent_name": "Garrafas SoulBM"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "351383654",
+      "sku": "SBGF00M-K001S",
+      "name": "Garrafas SoulBM - Martelada",
+      "parent_id": "351383639",
+      "parent_name": "Garrafas SoulBM"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "352284430",
+      "sku": "ACBF000-K050E",
+      "name": "50 Fitas Dupla Face BelezaFix + Embalagem",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "352584589",
+      "sku": "HBCO40S-K004",
+      "name": "KIT 4 - Corega 40g Sem Sabor",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "352584611",
+      "sku": "HBCO70M-K002",
+      "name": "KIT 2 - Corega 70g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "352584621",
+      "sku": "HBCO70M-K004",
+      "name": "KIT 4 - Corega 70g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "352806065",
+      "sku": "DDCM000-K006S",
+      "name": "Kit Cannon Musk - 6un",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "353826574",
+      "sku": "ACESM10-K001",
+      "name": "Espelho 10X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "353828308",
+      "sku": "ACESM10-K001S",
+      "name": "Kit Todos os Espelhos - M10 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "354122316",
+      "sku": "CCUTVES-K001",
+      "name": "Utensilio Espatula Vermelha 27cm",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "354423334",
+      "sku": "CMPO00B-K001S",
+      "name": "Kit Pond's  - Bio 1un",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "354424261",
+      "sku": "CMST001-K003S",
+      "name": "Kit St.ives - 3un",
+      "parent_id": "344688930",
+      "parent_name": "Kit St.ives"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "354424512",
+      "sku": "CMPO00N-K001S",
+      "name": "Kit Pond's  - Noite 1un",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "354748172",
+      "sku": "HBCOTB3-K120S",
+      "name": "Kit Corega Tabs 3 Minutos - 120un",
+      "parent_id": "344689046",
+      "parent_name": "Kit Corega Tabs 3 Minutos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "356856225",
+      "sku": "CCUTPCL-K001",
+      "name": "Colher Preta 27cm",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "356857721",
+      "sku": "CCUTVCL-K001",
+      "name": "Colher Vermelha 27cm",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357848720",
+      "sku": "HBCOMAX-K003S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 3un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357849357",
+      "sku": "ACPE001-K002S",
+      "name": "Kit Pente Colorido - 2un",
+      "parent_id": "357849345",
+      "parent_name": "Kit Pente Colorido"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357885407",
+      "sku": "TSTM-1",
+      "name": "Kit Fita Seios + Tapa Mamilo - Tapa Seios 1un + Tapa Mamilo 10un",
+      "parent_id": "357885404",
+      "parent_name": "Kit Fita Seios + Tapa Mamilo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357898168",
+      "sku": "DDFA00A-K003S",
+      "name": "Kit Fa  - Acqua - 3un",
+      "parent_id": "354106600",
+      "parent_name": "Kit Fa"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357902078",
+      "sku": "CMPO00S-K002S",
+      "name": "Kit Pond's  - S 2un",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357902083",
+      "sku": "CMPO00S-K003S",
+      "name": "Kit Pond's  - S 3un",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357902129",
+      "sku": "CMPO00S-K004S",
+      "name": "Kit Pond's  - S 4un",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "358380846",
+      "sku": "HBCO70M-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 2un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "362656315",
+      "sku": "DDCM000-K008S",
+      "name": "Kit Cannon Musk - 8un",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "364945730",
+      "sku": "SBPB00S-K001",
+      "name": "Pulseira Soulbm Sattva",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "364945963",
+      "sku": "SBPB00P-K001",
+      "name": "Pulseira Soulbm Prana",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "366352136",
+      "sku": "SBEL000-K001",
+      "name": "Escova Seca Cabo Longo SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367023397",
+      "sku": "SBCC001-K001",
+      "name": "Copo de Cobre - Ébano",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367250996",
+      "sku": "SBES001-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Redonda 1un",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367251002",
+      "sku": "SBES004-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Oval 1un",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367251007",
+      "sku": "SBES005-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Facial 1un",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367921507",
+      "sku": "HBCO40M-K022S",
+      "name": "Kit Corega Menta 40g - Menta 2un",
+      "parent_id": "344688941",
+      "parent_name": "Kit Corega Menta 40g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "368144614",
+      "sku": "HBCOMAX-K001",
+      "name": "Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "369147686",
+      "sku": "SBCC001-K002S",
+      "name": "Kit Copo De Cobre - Ébano - 2un",
+      "parent_id": "369147666",
+      "parent_name": "Kit Copo De Cobre - Ébano"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "370182997",
+      "sku": "SBPB00O-K001",
+      "name": "Pulseira Soulbm Ojas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "370648621",
+      "sku": "HBCOMAX-K006S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 6un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "372802877",
+      "sku": "ACOP000-K036",
+      "name": "Fita Orelha / Peruca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "374050417",
+      "sku": "ACOP000-K036S",
+      "name": "Kit Fita Orelha / Peruca - 1un",
+      "parent_id": "374050153",
+      "parent_name": "Kit Fita Orelha / Peruca"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "375652645",
+      "sku": "CCUTPPD-K001",
+      "name": "Utensilio Espátula Pão Duro Preto",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "376832557",
+      "sku": "KITGR-M001S",
+      "name": "Kit Garrafa  com Raspador  - martelada",
+      "parent_id": "376797537",
+      "parent_name": "Kit Garrafa  com Raspador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "376832560",
+      "sku": "KITGR-G001S",
+      "name": "Kit Garrafa  com Raspador  - Grafias",
+      "parent_id": "376797537",
+      "parent_name": "Kit Garrafa  com Raspador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "385361780",
+      "sku": "SBPB00T-K001",
+      "name": "Pulseira Soulbm Tejas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "392828521",
+      "sku": "ACESM15-K001S",
+      "name": "Kit Todos os Espelhos - M15 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "order:385174715:item:0",
+      "sku": "CMNV150-K003",
+      "name": "Kit Nivea Creme 150ml/145g Lata Azul Importada Kit Hidratante Facial - 03 UN. Nivea Creme · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "order:392415757:item:0",
+      "sku": "2165",
+      "name": "Desodorante Colbert Preto Noir Argentino Masc 250ml Grande Colbert Noir - Colbert Noir · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "order:394905195:item:1",
+      "sku": "CCUTVPL-K001",
+      "name": "Utensílios de Silicone Cozinha Kit Colher Vermelho Concha Monte Seu Jogo Conjunto Espátula Atacado - Pincel Vermelho 26, · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "order:394905195:item:2",
+      "sku": "CCUTVPM-K001",
+      "name": "Utensílios de Silicone Cozinha Kit Colher Vermelho Concha Monte Seu Jogo Conjunto Espátula Atacado - Pegador de Macarrão · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347837953",
+      "sku": "ACAI000-K001",
+      "name": "Adesivo Intimo Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347837966",
+      "sku": "CMATX00-K001",
+      "name": "Atrix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838004",
+      "sku": "DDCO00C-K001",
+      "name": "Colbert Code",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838085",
+      "sku": "SBCC000-K001",
+      "name": "Copo de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838123",
+      "sku": "HBCO40M-K002",
+      "name": "KIT 2 - Corega 40g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838207",
+      "sku": "HBCOMAX-K001",
+      "name": "Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838278",
+      "sku": "HBCOP22-K001",
+      "name": "Corega Pó 3 em 1",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838291",
+      "sku": "HBCOTB3-K030",
+      "name": "Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838323",
+      "sku": "HBCOTBB-K030",
+      "name": "Corega Tabs Branqueador",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838338",
+      "sku": "ACUN001-K012",
+      "name": "Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838361",
+      "sku": "ACUN000-K012",
+      "name": "Cortador de Unha DISCO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838417",
+      "sku": "SBES000-K001",
+      "name": "Escova Seca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838432",
+      "sku": "SBEC000-K001",
+      "name": "Escova Seca de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838442",
+      "sku": "SBES003-K001",
+      "name": "Escova Seca Facial SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838457",
+      "sku": "SBES002-K001",
+      "name": "Escova Seca Oval",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838468",
+      "sku": "ACESG10-K001",
+      "name": "Espelho 10X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838539",
+      "sku": "ACESP15-K001",
+      "name": "Espelho 15X PEQUENO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838698",
+      "sku": "ACBF000-K050",
+      "name": "Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838721",
+      "sku": "SBGF00G-K001",
+      "name": "Garrafa SoulBM Grafias",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838734",
+      "sku": "SBGF00M-K001",
+      "name": "Garrafa SoulBM Martelada",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838857",
+      "sku": "SBKW000-K001",
+      "name": "Kansa Wand",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838886",
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838915",
+      "sku": "DDCO0NV-K002",
+      "name": "KIT - Colbert Noir + Colbert Clássico",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838964",
+      "sku": "DDCOUCA-K003",
+      "name": "KIT - Colbert Us + Colbert CODE + Colbert Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838987",
+      "sku": "HBCOMAX-K003",
+      "name": "KIT - Corega 70g MAX (1 Unitário + 1 Combo)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839196",
+      "sku": "CMPO0DS-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's S (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839264",
+      "sku": "ACTM070-K070",
+      "name": "KIT - Tapa Mamilo (20) + Fita Adesiva (50)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839342",
+      "sku": "ACBF000-K100",
+      "name": "KIT 100 - Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839511",
+      "sku": "ACNV000-K012",
+      "name": "KIT 12 - Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839566",
+      "sku": "HBCOTB3-K120",
+      "name": "KIT 120 - Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839621",
+      "sku": "ACUN001-K120",
+      "name": "KIT 120 - Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839899",
+      "sku": "DDCO00N-K002",
+      "name": "KIT 2 - Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839915",
+      "sku": "DDCO00S-K002",
+      "name": "KIT 2 - Colbert Space",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839971",
+      "sku": "SBCC000-K002",
+      "name": "KIT 2 - Copo de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839985",
+      "sku": "HBCOMAX-K002",
+      "name": "KIT 2 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840016",
+      "sku": "SBES000-K002",
+      "name": "KIT 2 - Escova Seca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840073",
+      "sku": "ACESG10-K002",
+      "name": "KIT 2 - Espelho 10X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840164",
+      "sku": "ACPE001-K002",
+      "name": "KIT 2 - Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840323",
+      "sku": "CMPO00S-K002",
+      "name": "KIT 2 - Pond's S",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840375",
+      "sku": "CMTOCRC-K002",
+      "name": "KIT 2 - Tortulan C + Retinol",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840451",
+      "sku": "HBCOP50-K002",
+      "name": "KIT 2 - Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840493",
+      "sku": "ACUN001-K024",
+      "name": "KIT 24 - Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840565",
+      "sku": "DDCM000-K003",
+      "name": "KIT 3 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840608",
+      "sku": "DDCO00N-K003",
+      "name": "KIT 3 - Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840632",
+      "sku": "DDCO00U-K003",
+      "name": "KIT 3 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840814",
+      "sku": "ACNV000-K003",
+      "name": "KIT 3 - Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840976",
+      "sku": "HBCOP50-K003",
+      "name": "KIT 3 - Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840989",
+      "sku": "ACUN000-K036",
+      "name": "KIT 36 - Cortador de Unha DISCO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347840997",
+      "sku": "ACNV000-K036",
+      "name": "KIT 36 - Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347841250",
+      "sku": "HBCO70S-K004",
+      "name": "KIT 4 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347841840",
+      "sku": "DDCO00N-K006",
+      "name": "KIT 6 - Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347841877",
+      "sku": "DDCO00U-K006",
+      "name": "KIT 6 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347842105",
+      "sku": "HBCOTB3-K060",
+      "name": "KIT 60 - Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347842130",
+      "sku": "HBCOTBB-K060",
+      "name": "KIT 60 - Corega Tabs Branqueador",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347842717",
+      "sku": "HBCOMAX-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 1un",
+      "parent_id": "370648752",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347842997",
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "parent_id": "347842989",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843022",
+      "sku": "SBGF00G-K001S",
+      "name": "Garrafas SoulBM - Grafias",
+      "parent_id": "354421549",
+      "parent_name": "Garrafas SoulBM"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843027",
+      "sku": "SBGF00M-K001S",
+      "name": "Garrafas SoulBM - Martelada",
+      "parent_id": "354421549",
+      "parent_name": "Garrafas SoulBM"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843382",
+      "sku": "ACNV000-K001",
+      "name": "Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843398",
+      "sku": "CMNV150-K001",
+      "name": "Nivea 150g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843466",
+      "sku": "ACPE001-K001",
+      "name": "Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843533",
+      "sku": "CMPO0B3-K001",
+      "name": "Pond's B3",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843551",
+      "sku": "CMPO00B-K001",
+      "name": "Pond's Bio",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843569",
+      "sku": "CMPO00C-K001",
+      "name": "Pond's C",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843597",
+      "sku": "CMPO00D-K001",
+      "name": "Pond's Dia",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843610",
+      "sku": "CMPO00N-K001",
+      "name": "Pond's Noite",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843637",
+      "sku": "CMPO00S-K001",
+      "name": "Pond's S",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843664",
+      "sku": "SBLL001-K001",
+      "name": "Raspador de Lingua PREMIUM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843707",
+      "sku": "ACBFR03-K001",
+      "name": "Rolo 3m Fita BelezaFix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843720",
+      "sku": "SBSR00S-K001",
+      "name": "Saffron Supreme® Sérum",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843751",
+      "sku": "CMST001-K001",
+      "name": "St.Ives",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843818",
+      "sku": "CMTO00R-K001",
+      "name": "Tortulan Rosa",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843827",
+      "sku": "HBCOP20-K001",
+      "name": "Ultra Corega Pó 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843842",
+      "sku": "HBCOP50-K001",
+      "name": "Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "349731846",
+      "sku": "ACBF000-K200ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 200un",
+      "parent_id": "347842989",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "353714750",
+      "sku": "ACBF000-K050E",
+      "name": "50 Fitas Dupla Face BelezaFix + Embalagem",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "354421993",
+      "sku": "ACESM10-K001",
+      "name": "Espelho 10X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "357412182",
+      "sku": "ACBF000-K100E",
+      "name": "100 Fitas Dupla Face BelezaFix + Embalagem",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "357858003",
+      "sku": "CMPO00C-K001S",
+      "name": "Kit Pond's  - C 1un",
+      "parent_id": "357859633",
+      "parent_name": "Kit Pond's"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "359162649",
+      "sku": "SB-BAG",
+      "name": "Bag SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "364946354",
+      "sku": "SBPB00P-K001",
+      "name": "Pulseira Soulbm Prana",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "364946356",
+      "sku": "SBPB00S-K001",
+      "name": "Pulseira Soulbm Sattva",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "366354776",
+      "sku": "SBEL000-K001",
+      "name": "Escova Seca Cabo Longo SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "367023666",
+      "sku": "SBCC001-K001",
+      "name": "Copo de Cobre - Ébano",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "369150369",
+      "sku": "SBCC001-K002S",
+      "name": "Kit Copo De Cobre - Ébano - 2un",
+      "parent_id": "369150360",
+      "parent_name": "Kit Copo De Cobre - Ébano"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "370159933",
+      "sku": "COPU-1",
+      "name": "Kit Pulseiras de Cobre - Prana 1un",
+      "parent_id": "370159928",
+      "parent_name": "Kit Pulseiras de Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "370182191",
+      "sku": "SBPB00O-K001",
+      "name": "Pulseira Soulbm Ojas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "370184632",
+      "sku": "COPU-3",
+      "name": "Kit Pulseiras de Cobre - Ojas 1un",
+      "parent_id": "370159928",
+      "parent_name": "Kit Pulseiras de Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "370648787",
+      "sku": "HBCOMAX-K006S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 6un",
+      "parent_id": "370648752",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "372804080",
+      "sku": "ACOP000-K036",
+      "name": "Fita Orelha / Peruca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "385373209",
+      "sku": "COPU-4",
+      "name": "Kit Pulseiras de Cobre - Tejas 1un",
+      "parent_id": "370159928",
+      "parent_name": "Kit Pulseiras de Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "388043120",
+      "sku": "ACAI000-K002",
+      "name": "Kit 2 unidades Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "392804576",
+      "sku": "ACESM15-K001",
+      "name": "Espelho 15X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "order:381170848:item:0",
+      "sku": "ACBF000-K050E",
+      "name": "Fita Dupla Face Decote Adesivo Cola Roupa Belezafix 50un Branco 8,5cm X 1,2cm - Branco · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "order:394205584:item:0",
+      "sku": "CMNV150-K002",
+      "name": "2 Und. Nivea Creme 150ml Lata Azul - Tipo De Embalagem Pote - Pote · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119678",
+      "sku": "ACAI000-K001",
+      "name": "Adesivo Intimo Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119693",
+      "sku": "CMATX00-K001",
+      "name": "Atrix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119711",
+      "sku": "DDCM000-K001",
+      "name": "Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119716",
+      "sku": "DDCO00A-K001",
+      "name": "Colbert Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119734",
+      "sku": "DDCO00N-K001",
+      "name": "Colbert Noir",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119750",
+      "sku": "DDCO00U-K001",
+      "name": "Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119755",
+      "sku": "DDCO00V-K001",
+      "name": "Colbert Verde",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119762",
+      "sku": "SBCC000-K001",
+      "name": "Copo de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119789",
+      "sku": "HBCO40M-K003",
+      "name": "KIT 3 - Corega 40g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119824",
+      "sku": "HBCOMAX-K001",
+      "name": "Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119839",
+      "sku": "HBCO70M-K001",
+      "name": "Corega 70g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119851",
+      "sku": "HBCO70M-K003",
+      "name": "KIT 3 - Corega 70g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119857",
+      "sku": "HBCO70M-K002",
+      "name": "KIT 2 - Corega 70g Menta",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119879",
+      "sku": "HBCOP22-K001",
+      "name": "Corega Pó 3 em 1",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119885",
+      "sku": "HBCOTB3-K030",
+      "name": "Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119893",
+      "sku": "HBCOTBB-K030",
+      "name": "Corega Tabs Branqueador",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119902",
+      "sku": "ACUN001-K012",
+      "name": "Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119964",
+      "sku": "SBES000-K001",
+      "name": "Escova Seca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119977",
+      "sku": "SBEC000-K001",
+      "name": "Escova Seca de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119989",
+      "sku": "SBES003-K001",
+      "name": "Escova Seca Facial SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119997",
+      "sku": "SBES002-K001",
+      "name": "Escova Seca Oval",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120011",
+      "sku": "ACESG10-K001",
+      "name": "Espelho 10X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120040",
+      "sku": "ACESG03-K001",
+      "name": "Espelho 3X GRANDE",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120073",
+      "sku": "ACESP10-K001",
+      "name": "Espelho 10X PEQUENO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120087",
+      "sku": "ACESP15-K001",
+      "name": "Espelho 15X PEQUENO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120107",
+      "sku": "ACESP03-K001",
+      "name": "Espelho 3X PEQUENO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120130",
+      "sku": "DDFA00A-K001",
+      "name": "Fa Acqua",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120137",
+      "sku": "DDFA00B-K001",
+      "name": "Fa Brightening",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120151",
+      "sku": "DDFA00C-K001",
+      "name": "Fa Caribbean",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120158",
+      "sku": "DDFA00P-K001",
+      "name": "Fa Pink",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120165",
+      "sku": "DDFA0SO-K001",
+      "name": "Fa Soft",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120174",
+      "sku": "DDFA0SP-K001",
+      "name": "Fa Sport",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120188",
+      "sku": "ACBF000-K050",
+      "name": "Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120204",
+      "sku": "SBGF00G-K001",
+      "name": "Garrafa SoulBM Grafias",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120211",
+      "sku": "SBGF00M-K001",
+      "name": "Garrafa SoulBM Martelada",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120249",
+      "sku": "SBKW000-K001",
+      "name": "Kansa Wand",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120273",
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120292",
+      "sku": "DDCO0NV-K002",
+      "name": "KIT - Colbert Noir + Colbert Clássico",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120297",
+      "sku": "PDCO00U-K002",
+      "name": "KIT - Colbert US (1 Perfume + 1 Desodorante)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120318",
+      "sku": "HBCOMAX-K003",
+      "name": "KIT - Corega 70g MAX (1 Unitário + 1 Combo)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120322",
+      "sku": "HBCOMAX-K004",
+      "name": "KIT - Corega 70g MAX (2 Combos)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120373",
+      "sku": "CMPO0CN-K002",
+      "name": "KIT - Pond's C (1) + Pond's Noite (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120390",
+      "sku": "CMPOCDS-K003",
+      "name": "KIT - Pond's C(1) + Pond's Dia (1) + Pond's S (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120403",
+      "sku": "CMPODB3-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's B3 (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120407",
+      "sku": "CMPO0DN-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1)",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120458",
+      "sku": "DDCM000-K010",
+      "name": "KIT 10 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120482",
+      "sku": "ACBF000-K100",
+      "name": "KIT 100 - Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120488",
+      "sku": "ACTM000-K100",
+      "name": "KIT 100 - Tapa-mamilo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120530",
+      "sku": "DDFA0SP-K012",
+      "name": "KIT 12 - Fa Sport",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120534",
+      "sku": "ACNV000-K012",
+      "name": "KIT 12 - Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120553",
+      "sku": "HBCOTB3-K120",
+      "name": "KIT 120 - Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120563",
+      "sku": "ACUN001-K120",
+      "name": "KIT 120 - Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120600",
+      "sku": "DDCM000-K002",
+      "name": "KIT 2 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120632",
+      "sku": "HBCO70S-K002",
+      "name": "KIT 2 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120636",
+      "sku": "HBCOP22-K002",
+      "name": "KIT 2 - Corega Pó 3 em 1 – 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120652",
+      "sku": "ACESP15-K002",
+      "name": "KIT 2 - Espelho 15X PEQUENO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120686",
+      "sku": "ACPE001-K002",
+      "name": "KIT 2 - Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120726",
+      "sku": "SBLL000-K002",
+      "name": "KIT 2 - Raspador de Lingua SIMPLES",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120730",
+      "sku": "CMST001-K002",
+      "name": "KIT 2 - St. Ives",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120734",
+      "sku": "CMTOCRC-K002",
+      "name": "KIT 2 - Tortulan C + Retinol",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120767",
+      "sku": "CMTO00R-K002",
+      "name": "KIT 2 - Tortulan Rosa",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120771",
+      "sku": "HBCOP20-K002",
+      "name": "KIT 2 - Ultra Corega Pó 20g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120775",
+      "sku": "HBCOP50-K002",
+      "name": "KIT 2 - Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120783",
+      "sku": "ACPE001-K020",
+      "name": "KIT 20 - Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120789",
+      "sku": "ACBF000-K200",
+      "name": "KIT 200 - Fita Beleza Fix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120795",
+      "sku": "ACUN001-K024",
+      "name": "KIT 24 - Cortador de Unha CAIXA",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120822",
+      "sku": "DDCM000-K003",
+      "name": "KIT 3 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120861",
+      "sku": "DDCO00V-K003",
+      "name": "KIT 3 - Colbert Verde",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120866",
+      "sku": "HBCO70S-K003",
+      "name": "KIT 3 - Corega 70g MAX Combo",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120871",
+      "sku": "HBCOP22-K003",
+      "name": "KIT 3 - Corega Pó 3 em 1 – 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120879",
+      "sku": "DDFA00B-K003",
+      "name": "KIT 3 - Fa Brightening",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120888",
+      "sku": "DDFA00P-K003",
+      "name": "KIT 3 - Fa Pink",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120892",
+      "sku": "DDFA0SO-K003",
+      "name": "KIT 3 - Fa Soft",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120896",
+      "sku": "DDFA0SP-K003",
+      "name": "KIT 3 - Fa Sport",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120920",
+      "sku": "CMPO0B3-K003",
+      "name": "KIT 3 - Pond's B3",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120925",
+      "sku": "CMPO00C-K003",
+      "name": "KIT 3 - Pond's C",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120933",
+      "sku": "CMPO00N-K003",
+      "name": "KIT 3 - Pond's Noite",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120945",
+      "sku": "HBCOP20-K003",
+      "name": "KIT 3 - Ultra Corega Pó 20g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120950",
+      "sku": "HBCOP50-K003",
+      "name": "KIT 3 - Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120959",
+      "sku": "ACUN000-K036",
+      "name": "KIT 36 - Cortador de Unha DISCO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120964",
+      "sku": "ACNV000-K036",
+      "name": "KIT 36 - Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121065",
+      "sku": "ACUN000-K048",
+      "name": "KIT 48 - Cortador de Unha DISCO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121091",
+      "sku": "DDCO00U-K005",
+      "name": "KIT 5 - Colbert US",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121120",
+      "sku": "DDCM000-K006",
+      "name": "KIT 6 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121178",
+      "sku": "HBCOTB3-K060",
+      "name": "KIT 60 - Corega Tabs 3 Minutos",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121201",
+      "sku": "DDCM000-K008",
+      "name": "KIT 8 - Cannon Musk",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121222",
+      "sku": "ACAI000-K001S",
+      "name": "Kit Camel toe - 1un",
+      "parent_id": "351121219",
+      "parent_name": "Kit Camel toe"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121234",
+      "sku": "DDCM000-K002S",
+      "name": "Kit Cannon Musk - 2un",
+      "parent_id": "351121227",
+      "parent_name": "Kit Cannon Musk"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121239",
+      "sku": "DDCM000-K003S",
+      "name": "Kit Cannon Musk - 3un",
+      "parent_id": "351121227",
+      "parent_name": "Kit Cannon Musk"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121251",
+      "sku": "DDCO00A-K002S",
+      "name": "Kit Colbert Aqua - 2un",
+      "parent_id": "351121244",
+      "parent_name": "Kit Colbert Aqua"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121255",
+      "sku": "DDCO00A-K003S",
+      "name": "Kit Colbert Aqua - 3un",
+      "parent_id": "351121244",
+      "parent_name": "Kit Colbert Aqua"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121284",
+      "sku": "DDCO00N-K002S",
+      "name": "Kit Colbert Noir - 2un",
+      "parent_id": "351121274",
+      "parent_name": "Kit Colbert Noir"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121288",
+      "sku": "DDCO00N-K003S",
+      "name": "Kit Colbert Noir - 3un",
+      "parent_id": "351121274",
+      "parent_name": "Kit Colbert Noir"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121299",
+      "sku": "DDCO00S-K002S",
+      "name": "Kit Colbert Space - 2un",
+      "parent_id": "351121292",
+      "parent_name": "Kit Colbert Space"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121303",
+      "sku": "DDCO00S-K003S",
+      "name": "Kit Colbert Space - 3un",
+      "parent_id": "351121292",
+      "parent_name": "Kit Colbert Space"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121314",
+      "sku": "DDCO00V-K002S",
+      "name": "Kit Colbert Verde - 2un",
+      "parent_id": "351121307",
+      "parent_name": "Kit Colbert Verde"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121318",
+      "sku": "DDCO00V-K003S",
+      "name": "Kit Colbert Verde - 3un",
+      "parent_id": "351121307",
+      "parent_name": "Kit Colbert Verde"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121329",
+      "sku": "SBCC000-K002S",
+      "name": "Kit Copo De Cobre - 2un",
+      "parent_id": "351121322",
+      "parent_name": "Kit Copo De Cobre"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121384",
+      "sku": "HBCOMAX-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 1un",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121389",
+      "sku": "HBCOMAX-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - MAX Combo 2un",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121395",
+      "sku": "HBCOMAX-K004S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 4un",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121400",
+      "sku": "HBCO70M-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 1un",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121449",
+      "sku": "HBCOTBB-K030S",
+      "name": "Kit Corega Tabs Branqueador - 30un",
+      "parent_id": "351121446",
+      "parent_name": "Kit Corega Tabs Branqueador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121453",
+      "sku": "HBCOTBB-K060S",
+      "name": "Kit Corega Tabs Branqueador - 60un",
+      "parent_id": "351121446",
+      "parent_name": "Kit Corega Tabs Branqueador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121504",
+      "sku": "DDCO00U-K002S",
+      "name": "Kit Desodorante Colbert US - 2un",
+      "parent_id": "351121497",
+      "parent_name": "Kit Desodorante Colbert US"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121508",
+      "sku": "DDCO00U-K003S",
+      "name": "Kit Desodorante Colbert US - 3un",
+      "parent_id": "351121497",
+      "parent_name": "Kit Desodorante Colbert US"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121515",
+      "sku": "SBES002-K001S",
+      "name": "Kit Escova Oval - 1un",
+      "parent_id": "351121512",
+      "parent_name": "Kit Escova Oval"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121519",
+      "sku": "SBES002-K002S",
+      "name": "Kit Escova Oval - 2un",
+      "parent_id": "351121512",
+      "parent_name": "Kit Escova Oval"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121526",
+      "sku": "SBES000-K001S",
+      "name": "Kit Escova Soulbm - 1un",
+      "parent_id": "351121523",
+      "parent_name": "Kit Escova Soulbm"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121530",
+      "sku": "SBES000-K002S",
+      "name": "Kit Escova Soulbm - 2un",
+      "parent_id": "351121523",
+      "parent_name": "Kit Escova Soulbm"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121537",
+      "sku": "ACESG10-K001S",
+      "name": "Kit Todos os Espelhos - G10 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121542",
+      "sku": "ACESG15-K001S",
+      "name": "Kit Todos os Espelhos - G15 - 1un",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121547",
+      "sku": "ACESG03-K001S",
+      "name": "Kit Todos os Espelhos - G3 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121552",
+      "sku": "ACESG05-K001S",
+      "name": "Kit Todos os Espelhos - G5 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121557",
+      "sku": "ACESP10-K001S",
+      "name": "Kit Todos os Espelhos - P10 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121562",
+      "sku": "ACESP15-K001S",
+      "name": "Kit Todos os Espelhos - P15 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121567",
+      "sku": "ACESP03-K001S",
+      "name": "Kit Todos os Espelhos - P3 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121572",
+      "sku": "ACESP05-K001S",
+      "name": "Kit Todos os Espelhos - P5 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121580",
+      "sku": "ACBF000-K100S",
+      "name": "Kit Fita Belezafix - Fita 100un",
+      "parent_id": "351121577",
+      "parent_name": "Kit Fita Belezafix"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121585",
+      "sku": "ACBF000-K050S",
+      "name": "Kit Fita Belezafix - Fita 50un",
+      "parent_id": "351121577",
+      "parent_name": "Kit Fita Belezafix"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121593",
+      "sku": "ACBF000-K100ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 100un",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121597",
+      "sku": "ACBF000-K200ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 200un",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121602",
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121623",
+      "sku": "SBGF00G-K001S",
+      "name": "Garrafas SoulBM - Grafias",
+      "parent_id": "354421560",
+      "parent_name": "Garrafas SoulBM"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121628",
+      "sku": "SBGF00M-K001S",
+      "name": "Garrafas SoulBM - Martelada",
+      "parent_id": "354421560",
+      "parent_name": "Garrafas SoulBM"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121657",
+      "sku": "CMNV150-K002S",
+      "name": "Kit Nivea 150g - 2un",
+      "parent_id": "351121649",
+      "parent_name": "Kit Nivea 150g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121663",
+      "sku": "CMNV150-K003S",
+      "name": "Kit Nivea 150g - 3un",
+      "parent_id": "351121649",
+      "parent_name": "Kit Nivea 150g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121673",
+      "sku": "CMNV00S-K001S",
+      "name": "Kit Nivea Soft - 1un",
+      "parent_id": "351121670",
+      "parent_name": "Kit Nivea Soft"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121677",
+      "sku": "CMNV00S-K002S",
+      "name": "Kit Nivea Soft - 2un",
+      "parent_id": "351121670",
+      "parent_name": "Kit Nivea Soft"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121764",
+      "sku": "SBLL000-K001S",
+      "name": "Kit Raspador De Lingua Simples - 1un",
+      "parent_id": "351121761",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121768",
+      "sku": "SBLL000-K002S",
+      "name": "Kit Raspador De Lingua Simples - 2un",
+      "parent_id": "351121761",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121772",
+      "sku": "SBLL000-K004S",
+      "name": "Kit Raspador De Lingua Simples - 4un",
+      "parent_id": "351121761",
+      "parent_name": "Kit Raspador De Lingua Simples"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121793",
+      "sku": "ACBFR03-K001S",
+      "name": "Kit Rolo Fita Belezafix - ROLO3m",
+      "parent_id": "351121790",
+      "parent_name": "Kit Rolo Fita Belezafix"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121803",
+      "sku": "CMST001-K001S",
+      "name": "Kit St.ives - 1un",
+      "parent_id": "351121800",
+      "parent_name": "Kit St.ives"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121819",
+      "sku": "TAMA-1050100-2",
+      "name": "Kit Tapa Mamilo - 10un",
+      "parent_id": "351121811",
+      "parent_name": "Kit Tapa Mamilo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121852",
+      "sku": "TOROS-12-1",
+      "name": "Kit Tortulan Rosa - 1un",
+      "parent_id": "351121849",
+      "parent_name": "Kit Tortulan Rosa"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121856",
+      "sku": "TOROS-12-2",
+      "name": "Kit Tortulan Rosa - 2un",
+      "parent_id": "351121849",
+      "parent_name": "Kit Tortulan Rosa"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121868",
+      "sku": "HBCOP50-K002S",
+      "name": "Kit Ultra Corega 50g - 2un",
+      "parent_id": "351121860",
+      "parent_name": "Kit Ultra Corega 50g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121872",
+      "sku": "HBCOP50-K003S",
+      "name": "Kit Ultra Corega 50g - 3un",
+      "parent_id": "351121860",
+      "parent_name": "Kit Ultra Corega 50g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121881",
+      "sku": "ACNV000-K001",
+      "name": "Navalha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121887",
+      "sku": "CMNV150-K001",
+      "name": "Nivea 150g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121897",
+      "sku": "CMNV00S-K001",
+      "name": "Nivea Soft",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121911",
+      "sku": "ACPE001-K001",
+      "name": "Pente Colorido",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121916",
+      "sku": "ACPE000-K001",
+      "name": "Pente Inox",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121937",
+      "sku": "CMPO0B3-K001",
+      "name": "Pond's B3",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121945",
+      "sku": "CMPO00B-K001",
+      "name": "Pond's Bio",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121951",
+      "sku": "CMPO00C-K001",
+      "name": "Pond's C",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121958",
+      "sku": "CMPO00D-K001",
+      "name": "Pond's Dia",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121980",
+      "sku": "CMPO00N-K001",
+      "name": "Pond's Noite",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121992",
+      "sku": "CMPO00S-K001",
+      "name": "Pond's S",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122009",
+      "sku": "SBLL001-K001",
+      "name": "Raspador de Lingua PREMIUM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122014",
+      "sku": "SBLL000-K001",
+      "name": "Raspador de Lingua SIMPLES",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122029",
+      "sku": "ACBFR03-K001",
+      "name": "Rolo 3m Fita BelezaFix",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122034",
+      "sku": "SBSR00S-K001",
+      "name": "Saffron Supreme® Sérum",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122042",
+      "sku": "CMST001-K001",
+      "name": "St.Ives",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122057",
+      "sku": "CMTOCRC-K001",
+      "name": "Tortulan Creme Antirugas C + Retinol",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122067",
+      "sku": "CMTOCRG-K001",
+      "name": "Tortulan Gel",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122079",
+      "sku": "CMTO00R-K001",
+      "name": "Tortulan Rosa",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122094",
+      "sku": "HBCOP20-K001",
+      "name": "Ultra Corega Pó 22g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122104",
+      "sku": "HBCOP50-K001",
+      "name": "Ultra Corega Pó 50g",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "352303432",
+      "sku": "ACTM070-K070S",
+      "name": "Kit Fita Belezafix + Tapa Mamilo - Fita 50un + Tapa Mamilo 20un",
+      "parent_id": "354422134",
+      "parent_name": "Kit Fita Belezafix + Tapa Mamilo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "353820859",
+      "sku": "ACESM10-K001S",
+      "name": "Kit Todos os Espelhos - M10 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "353823561",
+      "sku": "ACESM10-K001",
+      "name": "Espelho 10X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "354421967",
+      "sku": "CCUTVES-K001",
+      "name": "Utensilio Espatula Vermelha 27cm",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "354422220",
+      "sku": "SHGF00M-K001S",
+      "name": "Kit Garrafa Soulbm Shopee - Martelada - 1un",
+      "parent_id": "354422216",
+      "parent_name": "Kit Garrafa Soulbm Shopee"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "354422224",
+      "sku": "SHGF00G-K001S",
+      "name": "Kit Garrafa Soulbm Shopee - Grafias - 1un",
+      "parent_id": "354422216",
+      "parent_name": "Kit Garrafa Soulbm Shopee"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "354748303",
+      "sku": "HBCOTB3-K120S",
+      "name": "Kit Corega Tabs 3 Minutos - 120un",
+      "parent_id": "351121433",
+      "parent_name": "Kit Corega Tabs 3 Minutos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "360027525",
+      "sku": "CCUTVPD-K001",
+      "name": "Utensilio Espátula Pão Duro Vermelha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "360027526",
+      "sku": "CCUTVEC-K001",
+      "name": "Utensilio Espátula Confeiteiro Vermelha",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "363270946",
+      "sku": "ACPE001-K010S",
+      "name": "Kit Pente Colorido - 10un",
+      "parent_id": "357852726",
+      "parent_name": "Kit Pente Colorido"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "364946364",
+      "sku": "SBPB00S-K001",
+      "name": "Pulseira Soulbm Sattva",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "364946366",
+      "sku": "SBPB00P-K001",
+      "name": "Pulseira Soulbm Prana",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "366354789",
+      "sku": "SBEL000-K001",
+      "name": "Escova Seca Cabo Longo SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367023670",
+      "sku": "SBCC001-K001",
+      "name": "Copo de Cobre - Ébano",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367253116",
+      "sku": "SBES001-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Redonda 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367253120",
+      "sku": "SBES004-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Oval 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367253123",
+      "sku": "SBES005-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Facial 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "369676612",
+      "sku": "SBEL000-K001SS",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Cabo Longo 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "369676619",
+      "sku": "SBEC000-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Cobre 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "370183005",
+      "sku": "SBPB00O-K001",
+      "name": "Pulseira Soulbm Ojas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "372804101",
+      "sku": "ACOP000-K036",
+      "name": "Fita Orelha / Peruca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "376875281",
+      "sku": "AKGMR-R001",
+      "name": "Kit Garrafa Martelada com Raspador",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "385373229",
+      "sku": "SBPB00T-K001",
+      "name": "Pulseira Soulbm Tejas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "387215891",
+      "sku": "KITGR-M001S",
+      "name": "Kit Garrafa  com Raspador  - martelada",
+      "parent_id": "387215884",
+      "parent_name": "Kit Garrafa  com Raspador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "387215897",
+      "sku": "KITGR-G001S",
+      "name": "Kit Garrafa  com Raspador  - Grafias",
+      "parent_id": "387215884",
+      "parent_name": "Kit Garrafa  com Raspador"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "388043138",
+      "sku": "ACAI000-K002",
+      "name": "Kit 2 unidades Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "392804586",
+      "sku": "ACESM15-K001",
+      "name": "Espelho 15X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "392829426",
+      "sku": "ACESM15-K001S",
+      "name": "Kit Todos os Espelhos - M15 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "order:394339072:item:2",
+      "sku": "CCUTVPM-K001",
+      "name": "Utensílios de Silicone Cozinha Kit Concha Vermelho Colher Monte Seu Jogo Conjunto Espátula Atacado - Pegador de Macarrão · sem vínculo de catálogo",
+      "parent_id": null,
+      "parent_name": null
+    }
+  ]
+}

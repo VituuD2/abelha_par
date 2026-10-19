@@ -1,0 +1,23 @@
+import "server-only";
+import catalog from "./data/composition-catalog.json";
+import baseCatalog from "./data/base-products.json";
+import classification from "./data/composition-classification.json";
+import { buildCompositionRules } from "./composition";
+
+const rules = buildCompositionRules(
+  [...catalog.kits, ...catalog.manual, ...classification.aliases],
+  catalog.version,
+  catalog.ignoredComponentSkus,
+  {
+    baseProducts: baseCatalog.products.filter(product => product.eligible),
+    pending: Object.fromEntries(classification.pending.map(item => [item.sku, item.reason])),
+  },
+);
+rules.costSource = { file: baseCatalog.source.file, sheet: baseCatalog.source.sheet, column: baseCatalog.source.costColumn, sha256: baseCatalog.source.sha256 };
+
+/** This catalog belongs to one operation. Identical SKUs in other workspaces are unrelated. */
+export function compositionRulesForWorkspace(workspaceId: string) {
+  if (!catalog.workspaceIds.includes(workspaceId))
+    throw new Error("Ainda não há regras de composição revisadas para este espaço de trabalho.");
+  return rules;
+}

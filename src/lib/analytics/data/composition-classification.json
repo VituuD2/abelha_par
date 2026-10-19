@@ -1,0 +1,297 @@
+{
+  "version": "2026-10-19.5",
+  "baseSource": "produtos_2026-10-19-14-00-16.xls",
+  "baseSourceSha256": "64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c",
+  "decision": "Inferencias de negocio avaliadas em 19/10/2026 a partir de cadastro simples, nome da variacao, quantidade e referencia visual. Sem heuristica global por sufixo.",
+  "aliases": [
+    {
+      "sku": "ACAI000-K002",
+      "name": "Kit 2 unidades Camel Toe",
+      "components": [
+        {
+          "sku": "ACAI000-K001",
+          "name": "Adesivo Intimo Camel Toe",
+          "quantity": "2"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Mesmo produto Camel Toe; descricao informa kit com 2 unidades.",
+      "baseSourceRow": 3
+    },
+    {
+      "sku": "ACBF000-K050E",
+      "name": "50 Fitas Dupla Face BelezaFix + Embalagem",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        }
+      ],
+      "auxiliaryComponents": [
+        "EBBF001-001"
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "50 fitas equivalem a 1 unidade do produto base de 50 fitas; embalagem desconsiderada conforme decisao do responsavel.",
+      "baseSourceRow": 51
+    },
+    {
+      "sku": "ACESM15-K001S",
+      "name": "Kit Todos os Espelhos - M15 - 1un",
+      "components": [
+        {
+          "sku": "ACESM15-K001",
+          "name": "Espelho 15X MEDIO",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao M15, 1un, confirma espelho MEDIO de 15X; preservar tamanho e ampliacao.",
+      "baseSourceRow": 40
+    },
+    {
+      "sku": "ACOP000-K036S",
+      "name": "Kit Fita Orelha / Peruca - 1un",
+      "components": [
+        {
+          "sku": "ACOP000-K036",
+          "name": "Fita Orelha / Peruca",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Fita Orelha / Peruca, variacao 1un; uma unidade do produto base K036, nao 36 unidades de estoque.",
+      "baseSourceRow": 52
+    },
+    {
+      "sku": "HBCO40M-K022S",
+      "name": "Kit Corega Menta 40g - Menta 2un",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "2"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Nome especifica Menta 40g, 2un; K022 e discrepancia de codigo e nao um fator de 22.",
+      "baseSourceRow": 19
+    },
+    {
+      "sku": "HBCOMAX-K006S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 6un",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "6"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao MAX Combo 6un, mesmo produto base Corega 70g MAX Combo.",
+      "baseSourceRow": 21
+    },
+    {
+      "sku": "SBCC001-K002S",
+      "name": "Kit Copo De Cobre - Ébano - 2un",
+      "components": [
+        {
+          "sku": "SBCC001-K001",
+          "name": "Copo de Cobre - Ébano",
+          "quantity": "2"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Copo de Cobre Ebano, 2un; nao confundir com copo de cobre padrao SBCC000.",
+      "baseSourceRow": 18
+    },
+    {
+      "sku": "SBEC000-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Cobre 1un",
+      "components": [
+        {
+          "sku": "SBEC000-K001",
+          "name": "Escova Seca de Cobre",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Cobre 1un identifica a escova de cobre, nao copo ou outra escova.",
+      "baseSourceRow": 33
+    },
+    {
+      "sku": "SBEL000-K001SS",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Cabo Longo 1un",
+      "components": [
+        {
+          "sku": "SBEL000-K001",
+          "name": "Escova Seca Cabo Longo SoulBM",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Cabo Longo 1un; sufixo SS nao muda o produto nem o fator.",
+      "baseSourceRow": 32
+    },
+    {
+      "sku": "SBES001-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Redonda 1un",
+      "components": [
+        {
+          "sku": "SBES000-K001",
+          "name": "Escova Seca",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Redonda 1un; foto do produto base SBES000 exportada no cadastro confirma escova corporal redonda.",
+      "baseSourceRow": 31,
+      "imageEvidence": "docs/evidencias/curva-abc-2026-10-19/escova-base-sbes000.webp"
+    },
+    {
+      "sku": "SBES004-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Oval 1un",
+      "components": [
+        {
+          "sku": "SBES002-K001",
+          "name": "Escova Seca Oval",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Oval 1un e produto simples Escova Seca Oval; codigos de variacao e base diferem.",
+      "baseSourceRow": 35
+    },
+    {
+      "sku": "SBES005-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Facial 1un",
+      "components": [
+        {
+          "sku": "SBES003-K001",
+          "name": "Escova Seca Facial SoulBM",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Facial 1un e produto simples Escova Seca Facial SoulBM; nao mapear por prefixo numerico.",
+      "baseSourceRow": 34
+    },
+    {
+      "sku": "COPU-1",
+      "name": "Kit Pulseiras de Cobre - Prana 1un",
+      "components": [
+        {
+          "sku": "SBPB00P-K001",
+          "name": "Pulseira Soulbm Prana",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Prana 1un corresponde ao produto simples Pulseira Soulbm Prana.",
+      "baseSourceRow": 91
+    },
+    {
+      "sku": "COPU-3",
+      "name": "Kit Pulseiras de Cobre - Ojas 1un",
+      "components": [
+        {
+          "sku": "SBPB00O-K001",
+          "name": "Pulseira Soulbm Ojas",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Ojas 1un corresponde ao produto simples Pulseira Soulbm Ojas.",
+      "baseSourceRow": 90
+    },
+    {
+      "sku": "COPU-4",
+      "name": "Kit Pulseiras de Cobre - Tejas 1un",
+      "components": [
+        {
+          "sku": "SBPB00T-K001",
+          "name": "Pulseira Soulbm Tejas",
+          "quantity": "1"
+        }
+      ],
+      "classification": "inferencia_revisada",
+      "evidence": "Variacao Tejas 1un corresponde ao produto simples Pulseira Soulbm Tejas.",
+      "baseSourceRow": 93
+    },
+    {
+      "sku": "KITGR-M001S",
+      "name": "Kit Garrafa com Raspador - Martelada",
+      "components": [
+        { "sku": "SBGF00M-K001", "name": "Garrafa SoulBM Martelada", "quantity": "1" },
+        { "sku": "SBLL001-K001", "name": "Raspador de Lingua PREMIUM", "quantity": "1" }
+      ],
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Responsável confirmou: martelada é a garrafa SoulBM Martelada com raspador premium; uma unidade de estoque de cada produto.",
+      "baseSourceRows": [64, 94]
+    },
+    {
+      "sku": "KITGR-G001S",
+      "name": "Kit Garrafa com Raspador - Grafias",
+      "components": [
+        { "sku": "SBGF00G-K001", "name": "Garrafa SoulBM Grafias", "quantity": "1" },
+        { "sku": "SBLL001-K001", "name": "Raspador de Lingua PREMIUM", "quantity": "1" }
+      ],
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Responsável confirmou: grafias é a garrafa SoulBM Grafias com raspador premium; uma unidade de estoque de cada produto.",
+      "baseSourceRows": [63, 94]
+    },
+    {
+      "sku": "AKGMR-R001",
+      "name": "Kit Garrafa Martelada com Raspador",
+      "components": [
+        { "sku": "SBGF00M-K001", "name": "Garrafa SoulBM Martelada", "quantity": "1" },
+        { "sku": "SBLL001-K001", "name": "Raspador de Lingua PREMIUM", "quantity": "1" }
+      ],
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Mesma composição martelada confirmada pelo responsável: garrafa SoulBM Martelada e raspador premium, uma unidade de estoque de cada.",
+      "baseSourceRows": [64, 94]
+    }
+  ],
+  "pending": [
+    {
+      "sku": "00000",
+      "category": "test",
+      "reason": "Cadastro simples nomeado TESTE: confirmar se e venda valida ou cadastro de teste; permanece individual, sem exclusao automatica das vendas."
+    }
+  ],
+  "warnings": [
+    {
+      "sku": "ACESG15-K001",
+      "reason": "Componente da planilha antiga ausente da exportacao atual de produtos simples; manter referencia historica e solicitar confirmacao do cadastro.",
+      "affectedSkus": [
+        "ACESG15-K001S"
+      ]
+    }
+  ],
+  "costDecisions": {
+    "date": "2026-10-19",
+    "ACFS000-K001": {
+      "referenceCostCents": "0",
+      "decision": "maintain_zero",
+      "reason": "Responsável pediu manter zerado; acredita que não há vendas. Se houver venda de combo com este componente, sinalizar rateio indisponível até existir CMV válido."
+    }
+  },
+  "unitDecisions": {
+    "date": "2026-10-19",
+    "siliconePair": {
+      "sku": "ACTM001-K002",
+      "stockUnit": "par",
+      "piecesPerStockUnit": 2
+    },
+    "corega": {
+      "sku": "HBCOMAX-K001",
+      "stockUnit": "bisnaga",
+      "supplierBoxPieces": 2,
+      "confirmedFactors": {
+        "HBCOMAX-K003": "3",
+        "HBCOMAX-K004": "4",
+        "HBCOMAX-K006": "6"
+      }
+    }
+  }
+}

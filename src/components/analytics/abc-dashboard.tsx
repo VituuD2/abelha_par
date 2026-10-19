@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  BarChart3,
   ChevronLeft,
   ChevronRight,
   Download,
@@ -19,6 +18,9 @@ import {
 import { type CoverageJob } from "@/lib/analytics/coverage";
 import { reportReliability } from "@/lib/analytics/reliability";
 import { ConnectionProgress } from "./connection-progress";
+import { ParetoChart } from "./pareto-chart";
+import { money, number, pct } from "@/lib/analytics/format";
+import { paretoHighlighted, type ParetoHighlight } from "@/lib/analytics/pareto";
 import { progressVersion } from "@/lib/analytics/progress";
 import type {
   ABCFilters,
@@ -46,6 +48,7 @@ type Status = {
 };
 type Drill = {
   total: number;
+  sources?: { sku: string; name: string; factor: string; quantity: string; baseQuantity: string; revenue: string; originalRevenue: string; referenceCostCents: string | null; unallocatedLines: number; ignoredComponents?: string[] }[];
   companies: {
     name: string;
     revenue: string;
@@ -92,20 +95,7 @@ function dayBefore(day: string, n: number) {
     .toISOString()
     .slice(0, 10);
 }
-export function money(cents: string) {
-  const v = BigInt(cents),
-    whole = v / BigInt(100),
-    fraction = (v % BigInt(100)).toString().padStart(2, "0");
-  return `R$ ${whole.toLocaleString("pt-BR")},${fraction}`;
-}
-const number = (value: string | number) => {
-  if (typeof value === "number")
-    return value.toLocaleString("pt-BR", { maximumFractionDigits: 3 });
-  const [whole, fraction = ""] = value.split(".");
-  const tail = fraction.replace(/0+$/, "");
-  return `${BigInt(whole || "0").toLocaleString("pt-BR")}${tail ? "," + tail : ""}`;
-};
-const pct = (value: number) => `${number(value)}%`;
+export { money } from "@/lib/analytics/format";
 async function jsonRequest(path: string, body?: unknown, signal?: AbortSignal) {
   const response = await fetch(
     path,
@@ -234,105 +224,6 @@ function MultiFilter({
     </details>
   );
 }
-function Pareto({ result, a, b }: { result: ABCResult; a: number; b: number }) {
-  if (!result.pareto.length) return null;
-  const rows = result.pareto,
-    count = rows.length,
-    width = 860,
-    left = 48,
-    plot = 780;
-  const y = (v: number) => 210 - v * 1.8,
-    x = (index: number) => left + ((index + 0.5) * plot) / count;
-  return (
-    <section className="card p-5 space-y-3">
-      <div className="flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-amber-700" />
-        <h2 className="font-semibold">Concentração das vendas</h2>
-      </div>
-      <p className="text-sm text-[var(--color-text-secondary)]">
-        Ranking da métrica escolhida. Barras: participação individual. Linha:
-        acumulado.{" "}
-        {result.total > count
-          ? `Exibindo os primeiros ${count} de ${result.total} registros; o acumulado usa o conjunto completo.`
-          : ""}
-      </p>
-      <svg
-        className="w-full min-h-48"
-        viewBox={`0 0 ${width} 250`}
-        role="img"
-        aria-label={`Gráfico de Pareto: ${result.total} entidades; os dez primeiros concentram ${pct(result.top10)}`}
-      >
-        {[0, 50, 100, a, b]
-          .filter((v, i, all) => all.indexOf(v) === i)
-          .map((v) => (
-            <g key={v}>
-              <line
-                x1={left}
-                x2={left + plot}
-                y1={y(v)}
-                y2={y(v)}
-                stroke={v === a || v === b ? "#a16207" : "#e8e0d2"}
-                strokeDasharray={v === a || v === b ? "5 4" : undefined}
-              />
-              <text
-                x={left - 8}
-                y={y(v) + 4}
-                textAnchor="end"
-                fontSize="11"
-                fill="#6f6252"
-              >
-                {v}%
-              </text>
-            </g>
-          ))}
-        {rows.map((row, index) => (
-          <rect
-            key={row.entityId}
-            x={x(index) - (plot / count) * 0.32}
-            y={y(row.percent)}
-            width={Math.max(1, (plot / count) * 0.64)}
-            height={Math.max(0, row.percent * 1.8)}
-            fill={
-              row.class === "A"
-                ? "#d97706"
-                : row.class === "B"
-                  ? "#f5bb20"
-                  : "#d6cec0"
-            }
-          >
-            <title>
-              {row.rank}. {row.name}: {pct(row.percent)}, acumulado{" "}
-              {pct(row.cumulative)}, classe {row.class}
-            </title>
-          </rect>
-        ))}
-        <polyline
-          points={rows
-            .map((row, i) => `${x(i)},${y(row.cumulative)}`)
-            .join(" ")}
-          fill="none"
-          stroke="#21864f"
-          strokeWidth="3"
-        />
-        <text x={left} y="235" fontSize="12" fill="#6f6252">
-          1º
-        </text>
-        <text
-          x={left + plot}
-          y="235"
-          textAnchor="end"
-          fontSize="12"
-          fill="#6f6252"
-        >
-          {rows[count - 1].rank}º
-        </text>
-      </svg>
-      <p className="text-xs text-[var(--color-text-secondary)]">
-        Referências A: {a}% · B: {b}% · Linha verde: acumulado.
-      </p>
-    </section>
-  );
-}
 
 export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
   const [draft, setDraft] = useState<ABCFilters>(() => ({
@@ -349,6 +240,10 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
   const [filters, setFilters] = useState(draft),
     [status, setStatus] = useState<Status | null>(null),
     [result, setResult] = useState<ABCResult | null>(null);
+  const [highlight, setHighlight] = useState<ParetoHighlight | null>(null);
+  const highlightRow = result?.pareto.find(row => row.entityId === highlight?.entityId) || result?.rows.find(row => row.entityId === highlight?.entityId) || null;
+  const updateHighlight = (next: ParetoHighlight | null) => setHighlight(current =>
+    current?.entityId === next?.entityId && current?.cumulative === next?.cumulative && current?.origin === next?.origin && current?.targetPercentage === next?.targetPercentage ? current : next);
   const [error, setError] = useState<string | null>(null),
     [loading, setLoading] = useState(true),
     [exporting, setExporting] = useState(false),
@@ -518,6 +413,11 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
     },
     [filters],
   );
+  const openEntity = (row: ABCRow) => {
+    setEntity(row);
+    setDrillPage(1);
+    dialog.current?.showModal();
+  };
   const cell = (row: ABCRow, column: Column) =>
     column === "revenue" ? (
       money(row.revenue)
@@ -534,11 +434,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
     ) : column === "name" ? (
       <button
         className="font-medium text-left hover:underline underline-offset-4"
-        onClick={() => {
-          setEntity(row);
-          setDrillPage(1);
-          dialog.current?.showModal();
-        }}
+        onClick={() => openEntity(row)}
       >
         {row.name}
       </button>
@@ -554,8 +450,8 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               Onde estão as vendas da sua operação?
             </h2>
             <p className="text-sm mt-2 text-[var(--color-text-secondary)]">
-              Combine empresas e origens. Cada produto permanece identificado
-              pela sua conta Olist.
+              Combine empresas e origens. Compare os registros Olist ou consolide
+              kits com regras de composição confirmadas.
             </p>
           </div>
           <button
@@ -567,12 +463,12 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
             Atualizar
           </button>
         </div>
-        <div className="flex gap-2" role="tablist" aria-label="Análises">
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Análises">
           <button
             role="tab"
-            aria-selected={draft.grouping !== "customer"}
+            aria-selected={draft.grouping === "product" || draft.grouping === "parent"}
             className={
-              draft.grouping !== "customer" ? "btn-primary" : "btn-ghost"
+              draft.grouping === "product" || draft.grouping === "parent" ? "btn-primary" : "btn-ghost"
             }
             onClick={() => {
               setDraft((f) => ({ ...f, grouping: "product" }));
@@ -582,6 +478,17 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
           >
             Produtos
           </button>
+          <button
+            role="tab"
+            aria-selected={draft.grouping === "composition"}
+            className={draft.grouping === "composition" ? "btn-primary" : "btn-ghost"}
+            onClick={() => {
+              setDraft(f => ({ ...f, grouping: "composition" }));
+              setFilters(f => ({ ...f, grouping: "composition" }));
+              setHighlight(null);
+              setPage(1);
+            }}
+          >Produtos base</button>
           <button
             role="tab"
             aria-selected={draft.grouping === "customer"}
@@ -835,6 +742,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
                       Registro da empresa / variação
                     </option>
                     <option value="parent">Produto pai documentado</option>
+                    <option value="composition">Produto base · composição confirmada</option>
                   </select>
                 </label>
               )}
@@ -930,7 +838,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
         <>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {[
-              ["Valor bruto dos itens", money(result.revenue)],
+              [result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", money(result.revenue)],
               ["Quantidade vendida", number(result.quantity)],
               [
                 "Pedidos / entidades",
@@ -965,10 +873,27 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               );
             })}
           </div>
-          <Pareto
+          {result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação">
+            <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
+            <p className="text-sm text-stone-600">{result.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais.</p>
+            <p className="text-xs text-stone-600">CMV de referência: coluna {result.composition.costSource?.column || "L"} da planilha {result.composition.costSource?.file || "de produtos"}. Este rateio gerencial usa o custo da planilha, sem recalcular o custo histórico de cada venda.</p>
+            {!!result.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">Rateio incompleto: {money(result.composition.unallocatedRevenue)} de {result.composition.unallocatedLines} itens vendidos aguardam CMV de {result.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(result.composition.originalRevenue)}.</p>}
+            <p className="text-xs text-stone-500">Filtros de SKU, produto e produto pai selecionam os registros originais da venda antes da consolidação. Regra {result.composition.version}.</p>
+            {!!result.composition.ignoredComponentSkus?.length && <p className="text-xs text-stone-600">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
+            {!!result.composition.pendingTotal && <details>
+              <summary className="cursor-pointer text-sm font-medium text-amber-900">{result.composition.pendingTotal} SKUs sem vínculo confirmado permanecem separados · revisar composição</summary>
+              <ul className="mt-3 space-y-2 text-sm text-stone-600">{result.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-xs font-semibold">{item.sku}</span> · {item.name}<span className="block text-xs text-amber-800">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
+              {result.composition.pendingTotal > result.composition.pending.length && <p className="mt-2 text-xs">Primeiros {result.composition.pending.length} SKUs pendentes; a exportação mantém todos os registros no ranking.</p>}
+            </details>}
+          </section>}
+          <ParetoChart
             result={result}
             a={filters.thresholdA}
             b={filters.thresholdB}
+            highlight={highlightRow ? highlight : null}
+            onHighlight={updateHighlight}
+            onOpen={openEntity}
+            entityLabel={filters.grouping === "customer" ? "cliente" : "produto"}
           />
           <section className="card overflow-hidden">
             <div className="p-5 space-y-3">
@@ -1018,7 +943,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
                           )
                         }
                       />
-                      {labels[c]}
+                      {c === "revenue" && result.composition ? "Valor atribuído" : labels[c]}
                     </label>
                   ))}
                 </div>
@@ -1052,7 +977,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
                             setPage(1);
                           }}
                         >
-                          {labels[c]}
+                          {c === "revenue" && result.composition ? "Valor atribuído" : labels[c]}
                           {sort === c
                             ? direction === "asc"
                               ? " ↑"
@@ -1067,7 +992,13 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
                   {result.rows.map((row) => (
                     <tr
                       key={row.entityId}
-                      className="border-t border-[var(--color-border-light)] hover:bg-amber-50/50"
+                      data-abc-entity={row.entityId}
+                      data-highlighted={paretoHighlighted(row, highlightRow, !!highlight?.cumulative)}
+                      className={`border-t border-[var(--color-border-light)] transition-colors duration-75 motion-reduce:transition-none ${paretoHighlighted(row, highlightRow, !!highlight?.cumulative) ? "bg-amber-100/75 ring-1 ring-inset ring-amber-300" : "hover:bg-amber-50/50"}`}
+                      onPointerEnter={() => updateHighlight({ entityId: row.entityId, cumulative: false, origin: "table" })}
+                      onPointerLeave={() => { if (highlight?.origin === "table") updateHighlight(null); }}
+                      onFocus={() => updateHighlight({ entityId: row.entityId, cumulative: false, origin: "table" })}
+                      onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null) && highlight?.origin === "table") updateHighlight(null); }}
                     >
                       {columns.map((c) => (
                         <td
@@ -1165,6 +1096,11 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
           {!drill && !drillError && <p role="status">Consultando pedidos…</p>}
           {drill && (
             <>
+              {!!drill.sources?.length && <section className="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-4 space-y-2">
+                <h3 className="font-semibold text-sm">Origem da composição</h3>
+                <p className="text-xs text-stone-600">Quantidade vendida × fator = unidades do produto base. Os valores abaixo são atribuídos somente a este produto; o valor original do kit serve para conferência.</p>
+                <ul className="space-y-2 text-sm">{drill.sources.map(source => <li key={`${source.sku}:${source.factor}`}><span className="font-mono text-xs">{source.sku || "Sem SKU"}</span> · {source.name}<span className="block text-xs text-stone-600">{number(source.quantity)} × {number(source.factor)} = {number(source.baseQuantity)} un. base · valor atribuído {money(source.revenue)}</span><span className="block text-xs text-stone-500">Valor original dos itens de origem: {money(source.originalRevenue)}{source.referenceCostCents && ` · CMV por unidade base: ${money(source.referenceCostCents)}`}</span>{!!source.unallocatedLines && <span className="block text-xs text-amber-800">{source.unallocatedLines} itens com rateio pendente por falta de CMV em um componente.</span>}{!!source.ignoredComponents?.length && <span className="block text-xs text-stone-500">Componentes auxiliares fora da análise: {source.ignoredComponents.join(", ")}</span>}</li>)}</ul>
+              </section>}
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
                   ["Por empresa", drill.companies],

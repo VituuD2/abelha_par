@@ -1,0 +1,814 @@
+{
+  "generatedAt": "2026-10-19T17:59:30.222Z",
+  "catalogVersion": "2026-10-19.5",
+  "snapshotAt": "2026-10-19T17:03:32.006Z",
+  "source": {
+    "file": "produtos_2026-10-19-14-00-16.xls",
+    "sheet": "Produtos",
+    "sha256": "64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c",
+    "products": 120,
+    "costColumn": "L",
+    "costHeader": "Preço de custo"
+  },
+  "simpleProducts": 120,
+  "acceptedSimpleProducts": 119,
+  "acceptedKits": 446,
+  "executableSingleRules": 525,
+  "mixedKits": 41,
+  "mixedKitsWithValidCMV": 39,
+  "importedProductRecords": 489,
+  "unlinkedRecords": 7,
+  "registeredRecords": 482,
+  "matchedRegisteredRecords": 482,
+  "observedUnresolvedSkus": 0,
+  "pendingCatalogSkus": 1,
+  "remaining": [
+    {
+      "sku": "00000",
+      "reason": "Cadastro simples nomeado TESTE: confirmar se e venda valida ou cadastro de teste; permanece individual, sem exclusao automatica das vendas.",
+      "name": "TESTE",
+      "observed": false
+    }
+  ],
+  "missingCosts": [
+    {
+      "sku": "ACFS000-K001",
+      "name": "Fita Seios",
+      "sourceRow": 53,
+      "affectedSkus": [
+        "ACTM011-K011",
+        "TSTM-1"
+      ],
+      "decision": {
+        "referenceCostCents": "0",
+        "decision": "maintain_zero",
+        "reason": "Responsável pediu manter zerado; acredita que não há vendas. Se houver venda de combo com este componente, sinalizar rateio indisponível até existir CMV válido."
+      }
+    }
+  ],
+  "mixed": [
+    {
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "components": [
+        {
+          "target": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "factor": "1"
+        },
+        {
+          "target": "ACTM001-K002",
+          "name": "Par Tapa-mamilo SILICONE",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "ACTM011-K011",
+      "name": "KIT - Tapa-mamilo (10) + Fita Seios (1)",
+      "components": [
+        {
+          "target": "ACFS000-K001",
+          "name": "Fita Seios",
+          "factor": "1"
+        },
+        {
+          "target": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": [
+        "ACFS000-K001"
+      ]
+    },
+    {
+      "sku": "ACTM070-K070",
+      "name": "KIT - Tapa Mamilo (20) + Fita Adesiva (50)",
+      "components": [
+        {
+          "target": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "factor": "1"
+        },
+        {
+          "target": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "ACTM070-K070S",
+      "name": "Kit Fita Belezafix + Tapa Mamilo - Fita 50un + Tapa Mamilo 20un",
+      "components": [
+        {
+          "target": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "factor": "1"
+        },
+        {
+          "target": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "AKGMR-R001",
+      "name": "Kit Garrafa Martelada com Raspador",
+      "components": [
+        {
+          "target": "SBGF00M-K001",
+          "name": "Garrafa SoulBM Martelada",
+          "factor": "1"
+        },
+        {
+          "target": "SBLL001-K001",
+          "name": "Raspador de Lingua PREMIUM",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CCMO222-K002",
+      "name": "KIT - Mor Preta + Branca",
+      "components": [
+        {
+          "target": "CCMO001-K001",
+          "name": "Garrafa MOR Preta",
+          "factor": "1"
+        },
+        {
+          "target": "CCMO002-K001",
+          "name": "Garrafa MOR Branca",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0BC-K002",
+      "name": "KIT - Pond's Bio (1) + Pond's C (1)",
+      "components": [
+        {
+          "target": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0CN-K002",
+      "name": "KIT - Pond's C (1) + Pond's Noite (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0CN-K002S",
+      "name": "Kit Pond's  - C + Noite",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0CS-K002",
+      "name": "KIT - Pond's C (1) + Pond's S (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0DN-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0DN-K002S",
+      "name": "Kit Pond's  - Dia + Noite",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO0DS-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's S (1)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO2CN-K003",
+      "name": "KIT - Pond's C (2) + Pond's Noite (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "2"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO2DN-K004",
+      "name": "KIT - Pond's Dia (2) + Pond's Noite (2)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "2"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO2DS-K004",
+      "name": "KIT - Pond's Dia (2) + Pond's S (2)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "2"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPO2NS-K004",
+      "name": "KIT - Pond's Noite (2) + Pond's S (2)",
+      "components": [
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "2"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOB2S-K004",
+      "name": "KIT - Pond's Bio (2) + Pond's S (2)",
+      "components": [
+        {
+          "target": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "factor": "2"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOCB3-K002",
+      "name": "KIT - Pond's C (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOCDN-K003",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1) + Pond's C (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOCDS-K003",
+      "name": "KIT - Pond's C(1) + Pond's Dia (1) + Pond's S (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOCDS-K003S",
+      "name": "Kit Pond's  - S + Dia + C",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOCN3-K003",
+      "name": "KIT - Pond's C (1) + Pond's Noite (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "target": "CMPO00C-K001",
+          "name": "Pond's C",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPODB3-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPODN3-K003",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPODS3-K003",
+      "name": "KIT - Pond's S (1) + Pond's Dia (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "target": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "CMPOSB3-K002",
+      "name": "KIT - Pond's S (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "target": "CMPO00S-K001",
+          "name": "Pond's S",
+          "factor": "1"
+        },
+        {
+          "target": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "DDCO0NV-K002",
+      "name": "KIT - Colbert Noir + Colbert Clássico",
+      "components": [
+        {
+          "target": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "factor": "1"
+        },
+        {
+          "target": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "DDCO0UA-K002",
+      "name": "KIT - Colbert US + Colbert Acqua",
+      "components": [
+        {
+          "target": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "factor": "1"
+        },
+        {
+          "target": "DDCO00U-K001",
+          "name": "Colbert US",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "DDCOUCA-K003",
+      "name": "KIT - Colbert Us + Colbert CODE + Colbert Acqua",
+      "components": [
+        {
+          "target": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "factor": "1"
+        },
+        {
+          "target": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "factor": "1"
+        },
+        {
+          "target": "DDCO00U-K001",
+          "name": "Colbert US",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "DDFASPC-K006",
+      "name": "KIT 3 - Fa Sport + 3 Fa Caribbean",
+      "components": [
+        {
+          "target": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "factor": "3"
+        },
+        {
+          "target": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "factor": "3"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "HBCO70X-K002",
+      "name": "Corega KIT - Corega 70g (1 Menta + 1 Sem Sabor)",
+      "components": [
+        {
+          "target": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "factor": "1"
+        },
+        {
+          "target": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "HBCO70X-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 1un + MAX Combo 1un",
+      "components": [
+        {
+          "target": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "factor": "1"
+        },
+        {
+          "target": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "KITGR-G001S",
+      "name": "Kit Garrafa com Raspador - Grafias",
+      "components": [
+        {
+          "target": "SBGF00G-K001",
+          "name": "Garrafa SoulBM Grafias",
+          "factor": "1"
+        },
+        {
+          "target": "SBLL001-K001",
+          "name": "Raspador de Lingua PREMIUM",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "KITGR-M001S",
+      "name": "Kit Garrafa com Raspador - Martelada",
+      "components": [
+        {
+          "target": "SBGF00M-K001",
+          "name": "Garrafa SoulBM Martelada",
+          "factor": "1"
+        },
+        {
+          "target": "SBLL001-K001",
+          "name": "Raspador de Lingua PREMIUM",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "PDCO00N-K002",
+      "name": "KIT - Colbert Noir (1 Perfume + 1 Desodorante)",
+      "components": [
+        {
+          "target": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "factor": "1"
+        },
+        {
+          "target": "PFCO00N-K001",
+          "name": "Perfume Colbert Noir Preto Argentino Eau de Toilette 90ml",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "PDCO00N-K003",
+      "name": "KIT - Colbert Noir (1 Perfume + 2 Desodorante)",
+      "components": [
+        {
+          "target": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "factor": "2"
+        },
+        {
+          "target": "PFCO00N-K001",
+          "name": "Perfume Colbert Noir Preto Argentino Eau de Toilette 90ml",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "PDCO00U-K002",
+      "name": "KIT - Colbert US (1 Perfume + 1 Desodorante)",
+      "components": [
+        {
+          "target": "DDCO00U-K001",
+          "name": "Colbert US",
+          "factor": "1"
+        },
+        {
+          "target": "PFCO00U-K001",
+          "name": "Perfume Colbert US Branco Argentino Eau de Toilette 60ml",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "PDCO00U-K003",
+      "name": "KIT - Colbert US (1 Perfume + 2 Desodorante)",
+      "components": [
+        {
+          "target": "DDCO00U-K001",
+          "name": "Colbert US",
+          "factor": "2"
+        },
+        {
+          "target": "PFCO00U-K001",
+          "name": "Perfume Colbert US Branco Argentino Eau de Toilette 60ml",
+          "factor": "1"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "TESTE-123",
+      "name": "TESTE",
+      "components": [
+        {
+          "target": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "factor": "1"
+        },
+        {
+          "target": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": []
+    },
+    {
+      "sku": "TSTM-1",
+      "name": "Kit Fita Seios + Tapa Mamilo - Tapa Seios 1un + Tapa Mamilo 10un",
+      "components": [
+        {
+          "target": "ACFS000-K001",
+          "name": "Fita Seios",
+          "factor": "1"
+        },
+        {
+          "target": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "factor": "2"
+        }
+      ],
+      "missingCostSkus": [
+        "ACFS000-K001"
+      ]
+    }
+  ],
+  "unitDecisions": {
+    "date": "2026-10-19",
+    "siliconePair": {
+      "sku": "ACTM001-K002",
+      "stockUnit": "par",
+      "piecesPerStockUnit": 2
+    },
+    "corega": {
+      "sku": "HBCOMAX-K001",
+      "stockUnit": "bisnaga",
+      "supplierBoxPieces": 2,
+      "confirmedFactors": {
+        "HBCOMAX-K003": "3",
+        "HBCOMAX-K004": "4",
+        "HBCOMAX-K006": "6"
+      }
+    }
+  },
+  "warnings": [
+    {
+      "sku": "ACESG15-K001",
+      "reason": "Componente da planilha antiga ausente da exportacao atual de produtos simples; manter referencia historica e solicitar confirmacao do cadastro.",
+      "affectedSkus": [
+        "ACESG15-K001S"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-19T17:51:38.698Z",
+  "exitCode": 1,
+  "summary": [
+    "# tests 194",
+    "# suites 0",
+    "# pass 192",
+    "# fail 2",
+    "# cancelled 0",
+    "# skipped 0",
+    "# todo 0",
+    "# duration_ms 21054.8746"
+  ],
+  "failures": [
+    "not ok 99 - dashboard polls existing reports as imports advance without asking the browser to run a worker",
+    "not ok 100 - missing coverage stays visibly partial and a server error does not leave a misleading old result"
+  ],
+  "typecheck": {
+    "exitCode": 0
+  },
+  "lint": {
+    "exitCode": 0,
+    "warnings": 6,
+    "existing": true
+  },
+  "newTests": {
+    "count": 10,
+    "passed": 10
+  }
+}

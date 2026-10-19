@@ -7,6 +7,7 @@ const abc = require("../src/app/api/analytics/abc/route.ts"),
   connections = require("../src/app/api/analytics/connections/route.ts"),
   exportApi = require("../src/app/api/analytics/export/route.ts");
 const { NextResponse } = require("next/server");
+const compositionCatalog = require("../src/lib/analytics/data/composition-catalog.json");
 const filters = {
   from: "2026-09-01",
   to: "2026-09-30",
@@ -18,6 +19,46 @@ const filters = {
   thresholdB: 95,
   selections: {},
 };
+test("composition report and drilldown use the server catalog and ignore forged rules and identities", async t => {
+  const calls = [];
+  t.mock.method(access, "authorize", async () => ({ access: { workspaceId: compositionCatalog.workspaceIds[0], user: { id: "trusted-user" }, role: "operator" } }));
+  t.mock.method(admin, "createAdminClient", () => ({ rpc: async (name,args) => { calls.push({name,args}); return {data:{rows:[],total:0},error:null}; } }));
+  const requestBody={filters:{...filters,grouping:"composition"},ensureCoverage:false,workspaceId:"foreign",p_rules:{rules:{"HBCOMAX-K001S":{target:"FORGED",factor:"999"}}}};
+  const response=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify(requestBody)}));
+  assert.equal(response.status,200);
+  assert.equal(calls[0].name,"analytics_abc_components");
+  assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].target,"HBCOMAX-K001");
+  assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].factor,"1");
+  assert.equal(calls[0].args.p_actor,"trusted-user");
+  assert.equal(calls[0].args.p_workspace,compositionCatalog.workspaceIds[0]);
+  const drill=require("../src/app/api/analytics/drilldown/route.ts");
+  const detail=await drill.POST(new Request("http://localhost/api/analytics/drilldown",{method:"POST",body:JSON.stringify({...requestBody,entity:"composition:HBCOMAX-K001",page:2})}));
+  assert.equal(detail.status,200);
+  assert.equal(calls[1].name,"analytics_drilldown_components");
+  assert.deepEqual(calls[1].args.p_rules,calls[0].args.p_rules);
+  assert.equal(calls[1].args.p_offset,50);
+});
+
+test("a catalog is never silently applied to another workspace with coincident SKUs", async t => {
+  let reads=0;
+  t.mock.method(access,"authorize",async()=>({access:{workspaceId:"another-workspace",user:{id:"trusted-user"},role:"admin"}}));
+  t.mock.method(admin,"createAdminClient",()=>({rpc:async()=>{reads++;return{data:{},error:null};}}));
+  const response=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify({filters:{...filters,grouping:"composition"},ensureCoverage:false})}));
+  assert.equal(response.status,400);
+  assert.match((await response.json()).error,/revisadas para este espaço/);
+  assert.equal(reads,0);
+});
+
+test("missing CMV gives an actionable value-report error instead of blaming the migration", async t => {
+  t.mock.method(access,"authorize",async()=>({access:{workspaceId:compositionCatalog.workspaceIds[0],user:{id:"trusted-user"},role:"operator"}}));
+  t.mock.method(admin,"createAdminClient",()=>({rpc:async()=>({data:null,error:{message:"CMV_REQUIRED:ACFS000-K001"}})}));
+  const response=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify({filters:{...filters,grouping:"composition"},ensureCoverage:false})}));
+  assert.equal(response.status,400);
+  const {error}=await response.json();
+  assert.match(error,/CMV unitário.*ACFS000-K001/);
+  assert.match(error,/métrica Quantidade/);
+  assert.doesNotMatch(error,/migração/);
+});
 const request = (body) =>
   new Request("http://localhost/api/analytics/abc", {
     method: "POST",

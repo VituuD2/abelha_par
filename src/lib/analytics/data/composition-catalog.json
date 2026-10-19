@@ -1,0 +1,4972 @@
+{
+  "version": "2026-10-19.5",
+  "ignoredComponentSkus": [
+    "EBBF001-001"
+  ],
+  "ignoredComponentReason": "Embalagem BelezaFIX desconsiderada como componente da Curva ABC por decisão do responsável em 19/10/2026. A origem dos kits é preservada para futura separação com/sem embalagem; estoque não é alterado.",
+  "workspaceIds": [
+    "fd694ddc-a2a6-4a56-9a4b-21b507b4645d"
+  ],
+  "source": {
+    "file": "composicao.xls",
+    "sha256": "f944734b4fe77f1e3d683bf4ad9cdaec855c33aae216beb189f7fd37eb34116f",
+    "rows": 474
+  },
+  "kits": [
+    {
+      "sku": "ACAI000-K001S",
+      "name": "Kit Cameltoe - 1un",
+      "components": [
+        {
+          "sku": "ACAI000-K001",
+          "name": "Adesivo Intimo Camel Toe",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K050S",
+      "name": "Kit Fita Belezafix - Fita 50un",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K100",
+      "name": "KIT 100 - Fita Beleza Fix",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K100E",
+      "name": "100 Fitas Dupla Face BelezaFix + Embalagem",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K100ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 100un",
+      "components": [
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "2"
+        },
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K100S",
+      "name": "Kit Fita Belezafix - Fita 100un",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K150",
+      "name": "KIT 150 - fita Beleza Fix",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K200",
+      "name": "KIT 200 - Fita Beleza Fix",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K200ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 200un",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "4"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACBF000-K999",
+      "name": "KIT 1000 - Fita Beleza Fix",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "20"
+        }
+      ]
+    },
+    {
+      "sku": "ACBFR03-K001S",
+      "name": "Kit Rolo Fita Belezafix - ROLO3m",
+      "components": [
+        {
+          "sku": "ACBFR03-K001",
+          "name": "Rolo 3m Fita BelezaFix",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESG03-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - G3 - 1un",
+      "components": [
+        {
+          "sku": "ACESG03-K001",
+          "name": "Espelho de Aumento G 3X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESG05-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - G5 - 1un",
+      "components": [
+        {
+          "sku": "ACESG05-K001",
+          "name": "Espelho de Aumento G 5X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESG10-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - G10 - 1un",
+      "components": [
+        {
+          "sku": "ACESG10-K001",
+          "name": "Espelho de Aumento G 10X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESG10-K002",
+      "name": "KIT 2 - Espelho de Aumento G 10X",
+      "components": [
+        {
+          "sku": "ACESG10-K001",
+          "name": "Espelho de Aumento G 10X",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACESG15-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - G15 - 1un",
+      "components": [
+        {
+          "sku": "ACESG15-K001",
+          "name": "Espelho de Aumento G 15X (NOVO)",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESM10-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - M10 - 1un",
+      "components": [
+        {
+          "sku": "ACESM10-K001",
+          "name": "Espelho de Aumento M 10X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESP03-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - P3 - 1un",
+      "components": [
+        {
+          "sku": "ACESP03-K001",
+          "name": "Espelho de Aumento P 3X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESP05-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - P5 - 1un",
+      "components": [
+        {
+          "sku": "ACESP05-K001",
+          "name": "Espelho de Aumento P 5X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESP10-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - P10 - 1un",
+      "components": [
+        {
+          "sku": "ACESP10-K001",
+          "name": "Espelho de Aumento P 10X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESP15-K001S",
+      "name": "Kit Espelho P3 P5 P10 P15 & G3 G5 G10 G15 - P15 - 1un",
+      "components": [
+        {
+          "sku": "ACESP15-K001",
+          "name": "Espelho de Aumento P 15X",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACESP15-K002",
+      "name": "KIT 2 - Espelho de Aumento P 15X",
+      "components": [
+        {
+          "sku": "ACESP15-K001",
+          "name": "Espelho de Aumento P 15X",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACNV000-K003",
+      "name": "KIT 3 - Navalha",
+      "components": [
+        {
+          "sku": "ACNV000-K001",
+          "name": "Navalha",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACNV000-K003S",
+      "name": "Kit Navalhas - 3un",
+      "components": [
+        {
+          "sku": "ACNV000-K001",
+          "name": "Navalha",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACNV000-K012",
+      "name": "KIT 12 - Navalha",
+      "components": [
+        {
+          "sku": "ACNV000-K001",
+          "name": "Navalha",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACNV000-K012S",
+      "name": "Kit Navalhas - 12un",
+      "components": [
+        {
+          "sku": "ACNV000-K001",
+          "name": "Navalha",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACNV000-K036",
+      "name": "KIT 36 - Navalha",
+      "components": [
+        {
+          "sku": "ACNV000-K001",
+          "name": "Navalha",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "ACNV000-K036S",
+      "name": "Kit Navalhas - 36un",
+      "components": [
+        {
+          "sku": "ACNV000-K001",
+          "name": "Navalha",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K001S",
+      "name": "Kit Pente Inox - 1un",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K002",
+      "name": "KIT 2 - Pente Inox",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K002S",
+      "name": "Kit Pente Inox - 2un",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K005",
+      "name": "KIT 5 - Pente Inox",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K005S",
+      "name": "Kit Pente Inox - 5un",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K008",
+      "name": "KIT 8 - Pente Inox",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "8"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K010",
+      "name": "KIT 10 - Pente Inox",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K010S",
+      "name": "Kit Pente Inox - 10un",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K017",
+      "name": "KIT 17 - Pente Inox",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "17"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K017S",
+      "name": "Kit Pente Inox - 17un",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "17"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE000-K020",
+      "name": "KIT 20 - Pente Inox",
+      "components": [
+        {
+          "sku": "ACPE000-K001",
+          "name": "Pente Inox",
+          "quantity": "20"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K001S",
+      "name": "Kit Pente Colorido - 1un",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K002",
+      "name": "KIT 2 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K002S",
+      "name": "Kit Pente Colorido - 2un",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K003S",
+      "name": "Kit Pente Colorido - 3un",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K005",
+      "name": "KIT 5 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K005S",
+      "name": "Kit Pente Colorido - 5un",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K006S",
+      "name": "Kit Pente Colorido - 6un",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K008",
+      "name": "KIT 8 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "8"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K010",
+      "name": "KIT 10 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K010S",
+      "name": "Kit Pente Colorido - 10un",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K013",
+      "name": "KIT 13 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "13"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K015",
+      "name": "KIT 15 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "15"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K017",
+      "name": "KIT 17 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "17"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K020",
+      "name": "KIT 20 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "20"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K030",
+      "name": "KIT 30 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "30"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K040",
+      "name": "KIT 40 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "40"
+        }
+      ]
+    },
+    {
+      "sku": "ACPE001-K060",
+      "name": "KIT 60 - Pente Colorido",
+      "components": [
+        {
+          "sku": "ACPE001-K001",
+          "name": "Pente Colorido",
+          "quantity": "60"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM000-K050",
+      "name": "KIT 50 - Tapa-mamilo",
+      "components": [
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM000-K100",
+      "name": "KIT 100 - Tapa-mamilo",
+      "components": [
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM000-K200",
+      "name": "KIT 200 - Tapa-mamilo",
+      "components": [
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "20"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM001-K002",
+          "name": "Par Tapa-mamilo SILICONE",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM011-K011",
+      "name": "KIT - Tapa-mamilo (10) + Fita Seios (1)",
+      "components": [
+        {
+          "sku": "ACFS000-K001",
+          "name": "Fita Seios",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM070-K070",
+      "name": "KIT - Tapa Mamilo (20) + Fita Adesiva (50)",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACTM070-K070S",
+      "name": "Kit Fita Belezafix + Tapa Mamilo - Fita 50un + Tapa Mamilo 20un",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K012S",
+      "name": "Kit Cortador Disco - 12un",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K024",
+      "name": "KIT 24un - Corta-unha DISCO",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K024S",
+      "name": "Kit Cortador Disco - 24un",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K036",
+      "name": "KIT 36 - Cortador de Unha DISCO",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K048",
+      "name": "KIT 48 - Cortador de Unha DISCO",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K048S",
+      "name": "Kit Cortador Disco - 48un",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K288",
+      "name": "KIT 288 - Cortador de Unha DISCO",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "24"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN000-K360",
+      "name": "KIT 360 - Cortador de Unha DISCO",
+      "components": [
+        {
+          "sku": "ACUN000-K012",
+          "name": "Cortador de Unha DISCO",
+          "quantity": "30"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K012S",
+      "name": "Kit Cortador Caixa - 12un",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K024",
+      "name": "KIT 24 - Cortador de Unha CAIXA",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K024S",
+      "name": "Kit Cortador Caixa - 24un",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K048S",
+      "name": "Kit Cortador Caixa - 48un",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K072",
+      "name": "KIT 72 - Cortador de Unha CAIXA",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K072S",
+      "name": "Kit Cortador Caixa - 72un",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K120",
+      "name": "KIT 120 - Cortador de Unha CAIXA",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "ACUN001-K288",
+      "name": "KIT 288 - Cortador de Unha CAIXA",
+      "components": [
+        {
+          "sku": "ACUN001-K012",
+          "name": "Cortador de Unha CAIXA",
+          "quantity": "24"
+        }
+      ]
+    },
+    {
+      "sku": "ACXU000-K288",
+      "name": "KIT 288 - Xuxinha",
+      "components": [
+        {
+          "sku": "ACXU000-K072",
+          "name": "Xuxinha 72un.",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "ACXU000-K360",
+      "name": "KIT 360 - Xuxinha",
+      "components": [
+        {
+          "sku": "ACXU000-K072",
+          "name": "Xuxinha 72un.",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "ACXU000-K432",
+      "name": "KIT 432 - Xuxinha",
+      "components": [
+        {
+          "sku": "ACXU000-K072",
+          "name": "Xuxinha 72un.",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "ACXU000-K720",
+      "name": "KIT 720 - Xuxinha",
+      "components": [
+        {
+          "sku": "ACXU000-K072",
+          "name": "Xuxinha 72un.",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO001-K001S",
+      "name": "Kit Garrafa Mor  - Preta - 1un",
+      "components": [
+        {
+          "sku": "CCMO001-K001",
+          "name": "Garrafa MOR Preta",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO001-K002",
+      "name": "KIT 2 - Garrafa MOR Preta",
+      "components": [
+        {
+          "sku": "CCMO001-K001",
+          "name": "Garrafa MOR Preta",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO001-K002S",
+      "name": "Kit Garrafa Mor  - Preta - 2un",
+      "components": [
+        {
+          "sku": "CCMO001-K001",
+          "name": "Garrafa MOR Preta",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO002-K001S",
+      "name": "Kit Garrafa Mor  - Branca - 1un",
+      "components": [
+        {
+          "sku": "CCMO002-K001",
+          "name": "Garrafa MOR Branca",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO002-K002",
+      "name": "KIT 2 - Garrafa MOR Branca",
+      "components": [
+        {
+          "sku": "CCMO002-K001",
+          "name": "Garrafa MOR Branca",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO002-K002S",
+      "name": "Kit Garrafa Mor  - Branca - 2un",
+      "components": [
+        {
+          "sku": "CCMO002-K001",
+          "name": "Garrafa MOR Branca",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO003-K001S",
+      "name": "Kit Garrafa Mor  - Inox - 1un",
+      "components": [
+        {
+          "sku": "CCMO003-K001",
+          "name": "Garrafa MOR Inox",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO003-K002",
+      "name": "kit 2 Garrafa MOR Inox",
+      "components": [
+        {
+          "sku": "CCMO003-K001",
+          "name": "Garrafa MOR Inox",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO003-K002S",
+      "name": "Kit Garrafa Mor  - Inox - 2un",
+      "components": [
+        {
+          "sku": "CCMO003-K001",
+          "name": "Garrafa MOR Inox",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CCMO222-K002",
+      "name": "KIT - Mor Preta + Branca",
+      "components": [
+        {
+          "sku": "CCMO001-K001",
+          "name": "Garrafa MOR Preta",
+          "quantity": "1"
+        },
+        {
+          "sku": "CCMO002-K001",
+          "name": "Garrafa MOR Branca",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTIFO-K001S",
+      "name": "Kit Fouet - Inox - 1un",
+      "components": [
+        {
+          "sku": "CCUTIFO-K001",
+          "name": "Fouet Inox",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTPCL-K001S",
+      "name": "Kit Colher 27cm - Preta - 1un",
+      "components": [
+        {
+          "sku": "CCUTPCL-K001",
+          "name": "Colher Preta 27cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTPES-K001S",
+      "name": "Kit Espatula 27cm - Preto - 1un",
+      "components": [
+        {
+          "sku": "CCUTPES-K001",
+          "name": "Utensilio Espatula Preta 27cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTPPL-K001S",
+      "name": "Kit utensilios de cozinha VML - Pincel PRETO",
+      "components": [
+        {
+          "sku": "CCUTPPL-K001",
+          "name": "Utensilio  Pincel Preto 26,3cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVCH-K001S",
+      "name": "Kit utensilios de cozinha VML - Espatula chapeiro VML",
+      "components": [
+        {
+          "sku": "CCUTVCH-K001",
+          "name": "Utensilio Espátula Chapeiro Vermelha 29cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVCL-K001S",
+      "name": "Kit Colher 27cm - Vermelho - 1un",
+      "components": [
+        {
+          "sku": "CCUTVCL-K001",
+          "name": "Colher Vermelha 27cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVEC-K001S",
+      "name": "Kit utensilios de cozinha VML - Espatula Confeiteiro VML",
+      "components": [
+        {
+          "sku": "CCUTVEC-K001",
+          "name": "Utensilio Espátula Confeiteiro Vermelha",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVEM-K001S",
+      "name": "Kit utensilios de cozinha VML - Escumadeira VML",
+      "components": [
+        {
+          "sku": "CCUTVEM-K001",
+          "name": "Utensilio Escumadeira Vermelha",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVES-K001S",
+      "name": "Kit Espatula 27cm - Vermelho - 1un",
+      "components": [
+        {
+          "sku": "CCUTVES-K001",
+          "name": "Utensilio Espatula Vermelha 27cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVFO-K001S",
+      "name": "Kit Fouet - Vermelho - 1un",
+      "components": [
+        {
+          "sku": "CCUTVFO-K001",
+          "name": "Fouet Vermelho",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVPD-K001S",
+      "name": "Kit utensilios de cozinha VML - Espatula Pao Duro VML",
+      "components": [
+        {
+          "sku": "CCUTVPD-K001",
+          "name": "Utensilio Espátula Pão Duro Vermelha",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CCUTVPI-K001S",
+      "name": "Kit utensilios de cozinha VML - Pinça VML",
+      "components": [
+        {
+          "sku": "CCUTVPI-K001",
+          "name": "Utensilio Pegador Pinça 30cm",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMATX00-K002",
+      "name": "KIT 2 - Atrix",
+      "components": [
+        {
+          "sku": "CMATX00-K001",
+          "name": "Atrix",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMATX00-K004",
+      "name": "KIT 4 - Atrix",
+      "components": [
+        {
+          "sku": "CMATX00-K001",
+          "name": "Atrix",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00M-K001S",
+      "name": "Kit Nivea Men - 1un",
+      "components": [
+        {
+          "sku": "CMNV00M-K001",
+          "name": "Nivea Men",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00M-K002",
+      "name": "KIT 2 - Nivea Men",
+      "components": [
+        {
+          "sku": "CMNV00M-K001",
+          "name": "Nivea Men",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00M-K002S",
+      "name": "Kit Nivea Men - 2un",
+      "components": [
+        {
+          "sku": "CMNV00M-K001",
+          "name": "Nivea Men",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00M-K003S",
+      "name": "Kit Nivea Men - 3un",
+      "components": [
+        {
+          "sku": "CMNV00M-K001",
+          "name": "Nivea Men",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K001S",
+      "name": "Kit Nivea Soft - 1un",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K002",
+      "name": "KIT 2 - Nivea Soft",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K002S",
+      "name": "Kit Nivea Soft - 2un",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K003",
+      "name": "KIT 3 - Nivea Soft",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K003S",
+      "name": "Kit Nivea Soft - 3un",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K004",
+      "name": "KIT 4 - Nivea Soft",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K004S",
+      "name": "Kit Nivea Soft - 4un",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV00S-K005",
+      "name": "KIT 5 - Nivea Soft",
+      "components": [
+        {
+          "sku": "CMNV00S-K001",
+          "name": "Nivea Soft",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV150-K001S",
+      "name": "Kit Nivea 150g - 1un",
+      "components": [
+        {
+          "sku": "CMNV150-K001",
+          "name": "Nivea 150g",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV150-K002S",
+      "name": "Kit Nivea 150g - 2un",
+      "components": [
+        {
+          "sku": "CMNV150-K001",
+          "name": "Nivea 150g",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV150-K003S",
+      "name": "Kit Nivea 150g - 3un",
+      "components": [
+        {
+          "sku": "CMNV150-K001",
+          "name": "Nivea 150g",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV150-K004",
+      "name": "KIT 4 - Nivea 150g",
+      "components": [
+        {
+          "sku": "CMNV150-K001",
+          "name": "Nivea 150g",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV150-K004S",
+      "name": "Kit Nivea 150g - 4un",
+      "components": [
+        {
+          "sku": "CMNV150-K001",
+          "name": "Nivea 150g",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMNV150-K010",
+      "name": "KIT 10 - Nivea 150g",
+      "components": [
+        {
+          "sku": "CMNV150-K001",
+          "name": "Nivea 150g",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K001S",
+      "name": "Kit Pond's  - Bio 1un",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K002",
+      "name": "KIT 2 - Pond's Bio",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K002S",
+      "name": "Kit Pond's  - Bio 2un",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K003S",
+      "name": "Kit Pond's  - Bio 3un",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K004",
+      "name": "KIT 4 - Pond's Bio",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K004S",
+      "name": "Kit Pond's  - Bio 4un",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00B-K006S",
+      "name": "Kit Pond's  - Bio 6un",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00C-K001S",
+      "name": "Kit Pond's  - C 1un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00C-K002",
+      "name": "KIT 2 - Pond's C",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00C-K002S",
+      "name": "Kit Pond's  - C 2un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00C-K003",
+      "name": "KIT 3 - Pond's C",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00C-K003S",
+      "name": "Kit Pond's  - C 3un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00C-K004",
+      "name": "KIT 4 - Pond's C",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00D-K001S",
+      "name": "Kit Pond's  - Dia 1un",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00D-K002",
+      "name": "KIT 2 - Pond's Dia",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00D-K002S",
+      "name": "Kit Pond's  - Dia 2un",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00D-K003",
+      "name": "KIT 3 - Pond's Dia",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00D-K003S",
+      "name": "Kit Pond's  - Dia 3un",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00D-K004",
+      "name": "KIT 4 - Pond's Dia",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00N-K001S",
+      "name": "Kit Pond's  - Noite 1un",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00N-K002",
+      "name": "KIT 2 - Pond's Noite",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00N-K002S",
+      "name": "Kit Pond's  - Noite 2un",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00N-K003",
+      "name": "KIT 3 - Pond's Noite",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00N-K003S",
+      "name": "Kit Pond's  - Noite 3un",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K001S",
+      "name": "Kit Pond's  - S 1un",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K002",
+      "name": "KIT 2 - Pond's S",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K002S",
+      "name": "Kit Pond's  - S 2un",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K003",
+      "name": "KIT 3 - Pond's S",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K003S",
+      "name": "Kit Pond's  - S 3un",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K004",
+      "name": "KIT 4 - Pond's S",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K004S",
+      "name": "Kit Pond's  - S 4un",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO00S-K006S",
+      "name": "Kit Pond's  - S 6un",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K001S",
+      "name": "Kit Pond's  - B3 1un",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K002",
+      "name": "KIT 2 - Pond's B3",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K002S",
+      "name": "Kit Pond's  - B3 2un",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K003",
+      "name": "KIT 3 - Pond's B3",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K003S",
+      "name": "Kit Pond's  - B3 3un",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K004",
+      "name": "KIT 4 - Pond's B3",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K004S",
+      "name": "Kit Pond's  - B3 4un",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K005S",
+      "name": "Kit Pond's  - C 5un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K006S",
+      "name": "Kit Pond's  - C 6un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K008S",
+      "name": "Kit Pond's  - C8un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "8"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K010S",
+      "name": "Kit Pond's  - C 10un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0B3-K012S",
+      "name": "Kit Pond's  - C 12un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0BC-K002",
+      "name": "KIT - Pond's Bio (1) + Pond's C (1)",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0CN-K002",
+      "name": "KIT - Pond's C (1) + Pond's Noite (1)",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0CN-K002S",
+      "name": "Kit Pond's  - C + Noite",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0CN-K004S",
+      "name": "Kit Pond's  - C 4un",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0CS-K002",
+      "name": "KIT - Pond's C (1) + Pond's S (1)",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0DN-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1)",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0DN-K002S",
+      "name": "Kit Pond's  - Dia + Noite",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO0DS-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's S (1)",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO2CN-K003",
+      "name": "KIT - Pond's C (2) + Pond's Noite (1)",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO2DN-K004",
+      "name": "KIT - Pond's Dia (2) + Pond's Noite (2)",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "2"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO2DS-K004",
+      "name": "KIT - Pond's Dia (2) + Pond's S (2)",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "2"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPO2NS-K004",
+      "name": "KIT - Pond's Noite (2) + Pond's S (2)",
+      "components": [
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "2"
+        },
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOB2S-K004",
+      "name": "KIT - Pond's Bio (2) + Pond's S (2)",
+      "components": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "2"
+        },
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOCB3-K002",
+      "name": "KIT - Pond's C (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOCDN-K003",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1) + Pond's C (1)",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOCDS-K003",
+      "name": "KIT - Pond's C(1) + Pond's Dia (1) + Pond's S (1)",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOCDS-K003S",
+      "name": "Kit Pond's  - S + Dia + C",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOCN3-K003",
+      "name": "KIT - Pond's C (1) + Pond's Noite (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPODB3-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPODN3-K003",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPODS3-K003",
+      "name": "KIT - Pond's S (1) + Pond's Dia (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMPOSB3-K002",
+      "name": "KIT - Pond's S (1) + Pond's B3 (1)",
+      "components": [
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMST001-K001S",
+      "name": "Kit St.ives - 1un",
+      "components": [
+        {
+          "sku": "CMST001-K001",
+          "name": "St.Ives",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMST001-K002",
+      "name": "KIT 2 - St. Ives",
+      "components": [
+        {
+          "sku": "CMST001-K001",
+          "name": "St.Ives",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMST001-K002S",
+      "name": "Kit St.ives - 2un",
+      "components": [
+        {
+          "sku": "CMST001-K001",
+          "name": "St.Ives",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMST001-K003S",
+      "name": "Kit St.ives - 3un",
+      "components": [
+        {
+          "sku": "CMST001-K001",
+          "name": "St.Ives",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMTJ000-K001S",
+      "name": "Kit Pincel - 1un",
+      "components": [
+        {
+          "sku": "CMTJ000-K001",
+          "name": "Kit Pincel de Maquiagem",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMTN000-K006",
+      "name": "Kit Rimel Tango - 6un",
+      "components": [
+        {
+          "sku": "CMTN000-K001",
+          "name": "Rímel Tango",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "CMTN000-K012",
+      "name": "KIT 12 - Rímel Tango",
+      "components": [
+        {
+          "sku": "CMTN000-K001",
+          "name": "Rímel Tango",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "CMTN000-K012S",
+      "name": "Kit Rimel Tango - 12un",
+      "components": [
+        {
+          "sku": "CMTN000-K001",
+          "name": "Rímel Tango",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "CMTO00R-K002",
+      "name": "KIT 2 - Tortulan Rosa",
+      "components": [
+        {
+          "sku": "CMTO00R-K001",
+          "name": "Tortulan Rosa",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMTO00R-K003",
+      "name": "KIT 3 - Tortulan Rosa",
+      "components": [
+        {
+          "sku": "CMTO00R-K001",
+          "name": "Tortulan Rosa",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "CMTO00R-K004",
+      "name": "KIT 4 - Tortulan Rosa",
+      "components": [
+        {
+          "sku": "CMTO00R-K001",
+          "name": "Tortulan Rosa",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRC-K001S",
+      "name": "Kit Tortulan Creme Antirugas - 1un",
+      "components": [
+        {
+          "sku": "CMTOCRC-K001",
+          "name": "Tortulan Creme Antirugas C + Retinol",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRC-K002",
+      "name": "KIT 2 - Tortulan C + Retinol",
+      "components": [
+        {
+          "sku": "CMTOCRC-K001",
+          "name": "Tortulan Creme Antirugas C + Retinol",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRC-K004",
+      "name": "KIT 4 - Tortulan C + Retinol",
+      "components": [
+        {
+          "sku": "CMTOCRC-K001",
+          "name": "Tortulan Creme Antirugas C + Retinol",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRG-K001S",
+      "name": "Kit Tortulan Gel - 1un",
+      "components": [
+        {
+          "sku": "CMTOCRG-K001",
+          "name": "Tortulan Gel",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRG-K002",
+      "name": "KIT 2 - Tortulan Gel",
+      "components": [
+        {
+          "sku": "CMTOCRG-K001",
+          "name": "Tortulan Gel",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRG-K002S",
+      "name": "Kit Tortulan Gel - 2un",
+      "components": [
+        {
+          "sku": "CMTOCRG-K001",
+          "name": "Tortulan Gel",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "CMTOCRG-K004",
+      "name": "KIT 4 - Tortulan Gel",
+      "components": [
+        {
+          "sku": "CMTOCRG-K001",
+          "name": "Tortulan Gel",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K001S",
+      "name": "Kit Cannon Musk - 1un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K002",
+      "name": "KIT 2 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K002S",
+      "name": "Kit Cannon Musk - 2un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K003",
+      "name": "KIT 3 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K003S",
+      "name": "Kit Cannon Musk - 3un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K004",
+      "name": "KIT 4 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K004S",
+      "name": "Kit Cannon Musk - 4un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K005S",
+      "name": "Kit Cannon Musk - 5un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K006",
+      "name": "KIT 6 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K006S",
+      "name": "Kit Cannon Musk - 6un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K008",
+      "name": "KIT 8 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "8"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K008S",
+      "name": "Kit Cannon Musk - 8un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "8"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K010",
+      "name": "KIT 10 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K010S",
+      "name": "Kit Cannon Musk - 10un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K012",
+      "name": "KIT 12 - Cannon Musk",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDCM000-K012S",
+      "name": "Kit Cannon Musk - 12un",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Cannon Musk",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K001S",
+      "name": "Kit Colbert Aqua - 1un",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K002",
+      "name": "KIT 2 - Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K002S",
+      "name": "Kit Colbert Aqua - 2un",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K003",
+      "name": "KIT 3 - Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K003S",
+      "name": "Kit Colbert Aqua - 3un",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K004",
+      "name": "KIT 4 - Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K005",
+      "name": "KIT 5 - Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00A-K006",
+      "name": "KIT 6 - Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00C-K001S",
+      "name": "Kit Colbert Code - 1un",
+      "components": [
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00C-K002S",
+      "name": "Kit Colbert Code - 2un",
+      "components": [
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00C-K003",
+      "name": "KIT 3 - Colbert Code",
+      "components": [
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00C-K003S",
+      "name": "Kit Colbert Code - 3un",
+      "components": [
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00C-K005",
+      "name": "KIT 5 - Colbert Code",
+      "components": [
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K001S",
+      "name": "Kit Colbert Noir - 1un",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K002",
+      "name": "KIT 2 - Colbert Noir",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K002S",
+      "name": "Kit Colbert Noir - 2un",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K003",
+      "name": "KIT 3 - Colbert Noir",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K003S",
+      "name": "Kit Colbert Noir - 3un",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K004",
+      "name": "KIT 4 - Colbert Noir",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K005",
+      "name": "KIT 5 - Colbert Noir",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K006",
+      "name": "KIT 6 - Colbert Noir",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00N-K006S",
+      "name": "Kit Colbert Noir - 6un",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K001S",
+      "name": "Kit Colbert Space - 1un",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K002",
+      "name": "KIT 2 - Colbert Space",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K002S",
+      "name": "Kit Colbert Space - 2un",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K003",
+      "name": "KIT 3 - Colbert Space",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K003S",
+      "name": "Kit Colbert Space - 3un",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K004",
+      "name": "KIT 4 - Colbert Space",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K005",
+      "name": "KIT 5 - Colbert Space",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00S-K006",
+      "name": "KIT 6 - Colbert Space",
+      "components": [
+        {
+          "sku": "DDCO00S-K001",
+          "name": "Colbert Space",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K001S",
+      "name": "Kit Desodorante Colbert US - 1un",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K002",
+      "name": "KIT 2 - Colbert US",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K002S",
+      "name": "Kit Desodorante Colbert US - 2un",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K003",
+      "name": "KIT 3 - Colbert US",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K003S",
+      "name": "Kit Desodorante Colbert US - 3un",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K004",
+      "name": "KIT 4 - Colbert US",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K005",
+      "name": "KIT 5 - Colbert US",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K006",
+      "name": "KIT 6 - Colbert US",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K006S",
+      "name": "Kit Desodorante Colbert US - 6un",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00U-K008S",
+      "name": "Kit Desodorante Colbert US - 8un",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "8"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K001S",
+      "name": "Kit Colbert Verde - 1un",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K002",
+      "name": "KIT 2 - Colbert Verde",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K002S",
+      "name": "Kit Colbert Verde - 2un",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K003",
+      "name": "KIT 3 - Colbert Verde",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K003S",
+      "name": "Kit Colbert Verde - 3un",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K004",
+      "name": "KIT 4 - Colbert Verde",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K004S",
+      "name": "Kit Colbert Verde - 4un",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K005",
+      "name": "KIT 5 - Colbert Verde",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K005S",
+      "name": "Kit Colbert Verde - 5un",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO00V-K006",
+      "name": "KIT 6 - Colbert Verde",
+      "components": [
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO0NV-K002",
+      "name": "KIT - Colbert Noir + Colbert Clássico",
+      "components": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCO0UA-K002",
+      "name": "KIT - Colbert US + Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDCOUCA-K003",
+      "name": "KIT - Colbert Us + Colbert CODE + Colbert Acqua",
+      "components": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K001S",
+      "name": "Kit Fa  - Acqua - 1un",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K002S",
+      "name": "Kit Fa  - Acqua - 2un",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K003",
+      "name": "KIT 3 - Fa Acqua",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K003S",
+      "name": "Kit Fa  - Acqua - 3un",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K006",
+      "name": "KIT 6 - Fa Acqua",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K006S",
+      "name": "Kit Fa  - Acqua - 6un",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K012",
+      "name": "KIT 12 - Fa Acqua",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00A-K012S",
+      "name": "Kit Fa  - Acqua - 12un",
+      "components": [
+        {
+          "sku": "DDFA00A-K001",
+          "name": "Fa Acqua",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00B-K003",
+      "name": "KIT 3 - Fa Brightening",
+      "components": [
+        {
+          "sku": "DDFA00B-K001",
+          "name": "Fa Brightening",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00B-K006",
+      "name": "KIT 6 - Fa Brightening",
+      "components": [
+        {
+          "sku": "DDFA00B-K001",
+          "name": "Fa Brightening",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00B-K012",
+      "name": "KIT 12 - Fa Brightening",
+      "components": [
+        {
+          "sku": "DDFA00B-K001",
+          "name": "Fa Brightening",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K001S",
+      "name": "Kit Fa  - Caribbean - 1un",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K002S",
+      "name": "Kit Fa  - Caribbean - 2un",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K003",
+      "name": "KIT 3 - Fa Caribbean",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K003S",
+      "name": "Kit Fa  - Caribbean - 3un",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K006",
+      "name": "KIT 6 - Fa Caribbean",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K006S",
+      "name": "Kit Fa  - Caribbean - 6un",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K012",
+      "name": "KIT 12 - Fa Caribbean",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00C-K012S",
+      "name": "Kit Fa  - Caribbean - 12un",
+      "components": [
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K001S",
+      "name": "Kit Fa  - Pink - 1un",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K002S",
+      "name": "Kit Fa  - Pink - 2un",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K003",
+      "name": "KIT 3 - Fa Pink",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K003S",
+      "name": "Kit Fa  - Pink - 3un",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K006",
+      "name": "KIT 6 - Fa Pink",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K006S",
+      "name": "Kit Fa  - Pink - 6un",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K012",
+      "name": "KIT 12 - Fa Pink",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA00P-K012S",
+      "name": "Kit Fa  - Pink - 12un",
+      "components": [
+        {
+          "sku": "DDFA00P-K001",
+          "name": "Fa Pink",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K001S",
+      "name": "Kit Fa  - Soft - 1un",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K002S",
+      "name": "Kit Fa  - Soft - 2un",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K003",
+      "name": "KIT 3 - Fa Soft",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K003S",
+      "name": "Kit Fa  - Soft - 3un",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K006",
+      "name": "KIT 6 - Fa Soft",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K006S",
+      "name": "Kit Fa  - Soft - 6un",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K012",
+      "name": "KIT 12 - Fa Soft",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SO-K012S",
+      "name": "Kit Fa  - Soft - 12un",
+      "components": [
+        {
+          "sku": "DDFA0SO-K001",
+          "name": "Fa Soft",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K001S",
+      "name": "Kit Fa  - Sport - 1un",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K002S",
+      "name": "Kit Fa  - Sport - 2un",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K003",
+      "name": "KIT 3 - Fa Sport",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K003S",
+      "name": "Kit Fa  - Sport - 3un",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K006",
+      "name": "KIT 6 - Fa Sport",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K006S",
+      "name": "Kit Fa  - Sport - 6un",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K012",
+      "name": "KIT 12 - Fa Sport",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFA0SP-K012S",
+      "name": "Kit Fa  - Sport - 12un",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "DDFASPC-K006",
+      "name": "KIT 3 - Fa Sport + 3 Fa Caribbean",
+      "components": [
+        {
+          "sku": "DDFA0SP-K001",
+          "name": "Fa Sport",
+          "quantity": "3"
+        },
+        {
+          "sku": "DDFA00C-K001",
+          "name": "Fa Caribbean",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K001S",
+      "name": "Kit Corega Menta 40g - Menta 1un",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K001SS",
+      "name": "Kit Corega Menta 40g & Corega Sem Sabor 40g - Menta 1un",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K002",
+      "name": "KIT 2 - Corega 40g Menta",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K002S",
+      "name": "Kit Corega Menta 40g & Corega Sem Sabor 40g - Menta 2un",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K003",
+      "name": "KIT 3 - Corega 40g Menta",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K003S",
+      "name": "Kit Corega Menta 40g - Menta 3un",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K004",
+      "name": "KIT 4 - Corega 40g Menta",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40M-K004S",
+      "name": "Kit Corega Menta 40g - Menta 4un",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Corega 40g Menta",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K001S",
+      "name": "Kit Corega Menta 40g & Corega Sem Sabor 40g - Sem Sabor 1un",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K001SS",
+      "name": "Kit Corega Sem Sabor 40g - sem sabor 1un",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K002",
+      "name": "KIT 2 - Corega 40g Sem Sabor",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K002S",
+      "name": "Kit Corega Menta 40g & Corega Sem Sabor 40g - Sem Sabor 2un",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K003",
+      "name": "KIT 3 - Corega 40g Sem Sabor",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K003S",
+      "name": "Kit Corega Sem Sabor 40g - Sem Sabor 3un",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K004",
+      "name": "KIT 4 - Corega 40g Sem Sabor",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO40S-K004S",
+      "name": "Kit Corega Sem Sabor 40g - Sem Sabor 4un",
+      "components": [
+        {
+          "sku": "HBCO40S-K001",
+          "name": "Corega 40g Sem Sabor",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 1un",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K002",
+      "name": "KIT 2 - Corega 70g Menta",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 2un",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K003",
+      "name": "KIT 3 - Corega 70g Menta",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K003S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 3un",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K004",
+      "name": "KIT 4 - Corega 70g Menta",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70M-K004S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 4un",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70S-K002",
+      "name": "KIT 2 - Corega 70g MAX Combo",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70S-K003",
+      "name": "KIT 3 - Corega 70g MAX Combo",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70S-K004",
+      "name": "KIT 4 - Corega 70g MAX Combo",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70X-K002",
+      "name": "Corega KIT - Corega 70g (1 Menta + 1 Sem Sabor)",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "1"
+        },
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCO70X-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Menta 1un + MAX Combo 1un",
+      "components": [
+        {
+          "sku": "HBCO70M-K001",
+          "name": "Corega 70g Menta",
+          "quantity": "1"
+        },
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K001S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 1un",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K002",
+      "name": "KIT 2 - Corega 70g MAX Combo",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K002S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - MAX Combo 2un",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K003",
+      "name": "KIT - Corega 70g MAX (1 Unitário + 1 Combo)",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K003S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 3un",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K004",
+      "name": "KIT - Corega 70g MAX (2 Combos)",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K004S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 4un",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOMAX-K006",
+      "name": "KIT - Corega 70g MAX (3 Combos)",
+      "components": [
+        {
+          "sku": "HBCOMAX-K001",
+          "name": "Corega 70g MAX Combo",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K001S",
+      "name": "Kit Ultra Corega Pó 22g - 1un",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K002",
+      "name": "KIT 2 - Ultra Corega Pó 20g",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K002S",
+      "name": "Kit Ultra Corega Pó 22g - 2un",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K003",
+      "name": "KIT 3 - Ultra Corega Pó 20g",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K003S",
+      "name": "Kit Ultra Corega Pó 22g - 3un",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K004S",
+      "name": "Kit Ultra Corega Pó 22g - 4un",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K005S",
+      "name": "Kit Ultra Corega Pó 22g - 5un",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP20-K006S",
+      "name": "Kit Ultra Corega Pó 22g - 6un",
+      "components": [
+        {
+          "sku": "HBCOP20-K001",
+          "name": "Ultra Corega Pó 22g",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP22-K002",
+      "name": "KIT 2 - Corega Pó 3 em 1 – 22g",
+      "components": [
+        {
+          "sku": "HBCOP22-K001",
+          "name": "Corega Pó 3 em 1",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP22-K003",
+      "name": "KIT 3 - Corega Pó 3 em 1 – 22g",
+      "components": [
+        {
+          "sku": "HBCOP22-K001",
+          "name": "Corega Pó 3 em 1",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP22-K004",
+      "name": "KIT 4 - Corega Pó 3 em 1 – 22g",
+      "components": [
+        {
+          "sku": "HBCOP22-K001",
+          "name": "Corega Pó 3 em 1",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP22-K005",
+      "name": "KIT 5 - Corega Pó 3 em 1 – 22g",
+      "components": [
+        {
+          "sku": "HBCOP22-K001",
+          "name": "Corega Pó 3 em 1",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP22-K006",
+      "name": "KIT 6 - Corega Pó 3 em 1 – 22g",
+      "components": [
+        {
+          "sku": "HBCOP22-K001",
+          "name": "Corega Pó 3 em 1",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP50-K001S",
+      "name": "Kit Ultra Corega 50g - 1un",
+      "components": [
+        {
+          "sku": "HBCOP50-K001",
+          "name": "Ultra Corega Pó 50g",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP50-K002",
+      "name": "KIT 2 - Ultra Corega Pó 50g",
+      "components": [
+        {
+          "sku": "HBCOP50-K001",
+          "name": "Ultra Corega Pó 50g",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP50-K002S",
+      "name": "Kit Ultra Corega 50g - 2un",
+      "components": [
+        {
+          "sku": "HBCOP50-K001",
+          "name": "Ultra Corega Pó 50g",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP50-K003",
+      "name": "KIT 3 - Ultra Corega Pó 50g",
+      "components": [
+        {
+          "sku": "HBCOP50-K001",
+          "name": "Ultra Corega Pó 50g",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOP50-K003S",
+      "name": "Kit Ultra Corega 50g - 3un",
+      "components": [
+        {
+          "sku": "HBCOP50-K001",
+          "name": "Ultra Corega Pó 50g",
+          "quantity": "3"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTB3-K030S",
+      "name": "Kit Corega Tabs 3 Minutos - 30un",
+      "components": [
+        {
+          "sku": "HBCOTB3-K030",
+          "name": "Corega Tabs 3 Minutos",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTB3-K060",
+      "name": "KIT 60 - Corega Tabs 3 Minutos",
+      "components": [
+        {
+          "sku": "HBCOTB3-K030",
+          "name": "Corega Tabs 3 Minutos",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTB3-K060S",
+      "name": "Kit Corega Tabs 3 Minutos - 60un",
+      "components": [
+        {
+          "sku": "HBCOTB3-K030",
+          "name": "Corega Tabs 3 Minutos",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTB3-K120",
+      "name": "KIT 120 - Corega Tabs 3 Minutos",
+      "components": [
+        {
+          "sku": "HBCOTB3-K030",
+          "name": "Corega Tabs 3 Minutos",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTB3-K120S",
+      "name": "Kit Corega Tabs 3 Minutos - 120un",
+      "components": [
+        {
+          "sku": "HBCOTB3-K030",
+          "name": "Corega Tabs 3 Minutos",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTBB-K030S",
+      "name": "Kit Corega Tabs Branqueador - 30un",
+      "components": [
+        {
+          "sku": "HBCOTBB-K030",
+          "name": "Corega Tabs Branqueador",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTBB-K060",
+      "name": "KIT 60 - Corega Tabs Branqueador",
+      "components": [
+        {
+          "sku": "HBCOTBB-K030",
+          "name": "Corega Tabs Branqueador",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTBB-K060S",
+      "name": "Kit Corega Tabs Branqueador - 60un",
+      "components": [
+        {
+          "sku": "HBCOTBB-K030",
+          "name": "Corega Tabs Branqueador",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTBB-K120",
+      "name": "KIT 120 - Corega Tabs Branqueador",
+      "components": [
+        {
+          "sku": "HBCOTBB-K030",
+          "name": "Corega Tabs Branqueador",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "HBCOTBB-K120S",
+      "name": "Kit Corega Tabs Branqueador - 120un",
+      "components": [
+        {
+          "sku": "HBCOTBB-K030",
+          "name": "Corega Tabs Branqueador",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "PDCO00N-K002",
+      "name": "KIT - Colbert Noir (1 Perfume + 1 Desodorante)",
+      "components": [
+        {
+          "sku": "PFCO00N-K001",
+          "name": "Perfume Colbert Noir Preto Argentino Eau de Toilette 90ml",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "PDCO00N-K003",
+      "name": "KIT - Colbert Noir (1 Perfume + 2 Desodorante)",
+      "components": [
+        {
+          "sku": "PFCO00N-K001",
+          "name": "Perfume Colbert Noir Preto Argentino Eau de Toilette 90ml",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "PDCO00U-K002",
+      "name": "KIT - Colbert US (1 Perfume + 1 Desodorante)",
+      "components": [
+        {
+          "sku": "PFCO00U-K001",
+          "name": "Perfume Colbert US Branco Argentino Eau de Toilette 60ml",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "PDCO00U-K003",
+      "name": "KIT - Colbert US (1 Perfume + 2 Desodorante)",
+      "components": [
+        {
+          "sku": "PFCO00U-K001",
+          "name": "Perfume Colbert US Branco Argentino Eau de Toilette 60ml",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "PFCO00N-K001S",
+      "name": "Kit Perfume Colbert Noir - 1un",
+      "components": [
+        {
+          "sku": "PFCO00N-K001",
+          "name": "Perfume Colbert Noir Preto Argentino Eau de Toilette 90ml",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "PFCO00U-K001S",
+      "name": "Kit Perfume Colbert Us - 1un",
+      "components": [
+        {
+          "sku": "PFCO00U-K001",
+          "name": "Perfume Colbert US Branco Argentino Eau de Toilette 60ml",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBCC000-K001S",
+      "name": "Kit Copo De Cobre - 1un",
+      "components": [
+        {
+          "sku": "SBCC000-K001",
+          "name": "Copo de Cobre",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBCC000-K002",
+      "name": "KIT 2 - Copo de Cobre",
+      "components": [
+        {
+          "sku": "SBCC000-K001",
+          "name": "Copo de Cobre",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBCC000-K002S",
+      "name": "Kit Copo De Cobre - 2un",
+      "components": [
+        {
+          "sku": "SBCC000-K001",
+          "name": "Copo de Cobre",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBCC000-K004",
+      "name": "KIT 4 - Copo de Cobre",
+      "components": [
+        {
+          "sku": "SBCC000-K001",
+          "name": "Copo de Cobre",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "SBCC000-K004S",
+      "name": "Kit Copo De Cobre - 4un",
+      "components": [
+        {
+          "sku": "SBCC000-K001",
+          "name": "Copo de Cobre",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "SBES000-K001S",
+      "name": "Kit Escova Soulbm - 1un",
+      "components": [
+        {
+          "sku": "SBES000-K001",
+          "name": "Escova Seca",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBES000-K002",
+      "name": "KIT 2 - Escova Seca",
+      "components": [
+        {
+          "sku": "SBES000-K001",
+          "name": "Escova Seca",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBES000-K002S",
+      "name": "Kit Escova Soulbm - 2un",
+      "components": [
+        {
+          "sku": "SBES000-K001",
+          "name": "Escova Seca",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBES002-K001S",
+      "name": "Kit Escova Oval - 1un",
+      "components": [
+        {
+          "sku": "SBES002-K001",
+          "name": "Escova Seca Oval",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBES002-K002",
+      "name": "KIT 2 - Escova Seca Oval",
+      "components": [
+        {
+          "sku": "SBES002-K001",
+          "name": "Escova Seca Oval",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBES002-K002S",
+      "name": "Kit Escova Oval - 2un",
+      "components": [
+        {
+          "sku": "SBES002-K001",
+          "name": "Escova Seca Oval",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBES003-K001S",
+      "name": "Kit Escova Facial - 1un",
+      "components": [
+        {
+          "sku": "SBES003-K001",
+          "name": "Escova Seca Facial SoulBM",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBGF00G-K001S",
+      "name": "Garrafas SoulBM - Grafias",
+      "components": [
+        {
+          "sku": "SBGF00G-K001",
+          "name": "Garrafa de Cobre GRAFIAS",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBGF00M-K001S",
+      "name": "Garrafas SoulBM - Martelada",
+      "components": [
+        {
+          "sku": "SBGF00M-K001",
+          "name": "Garrafa de Cobre MARTELADA",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K001S",
+      "name": "Kit Raspador De Lingua Simples - 1un",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K002",
+      "name": "KIT 2 - Raspador de Lingua SIMPLES",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K002S",
+      "name": "Kit Raspador De Lingua Simples - 2un",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K004",
+      "name": "KIT 4 - Raspador de Lingua SIMPLES",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K004S",
+      "name": "Kit Raspador De Lingua Simples - 4un",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "4"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K005",
+      "name": "KIT 5 - Raspador de Lingua SIMPLES",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K006",
+      "name": "Kit Raspador De Lingua Simples - 6un",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "SBLL000-K012",
+      "name": "Kit Raspador De Lingua Simples - 12un",
+      "components": [
+        {
+          "sku": "SBLL000-K001",
+          "name": "Raspador de Lingua SIMPLES",
+          "quantity": "12"
+        }
+      ]
+    },
+    {
+      "sku": "SHGF00G-K001S",
+      "name": "Kit Garrafa Soulbm Shopee - Grafias - 1un",
+      "components": [
+        {
+          "sku": "SHGF00G-K001",
+          "name": "Garrafa de Cobre  MARKETPLACE GRAFIAS",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "SHGF00M-K001S",
+      "name": "Kit Garrafa Soulbm Shopee - Martelada - 1un",
+      "components": [
+        {
+          "sku": "SHGF00M-K001",
+          "name": "Garrafa de Cobre MARKETPLACE MARTELADA",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "TAMA-1050100-2",
+      "name": "Kit Tapa Mamilo - 10un",
+      "components": [
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "TAMA-1050100-3",
+      "name": "Kit Tapa Mamilo - 50un",
+      "components": [
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "5"
+        }
+      ]
+    },
+    {
+      "sku": "TAMA-1050100-4",
+      "name": "Kit Tapa Mamilo - 100un",
+      "components": [
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "10"
+        }
+      ]
+    },
+    {
+      "sku": "TESTE-123",
+      "name": "TESTE",
+      "components": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "TOROS-12-1",
+      "name": "Kit Tortulan Rosa - 1un",
+      "components": [
+        {
+          "sku": "CMTO00R-K001",
+          "name": "Tortulan Rosa",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "TOROS-12-2",
+      "name": "Kit Tortulan Rosa - 2un",
+      "components": [
+        {
+          "sku": "CMTO00R-K001",
+          "name": "Tortulan Rosa",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "TSTM-1",
+      "name": "Kit Fita Seios + Tapa Mamilo - Tapa Seios 1un + Tapa Mamilo 10un",
+      "components": [
+        {
+          "sku": "ACFS000-K001",
+          "name": "Fita Seios",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ]
+    },
+    {
+      "sku": "UNHA-1",
+      "name": "kit unha - 1un",
+      "components": [
+        {
+          "sku": "CMPU001-K001",
+          "name": "Pó de Unhas Coverland",
+          "quantity": "1"
+        }
+      ]
+    }
+  ],
+  "manual": [
+    {
+      "sku": "179P",
+      "name": "179P",
+      "components": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Ponds Creme Facial C Limpeza Demaquilante 100g Importado",
+          "quantity": "1"
+        }
+      ]
+    },
+    {
+      "sku": "3139P",
+      "name": "3139P",
+      "components": [
+        {
+          "sku": "DDCM000-K001",
+          "name": "Desodorante Canon Musk Argentino Importado Aerosol 250ml",
+          "quantity": "6"
+        }
+      ]
+    },
+    {
+      "sku": "427P",
+      "name": "427P",
+      "components": [
+        {
+          "sku": "HBCO40M-K001",
+          "name": "Ultra Corega Creme Menta Fixador de Dentaduras 40g",
+          "quantity": "1"
+        }
+      ]
+    }
+  ]
+}

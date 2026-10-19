@@ -1,0 +1,2010 @@
+{
+  "at": "2026-10-19T16:08:29.099Z",
+  "catalogVersion": "2026-10-19.2",
+  "productsRead": 478,
+  "ambiguous": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967962",
+      "sku": "ACTM070-K070",
+      "name": "KIT - Tapa Mamilo (20) + Fita Adesiva (50)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839264",
+      "sku": "ACTM070-K070",
+      "name": "KIT - Tapa Mamilo (20) + Fita Adesiva (50)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838964",
+      "sku": "DDCOUCA-K003",
+      "name": "KIT - Colbert Us + Colbert CODE + Colbert Acqua",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "DDCO00A-K001",
+          "name": "Colbert Acqua",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00C-K001",
+          "name": "Colbert Code",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120292",
+      "sku": "DDCO0NV-K002",
+      "name": "KIT - Colbert Noir + Colbert Clássico",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967654",
+      "sku": "CMPO0DN-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "352303432",
+      "sku": "ACTM070-K070S",
+      "name": "Kit Fita Belezafix + Tapa Mamilo - Fita 50un + Tapa Mamilo 20un",
+      "parent_id": "354422134",
+      "parent_name": "Kit Fita Belezafix + Tapa Mamilo",
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342968003",
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM001-K002",
+          "name": "Par Tapa-mamilo SILICONE",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120390",
+      "sku": "CMPOCDS-K003",
+      "name": "KIT - Pond's C(1) + Pond's Dia (1) + Pond's S (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120373",
+      "sku": "CMPO0CN-K002",
+      "name": "KIT - Pond's C (1) + Pond's Noite (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342967401",
+      "sku": "CMPO0BC-K002",
+      "name": "KIT - Pond's Bio (1) + Pond's C (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00B-K001",
+          "name": "Pond's Bio",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00C-K001",
+          "name": "Pond's C",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120403",
+      "sku": "CMPODB3-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's B3 (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO0B3-K001",
+          "name": "Pond's B3",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120407",
+      "sku": "CMPO0DN-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's Noite (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00N-K001",
+          "name": "Pond's Noite",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "357885407",
+      "sku": "TSTM-1",
+      "name": "Kit Fita Seios + Tapa Mamilo - Tapa Seios 1un + Tapa Mamilo 10un",
+      "parent_id": "357885404",
+      "parent_name": "Kit Fita Seios + Tapa Mamilo",
+      "composition": [
+        {
+          "sku": "ACFS000-K001",
+          "name": "Fita Seios",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM000-K010",
+          "name": "Tapa Mamilo",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120273",
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM001-K002",
+          "name": "Par Tapa-mamilo SILICONE",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120297",
+      "sku": "PDCO00U-K002",
+      "name": "KIT - Colbert US (1 Perfume + 1 Desodorante)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "PFCO00U-K001",
+          "name": "Perfume Colbert US Branco Argentino Eau de Toilette 60ml",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00U-K001",
+          "name": "Colbert US",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838915",
+      "sku": "DDCO0NV-K002",
+      "name": "KIT - Colbert Noir + Colbert Clássico",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "DDCO00N-K001",
+          "name": "Colbert Noir",
+          "quantity": "1"
+        },
+        {
+          "sku": "DDCO00V-K001",
+          "name": "Colbert Verde",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838886",
+      "sku": "ACTM001-K052",
+      "name": "KIT - BelezaFix (50) + Tapa-mamilo SILICONE (2)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "ACTM001-K002",
+          "name": "Par Tapa-mamilo SILICONE",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347839196",
+      "sku": "CMPO0DS-K002",
+      "name": "KIT - Pond's Dia (1) + Pond's S (1)",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "CMPO00S-K001",
+          "name": "Pond's S",
+          "quantity": "1"
+        },
+        {
+          "sku": "CMPO00D-K001",
+          "name": "Pond's Dia",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    }
+  ],
+  "unknown": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "372804101",
+      "sku": "ACOP000-K036",
+      "name": "Fita Orelha / Peruca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "352284430",
+      "sku": "ACBF000-K050E",
+      "name": "50 Fitas Dupla Face BelezaFix + Embalagem",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "367023666",
+      "sku": "SBCC001-K001",
+      "name": "Copo de Cobre - Ébano",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367253116",
+      "sku": "SBES001-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Redonda 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843664",
+      "sku": "SBLL001-K001",
+      "name": "Raspador de Lingua PREMIUM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367251002",
+      "sku": "SBES004-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Oval 1un",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "353714750",
+      "sku": "ACBF000-K050E",
+      "name": "50 Fitas Dupla Face BelezaFix + Embalagem",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "369676612",
+      "sku": "SBEL000-K001SS",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Cabo Longo 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838432",
+      "sku": "SBEC000-K001",
+      "name": "Escova Seca de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351119977",
+      "sku": "SBEC000-K001",
+      "name": "Escova Seca de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "388043120",
+      "sku": "ACAI000-K002",
+      "name": "Kit 2 unidades Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "366352136",
+      "sku": "SBEL000-K001",
+      "name": "Escova Seca Cabo Longo SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351120249",
+      "sku": "SBKW000-K001",
+      "name": "Kansa Wand",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "372804080",
+      "sku": "ACOP000-K036",
+      "name": "Fita Orelha / Peruca",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "369150369",
+      "sku": "SBCC001-K002S",
+      "name": "Kit Copo De Cobre - Ébano - 2un",
+      "parent_id": "369150360",
+      "parent_name": "Kit Copo De Cobre - Ébano"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "369676619",
+      "sku": "SBEC000-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Cobre 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "392804576",
+      "sku": "ACESM15-K001",
+      "name": "Espelho 15X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "370648787",
+      "sku": "HBCOMAX-K006S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 6un",
+      "parent_id": "370648752",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367253123",
+      "sku": "SBES005-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Facial 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "370182191",
+      "sku": "SBPB00O-K001",
+      "name": "Pulseira Soulbm Ojas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "364946354",
+      "sku": "SBPB00P-K001",
+      "name": "Pulseira Soulbm Prana",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347843720",
+      "sku": "SBSR00S-K001",
+      "name": "Saffron Supreme® Sérum",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "364946356",
+      "sku": "SBPB00S-K001",
+      "name": "Pulseira Soulbm Sattva",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367023397",
+      "sku": "SBCC001-K001",
+      "name": "Copo de Cobre - Ébano",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528178",
+      "sku": "SBEC000-K001",
+      "name": "Escova Seca de Cobre",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528093",
+      "sku": "SBKW000-K001",
+      "name": "Kansa Wand",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122009",
+      "sku": "SBLL001-K001",
+      "name": "Raspador de Lingua PREMIUM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "370648621",
+      "sku": "HBCOMAX-K006S",
+      "name": "Kit Corega Menta 70g & Corega Sem Sabor 70g - Max Combo 6un",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "366354789",
+      "sku": "SBEL000-K001",
+      "name": "Escova Seca Cabo Longo SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351122034",
+      "sku": "SBSR00S-K001",
+      "name": "Saffron Supreme® Sérum",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "374050417",
+      "sku": "ACOP000-K036S",
+      "name": "Kit Fita Orelha / Peruca - 1un",
+      "parent_id": "374050153",
+      "parent_name": "Kit Fita Orelha / Peruca"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528209",
+      "sku": "SBSR00S-K001",
+      "name": "Saffron Supreme® Sérum",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "364945963",
+      "sku": "SBPB00P-K001",
+      "name": "Pulseira Soulbm Prana",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "364946364",
+      "sku": "SBPB00S-K001",
+      "name": "Pulseira Soulbm Sattva",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367250996",
+      "sku": "SBES001-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Redonda 1un",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "385373229",
+      "sku": "SBPB00T-K001",
+      "name": "Pulseira Soulbm Tejas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "364946366",
+      "sku": "SBPB00P-K001",
+      "name": "Pulseira Soulbm Prana",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "369147686",
+      "sku": "SBCC001-K002S",
+      "name": "Kit Copo De Cobre - Ébano - 2un",
+      "parent_id": "369147666",
+      "parent_name": "Kit Copo De Cobre - Ébano"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "370183005",
+      "sku": "SBPB00O-K001",
+      "name": "Pulseira Soulbm Ojas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "388043138",
+      "sku": "ACAI000-K002",
+      "name": "Kit 2 unidades Camel Toe",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "364945730",
+      "sku": "SBPB00S-K001",
+      "name": "Pulseira Soulbm Sattva",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367921507",
+      "sku": "HBCO40M-K022S",
+      "name": "Kit Corega Menta 40g - Menta 2un",
+      "parent_id": "344688941",
+      "parent_name": "Kit Corega Menta 40g"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "367251007",
+      "sku": "SBES005-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Facial 1un",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "392804586",
+      "sku": "ACESM15-K001",
+      "name": "Espelho 15X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367023670",
+      "sku": "SBCC001-K001",
+      "name": "Copo de Cobre - Ébano",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "385361780",
+      "sku": "SBPB00T-K001",
+      "name": "Pulseira Soulbm Tejas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528205",
+      "sku": "ACESM15-K001",
+      "name": "Espelho 15X MEDIO",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "366354776",
+      "sku": "SBEL000-K001",
+      "name": "Escova Seca Cabo Longo SoulBM",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "370182997",
+      "sku": "SBPB00O-K001",
+      "name": "Pulseira Soulbm Ojas",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "367253120",
+      "sku": "SBES004-K001S",
+      "name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo - Oval 1un",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "392828521",
+      "sku": "ACESM15-K001S",
+      "name": "Kit Todos os Espelhos - M15 - 1un",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347838857",
+      "sku": "SBKW000-K001",
+      "name": "Kansa Wand",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "392829426",
+      "sku": "ACESM15-K001S",
+      "name": "Kit Todos os Espelhos - M15 - 1un",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "375652645",
+      "sku": "CCUTPPD-K001",
+      "name": "Utensilio Espátula Pão Duro Preto",
+      "parent_id": null,
+      "parent_name": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "372802877",
+      "sku": "ACOP000-K036",
+      "name": "Fita Orelha / Peruca",
+      "parent_id": null,
+      "parent_name": null
+    }
+  ],
+  "documentedParents": [
+    {
+      "sku": "HBCOTB3-K060S",
+      "parent_id": "344689046",
+      "parent_name": "Kit Corega Tabs 3 Minutos",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOP50-K003S",
+      "parent_id": "351121860",
+      "parent_name": "Kit Ultra Corega 50g",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBFR03-K001S",
+      "parent_id": "344688796",
+      "parent_name": "Kit Rolo Fita Belezafix",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES000-K001S",
+      "parent_id": "351121523",
+      "parent_name": "Kit Escova Soulbm",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K100ES",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "SHGF00G-K001S",
+      "parent_id": "344689104",
+      "parent_name": "Kit Garrafa Soulbm Shopee",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES001-K001S",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "SBGF00G-K001S",
+      "parent_id": "354421549",
+      "parent_name": "Garrafas SoulBM",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K002S",
+      "parent_id": "351121761",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K050ES",
+      "parent_id": "344688817",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K050ES",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES004-K001S",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K200ES",
+      "parent_id": "347842989",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESG10-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCM000-K002S",
+      "parent_id": "351121227",
+      "parent_name": "Kit Cannon Musk",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOP50-K002S",
+      "parent_id": "344689021",
+      "parent_name": "Kit Ultra Corega 50g",
+      "parentSku": null
+    },
+    {
+      "sku": "SBGF00M-K001S",
+      "parent_id": "351383639",
+      "parent_name": "Garrafas SoulBM",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOP50-K002S",
+      "parent_id": "351121860",
+      "parent_name": "Kit Ultra Corega 50g",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K050S",
+      "parent_id": "344688804",
+      "parent_name": "Kit Fita Belezafix",
+      "parentSku": null
+    },
+    {
+      "sku": "SBEL000-K001SS",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "ACAI000-K001S",
+      "parent_id": "345804098",
+      "parent_name": "Kit Camel toe",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOTB3-K030S",
+      "parent_id": "344689046",
+      "parent_name": "Kit Corega Tabs 3 Minutos",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESG10-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00A-K002S",
+      "parent_id": "351121244",
+      "parent_name": "Kit Colbert Aqua",
+      "parentSku": null
+    },
+    {
+      "sku": "SBCC000-K001S",
+      "parent_id": "344689117",
+      "parent_name": "Kit Copo De Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "CMNV150-K002S",
+      "parent_id": "351121649",
+      "parent_name": "Kit Nivea 150g",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCM000-K003S",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk",
+      "parentSku": null
+    },
+    {
+      "sku": "SHGF00G-K001S",
+      "parent_id": "354422216",
+      "parent_name": "Kit Garrafa Soulbm Shopee",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K001S",
+      "parent_id": "351121761",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00U-K003S",
+      "parent_id": "351121497",
+      "parent_name": "Kit Desodorante Colbert US",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP10-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCM000-K003S",
+      "parent_id": "351121227",
+      "parent_name": "Kit Cannon Musk",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESM10-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES002-K001S",
+      "parent_id": "344689166",
+      "parent_name": "Kit Escova Oval",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K100S",
+      "parent_id": "344688804",
+      "parent_name": "Kit Fita Belezafix",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES002-K002S",
+      "parent_id": "351121512",
+      "parent_name": "Kit Escova Oval",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP10-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "SBCC001-K002S",
+      "parent_id": "369150360",
+      "parent_name": "Kit Copo De Cobre - Ébano",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO70M-K002S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K050S",
+      "parent_id": "351121577",
+      "parent_name": "Kit Fita Belezafix",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00S-K003S",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00S-K004S",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "SBEC000-K001S",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00N-K001S",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K006S",
+      "parent_id": "370648752",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K100S",
+      "parent_id": "351121577",
+      "parent_name": "Kit Fita Belezafix",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES005-K001S",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES000-K002S",
+      "parent_id": "351121523",
+      "parent_name": "Kit Escova Soulbm",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO70M-K001S",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOTBB-K030S",
+      "parent_id": "351121446",
+      "parent_name": "Kit Corega Tabs Branqueador",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K002S",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K004S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESG05-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESG05-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00U-K002S",
+      "parent_id": "351121497",
+      "parent_name": "Kit Desodorante Colbert US",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00V-K003S",
+      "parent_id": "344688878",
+      "parent_name": "Kit Colbert Verde",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP05-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K004S",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "SBGF00M-K001S",
+      "parent_id": "354421549",
+      "parent_name": "Garrafas SoulBM",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOP50-K003S",
+      "parent_id": "344689021",
+      "parent_name": "Kit Ultra Corega 50g",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOTBB-K030S",
+      "parent_id": "344689037",
+      "parent_name": "Kit Corega Tabs Branqueador",
+      "parentSku": null
+    },
+    {
+      "sku": "COPU-1",
+      "parent_id": "370159928",
+      "parent_name": "Kit Pulseiras de Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES002-K001S",
+      "parent_id": "351121512",
+      "parent_name": "Kit Escova Oval",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP03-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K001S",
+      "parent_id": "370648752",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "SBCC000-K002S",
+      "parent_id": "351121322",
+      "parent_name": "Kit Copo De Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "ACTM070-K070S",
+      "parent_id": "354422134",
+      "parent_name": "Kit Fita Belezafix + Tapa Mamilo",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO70M-K001S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K004S",
+      "parent_id": "351121761",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESG03-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "CMST001-K001S",
+      "parent_id": "351121800",
+      "parent_name": "Kit St.ives",
+      "parentSku": null
+    },
+    {
+      "sku": "ACAI000-K001S",
+      "parent_id": "351121219",
+      "parent_name": "Kit Camel toe",
+      "parentSku": null
+    },
+    {
+      "sku": "TOROS-12-2",
+      "parent_id": "351121849",
+      "parent_name": "Kit Tortulan Rosa",
+      "parentSku": null
+    },
+    {
+      "sku": "SBGF00M-K001S",
+      "parent_id": "354421560",
+      "parent_name": "Garrafas SoulBM",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP15-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "ACPE001-K002S",
+      "parent_id": "357849345",
+      "parent_name": "Kit Pente Colorido",
+      "parentSku": null
+    },
+    {
+      "sku": "SHGF00M-K001S",
+      "parent_id": "354422216",
+      "parent_name": "Kit Garrafa Soulbm Shopee",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBFR03-K001S",
+      "parent_id": "351121790",
+      "parent_name": "Kit Rolo Fita Belezafix",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K002S",
+      "parent_id": "344689195",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "ACPE001-K010S",
+      "parent_id": "357852726",
+      "parent_name": "Kit Pente Colorido",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00V-K002S",
+      "parent_id": "351121307",
+      "parent_name": "Kit Colbert Verde",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES000-K001S",
+      "parent_id": "344689177",
+      "parent_name": "Kit Escova Soulbm",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00A-K003S",
+      "parent_id": "351121244",
+      "parent_name": "Kit Colbert Aqua",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K006S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "CMNV00S-K001S",
+      "parent_id": "344689219",
+      "parent_name": "Kit Nivea Soft",
+      "parentSku": null
+    },
+    {
+      "sku": "CMNV150-K003S",
+      "parent_id": "351121649",
+      "parent_name": "Kit Nivea 150g",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K012",
+      "parent_id": "344689188",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESM10-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K001S",
+      "parent_id": "344689195",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K100ES",
+      "parent_id": "344688817",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K200ES",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESG03-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00U-K003S",
+      "parent_id": "344688828",
+      "parent_name": "Kit Desodorante Colbert US",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP05-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOTB3-K120S",
+      "parent_id": "351121433",
+      "parent_name": "Kit Corega Tabs 3 Minutos",
+      "parentSku": null
+    },
+    {
+      "sku": "SHGF00M-K001S",
+      "parent_id": "344689104",
+      "parent_name": "Kit Garrafa Soulbm Shopee",
+      "parentSku": null
+    },
+    {
+      "sku": "ACOP000-K036S",
+      "parent_id": "374050153",
+      "parent_name": "Kit Fita Orelha / Peruca",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00N-K003S",
+      "parent_id": "351121274",
+      "parent_name": "Kit Colbert Noir",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00N-K003S",
+      "parent_id": "344688863",
+      "parent_name": "Kit Colbert Noir",
+      "parentSku": null
+    },
+    {
+      "sku": "TOROS-12-1",
+      "parent_id": "351121849",
+      "parent_name": "Kit Tortulan Rosa",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOTBB-K060S",
+      "parent_id": "351121446",
+      "parent_name": "Kit Corega Tabs Branqueador",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP03-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES001-K001S",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "SBGF00G-K001S",
+      "parent_id": "354421560",
+      "parent_name": "Garrafas SoulBM",
+      "parentSku": null
+    },
+    {
+      "sku": "CMNV00S-K001S",
+      "parent_id": "351121670",
+      "parent_name": "Kit Nivea Soft",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESP15-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "SBCC000-K002S",
+      "parent_id": "344689117",
+      "parent_name": "Kit Copo De Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "SBLL000-K006",
+      "parent_id": "344689188",
+      "parent_name": "Kit Raspador De Lingua Simples",
+      "parentSku": null
+    },
+    {
+      "sku": "DDFA00A-K003S",
+      "parent_id": "354106600",
+      "parent_name": "Kit Fa",
+      "parentSku": null
+    },
+    {
+      "sku": "KITGR-M001S",
+      "parent_id": "387215884",
+      "parent_name": "Kit Garrafa  com Raspador",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00C-K001S",
+      "parent_id": "357859633",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCM000-K002S",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk",
+      "parentSku": null
+    },
+    {
+      "sku": "CMST001-K003S",
+      "parent_id": "344688930",
+      "parent_name": "Kit St.ives",
+      "parentSku": null
+    },
+    {
+      "sku": "SBCC001-K002S",
+      "parent_id": "369147666",
+      "parent_name": "Kit Copo De Cobre - Ébano",
+      "parentSku": null
+    },
+    {
+      "sku": "TSTM-1",
+      "parent_id": "357885404",
+      "parent_name": "Kit Fita Seios + Tapa Mamilo",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00U-K002S",
+      "parent_id": "344688828",
+      "parent_name": "Kit Desodorante Colbert US",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00N-K002S",
+      "parent_id": "344688863",
+      "parent_name": "Kit Colbert Noir",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00S-K003S",
+      "parent_id": "351121292",
+      "parent_name": "Kit Colbert Space",
+      "parentSku": null
+    },
+    {
+      "sku": "SBCC000-K004S",
+      "parent_id": "344689117",
+      "parent_name": "Kit Copo De Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCM000-K006S",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00N-K002S",
+      "parent_id": "351121274",
+      "parent_name": "Kit Colbert Noir",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCM000-K008S",
+      "parent_id": "344688908",
+      "parent_name": "Kit Cannon Musk",
+      "parentSku": null
+    },
+    {
+      "sku": "CMNV150-K002S",
+      "parent_id": "344689210",
+      "parent_name": "Kit Nivea 150g",
+      "parentSku": null
+    },
+    {
+      "sku": "TAMA-1050100-2",
+      "parent_id": "351121811",
+      "parent_name": "Kit Tapa Mamilo",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00S-K002S",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO40M-K001SS",
+      "parent_id": "344688962",
+      "parent_name": "Kit Corega Menta 40g & Corega Sem Sabor 40g",
+      "parentSku": null
+    },
+    {
+      "sku": "ACPE000-K010S",
+      "parent_id": "344689133",
+      "parent_name": "Kit Pente Inox",
+      "parentSku": null
+    },
+    {
+      "sku": "SBGF00G-K001S",
+      "parent_id": "351383639",
+      "parent_name": "Garrafas SoulBM",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO40S-K001S",
+      "parent_id": "344688962",
+      "parent_name": "Kit Corega Menta 40g & Corega Sem Sabor 40g",
+      "parentSku": null
+    },
+    {
+      "sku": "CMNV00S-K002S",
+      "parent_id": "351121670",
+      "parent_name": "Kit Nivea Soft",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO40M-K022S",
+      "parent_id": "344688941",
+      "parent_name": "Kit Corega Menta 40g",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00S-K002S",
+      "parent_id": "351121292",
+      "parent_name": "Kit Colbert Space",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K003S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES005-K001S",
+      "parent_id": "367250989",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOTB3-K120S",
+      "parent_id": "344689046",
+      "parent_name": "Kit Corega Tabs 3 Minutos",
+      "parentSku": null
+    },
+    {
+      "sku": "KITGR-G001S",
+      "parent_id": "387215884",
+      "parent_name": "Kit Garrafa  com Raspador",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K002S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCO40S-K003S",
+      "parent_id": "344689008",
+      "parent_name": "Kit Corega Sem Sabor 40g",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00V-K002S",
+      "parent_id": "344688878",
+      "parent_name": "Kit Colbert Verde",
+      "parentSku": null
+    },
+    {
+      "sku": "DDCO00V-K003S",
+      "parent_id": "351121307",
+      "parent_name": "Kit Colbert Verde",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00B-K001S",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "CMPO00S-K001S",
+      "parent_id": "348962512",
+      "parent_name": "Kit Pond's",
+      "parentSku": null
+    },
+    {
+      "sku": "SBES004-K001S",
+      "parent_id": "367253108",
+      "parent_name": "Kit Escova Redonda/Oval/Facial/Cobre/Cabo Longo",
+      "parentSku": null
+    },
+    {
+      "sku": "COPU-4",
+      "parent_id": "370159928",
+      "parent_name": "Kit Pulseiras de Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "PFCO00U-K001S",
+      "parent_id": "344688923",
+      "parent_name": "Kit Perfume Colbert Us",
+      "parentSku": null
+    },
+    {
+      "sku": "ACBF000-K050ES",
+      "parent_id": "347842989",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESM15-K001S",
+      "parent_id": "344689057",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "COPU-3",
+      "parent_id": "370159928",
+      "parent_name": "Kit Pulseiras de Cobre",
+      "parentSku": null
+    },
+    {
+      "sku": "CMST001-K001S",
+      "parent_id": "344688930",
+      "parent_name": "Kit St.ives",
+      "parentSku": null
+    },
+    {
+      "sku": "ACESM15-K001S",
+      "parent_id": "351121534",
+      "parent_name": "Kit Todos os Espelhos",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K001S",
+      "parent_id": "344688980",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    },
+    {
+      "sku": "HBCOMAX-K001S",
+      "parent_id": "351121381",
+      "parent_name": "Kit Corega Menta 70g & Corega Sem Sabor 70g",
+      "parentSku": null
+    }
+  ],
+  "skuMatchesIncludingUnlinked": 383,
+  "packagingApproved": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121593",
+      "sku": "ACBF000-K100ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 100un",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "2"
+        },
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688820",
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "parent_id": "344688817",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121602",
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "349731846",
+      "sku": "ACBF000-K200ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 200un",
+      "parent_id": "347842989",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "4"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "4"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "344688824",
+      "sku": "ACBF000-K100ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 100un",
+      "parent_id": "344688817",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "2"
+        },
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "external_id": "351121597",
+      "sku": "ACBF000-K200ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 200un",
+      "parent_id": "351121590",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "4"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "4"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "347842997",
+      "sku": "ACBF000-K050ES",
+      "name": "Kit Fita Belezafix + Embalagem - Fita 50un",
+      "parent_id": "347842989",
+      "parent_name": "Kit Fita Belezafix + Embalagem",
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "1"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "1"
+        }
+      ],
+      "parent": null
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "external_id": "357412182",
+      "sku": "ACBF000-K100E",
+      "name": "100 Fitas Dupla Face BelezaFix + Embalagem",
+      "parent_id": null,
+      "parent_name": null,
+      "composition": [
+        {
+          "sku": "ACBF000-K050",
+          "name": "Fita Beleza Fix",
+          "quantity": "2"
+        },
+        {
+          "sku": "EBBF001-001",
+          "name": "Embalagem BelezaFIX",
+          "quantity": "2"
+        }
+      ],
+      "parent": null
+    }
+  ],
+  "packagingDecision": {
+    "at": "2026-10-19",
+    "ignoredComponentSkus": [
+      "EBBF001-001"
+    ],
+    "reason": "Embalagem BelezaFIX desconsiderada como componente da Curva ABC por decisão do responsável em 19/10/2026. A origem dos kits é preservada para futura separação com/sem embalagem; estoque não é alterado."
+  }
+}

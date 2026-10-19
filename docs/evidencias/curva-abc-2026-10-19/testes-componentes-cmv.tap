@@ -1,0 +1,1220 @@
+TAP version 13
+# Subtest: composition report and drilldown use the server catalog and ignore forged rules and identities
+ok 1 - composition report and drilldown use the server catalog and ignore forged rules and identities
+  ---
+  duration_ms: 21.5277
+  type: 'test'
+  ...
+# Subtest: a catalog is never silently applied to another workspace with coincident SKUs
+ok 2 - a catalog is never silently applied to another workspace with coincident SKUs
+  ---
+  duration_ms: 1.5084
+  type: 'test'
+  ...
+# Subtest: missing CMV gives an actionable value-report error instead of blaming the migration
+ok 3 - missing CMV gives an actionable value-report error instead of blaming the migration
+  ---
+  duration_ms: 1.2622
+  type: 'test'
+  ...
+# Subtest: anonymous and blocked analytics calls never read data; connection operations require admin
+ok 4 - anonymous and blocked analytics calls never read data; connection operations require admin
+  ---
+  duration_ms: 6.7201
+  type: 'test'
+  ...
+# Subtest: report ignores forged workspace/user, validates filters and caps browser page size
+ok 5 - report ignores forged workspace/user, validates filters and caps browser page size
+  ---
+  duration_ms: 3.0118
+  type: 'test'
+  ...
+# Subtest: a scheduling outage remains actionable while returning the report already available
+ok 6 - a scheduling outage remains actionable while returning the report already available
+  ---
+  duration_ms: 2.1314
+  type: 'test'
+  ...
+# Subtest: background report refreshes reuse imported data without rescheduling historical coverage
+ok 7 - background report refreshes reuse imported data without rescheduling historical coverage
+  ---
+  duration_ms: 3.1926
+  type: 'test'
+  ...
+# Subtest: legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials
+ok 8 - legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials
+  ---
+  duration_ms: 9.6967
+  type: 'test'
+  ...
+# Subtest: independent mathematical oracle agrees with SQL and TS across edge cases, metrics, ties, limits, paging and visual sort
+ok 9 - independent mathematical oracle agrees with SQL and TS across edge cases, metrics, ties, limits, paging and visual sort
+  ---
+  duration_ms: 7329.668
+  type: 'test'
+  ...
+# Subtest: unlinked order lines reconcile exactly through normalized payload, SQL ingest, report API, CSV and XLSX; all company combinations isolate correctly
+ok 10 - unlinked order lines reconcile exactly through normalized payload, SQL ingest, report API, CSV and XLSX; all company combinations isolate correctly
+  ---
+  duration_ms: 917.5239
+  type: 'test'
+  ...
+# Subtest: additional accounts use their own client credentials and coalesce refreshes while persisting encrypted pairs
+ok 11 - additional accounts use their own client credentials and coalesce refreshes while persisting encrypted pairs
+  ---
+  duration_ms: 59.4698
+  type: 'test'
+  ...
+# Subtest: failed token persistence retries the same pair without a second OAuth exchange
+ok 12 - failed token persistence retries the same pair without a second OAuth exchange
+  ---
+  duration_ms: 258.4437
+  type: 'test'
+  ...
+# Subtest: legacy analytics references the existing authorization; removal never falls through to another OAuth account
+ok 13 - legacy analytics references the existing authorization; removal never falls through to another OAuth account
+  ---
+  duration_ms: 7.0517
+  type: 'test'
+  ...
+# Subtest: each changed access token must identify the expected company, including a legacy reconnect
+ok 14 - each changed access token must identify the expected company, including a legacy reconnect
+  ---
+  duration_ms: 1.3645
+  type: 'test'
+  ...
+# Subtest: all simple inventory products become canonical stock units, with TESTE retained for review
+ok 15 - all simple inventory products become canonical stock units, with TESTE retained for review
+  ---
+  duration_ms: 3.0171
+  type: 'test'
+  ...
+# Subtest: Camel Toe and typo variants use the stated kit quantity rather than numeric SKU suffixes
+ok 16 - Camel Toe and typo variants use the stated kit quantity rather than numeric SKU suffixes
+  ---
+  duration_ms: 0.2557
+  type: 'test'
+  ...
+# Subtest: cross-family variant codes retain physical model, shape, size and flavor distinctions
+ok 17 - cross-family variant codes retain physical model, shape, size and flavor distinctions
+  ---
+  duration_ms: 0.3163
+  type: 'test'
+  ...
+# Subtest: new packaged tape link follows the approved policy and becomes pending if that policy changes
+ok 18 - new packaged tape link follows the approved policy and becomes pending if that policy changes
+  ---
+  duration_ms: 0.3933
+  type: 'test'
+  ...
+# Subtest: confirmed Corega stock units are tubes; undocumented bottle kits remain pending
+ok 19 - confirmed Corega stock units are tubes; undocumented bottle kits remain pending
+  ---
+  duration_ms: 0.3657
+  type: 'test'
+  ...
+# Subtest: catalog accepts only documented links, exact quantities and the authorized workspace
+ok 20 - catalog accepts only documented links, exact quantities and the authorized workspace
+  ---
+  duration_ms: 6949.9809
+  type: 'test'
+  ...
+# Subtest: nested decimal conversions stay exact; cycles, invalid factors and conflicting evidence stay pending
+ok 21 - nested decimal conversions stay exact; cycles, invalid factors and conflicting evidence stay pending
+  ---
+  duration_ms: 1.7619
+  type: 'test'
+  ...
+# Subtest: approved packaging exclusion consolidates the tape while preserving packaged SKUs and distinct conversion factors
+ok 22 - approved packaging exclusion consolidates the tape while preserving packaged SKUs and distinct conversion factors
+  ---
+  duration_ms: 130.3109
+  type: 'test'
+  ...
+# Subtest: composition consolidates explicit SKUs across companies, converts units and conserves every cent and distinct order
+ok 23 - composition consolidates explicit SKUs across companies, converts units and conserves every cent and distinct order
+  ---
+  duration_ms: 48.1235
+  type: 'test'
+  ...
+# Subtest: new analytical classifications preserve cents while converting Camel Toe, typo kit and inventory pack units
+ok 24 - new analytical classifications preserve cents while converting Camel Toe, typo kit and inventory pack units
+  ---
+  duration_ms: 70.1268
+  type: 'test'
+  ...
+# Subtest: original product/SKU, company and invoice filters apply before composition and never widen the scope
+ok 25 - original product/SKU, company and invoice filters apply before composition and never widen the scope
+  ---
+  duration_ms: 75.6485
+  type: 'test'
+  ...
+# Subtest: drilldown traces original SKUs, conversion factors and order amounts without double counting
+ok 26 - drilldown traces original SKUs, conversion factors and order amounts without double counting
+  ---
+  duration_ms: 17.0059
+  type: 'test'
+  ...
+# Subtest: export, pagination and sorting share full ranking, with composition metadata and exact fractional conversion
+ok 27 - export, pagination and sorting share full ranking, with composition metadata and exact fractional conversion
+  ---
+  duration_ms: 114.3289
+  type: 'test'
+  ...
+# Subtest: ABC classes and cumulative percentages are recalculated after consolidation for both metrics and classification modes
+ok 28 - ABC classes and cumulative percentages are recalculated after consolidation for both metrics and classification modes
+  ---
+  duration_ms: 52.48
+  type: 'test'
+  ...
+# Subtest: composition functions are read-only, browser-restricted and enforce membership
+ok 29 - composition functions are read-only, browser-restricted and enforce membership
+  ---
+  duration_ms: 61.4128
+  type: 'test'
+  ...
+# Subtest: mixed kits use verified stock units and column L reference costs
+ok 30 - mixed kits use verified stock units and column L reference costs
+  ---
+  duration_ms: 0.4155
+  type: 'test'
+  ...
+# Subtest: nested mixed kits merge repeated leaves using exact decimal arithmetic
+ok 31 - nested mixed kits merge repeated leaves using exact decimal arithmetic
+  ---
+  duration_ms: 4.1601
+  type: 'test'
+  ...
+# Subtest: tape plus silicone pair and Ponds combo conserve cents, quantities and distinct orders
+ok 32 - tape plus silicone pair and Ponds combo conserve cents, quantities and distinct orders
+  ---
+  duration_ms: 66.6099
+  type: 'test'
+  ...
+# Subtest: each original line allocates its own remaining cents even for duplicate kit SKUs in one order
+ok 33 - each original line allocates its own remaining cents even for duplicate kit SKUs in one order
+  ---
+  duration_ms: 35.6454
+  type: 'test'
+  ...
+# Subtest: CMV weights include component quantities rather than only comparing unit costs
+ok 34 - CMV weights include component quantities rather than only comparing unit costs
+  ---
+  duration_ms: 41.3557
+  type: 'test'
+  ...
+# Subtest: missing or invalid CMV blocks value classification and preserves quantity analysis with explicit unallocated amounts
+ok 35 - missing or invalid CMV blocks value classification and preserves quantity analysis with explicit unallocated amounts
+  ---
+  duration_ms: 146.8383
+  type: 'test'
+  ...
+# Subtest: zero-value mixed lines conserve zero without requiring artificial CMV
+ok 36 - zero-value mixed lines conserve zero without requiring artificial CMV
+  ---
+  duration_ms: 17.1582
+  type: 'test'
+  ...
+# Subtest: allocation uses exact integer quotients for huge weights and stable SKU ties for equal remainders
+ok 37 - allocation uses exact integer quotients for huge weights and stable SKU ties for equal remainders
+  ---
+  duration_ms: 20.2618
+  type: 'test'
+  ...
+# Subtest: analytical cron rejects missing/mismatched authorization before any work
+ok 38 - analytical cron rejects missing/mismatched authorization before any work
+  ---
+  duration_ms: 82.2073
+  type: 'test'
+  ...
+# Subtest: cron processes durable queues with no browser and reports renewal failures without stopping other accounts
+ok 39 - cron processes durable queues with no browser and reports renewal failures without stopping other accounts
+  ---
+  duration_ms: 47.7325
+  type: 'test'
+  ...
+# Subtest: migration is idempotent, links legacy credentials without changing scanner and restricts browser access
+ok 40 - migration is idempotent, links legacy credentials without changing scanner and restricts browser access
+  ---
+  duration_ms: 5235.4973
+  type: 'test'
+  ...
+# Subtest: group setup is scoped, repeatable, creates pending accounts and never fabricates authorizations
+ok 41 - group setup is scoped, repeatable, creates pending accounts and never fabricates authorizations
+  ---
+  duration_ms: 198.6225
+  type: 'test'
+  ...
+# Subtest: idempotent imports replace changed items, stale lease fails, per-account lease serializes
+ok 42 - idempotent imports replace changed items, stale lease fails, per-account lease serializes
+  ---
+  duration_ms: 194.3953
+  type: 'test'
+  ...
+# Subtest: SQL math matches engine for modes, metrics and sorting without changing rank; cancellation is excluded
+ok 43 - SQL math matches engine for modes, metrics and sorting without changing rank; cancellation is excluded
+  ---
+  duration_ms: 71.743
+  type: 'test'
+  ...
+# Subtest: omnichannel consolidation scopes same SKUs by company and supports arbitrary company/source combinations
+ok 44 - omnichannel consolidation scopes same SKUs by company and supports arbitrary company/source combinations
+  ---
+  duration_ms: 76.4171
+  type: 'test'
+  ...
+# Subtest: exports return all ranked entities and drilldown reuses the exact filtered scope
+ok 45 - exports return all ranked entities and drilldown reuses the exact filtered scope
+  ---
+  duration_ms: 16.1678
+  type: 'test'
+  ...
+# Subtest: foreign admins and inactive users cannot query; RLS and compound FKs prevent workspace mixing
+ok 46 - foreign admins and inactive users cannot query; RLS and compound FKs prevent workspace mixing
+  ---
+  duration_ms: 65.423
+  type: 'test'
+  ...
+# Subtest: explicit verified external-account mapping reconciles duplicate sales and preserves aliases on later imports
+ok 47 - explicit verified external-account mapping reconciles duplicate sales and preserves aliases on later imports
+  ---
+  duration_ms: 63.9515
+  type: 'test'
+  ...
+# Subtest: cancellation updates existing sales even without item payloads and rejects stale leases
+ok 48 - cancellation updates existing sales even without item payloads and rejects stale leases
+  ---
+  duration_ms: 25.4812
+  type: 'test'
+  ...
+# Subtest: coverage merges completed intervals independently of recent incremental job history
+ok 49 - coverage merges completed intervals independently of recent incremental job history
+  ---
+  duration_ms: 13.4958
+  type: 'test'
+  ...
+# Subtest: missing-history scheduling subtracts covered and reserved spans, retains failed checkpoints and validates member scope
+ok 50 - missing-history scheduling subtracts covered and reserved spans, retains failed checkpoints and validates member scope
+  ---
+  duration_ms: 91.1369
+  type: 'test'
+  ...
+# Subtest: coverage includes proven incrementals and checkpoint days, but never update-only scans or gaps
+ok 51 - coverage includes proven incrementals and checkpoint days, but never update-only scans or gaps
+  ---
+  duration_ms: 359.3752
+  type: 'test'
+  ...
+# Subtest: incremental scheduling refreshes the current day without duplicate active or minute-by-minute completed jobs
+ok 52 - incremental scheduling refreshes the current day without duplicate active or minute-by-minute completed jobs
+  ---
+  duration_ms: 48.1466
+  type: 'test'
+  ...
+# Subtest: bulk leases reserve distinct accounts and recent jobs rotate fairly with the initial backfill
+ok 53 - bulk leases reserve distinct accounts and recent jobs rotate fairly with the initial backfill
+  ---
+  duration_ms: 64.299
+  type: 'test'
+  ...
+# Subtest: legacy relink verifies workspace, operational snapshot and CNPJ, then resumes the original cursor without changing scanner tokens
+ok 54 - legacy relink verifies workspace, operational snapshot and CNPJ, then resumes the original cursor without changing scanner tokens
+  ---
+  duration_ms: 24.7374
+  type: 'test'
+  ...
+# Subtest: cron SQL validates Vault, is repeatable, restricts invocation and records only request identifiers
+ok 55 - cron SQL validates Vault, is repeatable, restricts invocation and records only request identifiers
+  ---
+  duration_ms: 51.129
+  type: 'test'
+  ...
+# Subtest: large analytical data is aggregated on SQL and returns only a bounded page and Pareto
+ok 56 - large analytical data is aggregated on SQL and returns only a bounded page and Pareto
+  ---
+  duration_ms: 4666.1508
+  type: 'test'
+  ...
+# 50,000 orders/items; 5,000 products; SQL aggregate 1389.5 ms; response 45670 bytes. Local PGlite, not production SLA.
+# Subtest: rollback removes only the analytics layer and preserves operational credentials and history
+ok 57 - rollback removes only the analytics layer and preserves operational credentials and history
+  ---
+  duration_ms: 127.4
+  type: 'test'
+  ...
+# Subtest: unlinked Olist items retain exact money and unique order/position identity without inventing catalog equivalence
+ok 58 - unlinked Olist items retain exact money and unique order/position identity without inventing catalog equivalence
+  ---
+  duration_ms: 5.4511
+  type: 'test'
+  ...
+# Subtest: coverage distinguishes missing history, import, sync failure and genuinely empty filtered results; exports share selected scope
+ok 59 - coverage distinguishes missing history, import, sync failure and genuinely empty filtered results; exports share selected scope
+  ---
+  duration_ms: 0.9012
+  type: 'test'
+  ...
+# Subtest: progress version ignores heartbeats and row ordering but detects imported orders and coverage changes
+ok 60 - progress version ignores heartbeats and row ordering but detects imported orders and coverage changes
+  ---
+  duration_ms: 0.3369
+  type: 'test'
+  ...
+# Subtest: Tiny legacy and strict modes differ at crossings and preserve exact boundaries
+ok 61 - Tiny legacy and strict modes differ at crossings and preserve exact boundaries
+  ---
+  duration_ms: 0.7402
+  type: 'test'
+  ...
+# Subtest: empty, zero, one entity, deterministic ties, quantity and many entities
+ok 62 - empty, zero, one entity, deterministic ties, quantity and many entities
+  ---
+  duration_ms: 62.0089
+  type: 'test'
+  ...
+# Subtest: decimal money is exact, large amounts remain strings, lines round once
+ok 63 - decimal money is exact, large amounts remain strings, lines round once
+  ---
+  duration_ms: 0.3746
+  type: 'test'
+  ...
+# Subtest: normalizer scopes customer/product identities, uses documented parent and flags missing enrichment
+ok 64 - normalizer scopes customer/product identities, uses documented parent and flags missing enrichment
+  ---
+  duration_ms: 1.0711
+  type: 'test'
+  ...
+# Subtest: filters validate dimensions, dates, limits and default statuses
+ok 65 - filters validate dimensions, dates, limits and default statuses
+  ---
+  duration_ms: 0.6281
+  type: 'test'
+  ...
+# Subtest: coverage joins adjacent complete backfills and never claims gaps or incremental scans cover history
+ok 66 - coverage joins adjacent complete backfills and never claims gaps or incremental scans cover history
+  ---
+  duration_ms: 772.8423
+  type: 'test'
+  ...
+# Subtest: OAuth state binds user, workspace, connection and configuration version; rejects tampering and expiry
+ok 67 - OAuth state binds user, workspace, connection and configuration version; rejects tampering and expiry
+  ---
+  duration_ms: 20.1471
+  type: 'test'
+  ...
+# Subtest: OAuth saves encrypted tokens only after confirming the company and rejects replay
+ok 68 - OAuth saves encrypted tokens only after confirming the company and rejects replay
+  ---
+  duration_ms: 149.1533
+  type: 'test'
+  ...
+# Subtest: account HTTP 403 reports its cause without retrying or saving unverified tokens
+ok 69 - account HTTP 403 reports its cause without retrying or saving unverified tokens
+  ---
+  duration_ms: 3.0756
+  type: 'test'
+  ...
+# Subtest: account HTTP 401 reports its cause without retrying or saving unverified tokens
+ok 70 - account HTTP 401 reports its cause without retrying or saving unverified tokens
+  ---
+  duration_ms: 3.5014
+  type: 'test'
+  ...
+# Subtest: account HTTP 429 reports its cause without retrying or saving unverified tokens
+ok 71 - account HTTP 429 reports its cause without retrying or saving unverified tokens
+  ---
+  duration_ms: 16.3036
+  type: 'test'
+  ...
+# Subtest: a transient account lookup is retried with the same token without exchanging the code twice
+ok 72 - a transient account lookup is retried with the same token without exchanging the code twice
+  ---
+  duration_ms: 1234.232
+  type: 'test'
+  ...
+# Subtest: an unavailable account lookup stops after one retry and records the recoverable failure
+ok 73 - an unavailable account lookup stops after one retry and records the recoverable failure
+  ---
+  duration_ms: 1214.5181
+  type: 'test'
+  ...
+# Subtest: account identity company never links tokens to the wrong company
+ok 74 - account identity company never links tokens to the wrong company
+  ---
+  duration_ms: 2.8487
+  type: 'test'
+  ...
+# Subtest: account identity account_response never links tokens to the wrong company
+ok 75 - account identity account_response never links tokens to the wrong company
+  ---
+  duration_ms: 2.1077
+  type: 'test'
+  ...
+# Subtest: malformed OAuth responses, token network errors and refused exchanges have distinct errors
+    # Subtest: token_response
+    ok 1 - token_response
+      ---
+      duration_ms: 1.7158
+      type: 'test'
+      ...
+    # Subtest: token_request
+    ok 2 - token_request
+      ---
+      duration_ms: 1.1453
+      type: 'test'
+      ...
+    # Subtest: exchange
+    ok 3 - exchange
+      ---
+      duration_ms: 1.5506
+      type: 'test'
+      ...
+    1..3
+ok 76 - malformed OAuth responses, token network errors and refused exchanges have distinct errors
+  ---
+  duration_ms: 4.9906
+  type: 'test'
+  ...
+# Subtest: failed persistence returns save and leaves the authorization pending
+ok 77 - failed persistence returns save and leaves the authorization pending
+  ---
+  duration_ms: 1.3031
+  type: 'test'
+  ...
+# Subtest: a callback cannot overwrite a newer flow or mark it with a stale error
+ok 78 - a callback cannot overwrite a newer flow or mark it with a stale error
+  ---
+  duration_ms: 6.6305
+  type: 'test'
+  ...
+# Subtest: bar hover immediately links a custom tooltip, curve marker and table without API calls
+ok 79 - bar hover immediately links a custom tooltip, curve marker and table without API calls
+  ---
+  duration_ms: 409.346
+  type: 'test'
+  ...
+# Subtest: curve hover and percentage controls highlight the whole prefix, including the crossing product
+ok 80 - curve hover and percentage controls highlight the whole prefix, including the crossing product
+  ---
+  duration_ms: 182.6422
+  type: 'test'
+  ...
+# Subtest: hovering a table product reverses the link to its bar and curve point
+ok 81 - hovering a table product reverses the link to its bar and curve point
+  ---
+  duration_ms: 32.5709
+  type: 'test'
+  ...
+# Subtest: keyboard navigation supports cumulative exploration, dismissal and order drilldown
+ok 82 - keyboard navigation supports cumulative exploration, dismissal and order drilldown
+  ---
+  duration_ms: 249.0229
+  type: 'test'
+  ...
+# Subtest: the full plot responds to pointer position and a touch selection survives pointer exit
+ok 83 - the full plot responds to pointer position and a touch selection survives pointer exit
+  ---
+  duration_ms: 171.0998
+  type: 'test'
+  ...
+# Subtest: base product mode is explicitly sent to the server and remains separate from raw ERP products
+ok 84 - base product mode is explicitly sent to the server and remains separate from raw ERP products
+  ---
+  duration_ms: 149.841
+  type: 'test'
+  ...
+# Subtest: Olist HTTP client maps network timeouts to retry, bounds Retry-After and validates response contracts
+ok 85 - Olist HTTP client maps network timeouts to retry, bounds Retry-After and validates response contracts
+  ---
+  duration_ms: 33.3104
+  type: 'test'
+  ...
+# Subtest: real-world zero catalog id no longer poisons a checkpoint: all unlinked lines are ingested once and no /produtos/0 is requested
+ok 86 - real-world zero catalog id no longer poisons a checkpoint: all unlinked lines are ingested once and no /produtos/0 is requested
+  ---
+  duration_ms: 9.4713
+  type: 'test'
+  ...
+# Subtest: a deleted catalog product (404) retains its valid scoped ID and order values without blocking history
+ok 87 - a deleted catalog product (404) retains its valid scoped ID and order values without blocking history
+  ---
+  duration_ms: 1.2577
+  type: 'test'
+  ...
+# Subtest: recent denied enrichment check prevents repeating the catalog request even when an older enriched snapshot exists
+ok 88 - recent denied enrichment check prevents repeating the catalog request even when an older enriched snapshot exists
+  ---
+  duration_ms: 0.9285
+  type: 'test'
+  ...
+# Subtest: required Olist calls distinguish 401/403 from retryable 429/5xx and preserve the pending order
+ok 89 - required Olist calls distinguish 401/403 from retryable 429/5xx and preserve the pending order
+  ---
+  duration_ms: 2.75
+  type: 'test'
+  ...
+# Subtest: analytics ingests all origins, persists progress, caches products and releases the original lease
+ok 90 - analytics ingests all origins, persists progress, caches products and releases the original lease
+  ---
+  duration_ms: 1.2327
+  type: 'test'
+  ...
+# Subtest: rate limiting preserves pending order and schedules a retry without persisting a partial sale
+ok 91 - rate limiting preserves pending order and schedules a retry without persisting a partial sale
+  ---
+  duration_ms: 0.5228
+  type: 'test'
+  ...
+# Subtest: an incremental job uses update date; inaccessible optional enrichment is flagged, not invented
+ok 92 - an incremental job uses update date; inaccessible optional enrichment is flagged, not invented
+  ---
+  duration_ms: 1.0073
+  type: 'test'
+  ...
+# Subtest: new incremental coverage waits for both sale and update scans to complete
+ok 93 - new incremental coverage waits for both sale and update scans to complete
+  ---
+  duration_ms: 0.6634
+  type: 'test'
+  ...
+# Subtest: a worker traverses short pages and empty days within one lease instead of waiting another minute per day
+ok 94 - a worker traverses short pages and empty days within one lease instead of waiting another minute per day
+  ---
+  duration_ms: 3.9846
+  type: 'test'
+  ...
+# Subtest: parallel cron reserves distinct accounts once and starts all workers without waiting for another account's API
+ok 95 - parallel cron reserves distinct accounts once and starts all workers without waiting for another account's API
+  ---
+  duration_ms: 1.3868
+  type: 'test'
+  ...
+# Subtest: expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying
+ok 96 - expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying
+  ---
+  duration_ms: 0.6633
+  type: 'test'
+  ...
+# Subtest: dashboard renders cards and only the selected page, applies multi-company filters and keeps server rank on sort
+ok 97 - dashboard renders cards and only the selected page, applies multi-company filters and keeps server rank on sort
+  ---
+  duration_ms: 1852.3585
+  type: 'test'
+  ...
+# Subtest: drilldown traces orders and native dialog closes; client tab changes grouping on server
+ok 98 - drilldown traces orders and native dialog closes; client tab changes grouping on server
+  ---
+  duration_ms: 525.4549
+  type: 'test'
+  ...
+# Subtest: dashboard polls existing reports as imports advance without asking the browser to run a worker
+not ok 99 - dashboard polls existing reports as imports advance without asking the browser to run a worker
+  ---
+  duration_ms: 283.2829
+  type: 'test'
+  location: 'E:\\Users\\User\\Documents\\ESTUDOS\\abelha_par\\tests\\analytics-ui.test.cjs:198:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /3 pedidos processados/. Input:
+    
+    'Onde estão as vendas da sua operação?Combine empresas e origens. Compare os registros Olist ou consolide kits com regras de composição confirmadas.AtualizarProdutosProdutos baseClientesDeAtéMétricaValor bruto dos itensQuantidade vendidaBasePedidos · data da vendaPedidos com NF autorizada · emissãoÚltimos 7 diasÚltimos 30 diasÚltimos 90 diasÚltimos 365 diasEste mêsEste anoEmpresas · 2Selecionar todosEmpresa 1Empresa 2Empresa 3Conexões Olist · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Integrações / origens · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Situações · 3Selecionar todosAbertoFaturadoAprovadoPreparandoEnviadoEntregueProntoIncompletoNão entregueFiltros e regras adicionaisAnalisar vendasTodas as empresas e origensTodos os marketplaces classificadosSomente sites classificadosValor bruto dos itensR$ 100,00Quantidade vendida100Pedidos / entidades100 / 100Concentração dos 10 primeiros10%Classe A · 80 entidadesR$ 80,00 · 80% da métrica80 unidadesClasse B · 15 entidadesR$ 15,00 · 15% da métrica15 unidadesClasse C · 5 entidadesR$ 5,00 · 5% da métrica5 unidadesConcentração das vendasExplore um cliente na barra ou o conjunto acumulado na curva.IndividualAcumulado0%25%50%75%100%1º cliente60º clienteAcumulado até10%20%30%50%80%95%100%Passe o mouse ou toque. Use ← →; Shift destaca o acumulado; Enter abre pedidos; Esc limpa.Referências A: 80% · B: 95%Exibindo os primeiros 60 de 100 registros, que chegam a 60%. Percentuais além desse ponto destacam apenas os registros exibidos; o acumulado considera o conjunto completo.Clientes · 100 entidadesCSV completoExcelClique no nome para ver empresas, origens e pedidos. A ordenação da tabela preserva o ranking e o acumulado ABC.Colunas da tabelaPosiçãoSKUProduto / clienteQuantidadeValor bruto% individual% acumuladoPedidosClassePosiçãoSKUProduto / clienteQuantidadeValor bruto ↑% individual% acumuladoPedidosClasse1SKU-0Produto 01R$ 1,001%1%1A2SKU-1Produto 11R$ 1,001%2%1A3SKU-2Produto 21R$ 1,001%3%1A4SKU-3Produto 31R$ 1,001%4%1A5SKU-4Produto 41R$ 1,001%5%1A6SKU-5Produto 51R$ 1,001%6%1A7SKU-6Produto 61R$ 1,001%7%1A8SKU-7Produto 71R$ 1,001%8%1A9SKU-8Produto 81R$ 1,001%9%1A10SKU-9Produto 91R$ 1,001%10%1A11SKU-10Produto 101R$ 1,001%11%1A12SKU-11Produto 111R$ 1,001%12%1A13SKU-12Produto 121R$ 1,001%13%1A14SKU-13Produto 131R$ 1,001%14%1A15SKU-14Produto 141R$ 1,001%15%1A16SKU-15Produto 151R$ 1,001%16%1A17SKU-16Produto 161R$ 1,001%17%1A18SKU-17Produto 171R$ 1,001%18%1A19SKU-18Produto 181R$ 1,001%19%1A20SKU-19Produto 191R$ 1,001%20%1A21SKU-20Produto 201R$ 1,001%21%1A22SKU-21Produto 211R$ 1,001%22%1A23SKU-22Produto 221R$ 1,001%23%1A24SKU-23Produto 231R$ 1,001%24%1A25SKU-24Produto 241R$ 1,001%25%1A26SKU-25Produto 251R$ 1,001%26%1A27SKU-26Produto 261R$ 1,001%27%1A28SKU-27Produto 271R$ 1,001%28%1A29SKU-28Produto 281R$ 1,001%29%1A30SKU-29Produto 291R$ 1,001%30%1A31SKU-30Produto 301R$ 1,001%31%1A32SKU-31Produto 311R$ 1,001%32%1A33SKU-32Produto 321R$ 1,001%33%1A34SKU-33Produto 331R$ 1,001%34%1A35SKU-34Produto 341R$ 1,001%35%1A36SKU-35Produto 351R$ 1,001%36%1A37SKU-36Produto 361R$ 1,001%37%1A38SKU-37Produto 371R$ 1,001%38%1A39SKU-38Produto 381R$ 1,001%39%1A40SKU-39Produto 391R$ 1,001%40%1A41SKU-40Produto 401R$ 1,001%41%1A42SKU-41Produto 411R$ 1,001%42%1A43SKU-42Produto 421R$ 1,001%43%1A44SKU-43Produto 431R$ 1,001%44%1A45SKU-44Produto 441R$ 1,001%45%1A46SKU-45Produto 451R$ 1,001%46%1A47SKU-46Produto 461R$ 1,001%47%1A48SKU-47Produto 471R$ 1,001%48%1A49SKU-48Produto 481R$ 1,001%49%1A50SKU-49Produto 491R$ 1,001%50%1APor página25501001 / 2Escopo atual · valores referentes aos itens desta entidade · origem rastreável por conexão.Consultando pedidos…'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Onde estão as vendas da sua operação?Combine empresas e origens. Compare os registros Olist ou consolide kits com regras de composição confirmadas.AtualizarProdutosProdutos baseClientesDeAtéMétricaValor bruto dos itensQuantidade vendidaBasePedidos · data da vendaPedidos com NF autorizada · emissãoÚltimos 7 diasÚltimos 30 diasÚltimos 90 diasÚltimos 365 diasEste mêsEste anoEmpresas · 2Selecionar todosEmpresa 1Empresa 2Empresa 3Conexões Olist · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Integrações / origens · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Situações · 3Selecionar todosAbertoFaturadoAprovadoPreparandoEnviadoEntregueProntoIncompletoNão entregueFiltros e regras adicionaisAnalisar vendasTodas as empresas e origensTodos os marketplaces classificadosSomente sites classificadosValor bruto dos itensR$ 100,00Quantidade vendida100Pedidos / entidades100 / 100Concentração dos 10 primeiros10%Classe A · 80 entidadesR$ 80,00 · 80% da métrica80 unidadesClasse B · 15 entidadesR$ 15,00 · 15% da métrica15 unidadesClasse C · 5 entidadesR$ 5,00 · 5% da métrica5 unidadesConcentração das vendasExplore um cliente na barra ou o conjunto acumulado na curva.IndividualAcumulado0%25%50%75%100%1º cliente60º clienteAcumulado até10%20%30%50%80%95%100%Passe o mouse ou toque. Use ← →; Shift destaca o acumulado; Enter abre pedidos; Esc limpa.Referências A: 80% · B: 95%Exibindo os primeiros 60 de 100 registros, que chegam a 60%. Percentuais além desse ponto destacam apenas os registros exibidos; o acumulado considera o conjunto completo.Clientes · 100 entidadesCSV completoExcelClique no nome para ver empresas, origens e pedidos. A ordenação da tabela preserva o ranking e o acumulado ABC.Colunas da tabelaPosiçãoSKUProduto / clienteQuantidadeValor bruto% individual% acumuladoPedidosClassePosiçãoSKUProduto / clienteQuantidadeValor bruto ↑% individual% acumuladoPedidosClasse1SKU-0Produto 01R$ 1,001%1%1A2SKU-1Produto 11R$ 1,001%2%1A3SKU-2Produto 21R$ 1,001%3%1A4SKU-3Produto 31R$ 1,001%4%1A5SKU-4Produto 41R$ 1,001%5%1A6SKU-5Produto 51R$ 1,001%6%1A7SKU-6Produto 61R$ 1,001%7%1A8SKU-7Produto 71R$ 1,001%8%1A9SKU-8Produto 81R$ 1,001%9%1A10SKU-9Produto 91R$ 1,001%10%1A11SKU-10Produto 101R$ 1,001%11%1A12SKU-11Produto 111R$ 1,001%12%1A13SKU-12Produto 121R$ 1,001%13%1A14SKU-13Produto 131R$ 1,001%14%1A15SKU-14Produto 141R$ 1,001%15%1A16SKU-15Produto 151R$ 1,001%16%1A17SKU-16Produto 161R$ 1,001%17%1A18SKU-17Produto 171R$ 1,001%18%1A19SKU-18Produto 181R$ 1,001%19%1A20SKU-19Produto 191R$ 1,001%20%1A21SKU-20Produto 201R$ 1,001%21%1A22SKU-21Produto 211R$ 1,001%22%1A23SKU-22Produto 221R$ 1,001%23%1A24SKU-23Produto 231R$ 1,001%24%1A25SKU-24Produto 241R$ 1,001%25%1A26SKU-25Produto 251R$ 1,001%26%1A27SKU-26Produto 261R$ 1,001%27%1A28SKU-27Produto 271R$ 1,001%28%1A29SKU-28Produto 281R$ 1,001%29%1A30SKU-29Produto 291R$ 1,001%30%1A31SKU-30Produto 301R$ 1,001%31%1A32SKU-31Produto 311R$ 1,001%32%1A33SKU-32Produto 321R$ 1,001%33%1A34SKU-33Produto 331R$ 1,001%34%1A35SKU-34Produto 341R$ 1,001%35%1A36SKU-35Produto 351R$ 1,001%36%1A37SKU-36Produto 361R$ 1,001%37%1A38SKU-37Produto 371R$ 1,001%38%1A39SKU-38Produto 381R$ 1,001%39%1A40SKU-39Produto 391R$ 1,001%40%1A41SKU-40Produto 401R$ 1,001%41%1A42SKU-41Produto 411R$ 1,001%42%1A43SKU-42Produto 421R$ 1,001%43%1A44SKU-43Produto 431R$ 1,001%44%1A45SKU-44Produto 441R$ 1,001%45%1A46SKU-45Produto 451R$ 1,001%46%1A47SKU-46Produto 461R$ 1,001%47%1A48SKU-47Produto 471R$ 1,001%48%1A49SKU-48Produto 481R$ 1,001%49%1A50SKU-49Produto 491R$ 1,001%50%1APor página25501001 / 2Escopo atual · valores referentes aos itens desta entidade · origem rastreável por conexão.Consultando pedidos…'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (E:\Users\User\Documents\ESTUDOS\abelha_par\tests\analytics-ui.test.cjs:206:10)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: missing coverage stays visibly partial and a server error does not leave a misleading old result
+not ok 100 - missing coverage stays visibly partial and a server error does not leave a misleading old result
+  ---
+  duration_ms: 313.7883
+  type: 'test'
+  location: 'E:\\Users\\User\\Documents\\ESTUDOS\\abelha_par\\tests\\analytics-ui.test.cjs:227:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(document.body.textContent.includes("Escopo parcial"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (E:\Users\User\Documents\ESTUDOS\abelha_par\tests\analytics-ui.test.cjs:230:10)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: late success and network failure from aborted reports cannot overwrite the latest grouping
+ok 101 - late success and network failure from aborted reports cannot overwrite the latest grouping
+  ---
+  duration_ms: 274.3926
+  type: 'test'
+  ...
+# Subtest: operator can recover after export failure without losing the report or getting stuck exporting
+ok 102 - operator can recover after export failure without losing the report or getting stuck exporting
+  ---
+  duration_ms: 118.9063
+  type: 'test'
+  ...
+# Subtest: Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked
+ok 103 - Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked
+  ---
+  duration_ms: 120.8455
+  type: 'test'
+  ...
+# Subtest: Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow
+ok 104 - Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow
+  ---
+  duration_ms: 44.4396
+  type: 'test'
+  ...
+# Subtest: quantity analysis discloses missing CMV and separates attributed value from original kit value in drilldown
+ok 105 - quantity analysis discloses missing CMV and separates attributed value from original kit value in drilldown
+  ---
+  duration_ms: 176.3537
+  type: 'test'
+  ...
+# Subtest: cached admin layout cannot mount Ninho for a demoted operator; live revocation removes mounted settings while scanning state stays bound
+ok 106 - cached admin layout cannot mount Ninho for a demoted operator; live revocation removes mounted settings while scanning state stays bound
+  ---
+  duration_ms: 321.1528
+  type: 'test'
+  ...
+# Subtest: OAuth refresh lease is exclusive and stale workers cannot overwrite a reconnect or release a newer lease
+ok 107 - OAuth refresh lease is exclusive and stale workers cannot overwrite a reconnect or release a newer lease
+  ---
+  duration_ms: 3751.6864
+  type: 'test'
+  ...
+# Subtest: migrations retain history and prevent browser writes to sessions, credentials and batches
+ok 108 - migrations retain history and prevent browser writes to sessions, credentials and batches
+  ---
+  duration_ms: 12.5843
+  type: 'test'
+  ...
+# Subtest: finalization rejects incomplete and foreign sessions and returns the same batch after a retry
+ok 109 - finalization rejects incomplete and foreign sessions and returns the same batch after a retry
+  ---
+  duration_ms: 27.6589
+  type: 'test'
+  ...
+# Subtest: revision comparison prevents a late tracking update from overwriting a scan
+ok 110 - revision comparison prevents a late tracking update from overwriting a scan
+  ---
+  duration_ms: 25.3418
+  type: 'test'
+  ...
+# Subtest: webhook arriving during processing is queued again; expired workers cannot finish a reclaimed job
+ok 111 - webhook arriving during processing is queued again; expired workers cannot finish a reclaimed job
+  ---
+  duration_ms: 31.2711
+  type: 'test'
+  ...
+# Subtest: operators cannot access Ninho or mutate any connection, even with forged user metadata
+ok 112 - operators cannot access Ninho or mutate any connection, even with forged user metadata
+  ---
+  duration_ms: 20.9823
+  type: 'test'
+  ...
+# Subtest: blocked sessions and missing membership storage fail closed
+ok 113 - blocked sessions and missing membership storage fail closed
+  ---
+  duration_ms: 2.1535
+  type: 'test'
+  ...
+# Subtest: an active operator fetches orders through workspace credentials and shares their cache
+ok 114 - an active operator fetches orders through workspace credentials and shares their cache
+  ---
+  duration_ms: 4.2851
+  type: 'test'
+  ...
+# Subtest: live menu permissions identify the authenticated operator and cannot be cached
+ok 115 - live menu permissions identify the authenticated operator and cannot be cached
+  ---
+  duration_ms: 9.1135
+  type: 'test'
+  ...
+# Subtest: webhook signatures retain the old URL initially and reject it after rotation
+ok 116 - webhook signatures retain the old URL initially and reject it after rotation
+  ---
+  duration_ms: 1.8928
+  type: 'test'
+  ...
+# Subtest: admin creates an account and membership in the current workspace without returning its password
+ok 117 - admin creates an account and membership in the current workspace without returning its password
+  ---
+  duration_ms: 1.5023
+  type: 'test'
+  ...
+# Subtest: failed membership creation rolls back the new account and malformed bodies are rejected before creating it
+ok 118 - failed membership creation rolls back the new account and malformed bodies are rejected before creating it
+  ---
+  duration_ms: 1.6648
+  type: 'test'
+  ...
+# Subtest: atomic scans preserve tracking rules, reject duplicates and return small confirmations
+ok 119 - atomic scans preserve tracking rules, reject duplicates and return small confirmations
+  ---
+  duration_ms: 3498.6545
+  type: 'test'
+  ...
+# Subtest: atomic scans serialize competing readers, reject ambiguous labels and protect workspace access
+ok 120 - atomic scans serialize competing readers, reject ambiguous labels and protect workspace access
+  ---
+  duration_ms: 39.978
+  type: 'test'
+  ...
+# Subtest: migration preserves encrypted credentials, history, webhook ID and creator, and initializes roles once
+ok 121 - migration preserves encrypted credentials, history, webhook ID and creator, and initializes roles once
+  ---
+  duration_ms: 12.4393
+  type: 'test'
+  ...
+# Subtest: operators read shared history through RLS; foreign and blocked members cannot
+ok 122 - operators read shared history through RLS; foreign and blocked members cannot
+  ---
+  duration_ms: 43.912
+  type: 'test'
+  ...
+# Subtest: membership RPC rejects operators, foreign admins and removal of the last active admin
+ok 123 - membership RPC rejects operators, foreign admins and removal of the last active admin
+  ---
+  duration_ms: 8.3241
+  type: 'test'
+  ...
+# Subtest: an operator finalizes a shared session created by another member, preserving authorship and idempotency
+ok 124 - an operator finalizes a shared session created by another member, preserving authorship and idempotency
+  ---
+  duration_ms: 18.1044
+  type: 'test'
+  ...
+# Subtest: shared cache and queue accept workspace writes while legacy inserts stay compatible
+ok 125 - shared cache and queue accept workspace writes while legacy inserts stay compatible
+  ---
+  duration_ms: 28.2772
+  type: 'test'
+  ...
+# Subtest: webhook changes require admin and rotating the URL resets receipt without changing tokens
+ok 126 - webhook changes require admin and rotating the URL resets receipt without changing tokens
+  ---
+  duration_ms: 59.8653
+  type: 'test'
+  ...
+# Subtest: validated mapping uses store order number and integration, independent of names and ERP number
+ok 127 - validated mapping uses store order number and integration, independent of names and ERP number
+  ---
+  duration_ms: 2.0648
+  type: 'test'
+  ...
+# Subtest: missing, unpaid, cancelled, cross-store, repeated and ambiguous orders block reconciliation
+ok 128 - missing, unpaid, cancelled, cross-store, repeated and ambiguous orders block reconciliation
+  ---
+  duration_ms: 0.6001
+  type: 'test'
+  ...
+# Subtest: duplicate normalized tracking is blocked both before and during scanning
+ok 129 - duplicate normalized tracking is blocked both before and during scanning
+  ---
+  duration_ms: 1.8994
+  type: 'test'
+  ...
+# Subtest: Shift selection follows visible sort order; hidden selections survive and hidden anchor is ignored
+ok 130 - Shift selection follows visible sort order; hidden selections survive and hidden anchor is ignored
+  ---
+  duration_ms: 1.8598
+  type: 'test'
+  ...
+# Subtest: selection works in either fetch order, persists through navigation, invalidates on edits, isolates accounts
+ok 131 - selection works in either fetch order, persists through navigation, invalidates on edits, isolates accounts
+  ---
+  duration_ms: 1.564
+  type: 'test'
+  ...
+# Subtest: Nuvemshop adapter separates IDs and uses documented auth, pagination and rate limit headers
+ok 132 - Nuvemshop adapter separates IDs and uses documented auth, pagination and rate limit headers
+  ---
+  duration_ms: 30.6751
+  type: 'test'
+  ...
+# Subtest: Olist pagination does not stop on a page without Nuvemshop orders and advances dates
+ok 133 - Olist pagination does not stop on a page without Nuvemshop orders and advances dates
+  ---
+  duration_ms: 3.188
+  type: 'test'
+  ...
+# Subtest: server scan failure never marks an order; a successful retry restores authoritative state
+ok 134 - server scan failure never marks an order; a successful retry restores authoritative state
+  ---
+  duration_ms: 1.2686
+  type: 'test'
+  ...
+# Subtest: date boundaries use São Paulo and reject impossible dates; official webhook uses dados.id
+ok 135 - date boundaries use São Paulo and reject impossible dates; official webhook uses dados.id
+  ---
+  duration_ms: 42.076
+  type: 'test'
+  ...
+# Subtest: 100 complete list records require one provider call and are cached server-side before returning
+ok 136 - 100 complete list records require one provider call and are cached server-side before returning
+  ---
+  duration_ms: 10.9914
+  type: 'test'
+  ...
+# Subtest: omitted fields trigger detail fallback; explicit null tracking is a valid fresh snapshot
+ok 137 - omitted fields trigger detail fallback; explicit null tracking is a valid fresh snapshot
+  ---
+  duration_ms: 1.5507
+  type: 'test'
+  ...
+# Subtest: a cache write failure prevents a successful preparation response
+ok 138 - a cache write failure prevents a successful preparation response
+  ---
+  duration_ms: 1.2611
+  type: 'test'
+  ...
+# Subtest: operational connection status uses shared credentials without exposing webhook URL or tokens
+ok 139 - operational connection status uses shared credentials without exposing webhook URL or tokens
+  ---
+  duration_ms: 2.2
+  type: 'test'
+  ...
+# Subtest: permission policy denies unknown roles and capabilities; route matching protects the entire Ninho subtree
+ok 140 - permission policy denies unknown roles and capabilities; route matching protects the entire Ninho subtree
+  ---
+  duration_ms: 1.5491
+  type: 'test'
+  ...
+# Subtest: middleware denies operators, inactive members and unavailable permission storage before HTML is delivered
+ok 141 - middleware denies operators, inactive members and unavailable permission storage before HTML is delivered
+  ---
+  duration_ms: 15.338
+  type: 'test'
+  ...
+# Subtest: page and subtree guard independently reject direct calls and recheck a demoted member without trusting middleware or JWT metadata
+ok 142 - page and subtree guard independently reject direct calls and recheck a demoted member without trusting middleware or JWT metadata
+  ---
+  duration_ms: 4.3714
+  type: 'test'
+  ...
+# Subtest: confirmation frees the next scan immediately, keeps unchanged references and completes after the last save
+ok 143 - confirmation frees the next scan immediately, keeps unchanged references and completes after the last save
+  ---
+  duration_ms: 29.9738
+  type: 'test'
+  ...
+# Subtest: stale snapshot synchronizes other scans and tracking; legacy full responses remain supported
+ok 144 - stale snapshot synchronizes other scans and tracking; legacy full responses remain supported
+  ---
+  duration_ms: 0.987
+  type: 'test'
+  ...
+# Subtest: finishing one request cannot clear the busy state of the next request
+ok 145 - finishing one request cannot clear the busy state of the next request
+  ---
+  duration_ms: 2.2721
+  type: 'test'
+  ...
+# Subtest: network and duplicate errors pause scans without falsely marking checked or being dismissed by success
+ok 146 - network and duplicate errors pause scans without falsely marking checked or being dismissed by success
+  ---
+  duration_ms: 1.0193
+  type: 'test'
+  ...
+# Subtest: late scan responses cannot update a switched session and tracking refresh survives compact confirmations
+ok 147 - late scan responses cannot update a switched session and tracking refresh survives compact confirmations
+  ---
+  duration_ms: 1.9638
+  type: 'test'
+  ...
+# Subtest: large batches render only one page of orders
+ok 148 - large batches render only one page of orders
+  ---
+  duration_ms: 700.7292
+  type: 'test'
+  ...
+# Subtest: switching from admin to operator removes privileges immediately and ignores the old account response
+ok 149 - switching from admin to operator removes privileges immediately and ignores the old account response
+  ---
+  duration_ms: 3.881
+  type: 'test'
+  ...
+# Subtest: a late admin response cannot reverse the latest role update for the same account
+ok 150 - a late admin response cannot reverse the latest role update for the same account
+  ---
+  duration_ms: 2.6821
+  type: 'test'
+  ...
+# Subtest: logout, mismatched identities and failed permission checks cannot keep the admin menu
+ok 151 - logout, mismatched identities and failed permission checks cannot keep the admin menu
+  ---
+  duration_ms: 1.3994
+  type: 'test'
+  ...
+# Subtest: unmount discards pending responses instead of updating a new login
+ok 152 - unmount discards pending responses instead of updating a new login
+  ---
+  duration_ms: 0.6909
+  type: 'test'
+  ...
+# Subtest: entering a protected route invalidates cached privileges before the permission request finishes
+ok 153 - entering a protected route invalidates cached privileges before the permission request finishes
+  ---
+  duration_ms: 0.7168
+  type: 'test'
+  ...
+# Subtest: same-identity auth events also revoke old grants and stale route requests cannot verify the new route
+ok 154 - same-identity auth events also revoke old grants and stale route requests cannot verify the new route
+  ---
+  duration_ms: 2.3538
+  type: 'test'
+  ...
+# Subtest: creation ignores forged client snapshot and uses only workspace-scoped server records while retaining the creator
+ok 155 - creation ignores forged client snapshot and uses only workspace-scoped server records while retaining the creator
+  ---
+  duration_ms: 13.5492
+  type: 'test'
+  ...
+# Subtest: creation rejects an omitted duplicate candidate and expired selection
+    # Subtest: duplicate omitted by browser
+    ok 1 - duplicate omitted by browser
+      ---
+      duration_ms: 1.5132
+      type: 'test'
+      ...
+    # Subtest: expired server snapshot
+    ok 2 - expired server snapshot
+      ---
+      duration_ms: 0.9074
+      type: 'test'
+      ...
+    1..2
+ok 156 - creation rejects an omitted duplicate candidate and expired selection
+  ---
+  duration_ms: 2.9588
+  type: 'test'
+  ...
+# Subtest: unauthenticated creation and scans are rejected without reading or writing orders
+ok 157 - unauthenticated creation and scans are rejected without reading or writing orders
+  ---
+  duration_ms: 2.6184
+  type: 'test'
+  ...
+# Subtest: scan uses one atomic RPC with server identity and exposes timings; a foreign session returns 404
+ok 158 - scan uses one atomic RPC with server identity and exposes timings; a foreign session returns 404
+  ---
+  duration_ms: 3.598
+  type: 'test'
+  ...
+# Subtest: invalid scans never call the database and atomic errors retain their HTTP status
+ok 159 - invalid scans never call the database and atomic errors retain their HTTP status
+  ---
+  duration_ms: 8.144
+  type: 'test'
+  ...
+# Subtest: missing migration falls back with revision retry; uncertain writes never trigger fallback
+ok 160 - missing migration falls back with revision retry; uncertain writes never trigger fallback
+  ---
+  duration_ms: 1.6382
+  type: 'test'
+  ...
+# Subtest: both desktop and mobile navigation omit Ninho for an operator
+ok 161 - both desktop and mobile navigation omit Ninho for an operator
+  ---
+  duration_ms: 65.9563
+  type: 'test'
+  ...
+# Subtest: both desktop and mobile navigation include Ninho for a verified admin
+ok 162 - both desktop and mobile navigation include Ninho for a verified admin
+  ---
+  duration_ms: 29.9167
+  type: 'test'
+  ...
+# Subtest: Curva ABC has its own themed navigation in desktop and mobile for all members
+ok 163 - Curva ABC has its own themed navigation in desktop and mobile for all members
+  ---
+  duration_ms: 75.4896
+  type: 'test'
+  ...
+# Subtest: healthy access token does not make any provider request
+ok 164 - healthy access token does not make any provider request
+  ---
+  duration_ms: 5.601
+  type: 'test'
+  ...
+# Subtest: simultaneous requests rotate once and save the new encrypted pair
+ok 165 - simultaneous requests rotate once and save the new encrypted pair
+  ---
+  duration_ms: 6.3189
+  type: 'test'
+  ...
+# Subtest: database lease serializes rotation across independent server instances
+ok 166 - database lease serializes rotation across independent server instances
+  ---
+  duration_ms: 520.43
+  type: 'test'
+  ...
+# Subtest: database failure and invalid_client never masquerade as an expired authorization
+    # Subtest: storage
+    ok 1 - storage
+      ---
+      duration_ms: 0.5424
+      type: 'test'
+      ...
+    # Subtest: provider 400
+    ok 2 - provider 400
+      ---
+      duration_ms: 0.8586
+      type: 'test'
+      ...
+    # Subtest: provider 401
+    ok 3 - provider 401
+      ---
+      duration_ms: 0.6148
+      type: 'test'
+      ...
+    # Subtest: provider 429
+    ok 4 - provider 429
+      ---
+      duration_ms: 0.6472
+      type: 'test'
+      ...
+    # Subtest: provider 503
+    ok 5 - provider 503
+      ---
+      duration_ms: 0.6509
+      type: 'test'
+      ...
+    1..5
+ok 167 - database failure and invalid_client never masquerade as an expired authorization
+  ---
+  duration_ms: 4.0771
+  type: 'test'
+  ...
+# Subtest: invalid_grant requires reconnection but an expired refresh does not discard usable access
+    # Subtest: revoked
+    ok 1 - revoked
+      ---
+      duration_ms: 0.7604
+      type: 'test'
+      ...
+    # Subtest: still usable
+    ok 2 - still usable
+      ---
+      duration_ms: 0.3596
+      type: 'test'
+      ...
+    # Subtest: both expired
+    ok 3 - both expired
+      ---
+      duration_ms: 0.3029
+      type: 'test'
+      ...
+    1..3
+ok 168 - invalid_grant requires reconnection but an expired refresh does not discard usable access
+  ---
+  duration_ms: 1.7603
+  type: 'test'
+  ...
+# Subtest: refresh nearing expiry is renewed even while the access token is still valid
+ok 169 - refresh nearing expiry is renewed even while the access token is still valid
+  ---
+  duration_ms: 0.592
+  type: 'test'
+  ...
+# [olist-token-refresh] attention required {
+#   ok: false,
+#   checked: 1,
+#   renewed: 0,
+#   reconnect: 1,
+#   failed: 0,
+#   morePending: false
+# }
+# Subtest: failed persistence retries the same token pair without a second provider exchange
+ok 170 - failed persistence retries the same token pair without a second provider exchange
+  ---
+  duration_ms: 258.2952
+  type: 'test'
+  ...
+# Subtest: a reconnect during refresh cannot be overwritten by the older request
+ok 171 - a reconnect during refresh cannot be overwritten by the older request
+  ---
+  duration_ms: 1.309
+  type: 'test'
+  ...
+# Subtest: missing refresh expiry retains the previous deadline and malformed responses preserve credentials
+    # Subtest: omitted deadline
+    ok 1 - omitted deadline
+      ---
+      duration_ms: 0.5622
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 2 - malformed
+      ---
+      duration_ms: 0.433
+      type: 'test'
+      ...
+    1..2
+ok 172 - missing refresh expiry retains the previous deadline and malformed responses preserve credentials
+  ---
+  duration_ms: 1.2365
+  type: 'test'
+  ...
+# Subtest: cron rejects unauthorized requests and only renews due integrations without order requests
+ok 173 - cron rejects unauthorized requests and only renews due integrations without order requests
+  ---
+  duration_ms: 4.2379
+  type: 'test'
+  ...
+# Subtest: late tracking preserves scans, counts, responsible, metadata and error state; then allows completion
+ok 174 - late tracking preserves scans, counts, responsible, metadata and error state; then allows completion
+  ---
+  duration_ms: 4.5847
+  type: 'test'
+  ...
+# Subtest: empty updates cannot replace known codes, and previous sessions cannot update a new lot
+ok 175 - empty updates cannot replace known codes, and previous sessions cannot update a new lot
+  ---
+  duration_ms: 0.6317
+  type: 'test'
+  ...
+# Subtest: empty tracking never matches; API rejects missing, whitespace, oversized and pending orders
+ok 176 - empty tracking never matches; API rejects missing, whitespace, oversized and pending orders
+  ---
+  duration_ms: 0.4053
+  type: 'test'
+  ...
+# Subtest: refresh visits every missing order in batches and retries empty codes without interrupting scans
+ok 177 - refresh visits every missing order in batches and retries empty codes without interrupting scans
+  ---
+  duration_ms: 41.8637
+  type: 'test'
+  ...
+# Subtest: rate limit respects retry time and recovers automatically
+ok 178 - rate limit respects retry time and recovers automatically
+  ---
+  duration_ms: 14.6328
+  type: 'test'
+  ...
+# Subtest: network failure retries; leaving the scanner cancels requests and ignores their late responses
+ok 179 - network failure retries; leaving the scanner cancels requests and ignores their late responses
+  ---
+  duration_ms: 1.3609
+  type: 'test'
+  ...
+1..179
+# tests 194
+# suites 0
+# pass 192
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21054.8746
