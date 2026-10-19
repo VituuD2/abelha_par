@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { parseABCFilters } from "@/lib/analytics/filters";
 import { analyticsError } from "@/lib/analytics/server";
 export async function POST(request: Request) {
-  const auth = await authorize();
+  const auth = await authorize("analytics:read");
   if (auth.response) return auth.response;
   try {
     const body = await request.json(),

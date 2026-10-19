@@ -3,6 +3,7 @@ import { authorize } from "@/lib/access";
 import { testTinyConnection } from "@/lib/olist";
 import { isRateLimited } from "@/lib/rate-limit";
 import { getValidTinyToken } from "@/lib/tiny-auth";
+import { can } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
   const { access, response: denied } = await authorize();
   if (denied) return denied;
   const verify = new URL(request.url).searchParams.get("verify") === "1";
-  if (verify && access.role !== "admin") return NextResponse.json({ error: "Diagnóstico disponível somente no Ninho." }, { status: 403 });
+  if (verify && !can(access.role, "integrations:manage")) return NextResponse.json({ error: "Diagnóstico disponível somente no Ninho." }, { status: 403, headers: { "Cache-Control": "private, no-store", Vary: "Cookie" } });
   if (isRateLimited(`tiny-status:${access.workspaceId}`, 20, 60_000)) {
     return NextResponse.json({ error: "Muitas verificações. Tente novamente." }, { status: 429 });
   }

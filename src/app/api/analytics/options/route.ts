@@ -5,7 +5,7 @@ import { analyticsStatus, analyticsError } from "@/lib/analytics/server";
 import { DIMENSIONS } from "@/lib/analytics/config";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
-  const auth = await authorize();
+  const auth = await authorize("analytics:read");
   if (auth.response) return auth.response;
   try {
     const params = new URL(request.url).searchParams,

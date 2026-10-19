@@ -16,7 +16,7 @@ import type { ABCResult } from "@/lib/analytics/types";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 export async function POST(request: Request) {
-  const auth = await authorize();
+  const auth = await authorize("analytics:export");
   if (auth.response) return auth.response;
   try {
     const b = await request.json(),

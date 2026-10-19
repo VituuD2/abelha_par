@@ -5,7 +5,7 @@ import { report, analyticsError } from "@/lib/analytics/server";
 import { ensureFilterCoverage } from "@/lib/analytics/sync";
 export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
-  const auth = await authorize();
+  const auth = await authorize("analytics:read");
   if (auth.response) return auth.response;
   try {
     const body = await request.json();

@@ -16,17 +16,17 @@ const {Sidebar}=require('../src/components/layout/sidebar.tsx');
 Module._load=original;
 
 test('both desktop and mobile navigation omit Ninho for an operator',()=>{
-  const html=renderToStaticMarkup(React.createElement(Sidebar,{isAdmin:false}));
+  const html=renderToStaticMarkup(React.createElement(Sidebar,{role:'operator'}));
   assert.equal((html.match(/href="\/ninho"/g)||[]).length,0);
   assert.ok(html.includes('href="/scanner"'));assert.ok(html.includes('href="/orders"'));
 });
 test('both desktop and mobile navigation include Ninho for a verified admin',()=>{
-  const html=renderToStaticMarkup(React.createElement(Sidebar,{isAdmin:true}));
+  const html=renderToStaticMarkup(React.createElement(Sidebar,{role:'admin'}));
   assert.equal((html.match(/href="\/ninho"/g)||[]).length,2);
 });
 test('Curva ABC has its own themed navigation in desktop and mobile for all members',()=>{
   for(const isAdmin of [false,true]){
-    const html=renderToStaticMarkup(React.createElement(Sidebar,{isAdmin}));
+    const html=renderToStaticMarkup(React.createElement(Sidebar,{role:isAdmin?'admin':'operator'}));
     assert.equal((html.match(/href="\/analytics\/abc"/g)||[]).length,2);
     assert.equal((html.match(/Néctar/g)||[]).length,2);
   }

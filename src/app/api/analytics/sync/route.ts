@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 export async function GET() {
-  const auth = await authorize();
+  const auth = await authorize("analytics:read");
   if (auth.response) return auth.response;
   try {
     return NextResponse.json(
@@ -19,7 +19,7 @@ export async function GET() {
   }
 }
 export async function POST(request: Request) {
-  const auth = await authorize(true);
+  const auth = await authorize("analytics:manage");
   if (auth.response) return auth.response;
   try {
     const b = await request.json();

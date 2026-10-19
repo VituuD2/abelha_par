@@ -32,7 +32,7 @@ async function accountInfo(token: string, connection: string) {
 }
 
 export async function GET(request: Request) {
-  const auth = await authorize(true);
+  const auth = await authorize("integrations:manage");
   if (auth.response) return auth.response;
   const url = new URL(request.url);
   let stage = "state";

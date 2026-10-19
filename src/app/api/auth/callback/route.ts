@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const providerError = searchParams.get("error");
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   const user = access.user;
   const verifiedState = state && user ? verifyTinyOAuthState(state, user.id) : null;

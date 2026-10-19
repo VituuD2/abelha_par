@@ -16,7 +16,7 @@ const shippingLabels: Record<string, string> = { unpacked: "Não embalado", unsh
 const PAGE_SIZE = 50;
 
 export default function OrdersPage() {
-  const { isAdmin } = useAppAccess();
+  const { can } = useAppAccess();
   const router = useRouter();
   const orders = usePreparationStore(state => state.nuvemshopOrders);
   const selectedIds = usePreparationStore(state => state.selectedIds);
@@ -101,7 +101,7 @@ export default function OrdersPage() {
   };
   return <>
     <Header title="Pedidos Nuvemshop" subtitle="Selecione os pedidos preparados para o lote de hoje" breadcrumbs={["Abelha Par", "Pedidos Nuvemshop"]} />
-    {!checkingConnection && !connected && <section className="card p-5 mb-5"><p>A conexão Nuvemshop precisa estar disponível para buscar os pedidos.</p>{isAdmin ? <Link href="/ninho" className="btn-ghost mt-2">Configurar no Ninho</Link> : <p className="text-sm mt-2 text-[var(--color-text-secondary)]">Peça ao administrador para revisar a conexão no Ninho.</p>}</section>}
+    {!checkingConnection && !connected && <section className="card p-5 mb-5"><p>A conexão Nuvemshop precisa estar disponível para buscar os pedidos.</p>{can("ninho:access") ? <Link href="/ninho" className="btn-ghost mt-2">Configurar no Ninho</Link> : <p className="text-sm mt-2 text-[var(--color-text-secondary)]">Peça ao administrador para revisar a conexão no Ninho.</p>}</section>}
     <section className="card p-5 sm:p-6 mb-5">
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
         <label className="text-sm">Buscar por<select className="field mt-1" value={mode} onChange={event => setMode(event.target.value)}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></select></label>

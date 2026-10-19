@@ -1,0 +1,221 @@
+node.exe : npm notice run scanner-checkout@1.0.0 test
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\User\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...kout@1.0.0 test:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run node --test tests/*.test.cjs
+✔ anonymous and blocked analytics calls never read data; connection operations require admin (14.4873ms)
+✔ report ignores forged workspace/user, validates filters and caps browser page size (5.0928ms)
+✔ a scheduling outage remains actionable while returning the report already available (3.2489ms)
+✔ background report refreshes reuse imported data without rescheduling historical coverage (2.2946ms)
+✔ legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials (4.7939ms)
+✔ independent mathematical oracle agrees with SQL and TS across edge cases, metrics, ties, limits, paging and visual sort (5406.2281ms)
+✔ unlinked order lines reconcile exactly through normalized payload, SQL ingest, report API, CSV and XLSX; all company combinations isolate correctly (975.7537ms)
+✔ additional accounts use their own client credentials and coalesce refreshes while persisting encrypted pairs (172.5633ms)
+✔ failed token persistence retries the same pair without a second OAuth exchange (264.6759ms)
+✔ legacy analytics references the existing authorization; removal never falls through to another OAuth account (18.5596ms)
+✔ each changed access token must identify the expected company, including a legacy reconnect (11.1714ms)
+✔ analytical cron rejects missing/mismatched authorization before any work (31.572ms)
+✔ cron processes durable queues with no browser and reports renewal failures without stopping other accounts (7.1994ms)
+✔ migration is idempotent, links legacy credentials without changing scanner and restricts browser access (4897.7811ms)
+✔ group setup is scoped, repeatable, creates pending accounts and never fabricates authorizations (65.4872ms)
+✔ idempotent imports replace changed items, stale lease fails, per-account lease serializes (89.1275ms)
+✔ SQL math matches engine for modes, metrics and sorting without changing rank; cancellation is excluded (32.1269ms)
+✔ omnichannel consolidation scopes same SKUs by company and supports arbitrary company/source combinations (40.8448ms)
+✔ exports return all ranked entities and drilldown reuses the exact filtered scope (6.2009ms)
+✔ foreign admins and inactive users cannot query; RLS and compound FKs prevent workspace mixing (15.6978ms)
+✔ explicit verified external-account mapping reconciles duplicate sales and preserves aliases on later imports (25.3614ms)
+✔ cancellation updates existing sales even without item payloads and rejects stale leases (10.3025ms)
+✔ coverage merges completed intervals independently of recent incremental job history (5.5138ms)
+✔ missing-history scheduling subtracts covered and reserved spans, retains failed checkpoints and validates member scope (17.0626ms)
+✔ coverage includes proven incrementals and checkpoint days, but never update-only scans or gaps (107.5266ms)
+✔ incremental scheduling refreshes the current day without duplicate active or minute-by-minute completed jobs (85.0538ms)
+✔ bulk leases reserve distinct accounts and recent jobs rotate fairly with the initial backfill (411.2593ms)
+✔ legacy relink verifies workspace, operational snapshot and CNPJ, then resumes the original cursor without changing scanner tokens (36.464ms)
+✔ cron SQL validates Vault, is repeatable, restricts invocation and records only request identifiers (113.5392ms)
+✔ large analytical data is aggregated on SQL and returns only a bounded page and Pareto (5461.0744ms)
+ℹ 50,000 orders/items; 5,000 products; SQL aggregate 1356.6 ms; response 45670 bytes. Local PGlite, not production SLA.
+✔ rollback removes only the analytics layer and preserves operational credentials and history (152.9079ms)
+✔ unlinked Olist items retain exact money and unique order/position identity without inventing catalog equivalence (8.5256ms)
+✔ coverage distinguishes missing history, import, sync failure and genuinely empty filtered results; exports share selected scope (1.0795ms)
+✔ progress version ignores heartbeats and row ordering but detects imported orders and coverage changes (7.49ms)
+✔ Tiny legacy and strict modes differ at crossings and preserve exact boundaries (0.8472ms)
+✔ empty, zero, one entity, deterministic ties, quantity and many entities (29.2941ms)
+✔ decimal money is exact, large amounts remain strings, lines round once (0.5996ms)
+✔ normalizer scopes customer/product identities, uses documented parent and flags missing enrichment (1.087ms)
+✔ filters validate dimensions, dates, limits and default statuses (0.6362ms)
+✔ coverage joins adjacent complete backfills and never claims gaps or incremental scans cover history (36.4665ms)
+✔ OAuth state binds user, workspace, connection and configuration version; rejects tampering and expiry (7.2808ms)
+✔ OAuth saves encrypted tokens only after confirming the company and rejects replay (22.1526ms)
+✔ account HTTP 403 reports its cause without retrying or saving unverified tokens (2.84ms)
+✔ account HTTP 401 reports its cause without retrying or saving unverified tokens (1.9142ms)
+✔ account HTTP 429 reports its cause without retrying or saving unverified tokens (2.049ms)
+✔ a transient account lookup is retried with the same token without exchanging the code twice (1212.9619ms)
+✔ an unavailable account lookup stops after one retry and records the recoverable failure (1215.3532ms)
+✔ account identity company never links tokens to the wrong company (1.7483ms)
+✔ account identity account_response never links tokens to the wrong company (2.787ms)
+▶ malformed OAuth responses, token network errors and refused exchanges have distinct errors
+  ✔ token_response (8.0876ms)
+  ✔ token_request (1.5273ms)
+  ✔ exchange (1.2859ms)
+✔ malformed OAuth responses, token network errors and refused exchanges have distinct errors (31.7334ms)
+✔ failed persistence returns save and leaves the authorization pending (2.0579ms)
+✔ a callback cannot overwrite a newer flow or mark it with a stale error (12.1292ms)
+✔ Olist HTTP client maps network timeouts to retry, bounds Retry-After and validates response contracts (39.5905ms)
+✔ real-world zero catalog id no longer poisons a checkpoint: all unlinked lines are ingested once and no /produtos/0 is requested (6.0311ms)
+✔ a deleted catalog product (404) retains its valid scoped ID and order values without blocking history (1.106ms)
+✔ recent denied enrichment check prevents repeating the catalog request even when an older enriched snapshot exists (0.9218ms)
+✔ required Olist calls distinguish 401/403 from retryable 429/5xx and preserve the pending order (2.4253ms)
+✔ analytics ingests all origins, persists progress, caches products and releases the original lease (1.11ms)
+✔ rate limiting preserves pending order and schedules a retry without persisting a partial sale (0.5001ms)
+✔ an incremental job uses update date; inaccessible optional enrichment is flagged, not invented (1.6456ms)
+✔ new incremental coverage waits for both sale and update scans to complete (0.7481ms)
+✔ a worker traverses short pages and empty days within one lease instead of waiting another minute per day (0.9996ms)
+✔ parallel cron reserves distinct accounts once and starts all workers without waiting for another account's API (1.1639ms)
+✔ expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying (0.5732ms)
+✔ dashboard renders cards and only the selected page, applies multi-company filters and keeps server rank on sort (698.0572ms)
+✔ drilldown traces orders and native dialog closes; client tab changes grouping on server (180.7498ms)
+✖ dashboard polls existing reports as imports advance without asking the browser to run a worker (85.6972ms)
+✖ missing coverage stays visibly partial and a server error does not leave a misleading old result (113.5415ms)
+✔ late success and network failure from aborted reports cannot overwrite the latest grouping (91.9019ms)
+✔ operator can recover after export failure without losing the report or getting stuck exporting (57.9531ms)
+✔ Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked (75.7755ms)
+✔ Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow (33.4762ms)
+✔ OAuth refresh lease is exclusive and stale workers cannot overwrite a reconnect or release a newer lease (2997.8709ms)
+✔ migrations retain history and prevent browser writes to sessions, credentials and batches (19.2716ms)
+✔ finalization rejects incomplete and foreign sessions and returns the same batch after a retry (46.4222ms)
+✔ revision comparison prevents a late tracking update from overwriting a scan (13.7274ms)
+✔ webhook arriving during processing is queued again; expired workers cannot finish a reclaimed job (32.7211ms)
+✔ operators cannot access Ninho or mutate any connection, even with forged user metadata (12.616ms)
+✔ blocked sessions and missing membership storage fail closed (1.0288ms)
+✔ an active operator fetches orders through workspace credentials and shares their cache (4.4289ms)
+✔ live menu permissions identify the authenticated operator and cannot be cached (6.9266ms)
+✔ webhook signatures retain the old URL initially and reject it after rotation (4.6677ms)
+✔ admin creates an account and membership in the current workspace without returning its password (1.3193ms)
+✔ failed membership creation rolls back the new account and malformed bodies are rejected before creating it (1.8409ms)
+✔ atomic scans preserve tracking rules, reject duplicates and return small confirmations (3214.8949ms)
+✔ atomic scans serialize competing readers, reject ambiguous labels and protect workspace access (40.9335ms)
+✔ migration preserves encrypted credentials, history, webhook ID and creator, and initializes roles once (6.5619ms)
+✔ operators read shared history through RLS; foreign and blocked members cannot (11.5848ms)
+✔ membership RPC rejects operators, foreign admins and removal of the last active admin (5.2532ms)
+✔ an operator finalizes a shared session created by another member, preserving authorship and idempotency (11.123ms)
+✔ shared cache and queue accept workspace writes while legacy inserts stay compatible (11.7368ms)
+✔ webhook changes require admin and rotating the URL resets receipt without changing tokens (24.0944ms)
+✔ validated mapping uses store order number and integration, independent of names and ERP number (2.0664ms)
+✔ missing, unpaid, cancelled, cross-store, repeated and ambiguous orders block reconciliation (0.6276ms)
+✔ duplicate normalized tracking is blocked both before and during scanning (1.9317ms)
+✔ Shift selection follows visible sort order; hidden selections survive and hidden anchor is ignored (3.7833ms)
+✔ selection works in either fetch order, persists through navigation, invalidates on edits, isolates accounts (1.13ms)
+✔ Nuvemshop adapter separates IDs and uses documented auth, pagination and rate limit headers (34.5442ms)
+✔ Olist pagination does not stop on a page without Nuvemshop orders and advances dates (43.2074ms)
+✔ server scan failure never marks an order; a successful retry restores authoritative state (2.2301ms)
+✔ date boundaries use São Paulo and reject impossible dates; official webhook uses dados.id (153.1253ms)
+✔ 100 complete list records require one provider call and are cached server-side before returning (15.7193ms)
+✔ omitted fields trigger detail fallback; explicit null tracking is a valid fresh snapshot (1.623ms)
+✔ a cache write failure prevents a successful preparation response (3.177ms)
+✔ operational connection status uses shared credentials without exposing webhook URL or tokens (3.1006ms)
+✔ confirmation frees the next scan immediately, keeps unchanged references and completes after the last save (40.3615ms)
+✔ stale snapshot synchronizes other scans and tracking; legacy full responses remain supported (1.196ms)
+✔ finishing one request cannot clear the busy state of the next request (1.5217ms)
+✔ network and duplicate errors pause scans without falsely marking checked or being dismissed by success (1.5472ms)
+✔ late scan responses cannot update a switched session and tracking refresh survives compact confirmations (7.8894ms)
+✔ large batches render only one page of orders (1159.8279ms)
+✔ switching from admin to operator removes privileges immediately and ignores the old account response (3.9964ms)
+✔ a late admin response cannot reverse the latest role update for the same account (1.0495ms)
+✔ logout, mismatched identities and failed permission checks cannot keep the admin menu (1.9142ms)
+✔ unmount discards pending responses instead of updating a new login (0.6903ms)
+✔ creation ignores forged client snapshot and uses only workspace-scoped server records while retaining the creator (9.93ms)
+▶ creation rejects an omitted duplicate candidate and expired selection
+  ✔ duplicate omitted by browser (1.3412ms)
+  ✔ expired server snapshot (1.1755ms)
+✔ creation rejects an omitted duplicate candidate and expired selection (3.7646ms)
+✔ unauthenticated creation and scans are rejected without reading or writing orders (1.3055ms)
+✔ scan uses one atomic RPC with server identity and exposes timings; a foreign session returns 404 (2.7963ms)
+✔ invalid scans never call the database and atomic errors retain their HTTP status (3.7009ms)
+✔ missing migration falls back with revision retry; uncertain writes never trigger fallback (1.9093ms)
+✔ both desktop and mobile navigation omit Ninho for an operator (23.9255ms)
+✔ both desktop and mobile navigation include Ninho for a verified admin (5.6374ms)
+✔ Curva ABC has its own themed navigation in desktop and mobile for all members (9.252ms)
+✔ healthy access token does not make any provider request (4.0309ms)
+✔ simultaneous requests rotate once and save the new encrypted pair (7.4912ms)
+✔ database lease serializes rotation across independent server instances (538.1822ms)
+▶ database failure and invalid_client never masquerade as an expired authorization
+  ✔ storage (0.7753ms)
+  ✔ provider 400 (0.9523ms)
+  ✔ provider 401 (0.7629ms)
+  ✔ provider 429 (0.675ms)
+  ✔ provider 503 (0.6462ms)
+✔ database failure and invalid_client never masquerade as an expired authorization (4.5594ms)
+▶ invalid_grant requires reconnection but an expired refresh does not discard usable access
+  ✔ revoked (0.793ms)
+  ✔ still usable (0.3695ms)
+  ✔ both expired (0.3169ms)
+✔ invalid_grant requires reconnection but an expired refresh does not discard usable access (1.8132ms)
+✔ refresh nearing expiry is renewed even while the access token is still valid (0.6098ms)
+[olist-token-refresh] attention required {
+  ok: false,
+  checked: 1,
+  renewed: 0,
+  reconnect: 1,
+  failed: 0,
+  morePending: false
+}
+✔ failed persistence retries the same token pair without a second provider exchange (257.9889ms)
+✔ a reconnect during refresh cannot be overwritten by the older request (1.2125ms)
+▶ missing refresh expiry retains the previous deadline and malformed responses preserve credentials
+  ✔ omitted deadline (0.623ms)
+  ✔ malformed (0.5146ms)
+✔ missing refresh expiry retains the previous deadline and malformed responses preserve credentials (1.3821ms)
+✔ cron rejects unauthorized requests and only renews due integrations without order requests (4.2086ms)
+✔ late tracking preserves scans, counts, responsible, metadata and error state; then allows completion (4.5004ms)
+✔ empty updates cannot replace known codes, and previous sessions cannot update a new lot (0.3877ms)
+✔ empty tracking never matches; API rejects missing, whitespace, oversized and pending orders (0.633ms)
+✔ refresh visits every missing order in batches and retries empty codes without interrupting scans (32.3967ms)
+✔ rate limit respects retry time and recovers automatically (2.0542ms)
+✔ network failure retries; leaving the scanner cancels requests and ignores their late responses (1.6278ms)
+ℹ tests 155
+ℹ suites 0
+ℹ pass 153
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15157.186
+
+✖ failing tests:
+
+test at tests\analytics-ui.test.cjs:198:1
+✖ dashboard polls existing reports as imports advance without asking the browser to run a worker (85.6972ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /3 pedidos processados/. Input:
+  
+  'Onde estão as vendas da sua operação?Combine empresas e origens. Cada produto permanece identificado pela sua conta Olist.AtualizarProdutosClientesDeAtéMétricaValor bruto dos itensQuantidade vendidaBasePedidos · data da vendaPedidos com NF autorizada · emissãoÚltimos 7 diasÚltimos 30 diasÚltimos 90 diasÚltimos 365 diasEste mêsEste anoEmpresas · 2Selecionar todosEmpresa 1Empresa 2Empresa 3Conexões Olist · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Integrações / origens · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Situações · 3Selecionar todosAbertoFaturadoAprovadoPreparandoEnviadoEntregueProntoIncompletoNão entregueFiltros e regras adicionaisAnalisar vendasTodas as empresas e origensTodos os marketplaces classificadosSomente sites classificadosValor bruto dos itensR$ 100,00Quantidade vendida100Pedidos / entidades100 / 100Concentração dos 10 primeiros10%Classe A · 80 entidadesR$ 80,00 · 80% da métrica80 unidadesClasse B · 15 entidadesR$ 15,00 · 15% da métrica15 unidadesClasse C · 5 entidadesR$ 5,00 · 5% da métrica5 unidadesConcentração das vendasRanking da métrica escolhida. Barras: participação individual. Linha: acumulado. Exibindo os primeiros 60 de 100 registros; o acumulado usa o conjunto completo.0%50%100%80%95%1. Produto 0: 1%, acumulado 1%, classe A2. Produto 1: 1%, acumulado 2%, classe A3. Produto 2: 1%, acumulado 3%, classe A4. Produto 3: 1%, acumulado 4%, classe A5. Produto 4: 1%, acumulado 5%, classe A6. Produto 5: 1%, acumulado 6%, classe A7. Produto 6: 1%, acumulado 7%, classe A8. Produto 7: 1%, acumulado 8%, classe A9. Produto 8: 1%, acumulado 9%, classe A10. Produto 9: 1%, acumulado 10%, classe A11. Produto 10: 1%, acumulado 11%, classe A12. Produto 11: 1%, acumulado 12%, classe A13. Produto 12: 1%, acumulado 13%, classe A14. Produto 13: 1%, acumulado 14%, classe A15. Produto 14: 1%, acumulado 15%, classe A16. Produto 15: 1%, acumulado 16%, classe A17. Produto 16: 1%, acumulado 17%, classe A18. Produto 17: 1%, acumulado 18%, classe A19. Produto 18: 1%, acumulado 19%, classe A20. Produto 19: 1%, acumulado 20%, classe A21. Produto 20: 1%, acumulado 21%, classe A22. Produto 21: 1%, acumulado 22%, classe A23. Produto 22: 1%, acumulado 23%, classe A24. Produto 23: 1%, acumulado 24%, classe A25. Produto 24: 1%, acumulado 25%, classe A26. Produto 25: 1%, acumulado 26%, classe A27. Produto 26: 1%, acumulado 27%, classe A28. Produto 27: 1%, acumulado 28%, classe A29. Produto 28: 1%, acumulado 29%, classe A30. Produto 29: 1%, acumulado 30%, classe A31. Produto 30: 1%, acumulado 31%, classe A32. Produto 31: 1%, acumulado 32%, classe A33. Produto 32: 1%, acumulado 33%, classe A34. Produto 33: 1%, acumulado 34%, classe A35. Produto 34: 1%, acumulado 35%, classe A36. Produto 35: 1%, acumulado 36%, classe A37. Produto 36: 1%, acumulado 37%, classe A38. Produto 37: 1%, acumulado 38%, classe A39. Produto 38: 1%, acumulado 39%, classe A40. Produto 39: 1%, acumulado 40%, classe A41. Produto 40: 1%, acumulado 41%, classe A42. Produto 41: 1%, acumulado 42%, classe A43. Produto 42: 1%, acumulado 43%, classe A44. Produto 43: 1%, acumulado 44%, classe A45. Produto 44: 1%, acumulado 45%, classe A46. Produto 45: 1%, acumulado 46%, classe A47. Produto 46: 1%, acumulado 47%, classe A48. Produto 47: 1%, acumulado 48%, classe A49. Produto 48: 1%, acumulado 49%, classe A50. Produto 49: 1%, acumulado 50%, classe A51. Produto 50: 1%, acumulado 51%, classe A52. Produto 51: 1%, acumulado 52%, classe A53. Produto 52: 1%, acumulado 53%, classe A54. Produto 53: 1%, acumulado 54%, classe A55. Produto 54: 1%, acumulado 55%, classe A56. Produto 55: 1%, acumulado 56%, classe A57. Produto 56: 1%, acumulado 57%, classe A58. Produto 57: 1%, acumulado 58%, classe A59. Produto 58: 1%, acumulado 59%, classe A60. Produto 59: 1%, acumulado 60%, classe A1º60ºReferências A: 80% · B: 95% · Linha verde: acumulado.Clientes · 100 entidadesCSV completoExcelClique no nome para ver empresas, origens e pedidos. A ordenação da tabela preserva o ranking e o acumulado ABC.Colunas da tabelaPosiçãoSKUProduto / clienteQuantidadeValor bruto% individual% acumuladoPedidosClassePosiçãoSKUProduto / clienteQuantidadeValor bruto ↑% individual% acumuladoPedidosClasse1SKU-0Produto 01R$ 1,001%1%1A2SKU-1Produto 11R$ 1,001%2%1A3SKU-2Produto 21R$ 1,001%3%1A4SKU-3Produto 31R$ 1,001%4%1A5SKU-4Produto 41R$ 1,001%5%1A6SKU-5Produto 51R$ 1,001%6%1A7SKU-6Produto 61R$ 1,001%7%1A8SKU-7Produto 71R$ 1,001%8%1A9SKU-8Produto 81R$ 1,001%9%1A10SKU-9Produto 91R$ 1,001%10%1A11SKU-10Produto 101R$ 1,001%11%1A12SKU-11Produto 111R$ 1,001%12%1A13SKU-12Produto 121R$ 1,001%13%1A14SKU-13Produto 131R$ 1,001%14%1A15SKU-14Produto 141R$ 1,001%15%1A16SKU-15Produto 151R$ 1,001%16%1A17SKU-16Produto 161R$ 1,001%17%1A18SKU-17Produto 171R$ 1,001%18%1A19SKU-18Produto 181R$ 1,001%19%1A20SKU-19Produto 191R$ 1,001%20%1A21SKU-20Produto 201R$ 1,001%21%1A22SKU-21Produto 211R$ 1,001%22%1A23SKU-22Produto 221R$ 1,001%23%1A24SKU-23Produto 231R$ 1,001%24%1A25SKU-24Produto 241R$ 1,001%25%1A26SKU-25Produto 251R$ 1,001%26%1A27SKU-26Produto 261R$ 1,001%27%1A28SKU-27Produto 271R$ 1,001%28%1A29SKU-28Produto 281R$ 1,001%29%1A30SKU-29Produto 291R$ 1,001%30%1A31SKU-30Produto 301R$ 1,001%31%1A32SKU-31Produto 311R$ 1,001%32%1A33SKU-32Produto 321R$ 1,001%33%1A34SKU-33Produto 331R$ 1,001%34%1A35SKU-34Produto 341R$ 1,001%35%1A36SKU-35Produto 351R$ 1,001%36%1A37SKU-36Produto 361R$ 1,001%37%1A38SKU-37Produto 371R$ 1,001%38%1A39SKU-38Produto 381R$ 1,001%39%1A40SKU-39Produto 391R$ 1,001%40%1A41SKU-40Produto 401R$ 1,001%41%1A42SKU-41Produto 411R$ 1,001%42%1A43SKU-42Produto 421R$ 1,001%43%1A44SKU-43Produto 431R$ 1,001%44%1A45SKU-44Produto 441R$ 1,001%45%1A46SKU-45Produto 451R$ 1,001%46%1A47SKU-46Produto 461R$ 1,001%47%1A48SKU-47Produto 471R$ 1,001%48%1A49SKU-48Produto 481R$ 1,001%49%1A50SKU-49Produto 491R$ 1,001%50%1APor página25501001 / 2Escopo atual · valores referentes aos itens desta entidade · origem rastreável por conexão.Consultando pedidos…'
+  
+      at TestContext.<anonymous> (E:\Users\User\Documents\ESTUDOS\abelha_par\tests\analytics-ui.test.cjs:206:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Onde estão as vendas da sua operação?Combine empresas e origens. Cada produto permanece identificado pela sua conta Olist.AtualizarProdutosClientesDeAtéMétricaValor bruto dos itensQuantidade vendidaBasePedidos · data da vendaPedidos com NF autorizada · emissãoÚltimos 7 diasÚltimos 30 diasÚltimos 90 diasÚltimos 365 diasEste mêsEste anoEmpresas · 2Selecionar todosEmpresa 1Empresa 2Empresa 3Conexões Olist · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Integrações / origens · TodosSem valores importados. Este campo depende da resposta da API ou da classificação de origem no Ninho.Situações · 3Selecionar todosAbertoFaturadoAprovadoPreparandoEnviadoEntregueProntoIncompletoNão entregueFiltros e regras adicionaisAnalisar vendasTodas as empresas e origensTodos os marketplaces classificadosSomente sites classificadosValor bruto dos itensR$ 100,00Quantidade vendida100Pedidos / entidades100 / 100Concentração dos 10 primeiros10%Classe A · 80 entidadesR$ 80,00 · 80% da métrica80 unidadesClasse B · 15 entidadesR$ 15,00 · 15% da métrica15 unidadesClasse C · 5 entidadesR$ 5,00 · 5% da métrica5 unidadesConcentração das vendasRanking da métrica escolhida. Barras: participação individual. Linha: acumulado. Exibindo os primeiros 60 de 100 registros; o acumulado usa o conjunto completo.0%50%100%80%95%1. Produto 0: 1%, acumulado 1%, classe A2. Produto 1: 1%, acumulado 2%, classe A3. Produto 2: 1%, acumulado 3%, classe A4. Produto 3: 1%, acumulado 4%, classe A5. Produto 4: 1%, acumulado 5%, classe A6. Produto 5: 1%, acumulado 6%, classe A7. Produto 6: 1%, acumulado 7%, classe A8. Produto 7: 1%, acumulado 8%, classe A9. Produto 8: 1%, acumulado 9%, classe A10. Produto 9: 1%, acumulado 10%, classe A11. Produto 10: 1%, acumulado 11%, classe A12. Produto 11: 1%, acumulado 12%, classe A13. Produto 12: 1%, acumulado 13%, classe A14. Produto 13: 1%, acumulado 14%, classe A15. Produto 14: 1%, acumulado 15%, classe A16. Produto 15: 1%, acumulado 16%, classe A17. Produto 16: 1%, acumulado 17%, classe A18. Produto 17: 1%, acumulado 18%, classe A19. Produto 18: 1%, acumulado 19%, classe A20. Produto 19: 1%, acumulado 20%, classe A21. Produto 20: 1%, acumulado 21%, classe A22. Produto 21: 1%, acumulado 22%, classe A23. Produto 22: 1%, acumulado 23%, classe A24. Produto 23: 1%, acumulado 24%, classe A25. Produto 24: 1%, acumulado 25%, classe A26. Produto 25: 1%, acumulado 26%, classe A27. Produto 26: 1%, acumulado 27%, classe A28. Produto 27: 1%, acumulado 28%, classe A29. Produto 28: 1%, acumulado 29%, classe A30. Produto 29: 1%, acumulado 30%, classe A31. Produto 30: 1%, acumulado 31%, classe A32. Produto 31: 1%, acumulado 32%, classe A33. Produto 32: 1%, acumulado 33%, classe A34. Produto 33: 1%, acumulado 34%, classe A35. Produto 34: 1%, acumulado 35%, classe A36. Produto 35: 1%, acumulado 36%, classe A37. Produto 36: 1%, acumulado 37%, classe A38. Produto 37: 1%, acumulado 38%, classe A39. Produto 38: 1%, acumulado 39%, classe A40. Produto 39: 1%, acumulado 40%, classe A41. Produto 40: 1%, acumulado 41%, classe A42. Produto 41: 1%, acumulado 42%, classe A43. Produto 42: 1%, acumulado 43%, classe A44. Produto 43: 1%, acumulado 44%, classe A45. Produto 44: 1%, acumulado 45%, classe A46. Produto 45: 1%, acumulado 46%, classe A47. Produto 46: 1%, acumulado 47%, classe A48. Produto 47: 1%, acumulado 48%, classe A49. Produto 48: 1%, acumulado 49%, classe A50. Produto 49: 1%, acumulado 50%, classe A51. Produto 50: 1%, acumulado 51%, classe A52. Produto 51: 1%, acumulado 52%, classe A53. Produto 52: 1%, acumulado 53%, classe A54. Produto 53: 1%, acumulado 54%, classe A55. Produto 54: 1%, acumulado 55%, classe A56. Produto 55: 1%, acumulado 56%, classe A57. Produto 56: 1%, acumulado 57%, classe A58. Produto 57: 1%, acumulado 58%, classe A59. Produto 58: 1%, acumulado 59%, classe A60. Produto 59: 1%, acumulado 60%, classe A1º60ºReferências A: 80% · B: 95% · Linha verde: acumulado.Clientes · 100 entidadesCSV completoExcelClique no nome para ver empresas, origens e pedidos. A ordenação da tabela preserva o ranking e o acumulado ABC.Colunas da tabelaPosiçãoSKUProduto / clienteQuantidadeValor bruto% individual% acumuladoPedidosClassePosiçãoSKUProduto / clienteQuantidadeValor bruto ↑% individual% acumuladoPedidosClasse1SKU-0Produto 01R$ 1,001%1%1A2SKU-1Produto 11R$ 1,001%2%1A3SKU-2Produto 21R$ 1,001%3%1A4SKU-3Produto 31R$ 1,001%4%1A5SKU-4Produto 41R$ 1,001%5%1A6SKU-5Produto 51R$ 1,001%6%1A7SKU-6Produto 61R$ 1,001%7%1A8SKU-7Produto 71R$ 1,001%8%1A9SKU-8Produto 81R$ 1,001%9%1A10SKU-9Produto 91R$ 1,001%10%1A11SKU-10Produto 101R$ 1,001%11%1A12SKU-11Produto 111R$ 1,001%12%1A13SKU-12Produto 121R$ 1,001%13%1A14SKU-13Produto 131R$ 1,001%14%1A15SKU-14Produto 141R$ 1,001%15%1A16SKU-15Produto 151R$ 1,001%16%1A17SKU-16Produto 161R$ 1,001%17%1A18SKU-17Produto 171R$ 1,001%18%1A19SKU-18Produto 181R$ 1,001%19%1A20SKU-19Produto 191R$ 1,001%20%1A21SKU-20Produto 201R$ 1,001%21%1A22SKU-21Produto 211R$ 1,001%22%1A23SKU-22Produto 221R$ 1,001%23%1A24SKU-23Produto 231R$ 1,001%24%1A25SKU-24Produto 241R$ 1,001%25%1A26SKU-25Produto 251R$ 1,001%26%1A27SKU-26Produto 261R$ 1,001%27%1A28SKU-27Produto 271R$ 1,001%28%1A29SKU-28Produto 281R$ 1,001%29%1A30SKU-29Produto 291R$ 1,001%30%1A31SKU-30Produto 301R$ 1,001%31%1A32SKU-31Produto 311R$ 1,001%32%1A33SKU-32Produto 321R$ 1,001%33%1A34SKU-33Produto 331R$ 1,001%34%1A35SKU-34Produto 341R$ 1,001%35%1A36SKU-35Produto 351R$ 1,001%36%1A37SKU-36Produto 361R$ 1,001%37%1A38SKU-37Produto 371R$ 1,001%38%1A39SKU-38Produto 381R$ 1,001%39%1A40SKU-39Produto 391R$ 1,001%40%1A41SKU-40Produto 401R$ 1,001%41%1A42SKU-41Produto 411R$ 1,001%42%1A43SKU-42Produto 421R$ 1,001%43%1A44SKU-43Produto 431R$ 1,001%44%1A45SKU-44Produto 441R$ 1,001%45%1A46SKU-45Produto 451R$ 1,001%46%1A47SKU-46Produto 461R$ 1,001%47%1A48SKU-47Produto 471R$ 1,001%48%1A49SKU-48Produto 481R$ 1,001%49%1A50SKU-49Produto 491R$ 1,001%50%1APor página25501001 / 2Escopo atual · valores referentes aos itens desta entidade · origem rastreável por conexão.Consultando pedidos…',
+    expected: /3 pedidos processados/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests\analytics-ui.test.cjs:227:1
+✖ missing coverage stays visibly partial and a server error does not leave a misleading old result (113.5415ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(document.body.textContent.includes("Escopo parcial"))
+  
+      at TestContext.<anonymous> (E:\Users\User\Documents\ESTUDOS\abelha_par\tests\analytics-ui.test.cjs:230:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

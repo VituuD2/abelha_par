@@ -5,7 +5,7 @@ import { getAppUrl } from "@/lib/app-url";
 import { getOlistWebhookUrl, getOlistWebhookStatus } from "@/lib/olist-webhook";
 
 export async function GET(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   const { data, error } = await createAdminClient().from("workspaces").select("olist_webhook_enabled, olist_webhook_revision").eq("id", access.workspaceId).single();
   if (error) return NextResponse.json({ error: "Não foi possível verificar o webhook." }, { status: 503 });
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   let body;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "JSON inválido." }, { status: 400 }); }

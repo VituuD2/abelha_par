@@ -56,3 +56,28 @@ test('unmount discards pending responses instead of updating a new login',async(
   monitor.observeSession('admin');const before=updates;monitor.dispose();
   request.resolve({userId:'admin',role:'admin'});await settle();assert.equal(updates,before);
 });
+
+test('entering a protected route invalidates cached privileges before the permission request finishes',async()=>{
+  const initial=deferred(),pending=deferred();let snapshot;
+  const queue=[initial,pending];
+  const monitor=createSessionAccessMonitor(()=>queue.shift().promise,next=>snapshot=next);
+  monitor.observeSession('same-user','/');initial.resolve({userId:'same-user',role:'admin'});await settle();
+  assert.equal(snapshot.verifiedFor,'/');assert.equal(snapshot.role,'admin');
+  const check=monitor.refresh('/ninho',{invalidate:true});
+  assert.equal(snapshot.role,null);assert.equal(snapshot.verifiedFor,null);
+  pending.resolve({userId:'same-user',role:'operator'});await check;
+  assert.equal(snapshot.role,'operator');assert.equal(snapshot.verifiedFor,'/ninho');
+  monitor.dispose();
+});
+
+test('same-identity auth events also revoke old grants and stale route requests cannot verify the new route',async()=>{
+  const initial=deferred(),old=deferred(),latest=deferred();let snapshot;
+  const queue=[initial,old,latest];
+  const monitor=createSessionAccessMonitor(()=>queue.shift().promise,next=>snapshot=next);
+  monitor.observeSession('user','/ninho');initial.resolve({userId:'user',role:'admin'});await settle();
+  monitor.observeSession('user','/ninho');assert.equal(snapshot.role,null);
+  const current=monitor.refresh('/ninho/users',{invalidate:true});
+  latest.resolve({userId:'user',role:'operator'});await current;
+  old.resolve({userId:'user',role:'admin'});await settle();
+  assert.equal(snapshot.verifiedFor,'/ninho/users');assert.equal(snapshot.role,'operator');monitor.dispose();
+});

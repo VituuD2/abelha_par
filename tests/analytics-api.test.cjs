@@ -31,8 +31,8 @@ test("anonymous and blocked analytics calls never read data; connection operatio
     reads++;
     throw new Error("must not read");
   });
-  t.mock.method(access, "authorize", async (adminOnly = false) => {
-    requires.push(adminOnly);
+  t.mock.method(access, "authorize", async (permission = "app:access") => {
+    requires.push(permission);
     return {
       response: NextResponse.json({ error: "Negado" }, { status: 403 }),
     };
@@ -43,7 +43,7 @@ test("anonymous and blocked analytics calls never read data; connection operatio
     [exportApi, { filters, format: "csv" }],
   ])
     assert.equal((await route.POST(request(body))).status, 403);
-  assert.deepEqual(requires, [false, true, false]);
+  assert.deepEqual(requires, ["analytics:read", "integrations:manage", "analytics:export"]);
   assert.equal(reads, 0);
 });
 test("report ignores forged workspace/user, validates filters and caps browser page size", async (t) => {

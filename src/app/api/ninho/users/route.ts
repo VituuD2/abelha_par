@@ -5,7 +5,7 @@ import { UUID } from "@/lib/scan-session-server";
 import { isRateLimited } from "@/lib/rate-limit";
 
 export async function GET() {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("members:manage");
   if (denied) return denied;
   const db = createAdminClient();
   const { data, error } = await db.from("workspace_members").select("user_id, display_name, role, active, created_at")
@@ -20,7 +20,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("members:manage");
   if (denied) return denied;
   if (isRateLimited(`ninho-create:${access.user.id}`, 10, 60_000)) return NextResponse.json({ error: "Aguarde um minuto para criar mais usuários." }, { status: 429 });
   let body;
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("members:manage");
   if (denied) return denied;
   let body;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "JSON inválido." }, { status: 400 }); }

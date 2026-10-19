@@ -9,6 +9,7 @@ import { ListChecks } from "lucide-react";
 import { BeeSettingsIcon } from "@/components/layout/bee-settings-icon";
 import { NectarIcon } from "@/components/layout/nectar-icon";
 import { NECTAR_MODULE } from "@/lib/analytics/config";
+import { can, type Role } from "@/lib/permissions";
 
 function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -53,9 +54,9 @@ const navItems = [
   { href: NECTAR_MODULE.href, label: NECTAR_MODULE.name, icon: NectarIcon },
 ];
 
-export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
+export function Sidebar({ role }: { role: Role | null }) {
   const pathname = usePathname();
-  const items = isAdmin ? [...navItems, { href: "/ninho", label: "Ninho", icon: BeeSettingsIcon }] : navItems;
+  const items = can(role, "ninho:access") ? [...navItems, { href: "/ninho", label: "Ninho", icon: BeeSettingsIcon }] : navItems;
 
   return (
     <>

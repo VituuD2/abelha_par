@@ -1,0 +1,33 @@
+✔ anonymous and blocked analytics calls never read data; connection operations require admin (34.2967ms)
+✔ report ignores forged workspace/user, validates filters and caps browser page size (16.1081ms)
+✔ a scheduling outage remains actionable while returning the report already available (1.6114ms)
+✔ background report refreshes reuse imported data without rescheduling historical coverage (1.3102ms)
+✔ legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials (10.0512ms)
+✔ cached admin layout cannot mount Ninho for a demoted operator; live revocation removes mounted settings while scanning state stays bound (204.1057ms)
+✔ operators cannot access Ninho or mutate any connection, even with forged user metadata (20.4612ms)
+✔ blocked sessions and missing membership storage fail closed (0.8903ms)
+✔ an active operator fetches orders through workspace credentials and shares their cache (3.4128ms)
+✔ live menu permissions identify the authenticated operator and cannot be cached (8.3636ms)
+✔ webhook signatures retain the old URL initially and reject it after rotation (2.8931ms)
+✔ admin creates an account and membership in the current workspace without returning its password (2.4419ms)
+✔ failed membership creation rolls back the new account and malformed bodies are rejected before creating it (3.3749ms)
+✔ permission policy denies unknown roles and capabilities; route matching protects the entire Ninho subtree (1.8421ms)
+✔ middleware denies operators, inactive members and unavailable permission storage before HTML is delivered (20.2842ms)
+✔ page and subtree guard independently reject direct calls and recheck a demoted member without trusting middleware or JWT metadata (4.1612ms)
+✔ switching from admin to operator removes privileges immediately and ignores the old account response (3.5923ms)
+✔ a late admin response cannot reverse the latest role update for the same account (10.0998ms)
+✔ logout, mismatched identities and failed permission checks cannot keep the admin menu (10.978ms)
+✔ unmount discards pending responses instead of updating a new login (4.5706ms)
+✔ entering a protected route invalidates cached privileges before the permission request finishes (13.4994ms)
+✔ same-identity auth events also revoke old grants and stale route requests cannot verify the new route (0.8905ms)
+✔ both desktop and mobile navigation omit Ninho for an operator (37.5477ms)
+✔ both desktop and mobile navigation include Ninho for a verified admin (8.048ms)
+✔ Curva ABC has its own themed navigation in desktop and mobile for all members (11.9495ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2151.4651

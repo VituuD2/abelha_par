@@ -14,7 +14,7 @@ interface ApiFetchCardProps {
 }
 
 export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardProps) {
-  const { isAdmin } = useAppAccess();
+  const { can } = useAppAccess();
   const [dateFrom, setDateFrom] = useState(() => saoPauloDate());
   const [dateTo, setDateTo] = useState(() => saoPauloDate());
   const [dateMode, setDateMode] = useState<"created" | "updated">("updated");
@@ -83,7 +83,7 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
       <div className="grid sm:grid-cols-2 gap-3"><label className="text-sm">De<input className="field mt-1" type="date" value={dateFrom} max={dateTo} disabled={loading} onChange={event => setDateFrom(event.target.value)} /></label><label className="text-sm">Até<input className="field mt-1" type="date" value={dateTo} min={dateFrom} disabled={loading} onChange={event => setDateTo(event.target.value)} /></label></div>
       <button className="btn-primary mt-auto" disabled={disabled || loading} onClick={handleFetch}>{loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}{loading ? `${count || 0} pedidos carregados…` : "Buscar pedidos"}</button>
       {count !== null && !loading && !error && <p role="status" className="text-sm text-[var(--color-accent-green)]">{count} pedidos carregados.</p>}
-    </> : <div className="space-y-3 py-5"><p>{message || "A conexão Olist precisa de atenção do administrador."}</p>{isAdmin ? <Link href="/ninho" className="btn-primary">Abrir Ninho</Link> : <p className="text-sm text-[var(--color-text-secondary)]">Peça a um administrador para revisar a conexão no Ninho.</p>}<button className="btn-ghost" onClick={check}>Verificar novamente</button></div>}
+    </> : <div className="space-y-3 py-5"><p>{message || "A conexão Olist precisa de atenção do administrador."}</p>{can("ninho:access") ? <Link href="/ninho" className="btn-primary">Abrir Ninho</Link> : <p className="text-sm text-[var(--color-text-secondary)]">Peça a um administrador para revisar a conexão no Ninho.</p>}<button className="btn-ghost" onClick={check}>Verificar novamente</button></div>}
     {message && connected && <p className="text-sm text-[var(--color-accent-orange)]">{message}</p>}
     {error && <p role="alert" className="text-sm text-[var(--color-accent-red)]">{error}</p>}
   </section>;

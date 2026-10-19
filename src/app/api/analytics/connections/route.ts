@@ -10,7 +10,7 @@ import { object, string } from "@/lib/analytics/normalize";
 import { analyticsError, analyticsStatus } from "@/lib/analytics/server";
 export const dynamic = "force-dynamic";
 export async function GET() {
-  const auth = await authorize(true);
+  const auth = await authorize("integrations:manage");
   if (auth.response) return auth.response;
   try {
     return NextResponse.json(
@@ -22,7 +22,7 @@ export async function GET() {
   }
 }
 export async function POST(request: Request) {
-  const auth = await authorize(true);
+  const auth = await authorize("integrations:manage");
   if (auth.response) return auth.response;
   const db = createAdminClient(),
     workspace = auth.access.workspaceId;

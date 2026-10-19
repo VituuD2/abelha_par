@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export const dynamic = "force-dynamic";
 
 export async function POST() {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   const user = access.user;
 

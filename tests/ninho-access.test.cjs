@@ -21,6 +21,11 @@ const mutations = [
   [require('../src/app/api/ninho/users/route.ts'), 'PATCH'],
   [require('../src/app/api/ninho/webhook/route.ts'), 'GET'],
   [require('../src/app/api/ninho/webhook/route.ts'), 'POST'],
+  [require('../src/app/api/analytics/connections/route.ts'), 'GET'],
+  [require('../src/app/api/analytics/connections/route.ts'), 'POST'],
+  [require('../src/app/api/analytics/oauth/login/route.ts'), 'GET'],
+  [require('../src/app/api/analytics/oauth/callback/route.ts'), 'GET'],
+  [require('../src/app/api/analytics/sync/route.ts'), 'POST'],
 ];
 
 function membership(t, { role = 'operator', active = true, user = { id: 'operator-id', user_metadata: { role: 'admin' } }, error = null } = {}) {
@@ -62,7 +67,7 @@ test('live menu permissions identify the authenticated operator and cannot be ca
   const route=require('../src/app/api/auth/access/route.ts');
   const response=await route.GET();
   assert.equal(response.status,200);
-  assert.deepEqual(await response.json(),{userId:'operator-id',role:'operator'});
+  assert.deepEqual(await response.json(),{userId:'operator-id',role:'operator',permissions:['app:access','analytics:read','analytics:export']});
   assert.match(response.headers.get('cache-control'),/no-store/);
   assert.equal(response.headers.get('vary'),'Cookie');
   membership(t,{active:false});

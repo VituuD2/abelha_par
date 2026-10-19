@@ -1,38 +1,39 @@
 export type SessionAccess = { userId: string; role: "admin" | "operator" };
-export type SessionAccessSnapshot = { userId: string | null; role: SessionAccess["role"] | null; loading: boolean; error: string | null };
+export type SessionAccessSnapshot = { userId: string | null; role: SessionAccess["role"] | null; loading: boolean; error: string | null; verifiedFor: string | null };
 
 /** Bind UI privileges to the current identity, never to a cached layout or an older request. */
 export function createSessionAccessMonitor(load: () => Promise<SessionAccess>, publish: (snapshot: SessionAccessSnapshot) => void) {
-  let snapshot: SessionAccessSnapshot = { userId: null, role: null, loading: true, error: null };
+  let snapshot: SessionAccessSnapshot = { userId: null, role: null, loading: true, error: null, verifiedFor: null };
   let generation = 0;
   let disposed = false;
   const emit = (next: SessionAccessSnapshot) => { snapshot = next; publish(next); };
 
-  async function refresh() {
+  async function refresh(scope: string | null = null, { invalidate = false }: { invalidate?: boolean } = {}) {
     const userId = snapshot.userId;
     if (disposed || !userId) return;
     const request = ++generation;
+    if (invalidate) emit({ ...snapshot, role: null, verifiedFor: null });
     try {
       const access = await load();
       if (disposed || request !== generation || snapshot.userId !== userId) return;
       if (access.userId !== userId || !["admin", "operator"].includes(access.role)) {
         throw new Error("A sessão mudou. Entre novamente para confirmar seu acesso.");
       }
-      emit({ userId, role: access.role, loading: false, error: null });
+      emit({ userId, role: access.role, loading: false, error: null, verifiedFor: scope });
     } catch (error) {
       if (disposed || request !== generation || snapshot.userId !== userId) return;
-      emit({ userId, role: null, loading: false, error: error instanceof Error ? error.message : "Não foi possível verificar seu acesso." });
+      emit({ userId, role: null, loading: false, error: error instanceof Error ? error.message : "Não foi possível verificar seu acesso.", verifiedFor: null });
     }
   }
 
-  function observeSession(userId: string | null) {
+  function observeSession(userId: string | null, scope: string | null = null) {
     if (disposed) return;
     if (userId !== snapshot.userId || snapshot.loading) {
       generation++;
-      emit({ userId, role: null, loading: Boolean(userId), error: null });
+      emit({ userId, role: null, loading: Boolean(userId), error: null, verifiedFor: null });
     }
-    if (!userId) { generation++; emit({ userId: null, role: null, loading: false, error: null }); return; }
-    void refresh();
+    if (!userId) { generation++; emit({ userId: null, role: null, loading: false, error: null, verifiedFor: null }); return; }
+    void refresh(scope, { invalidate: true });
   }
 
   return { observeSession, refresh, dispose() { disposed = true; generation++; } };

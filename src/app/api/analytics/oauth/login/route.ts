@@ -5,7 +5,7 @@ import { createAnalyticsState } from "@/lib/analytics/auth";
 import { analyticsError } from "@/lib/analytics/server";
 import type { AnalyticsConnection } from "@/lib/analytics/types";
 export async function GET(request: Request) {
-  const auth = await authorize(true);
+  const auth = await authorize("integrations:manage");
   if (auth.response) return auth.response;
   try {
     const url = new URL(request.url),

@@ -6,7 +6,7 @@ import { createTinyOAuthState } from "@/lib/tiny-oauth-state";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) {
     if (denied.status === 401) return NextResponse.redirect(new URL("/login?next=%2Fninho", request.url));
     return denied;

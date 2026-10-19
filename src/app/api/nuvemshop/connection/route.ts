@@ -14,7 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   try {
     const body = await request.json();
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   try {
     const body = await request.json();
@@ -42,7 +42,7 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE() {
-  const { access, response: denied } = await authorize(true);
+  const { access, response: denied } = await authorize("integrations:manage");
   if (denied) return denied;
   const { error } = await createAdminClient().from("nuvemshop_integrations").delete().eq("workspace_id", access.workspaceId);
   if (error) return NextResponse.json({ error: "Não foi possível remover a conexão Nuvemshop." }, { status: 503 });

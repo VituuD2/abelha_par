@@ -921,66 +921,6 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
           )}
         </div>
       )}
-      {status && (
-        <section
-          className={`card p-5 space-y-3 ${incomplete ? "border-amber-300" : "border-green-300"}`}
-        >
-          <h2 className="font-semibold">
-            {incomplete
-              ? "Escopo parcial · confira a cobertura antes de concluir"
-              : "Histórico importado para o período selecionado · análise provisória"}
-          </h2>
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            {companies.map((c) => c.name).join(" + ") ||
-              "Nenhuma empresa cadastrada"}{" "}
-            · {filters.from.split("-").reverse().join("/")} a{" "}
-            {filters.to.split("-").reverse().join("/")} ·{" "}
-            {Object.values(filters.selections).reduce(
-              (n, v) => n + (v?.length || 0),
-              0,
-            )}{" "}
-            seleções dimensionais. Valores brutos dos itens; frete e despesas
-            excluídos. Descontos globais e devoluções não são deduzidos.
-            Situações canceladas excluídas.
-          </p>
-          <p className="text-xs">Cobertura de importação não comprova reconciliação com o ERP.
-            Itens sem vínculo de catálogo permanecem separados por pedido e sinalizados no nome;
-            não representam produtos equivalentes. Valide uma amostra de controle antes de decidir.</p>
-          <div className="flex flex-wrap gap-3">
-            {selectedConnections.map((c) => (
-              <div
-                key={c.id}
-                className="rounded-xl bg-black/[0.025] p-3 text-xs"
-              >
-                <p className="font-semibold">
-                  {c.name}
-                  {!c.enabled ? " · pausada" : ""}
-                </p>
-                <p className="mt-1">
-                  {c.verified_at
-                    ? "CNPJ validado na API"
-                    : "CNPJ ainda não validado na API"}
-                </p>
-                <p className="mt-1">
-                  {c.last_synced_at
-                    ? `Última importação: ${new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}`
-                    : "Histórico ainda não importado"}
-                </p>
-                {c.last_error && (
-                  <p className="text-red-700 max-w-72 mt-1">{c.last_error}</p>
-                )}
-                <ConnectionProgress connection={c.id} jobs={status.jobs} coverage={status.coverage || status.jobs.filter((j) => j.status === "completed" && (j.mode === "backfill" || j.covers_sales))} />
-              </div>
-            ))}
-          </div>
-          {isAdmin && (
-            <Link className="text-sm underline text-amber-800" href="/ninho">
-              Gerenciar empresas, conexões e importação histórica
-            </Link>
-          )}
-          <p className="text-xs">O histórico faltante é programado automaticamente. Os dados já disponíveis aparecem durante a importação e o painel acompanha o progresso. Contas com falha de autorização precisam ser reconectadas no Ninho.</p>
-        </section>
-      )}
       {loading && (
         <p role="status" className="text-sm py-4">
           Calculando a Curva ABC…

@@ -1,0 +1,85 @@
+node.exe : npm notice run scanner-checkout@1.0.0 build
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\User\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...out@1.0.0 build:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run next build
+   ▲ Next.js 15.5.27
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 11.4s
+   Linting and checking validity of types ...
+
+./src/components/analytics/abc-dashboard.tsx
+21:10  Warning: 'ConnectionProgress' is defined but never used.  @typescript-eslint/no-unused-vars
+488:9  Warning: 'selectedConnections' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+489:9  Warning: 'companies' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+490:9  Warning: 'incomplete' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/history/batch-table.tsx
+7:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/scanner/success-popup.tsx
+5:24  Warning: 'Package' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/23) ...
+   Generating static pages (5/23) 
+   Generating static pages (11/23) 
+   Generating static pages (17/23) 
+ ✓ Generating static pages (23/23)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                       Size  First Load JS
+┌ ƒ /                                          6.15 kB         239 kB
+├ ƒ /_not-found                                  999 B         104 kB
+├ ƒ /analytics/abc                             9.17 kB         116 kB
+├ ƒ /api/analytics/abc                           211 B         103 kB
+├ ƒ /api/analytics/connections                   211 B         103 kB
+├ ƒ /api/analytics/drilldown                     211 B         103 kB
+├ ƒ /api/analytics/export                        211 B         103 kB
+├ ƒ /api/analytics/oauth/callback                211 B         103 kB
+├ ƒ /api/analytics/oauth/login                   211 B         103 kB
+├ ƒ /api/analytics/options                       211 B         103 kB
+├ ƒ /api/analytics/sync                          211 B         103 kB
+├ ƒ /api/auth/access                             211 B         103 kB
+├ ƒ /api/auth/callback                           211 B         103 kB
+├ ƒ /api/auth/disconnect                         211 B         103 kB
+├ ƒ /api/auth/login                              211 B         103 kB
+├ ƒ /api/auth/status                             211 B         103 kB
+├ ƒ /api/batches                                 211 B         103 kB
+├ ƒ /api/internal/analytics-sync                 211 B         103 kB
+├ ƒ /api/internal/olist-sync                     211 B         103 kB
+├ ƒ /api/internal/olist-token-refresh            211 B         103 kB
+├ ƒ /api/ninho/users                             211 B         103 kB
+├ ƒ /api/ninho/webhook                           211 B         103 kB
+├ ƒ /api/nuvemshop/connection                    211 B         103 kB
+├ ƒ /api/nuvemshop/orders                        211 B         103 kB
+├ ƒ /api/olist                                   211 B         103 kB
+├ ƒ /api/olist/resolve                           211 B         103 kB
+├ ƒ /api/scan-sessions                           211 B         103 kB
+├ ƒ /api/scan-sessions/[id]                      211 B         103 kB
+├ ƒ /api/scan-sessions/[id]/tracking             211 B         103 kB
+├ ƒ /api/webhooks/olist/[ownerId]/[signature]    211 B         103 kB
+├ ƒ /forgot-password                           1.64 kB         174 kB
+├ ƒ /history                                    4.5 kB         150 kB
+├ ƒ /login                                     1.58 kB         174 kB
+├ ƒ /ninho                                     13.5 kB         116 kB
+├ ƒ /orders                                    5.27 kB         238 kB
+├ ƒ /reset-password                            1.95 kB         175 kB
+└ ƒ /scanner                                   15.6 kB         171 kB
++ First Load JS shared by all                   103 kB
+  ├ chunks/1255-5cd2fe06309409a0.js            46.5 kB
+  ├ chunks/4bd1b696-f785427dddbba9fb.js        54.2 kB
+  └ other shared chunks (total)                   2 kB
+
+
+ƒ Middleware                                   92.2 kB
+
+ƒ  (Dynamic)  server-rendered on demand
+
