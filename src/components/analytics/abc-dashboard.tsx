@@ -245,6 +245,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const updateHighlight = (next: ParetoHighlight | null) => setHighlight(current =>
     current?.entityId === next?.entityId && current?.cumulative === next?.cumulative && current?.origin === next?.origin && current?.targetPercentage === next?.targetPercentage ? current : next);
   const [error, setError] = useState<string | null>(null),
+    [schedulingError, setSchedulingError] = useState<string | null>(null),
     [loading, setLoading] = useState(true),
     [exporting, setExporting] = useState(false),
     [advanced, setAdvanced] = useState(false),
@@ -267,6 +268,18 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const statusSequence = useRef(0);
   const lastProgress = useRef("");
   const optionsLoadedAt = useRef(0);
+  const reportSequence = useRef(0);
+  const reportRunning = useRef(false);
+  const pendingProgressRefresh = useRef<"all" | "data" | null>(null);
+  const refreshFromProgress = useCallback((includeOptions: boolean) => {
+    if (reportRunning.current) {
+      if (includeOptions || pendingProgressRefresh.current !== "all")
+        pendingProgressRefresh.current = includeOptions ? "all" : "data";
+      return;
+    }
+    if (includeOptions) setRefresh(value => value + 1);
+    else setDataRefresh(value => value + 1);
+  }, []);
   useEffect(() => {
     const abort = new AbortController();
     const sequence = ++statusSequence.current;
@@ -288,9 +301,32 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     return () => abort.abort();
   }, [refresh]);
   useEffect(() => {
-    const abort = new AbortController();
     const filterScope = JSON.stringify(filters);
-    const ensureCoverage = scheduledFilters.current !== filterScope;
+    setSchedulingError(null);
+    if (scheduledFilters.current === filterScope) return;
+    const abort = new AbortController();
+    // Existing sales can be displayed while durable history is being scheduled.
+    jsonRequest("/api/analytics/coverage", { filters }, abort.signal)
+      .then(async (data) => {
+        if (abort.signal.aborted) return;
+        if (data.sync?.error) throw new Error(data.sync.error);
+        scheduledFilters.current = filterScope;
+        const sequence = ++statusSequence.current;
+        const next = await jsonRequest("/api/analytics/sync", undefined, abort.signal);
+        if (abort.signal.aborted || sequence !== statusSequence.current) return;
+        lastProgress.current = progressVersion(next);
+        setStatus(current => ({ ...next, options: current?.options || {} }));
+      })
+      .catch((reason) => {
+        if (!abort.signal.aborted && reason.name !== "AbortError") setSchedulingError(reason.message);
+      });
+    return () => abort.abort();
+  }, [filters, refresh]);
+  useEffect(() => {
+    const abort = new AbortController();
+    const sequence = ++reportSequence.current;
+    reportRunning.current = true;
+    pendingProgressRefresh.current = null;
     const scope = JSON.stringify({ filters, page, size, sort, direction });
     if (resultScope.current !== scope) {
       setResult(null);
@@ -300,25 +336,13 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     setError(null);
     jsonRequest(
       "/api/analytics/abc",
-      { filters, page, size, sort, direction, ensureCoverage },
+      { filters, page, size, sort, direction, ensureCoverage: false },
       abort.signal,
     )
       .then((data) => {
         if (!abort.signal.aborted) {
           setResult(data);
           if (data.sync?.error) setError(data.sync.error);
-          else if (ensureCoverage) scheduledFilters.current = filterScope;
-          if (ensureCoverage) {
-            const sequence = ++statusSequence.current;
-            jsonRequest("/api/analytics/sync", undefined, abort.signal)
-              .then((next) => {
-                if (!abort.signal.aborted && sequence === statusSequence.current) {
-                  lastProgress.current = progressVersion(next);
-                  setStatus((current) => ({ ...next, options: current?.options || {} }));
-                }
-              })
-              .catch((e) => { if (!abort.signal.aborted && e.name !== "AbortError") setError(e.message); });
-          }
         }
       })
       .catch((e) => {
@@ -328,10 +352,20 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         }
       })
       .finally(() => {
-        if (!abort.signal.aborted) setLoading(false);
+        if (abort.signal.aborted || sequence !== reportSequence.current) return;
+        reportRunning.current = false;
+        setLoading(false);
+        const pending = pendingProgressRefresh.current;
+        pendingProgressRefresh.current = null;
+        if (pending) refreshFromProgress(pending === "all");
       });
-    return () => abort.abort();
-  }, [filters, page, size, sort, direction, refresh, dataRefresh]);
+    return () => {
+      abort.abort();
+      // React cleans this effect up before starting the next report effect.
+      reportRunning.current = false;
+      pendingProgressRefresh.current = null;
+    };
+  }, [filters, page, size, sort, direction, refresh, dataRefresh, refreshFromProgress]);
   const pendingImports = status?.jobs.some((j) => ["queued", "running", "retry"].includes(j.status));
   useEffect(() => {
     if (!pendingImports) return;
@@ -349,10 +383,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         lastProgress.current = version;
         setStatus((current) => ({ ...next, options: current?.options || {} }));
         if (changed) {
-          if (Date.now() - optionsLoadedAt.current >= 60000 ||
-            !next.jobs.some((j: CoverageJob) => ["queued", "running", "retry"].includes(j.status)))
-            setRefresh((value) => value + 1);
-          else setDataRefresh((value) => value + 1);
+          refreshFromProgress(Date.now() - optionsLoadedAt.current >= 60000 ||
+            !next.jobs.some((j: CoverageJob) => ["queued", "running", "retry"].includes(j.status)));
         }
       } catch (reason) {
         if (!abort.signal.aborted) setError(reason instanceof Error ? reason.message : "Progresso indisponível.");
@@ -360,7 +392,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     };
     const timer = setInterval(poll, 15000);
     return () => { clearInterval(timer); abort.abort(); };
-  }, [pendingImports]);
+  }, [pendingImports, refreshFromProgress]);
   useEffect(() => {
     if (!entity) return;
     const abort = new AbortController();
@@ -818,9 +850,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </button>
         </div>
       </form>
-      {error && (
+      {(error || schedulingError) && (
         <div className="card p-5 text-red-800" role="alert">
-          {error}
+          {error || schedulingError}
           {isAdmin && (
             <p className="mt-2">
               <Link href="/ninho" className="underline">

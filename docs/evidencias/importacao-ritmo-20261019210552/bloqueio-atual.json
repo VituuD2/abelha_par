@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-19T21:06:20.249Z",
+  "readOnly": true,
+  "cursor_date": "2026-08-10",
+  "attempts": 10,
+  "last_error": "Valor decimal inválido ou negativo.",
+  "next_at": "2026-10-19T21:10:20.825+00:00",
+  "pendingIndex": 43,
+  "blockingOrderId": "382643017",
+  "remainingInCurrentPage": 8
+}

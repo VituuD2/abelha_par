@@ -2,6 +2,7 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 import type { User } from "@supabase/supabase-js";
+import { cache } from "react";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { can, type Permission, type Role } from "@/lib/permissions";
@@ -13,12 +14,19 @@ export class AccessError extends Error {
   constructor(message: string, public status: number) { super(message); }
 }
 
+// Deduplicate layouts/page guards only within a React server request.
+// Route handlers still query membership on every operation.
+const readMembership = cache(async (userId: string) => {
+  const { data, error } = await createAdminClient().from("workspace_members")
+    .select("workspace_id, role, active, display_name").eq("user_id", userId).maybeSingle();
+  if (error) throw new AccessError("Não foi possível verificar suas permissões. Confira a atualização do banco para o Ninho.", 503);
+  return data;
+});
+
 export async function getAccessContext(user?: User | null): Promise<AccessContext | null> {
   const authenticated = user === undefined ? await getAuthenticatedUser() : user;
   if (!authenticated) return null;
-  const { data, error } = await createAdminClient().from("workspace_members")
-    .select("workspace_id, role, active, display_name").eq("user_id", authenticated.id).maybeSingle();
-  if (error) throw new AccessError("Não foi possível verificar suas permissões. Confira a atualização do banco para o Ninho.", 503);
+  const data = await readMembership(authenticated.id);
   if (data?.active !== true) throw new AccessError("Seu acesso está bloqueado ou ainda não foi liberado por um administrador.", 403);
   if (data.role !== "admin" && data.role !== "operator") throw new AccessError("Perfil de acesso inválido.", 403);
   if (typeof data.workspace_id !== "string" || !data.workspace_id) throw new AccessError("Vínculo com a colmeia inválido.", 403);

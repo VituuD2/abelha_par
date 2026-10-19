@@ -157,6 +157,43 @@ test("background report refreshes reuse imported data without rescheduling histo
   assert.deepEqual(calls,["analytics_abc"]);
 });
 
+test("independent coverage scheduling cannot delay report reads and retains trusted scope and timings",async t=>{
+  const coverage=require('../src/app/api/analytics/coverage/route.ts');
+  const calls=[];let finishCoverage;
+  t.mock.method(access,'authorize',async permission=>{
+    assert.equal(permission,'analytics:read');
+    return {access:{workspaceId:'trusted',user:{id:'member'},role:'operator'}};
+  });
+  t.mock.method(admin,'createAdminClient',()=>({rpc:async(name,args)=>{
+    calls.push(name);assert.equal(args.p_workspace,'trusted');assert.equal(args.p_actor,'member');
+    if(name==='analytics_ensure_coverage')return new Promise(resolve=>{finishCoverage=()=>resolve({data:{scheduled:1},error:null})});
+    assert.equal(name,'analytics_abc');return {data:{rows:[],total:0,revenue:'12345'},error:null};
+  }}));
+  const pending=coverage.POST(request({filters,workspaceId:'forged',user:'forged'}));
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(typeof finishCoverage,'function');
+  const response=await abc.POST(request({filters,ensureCoverage:false}));
+  assert.equal(response.status,200);assert.equal((await response.json()).revenue,'12345');
+  assert.match(response.headers.get('Server-Timing'),/authorize;dur=.*report;dur=.*coverage;dur=0\.0/);
+  finishCoverage();const scheduled=await pending;
+  assert.deepEqual(await scheduled.json(),{sync:{scheduled:1}});
+  assert.match(scheduled.headers.get('Server-Timing'),/authorize;dur=.*coverage;dur=/);
+  assert.deepEqual(calls,['analytics_ensure_coverage','analytics_abc']);
+});
+
+test("independent coverage validates filters, rejects unauthorized callers and exposes scheduling outages safely",async t=>{
+  const coverage=require('../src/app/api/analytics/coverage/route.ts');let calls=0;
+  t.mock.method(access,'authorize',async()=>({response:Response.json({error:'Negado'},{status:403})}));
+  t.mock.method(admin,'createAdminClient',()=>{calls++;throw Error('must not run')});
+  assert.equal((await coverage.POST(request({filters}))).status,403);assert.equal(calls,0);
+  t.mock.method(access,'authorize',async()=>({access:{workspaceId:'trusted',user:{id:'member'}}}));
+  for(const body of [null,{}, {filters:{...filters,from:'2027-01-01'}}])assert.equal((await coverage.POST(request(body))).status,400);
+  assert.equal(calls,0);
+  t.mock.method(admin,'createAdminClient',()=>({rpc:async()=>({data:null,error:{message:'sensitive diagnostic'}})}));
+  const failed=await coverage.POST(request({filters}));assert.equal(failed.status,503);
+  const text=await failed.text();assert.match(text,/histórico faltante/);assert.doesNotMatch(text,/sensitive/);
+});
+
 test("legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials", async t => {
   const tiny=require("../src/lib/tiny-auth.ts"), provider=require("../src/lib/analytics/olist-client.ts");
   const {encryptToken}=require("../src/lib/token-crypto.ts");

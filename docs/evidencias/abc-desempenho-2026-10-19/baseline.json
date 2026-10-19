@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-19T21:40:31.548Z",
+  "readOnly": true,
+  "samples": [
+    {
+      "grouping": "composition",
+      "milliseconds": 1387,
+      "rows": 50,
+      "orders": 3883,
+      "entities": 82,
+      "responseBytes": 29987
+    },
+    {
+      "grouping": "product",
+      "milliseconds": 1139,
+      "rows": 50,
+      "orders": 3883,
+      "entities": 365,
+      "responseBytes": 32629
+    },
+    {
+      "operation": "options",
+      "milliseconds": 220
+    }
+  ],
+  "scope": "local machine to Supabase; no authenticated app timing",
+  "ruleBytes": 52240,
+  "filters": {
+    "from": "2026-09-20",
+    "to": "2026-10-19",
+    "metric": "revenue",
+    "mode": "TINY_LEGACY",
+    "grouping": "composition",
+    "basis": "orders",
+    "thresholdA": 80,
+    "thresholdB": 95,
+    "selections": {
+      "statuses": [
+        "1",
+        "5",
+        "6"
+      ]
+    }
+  }
+}

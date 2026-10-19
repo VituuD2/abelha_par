@@ -1,0 +1,706 @@
+{
+  "startedAt": "2026-10-19T21:05:52.069Z",
+  "readOnly": true,
+  "snapshots": [
+    {
+      "at": "2026-10-19T21:05:52.646Z",
+      "metrics": [
+        {
+          "name": "node_vmstat_pswpin",
+          "labels": {},
+          "value": 13543974
+        },
+        {
+          "name": "pgbouncer_pools_client_waiting_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_client_waiting_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_client_waiting_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "node_memory_SwapFree_bytes",
+          "labels": {},
+          "value": 726192128
+        },
+        {
+          "name": "node_memory_SwapTotal_bytes",
+          "labels": {},
+          "value": 1073737728
+        },
+        {
+          "name": "node_memory_MemAvailable_bytes",
+          "labels": {},
+          "value": 154222592
+        },
+        {
+          "name": "pgbouncer_pools_server_active_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_server_active_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_server_active_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "node_memory_MemTotal_bytes",
+          "labels": {},
+          "value": 456818688
+        },
+        {
+          "name": "node_load1",
+          "labels": {},
+          "value": 0.02
+        },
+        {
+          "name": "node_filesystem_size_bytes",
+          "labels": {
+            "device": "/dev/nvme0n1p2",
+            "fstype": "ext4",
+            "mountpoint": "/"
+          },
+          "value": 10461904896
+        },
+        {
+          "name": "node_filesystem_size_bytes",
+          "labels": {
+            "device": "/dev/nvme1n1",
+            "fstype": "ext4",
+            "mountpoint": "/data"
+          },
+          "value": 2077073408
+        },
+        {
+          "name": "node_load5",
+          "labels": {},
+          "value": 0.09
+        },
+        {
+          "name": "node_filesystem_avail_bytes",
+          "labels": {
+            "device": "/dev/nvme0n1p2",
+            "fstype": "ext4",
+            "mountpoint": "/"
+          },
+          "value": 2457960448
+        },
+        {
+          "name": "node_filesystem_avail_bytes",
+          "labels": {
+            "device": "/dev/nvme1n1",
+            "fstype": "ext4",
+            "mountpoint": "/data"
+          },
+          "value": 1750106112
+        },
+        {
+          "name": "node_disk_io_time_seconds_total",
+          "labels": {
+            "device": "nvme0n1"
+          },
+          "value": 29267.234
+        },
+        {
+          "name": "node_disk_io_time_seconds_total",
+          "labels": {
+            "device": "nvme1n1"
+          },
+          "value": 2274.199
+        },
+        {
+          "name": "node_vmstat_pswpout",
+          "labels": {},
+          "value": 5618535
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "idle"
+          },
+          "value": 1789097.64
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "iowait"
+          },
+          "value": 14531.4
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "irq"
+          },
+          "value": 0
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "nice"
+          },
+          "value": 46.65
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "softirq"
+          },
+          "value": 208.39
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "steal"
+          },
+          "value": 284.77
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "system"
+          },
+          "value": 13613.32
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "user"
+          },
+          "value": 18249.51
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "idle"
+          },
+          "value": 1789235.09
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "iowait"
+          },
+          "value": 14535.11
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "irq"
+          },
+          "value": 0
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "nice"
+          },
+          "value": 46.48
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "softirq"
+          },
+          "value": 185.28
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "steal"
+          },
+          "value": 192.74
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "system"
+          },
+          "value": 13627.54
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "user"
+          },
+          "value": 18313.72
+        },
+        {
+          "name": "pg_stat_database_num_backends",
+          "labels": {},
+          "value": 14
+        },
+        {
+          "name": "pg_stat_database_temp_bytes_total",
+          "labels": {},
+          "value": 1379663768
+        },
+        {
+          "name": "pg_database_size_bytes",
+          "labels": {
+            "datname": "postgres"
+          },
+          "value": 33877139
+        },
+        {
+          "name": "pg_database_size_bytes",
+          "labels": {
+            "datname": "template0"
+          },
+          "value": 7520783
+        },
+        {
+          "name": "pg_database_size_bytes",
+          "labels": {
+            "datname": "template1"
+          },
+          "value": 7594511
+        },
+        {
+          "name": "max_connections_connection_count",
+          "labels": {},
+          "value": 60
+        },
+        {
+          "name": "pg_stat_database_xact_rollback_total",
+          "labels": {},
+          "value": 64
+        },
+        {
+          "name": "pg_stat_database_deadlocks_total",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pg_stat_database_xact_commit_total",
+          "labels": {},
+          "value": 1975056
+        }
+      ]
+    },
+    {
+      "at": "2026-10-19T21:06:58.052Z",
+      "metrics": [
+        {
+          "name": "node_memory_MemTotal_bytes",
+          "labels": {},
+          "value": 456818688
+        },
+        {
+          "name": "node_vmstat_pswpout",
+          "labels": {},
+          "value": 5619391
+        },
+        {
+          "name": "pgbouncer_pools_client_waiting_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_client_waiting_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_client_waiting_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "node_memory_SwapTotal_bytes",
+          "labels": {},
+          "value": 1073737728
+        },
+        {
+          "name": "node_load1",
+          "labels": {},
+          "value": 0.03
+        },
+        {
+          "name": "node_filesystem_avail_bytes",
+          "labels": {
+            "device": "/dev/nvme0n1p2",
+            "fstype": "ext4",
+            "mountpoint": "/"
+          },
+          "value": 2457960448
+        },
+        {
+          "name": "node_filesystem_avail_bytes",
+          "labels": {
+            "device": "/dev/nvme1n1",
+            "fstype": "ext4",
+            "mountpoint": "/data"
+          },
+          "value": 1750056960
+        },
+        {
+          "name": "pgbouncer_pools_server_active_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_server_active_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pgbouncer_pools_server_active_connections",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "node_disk_io_time_seconds_total",
+          "labels": {
+            "device": "nvme0n1"
+          },
+          "value": 29268.11
+        },
+        {
+          "name": "node_disk_io_time_seconds_total",
+          "labels": {
+            "device": "nvme1n1"
+          },
+          "value": 2274.295
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "idle"
+          },
+          "value": 1789160.86
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "iowait"
+          },
+          "value": 14531.84
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "irq"
+          },
+          "value": 0
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "nice"
+          },
+          "value": 46.65
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "softirq"
+          },
+          "value": 208.42
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "steal"
+          },
+          "value": 284.77
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "system"
+          },
+          "value": 13613.77
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "0",
+            "mode": "user"
+          },
+          "value": 18250.37
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "idle"
+          },
+          "value": 1789295.27
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "iowait"
+          },
+          "value": 14535.48
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "irq"
+          },
+          "value": 0
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "nice"
+          },
+          "value": 46.48
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "softirq"
+          },
+          "value": 185.31
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "steal"
+          },
+          "value": 192.75
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "system"
+          },
+          "value": 13628
+        },
+        {
+          "name": "node_cpu_seconds_total",
+          "labels": {
+            "cpu": "1",
+            "mode": "user"
+          },
+          "value": 18317.73
+        },
+        {
+          "name": "node_filesystem_size_bytes",
+          "labels": {
+            "device": "/dev/nvme0n1p2",
+            "fstype": "ext4",
+            "mountpoint": "/"
+          },
+          "value": 10461904896
+        },
+        {
+          "name": "node_filesystem_size_bytes",
+          "labels": {
+            "device": "/dev/nvme1n1",
+            "fstype": "ext4",
+            "mountpoint": "/data"
+          },
+          "value": 2077073408
+        },
+        {
+          "name": "node_memory_MemAvailable_bytes",
+          "labels": {},
+          "value": 137703424
+        },
+        {
+          "name": "node_vmstat_pswpin",
+          "labels": {},
+          "value": 13545823
+        },
+        {
+          "name": "node_memory_SwapFree_bytes",
+          "labels": {},
+          "value": 749047808
+        },
+        {
+          "name": "node_load5",
+          "labels": {},
+          "value": 0.08
+        },
+        {
+          "name": "pg_stat_database_deadlocks_total",
+          "labels": {},
+          "value": 0
+        },
+        {
+          "name": "pg_stat_database_temp_bytes_total",
+          "labels": {},
+          "value": 1390459124
+        },
+        {
+          "name": "pg_stat_database_xact_rollback_total",
+          "labels": {},
+          "value": 64
+        },
+        {
+          "name": "pg_stat_database_num_backends",
+          "labels": {},
+          "value": 14
+        },
+        {
+          "name": "pg_stat_database_xact_commit_total",
+          "labels": {},
+          "value": 1975419
+        },
+        {
+          "name": "max_connections_connection_count",
+          "labels": {},
+          "value": 60
+        },
+        {
+          "name": "pg_database_size_bytes",
+          "labels": {
+            "datname": "postgres"
+          },
+          "value": 33926291
+        },
+        {
+          "name": "pg_database_size_bytes",
+          "labels": {
+            "datname": "template0"
+          },
+          "value": 7520783
+        },
+        {
+          "name": "pg_database_size_bytes",
+          "labels": {
+            "datname": "template1"
+          },
+          "value": 7594511
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "analytics_orders": 10407,
+    "analytics_items": 10856,
+    "analytics_products": 521,
+    "analytics_sync_jobs": 15,
+    "analytics_cron_runs": 2880
+  },
+  "reports": [
+    {
+      "milliseconds": 1454,
+      "responseBytes": 32776,
+      "rows": 50,
+      "entities": 516,
+      "orders": 10049
+    },
+    {
+      "milliseconds": 1440,
+      "responseBytes": 32776,
+      "rows": 50,
+      "entities": 516,
+      "orders": 10049
+    },
+    {
+      "milliseconds": 1486,
+      "responseBytes": 32776,
+      "rows": 50,
+      "entities": 516,
+      "orders": 10049
+    }
+  ],
+  "connections": [
+    {
+      "name": "Olist 2",
+      "enabled": true,
+      "last_synced_at": "2026-10-19T21:05:37.333+00:00",
+      "error_code": null
+    },
+    {
+      "name": "Olist 3",
+      "enabled": true,
+      "last_synced_at": "2026-10-19T21:05:34.498+00:00",
+      "error_code": null
+    },
+    {
+      "name": "Olist 1",
+      "enabled": true,
+      "last_synced_at": "2026-10-19T21:05:33.781+00:00",
+      "error_code": null
+    }
+  ],
+  "reportScope": {
+    "filters": {
+      "from": "2026-08-01",
+      "to": "2026-10-19",
+      "metric": "revenue",
+      "mode": "TINY_LEGACY",
+      "grouping": "product",
+      "basis": "orders",
+      "thresholdA": 80,
+      "thresholdB": 95,
+      "selections": {
+        "statuses": [
+          "1",
+          "5",
+          "6"
+        ]
+      }
+    },
+    "limit": 50,
+    "sequentialRequests": 3
+  },
+  "summary": {
+    "windowSeconds": 65.406,
+    "cpuNonIdlePercent": 5.120713517290454,
+    "databaseBytesAllDatabases": 49041585,
+    "databaseBytesPostgres": 33926291,
+    "memoryTotalBytes": 456818688,
+    "memoryAvailableBytes": 137703424,
+    "connections": 14,
+    "maxConnections": 60,
+    "poolerWaitingClients": 0,
+    "deadlocksDuringWindow": 0,
+    "tempBytesDuringWindow": 10795356,
+    "swapPagesInDuringWindow": 1849,
+    "swapPagesOutDuringWindow": 856,
+    "reportMilliseconds": [
+      1454,
+      1440,
+      1486
+    ]
+  },
+  "finishedAt": "2026-10-19T21:06:58.053Z"
+}

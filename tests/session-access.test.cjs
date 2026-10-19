@@ -4,80 +4,98 @@ const assert = require('node:assert/strict');
 const { createSessionAccessMonitor } = require('../src/lib/session-access.ts');
 const deferred = () => { let resolve, reject; const promise = new Promise((a,b)=>{resolve=a;reject=b}); return { promise, resolve, reject }; };
 const settle = () => new Promise(resolve=>setImmediate(resolve));
+const admin = { userId:'user', role:'admin' };
 
-test('switching from admin to operator removes privileges immediately and ignores the old account response',async()=>{
-  const initial=deferred(),stale=deferred(),operator=deferred();
-  const pending=[initial,stale,operator];let snapshot;
-  const monitor=createSessionAccessMonitor(()=>pending.shift().promise,next=>snapshot=next);
-  monitor.observeSession('admin');
-  assert.equal(snapshot.role,null);
-  initial.resolve({userId:'admin',role:'admin'});await settle();
-  assert.equal(snapshot.role,'admin');
-  const oldRequest=monitor.refresh();
-  monitor.observeSession('operator');
+test('server bootstrap and repeated same-identity auth/focus events reuse a fresh snapshot without publishing or fetching',async()=>{
+  let now=100,loads=0,publishes=0;
+  const monitor=createSessionAccessMonitor(async()=>{loads++;return admin},()=>publishes++,{initialAccess:admin,initialScope:'/',now:()=>now});
+  for(let i=0;i<20;i++){
+    monitor.observeSession('user','/');
+    await monitor.refresh('/');
+  }
+  now+=59_999;await monitor.refresh('/');
+  assert.equal(loads,0);assert.equal(publishes,0);
+  now++;await monitor.refresh('/');
+  assert.equal(loads,1);assert.equal(publishes,0,'unchanged permissions do not rerender the app');
+  monitor.dispose();
+});
+
+test('expired focus, visibility, timer and auth events share one request while the admin menu stays visible',async()=>{
+  let now=0,loads=0,snapshot;const request=deferred();
+  const monitor=createSessionAccessMonitor(()=>{loads++;return request.promise},next=>snapshot=next,{now:()=>now});
+  monitor.observeSession('user','/');await settle();
+  assert.equal(snapshot.loading,true);assert.equal(loads,1);
+  request.resolve(admin);await settle();
+  const next=deferred();
+  monitor.dispose();snapshot={...snapshot};
+  const current=createSessionAccessMonitor(()=>{loads++;return next.promise},value=>snapshot=value,{initialAccess:admin,initialScope:'/',now:()=>now});
+  now=60_000;
+  const first=current.refresh('/');
+  const second=current.refresh('/');current.observeSession('user','/');
+  assert.equal(first,second);await settle();
+  assert.equal(loads,2);assert.equal(snapshot.role,'admin');assert.equal(snapshot.loading,false);
+  next.resolve(admin);await first;assert.equal(snapshot.role,'admin');
+  current.dispose();
+});
+
+test('switching identities immediately clears privileges, cancels the old request and ignores its response',async()=>{
+  const stale=deferred(),operator=deferred();let snapshot,signal;
+  const queue=[stale,operator];
+  const monitor=createSessionAccessMonitor(s=>{signal=s;return queue.shift().promise},next=>snapshot=next,{initialAccess:admin});
+  const old=monitor.refresh('/',{force:true});await settle();const oldSignal=signal;
+  monitor.observeSession('operator','/');
   assert.equal(snapshot.userId,'operator');assert.equal(snapshot.role,null);assert.equal(snapshot.loading,true);
+  assert.equal(oldSignal.aborted,true);await settle();
   operator.resolve({userId:'operator',role:'operator'});await settle();
-  stale.resolve({userId:'admin',role:'admin'});await oldRequest;
+  stale.resolve(admin);await old;
   assert.equal(snapshot.role,'operator');assert.equal(snapshot.userId,'operator');
   monitor.dispose();
 });
 
-test('a late admin response cannot reverse the latest role update for the same account',async()=>{
-  const initial=deferred(),stale=deferred(),latest=deferred();
-  const pending=[initial,stale,latest];let snapshot;
-  const monitor=createSessionAccessMonitor(()=>pending.shift().promise,next=>snapshot=next);
-  monitor.observeSession('same-user');initial.resolve({userId:'same-user',role:'admin'});await settle();
-  const older=monitor.refresh(),newer=monitor.refresh();
-  latest.resolve({userId:'same-user',role:'operator'});await newer;
-  stale.resolve({userId:'same-user',role:'admin'});await older;
-  assert.equal(snapshot.role,'operator');monitor.dispose();
-});
-
-test('logout, mismatched identities and failed permission checks cannot keep the admin menu',async()=>{
-  const first=deferred(),late=deferred();const pending=[first,late];let snapshot;
-  const monitor=createSessionAccessMonitor(()=>pending.shift().promise,next=>snapshot=next);
-  monitor.observeSession('admin');first.resolve({userId:'admin',role:'admin'});await settle();
-  const old=monitor.refresh();monitor.observeSession(null);
-  late.resolve({userId:'admin',role:'admin'});await old;
-  assert.equal(snapshot.userId,null);assert.equal(snapshot.role,null);
-  monitor.dispose();
-
-  const mismatched=createSessionAccessMonitor(async()=>({userId:'old-admin',role:'admin'}),next=>snapshot=next);
-  mismatched.observeSession('operator');await settle();
-  assert.equal(snapshot.role,null);assert.ok(snapshot.error);mismatched.dispose();
-  const offline=createSessionAccessMonitor(async()=>{throw new Error('offline')},next=>snapshot=next);
-  offline.observeSession('admin');await settle();
-  assert.equal(snapshot.role,null);assert.equal(snapshot.error,'offline');offline.dispose();
-});
-
-test('unmount discards pending responses instead of updating a new login',async()=>{
-  const request=deferred();let updates=0;
-  const monitor=createSessionAccessMonitor(()=>request.promise,()=>updates++);
-  monitor.observeSession('admin');const before=updates;monitor.dispose();
-  request.resolve({userId:'admin',role:'admin'});await settle();assert.equal(updates,before);
-});
-
-test('entering a protected route invalidates cached privileges before the permission request finishes',async()=>{
-  const initial=deferred(),pending=deferred();let snapshot;
-  const queue=[initial,pending];
-  const monitor=createSessionAccessMonitor(()=>queue.shift().promise,next=>snapshot=next);
-  monitor.observeSession('same-user','/');initial.resolve({userId:'same-user',role:'admin'});await settle();
-  assert.equal(snapshot.verifiedFor,'/');assert.equal(snapshot.role,'admin');
+test('protected route entry always verifies again even with fresh admin permissions',async()=>{
+  const pending=deferred();let snapshot;
+  const monitor=createSessionAccessMonitor(()=>pending.promise,next=>snapshot=next,{initialAccess:admin,initialScope:'/'});
   const check=monitor.refresh('/ninho',{invalidate:true});
-  assert.equal(snapshot.role,null);assert.equal(snapshot.verifiedFor,null);
-  pending.resolve({userId:'same-user',role:'operator'});await check;
+  assert.equal(snapshot.role,'admin','menu is stable while protected content waits');
+  assert.equal(snapshot.verifiedFor,null);
+  pending.resolve({userId:'user',role:'operator'});await check;
   assert.equal(snapshot.role,'operator');assert.equal(snapshot.verifiedFor,'/ninho');
   monitor.dispose();
 });
 
-test('same-identity auth events also revoke old grants and stale route requests cannot verify the new route',async()=>{
-  const initial=deferred(),old=deferred(),latest=deferred();let snapshot;
-  const queue=[initial,old,latest];
-  const monitor=createSessionAccessMonitor(()=>queue.shift().promise,next=>snapshot=next);
-  monitor.observeSession('user','/ninho');initial.resolve({userId:'user',role:'admin'});await settle();
-  monitor.observeSession('user','/ninho');assert.equal(snapshot.role,null);
-  const current=monitor.refresh('/ninho/users',{invalidate:true});
+test('protected entry supersedes background checks and an old response cannot verify the new route',async()=>{
+  const old=deferred(),latest=deferred();const queue=[old,latest];let snapshot;
+  const monitor=createSessionAccessMonitor(()=>queue.shift().promise,next=>snapshot=next,{initialAccess:admin,initialScope:'/'});
+  const first=monitor.refresh('/',{force:true});await settle();
+  const current=monitor.refresh('/ninho',{invalidate:true});await settle();
   latest.resolve({userId:'user',role:'operator'});await current;
-  old.resolve({userId:'user',role:'admin'});await settle();
-  assert.equal(snapshot.verifiedFor,'/ninho/users');assert.equal(snapshot.role,'operator');monitor.dispose();
+  old.resolve(admin);await first;
+  assert.equal(snapshot.verifiedFor,'/ninho');assert.equal(snapshot.role,'operator');monitor.dispose();
+});
+
+test('protected pages can revalidate at 15 seconds and successful revocation removes privileges',async()=>{
+  let now=0,loads=0,snapshot;
+  const monitor=createSessionAccessMonitor(async()=>{loads++;return {userId:'user',role:'operator'}},next=>snapshot=next,{initialAccess:admin,initialScope:'/ninho',now:()=>now});
+  now=14_999;await monitor.refresh('/ninho',{maxAgeMs:15_000});assert.equal(loads,0);
+  now++;await monitor.refresh('/ninho',{maxAgeMs:15_000});
+  assert.equal(loads,1);assert.equal(snapshot.role,'operator');monitor.dispose();
+});
+
+test('logout, mismatched identities and failed checks cannot retain admin privileges',async()=>{
+  const late=deferred();let snapshot;
+  const monitor=createSessionAccessMonitor(()=>late.promise,next=>snapshot=next,{initialAccess:admin});
+  const old=monitor.refresh('/',{force:true});await settle();monitor.observeSession(null);
+  late.resolve(admin);await old;
+  assert.equal(snapshot.userId,null);assert.equal(snapshot.role,null);monitor.dispose();
+  for(const load of [async()=>({userId:'other-admin',role:'admin'}),async()=>({userId:'user',role:'unknown'}),async()=>{throw new Error('offline')}]){
+    const current=createSessionAccessMonitor(load,next=>snapshot=next,{initialAccess:admin});
+    await current.refresh('/',{force:true});assert.equal(snapshot.role,null);assert.ok(snapshot.error);current.dispose();
+  }
+});
+
+test('unmount cancels pending checks and cannot update a new login',async()=>{
+  const request=deferred();let updates=0,signal;
+  const monitor=createSessionAccessMonitor(s=>{signal=s;return request.promise},()=>updates++);
+  monitor.observeSession('user');await settle();const before=updates;monitor.dispose();
+  assert.equal(signal.aborted,true);request.resolve(admin);await settle();assert.equal(updates,before);
 });

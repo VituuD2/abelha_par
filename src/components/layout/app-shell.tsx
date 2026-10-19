@@ -6,16 +6,26 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { usePreparationStore } from "@/stores/preparation-store";
 import { useScanStore } from "@/stores/scan-store";
 import { createClient } from "@/lib/supabase/client";
-import { createSessionAccessMonitor, type SessionAccessSnapshot } from "@/lib/session-access";
+import { ACCESS_FRESHNESS_MS, PROTECTED_ACCESS_FRESHNESS_MS, createSessionAccessMonitor, type SessionAccess, type SessionAccessSnapshot } from "@/lib/session-access";
 import { can, permissionForPage, type Permission } from "@/lib/permissions";
 
 const AppAccessContext = createContext({ can: (permission: Permission): boolean => can(null, permission) });
 export const useAppAccess = () => useContext(AppAccessContext);
 
-export function AppShell({ children, userId: serverUserId }: { children: React.ReactNode; userId: string | null }) {
+export function AppShell({ children, userId: serverUserId, initialAccess = null }: { children: React.ReactNode; userId: string | null; initialAccess?: SessionAccess | null }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [access, setAccess] = useState<SessionAccessSnapshot>({ userId: null, role: null, loading: true, error: null, verifiedFor: null });
+  // A new visit needs a new proof even when returning to the same URL.
+  const routeVisit = useRef({ pathname, version: 0 });
+  if (routeVisit.current.pathname !== pathname) {
+    routeVisit.current = { pathname, version: routeVisit.current.version + 1 };
+  }
+  const scope = `${routeVisit.current.version}:${pathname}`;
+  const bootstrap = useRef(initialAccess?.userId === serverUserId ? initialAccess : null);
+  const [access, setAccess] = useState<SessionAccessSnapshot>(() => ({
+    userId: bootstrap.current?.userId || null, role: bootstrap.current?.role || null,
+    loading: !bootstrap.current, error: null, verifiedFor: bootstrap.current ? scope : null,
+  }));
   const monitor = useRef<ReturnType<typeof createSessionAccessMonitor> | null>(null);
   const userId = access.userId;
   const accessError = access.error;
@@ -24,35 +34,43 @@ export function AppShell({ children, userId: serverUserId }: { children: React.R
   const pagePermission = permissionForPage(pathname);
   const currentPath = useRef(pathname);
   currentPath.current = pathname;
-  const routeVerified = access.verifiedFor === pathname;
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
+  const routeVerified = access.verifiedFor === scope;
   const allowedPage = !pagePermission || (routeVerified && can(access.role, pagePermission));
 
   useEffect(() => {
-    const current = createSessionAccessMonitor(async () => {
-      const response = await fetch("/api/auth/access", { cache: "no-store", signal: AbortSignal.timeout(10_000) });
+    const current = createSessionAccessMonitor(async signal => {
+      const response = await fetch("/api/auth/access", { cache: "no-store", signal: AbortSignal.any([signal, AbortSignal.timeout(10_000)]) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Não foi possível verificar suas permissões.");
       return data;
-    }, setAccess);
+    }, setAccess, { initialAccess: bootstrap.current, initialScope: currentScope.current });
     monitor.current = current;
     const { data: { subscription } } = createClient().auth.onAuthStateChange((_event, session) => {
-      current.observeSession(session?.user.id || null, currentPath.current);
+      current.observeSession(session?.user.id || null, currentScope.current);
     });
-    const check = () => { void current.refresh(currentPath.current, { invalidate: true }); };
-    const timer = setInterval(() => { void current.refresh(currentPath.current); }, 60_000);
-    const visibility = () => { if (document.visibilityState === "visible") check(); };
+    const check = () => {
+      if (document.visibilityState !== "visible") return;
+      void current.refresh(currentScope.current, { maxAgeMs: permissionForPage(currentPath.current) ? PROTECTED_ACCESS_FRESHNESS_MS : ACCESS_FRESHNESS_MS });
+    };
+    const visibility = check;
     window.addEventListener("focus", check);
     window.addEventListener("pageshow", check);
     document.addEventListener("visibilitychange", visibility);
-    return () => { current.dispose(); subscription.unsubscribe(); clearInterval(timer); window.removeEventListener("focus", check); window.removeEventListener("pageshow", check); document.removeEventListener("visibilitychange", visibility); if (monitor.current === current) monitor.current = null; };
+    return () => { current.dispose(); subscription.unsubscribe(); window.removeEventListener("focus", check); window.removeEventListener("pageshow", check); document.removeEventListener("visibilitychange", visibility); if (monitor.current === current) monitor.current = null; };
   }, []);
 
-  useEffect(() => { void monitor.current?.refresh(pathname, { invalidate: true }); }, [pathname]);
+  const previousPath = useRef(pathname);
   useEffect(() => {
-    if (!pagePermission) return;
-    const timer = setInterval(() => { void monitor.current?.refresh(pathname); }, 15_000);
+    const enteredProtectedPage = previousPath.current !== pathname && Boolean(pagePermission);
+    previousPath.current = pathname;
+    void monitor.current?.refresh(scope, { invalidate: enteredProtectedPage });
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") void monitor.current?.refresh(scope, { maxAgeMs: pagePermission ? PROTECTED_ACCESS_FRESHNESS_MS : ACCESS_FRESHNESS_MS });
+    }, pagePermission ? PROTECTED_ACCESS_FRESHNESS_MS : ACCESS_FRESHNESS_MS);
     return () => clearInterval(timer);
-  }, [pathname, pagePermission]);
+  }, [pathname, pagePermission, scope]);
   useEffect(() => {
     if (userId && userId !== serverUserId) router.refresh();
     if (access.loading || isAuthPage) return;
