@@ -8,6 +8,7 @@ import {
 import {
   csvCell,
   exportMetadata,
+  exportCoverageMetadata,
   exportRow,
   EXPORT_COLUMNS,
 } from "@/lib/analytics/export";
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
     ]);
     const metadata = [
       ...exportMetadata(filters, result),
-      ["Empresas / conexões / cobertura", JSON.stringify(status)],
+      ...exportCoverageMetadata(filters, status),
     ];
     const name = `curva-abc-${filters.from}-${filters.to}.${b.format}`;
     if (b.format === "xlsx") {

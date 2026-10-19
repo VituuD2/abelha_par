@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   enqueueIncremental,
-  processAnalyticsBatch,
+  processAnalyticsBatches,
 } from "@/lib/analytics/sync";
 import { refreshDueAnalyticsTokens } from "@/lib/analytics/auth";
 import { timingSafeEqual } from "crypto";
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const budget = 45000 - (Date.now() - started);
     if (budget < 15000)
       return NextResponse.json({ processed: 0, pending: true, renewal }, { status: renewal.reconnect || renewal.failed ? 503 : 200 });
-    const result = await processAnalyticsBatch(undefined, budget);
+    const result = await processAnalyticsBatches(undefined, budget);
     return NextResponse.json(
       { ...result, renewal, ...(renewal.reconnect ? { guidance: "Reconecte a conta indicada no Ninho para retomar seu checkpoint." } : {}) },
       { status: result.error || renewal.reconnect || renewal.failed ? 503 : 200 },
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Falha no processamento analítico. Confira os checkpoints e a migração v12.",
+          "Falha no processamento analítico. Confira os checkpoints e a migração v13.",
       },
       { status: 503 },
     );

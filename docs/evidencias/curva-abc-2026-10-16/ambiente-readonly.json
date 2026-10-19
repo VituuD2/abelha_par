@@ -1,0 +1,573 @@
+{
+  "at": "2026-10-16T18:38:49.541Z",
+  "mode": "read-only GET; no token refresh",
+  "tables": {
+    "analytics_companies": {
+      "count": 3,
+      "rows": [
+        {
+          "id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+          "name": "Olist 2",
+          "tax_id": "36965322000112"
+        },
+        {
+          "id": "31009cb5-fd2d-4c97-8510-0467d48e938f",
+          "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+          "name": "Olist 1",
+          "tax_id": "13397731000164"
+        },
+        {
+          "id": "b54b3248-b426-467e-9cd9-c57d7109edbb",
+          "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+          "name": "Olist 3",
+          "tax_id": "37201039000187"
+        }
+      ]
+    },
+    "analytics_connections": {
+      "count": 3,
+      "rows": [
+        {
+          "id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+          "company_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "name": "Olist 2",
+          "enabled": true,
+          "credential_kind": "legacy",
+          "legacy_integration_id": "036213c7-582a-401e-bd53-b3fde3cb4c1f",
+          "verified_at": "2026-10-16T15:42:04.845+00:00",
+          "verified_tax_id": "36965322000112",
+          "expires_at": null,
+          "last_synced_at": "2026-10-08T15:42:08.498+00:00",
+          "error_code": null
+        },
+        {
+          "id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+          "company_id": "b54b3248-b426-467e-9cd9-c57d7109edbb",
+          "name": "Olist 3",
+          "enabled": true,
+          "credential_kind": "oauth",
+          "legacy_integration_id": null,
+          "verified_at": "2026-10-16T17:34:04.02+00:00",
+          "verified_tax_id": "37201039000187",
+          "expires_at": "2026-10-16T20:59:01.529+00:00",
+          "last_synced_at": "2026-10-08T15:41:05.562+00:00",
+          "error_code": null
+        },
+        {
+          "id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+          "company_id": "31009cb5-fd2d-4c97-8510-0467d48e938f",
+          "name": "Olist 1",
+          "enabled": true,
+          "credential_kind": "oauth",
+          "legacy_integration_id": null,
+          "verified_at": "2026-10-16T17:24:03.851+00:00",
+          "verified_tax_id": "13397731000164",
+          "expires_at": "2026-10-16T20:57:01.307+00:00",
+          "last_synced_at": "2026-10-08T15:50:05.363+00:00",
+          "error_code": null
+        }
+      ]
+    },
+    "analytics_sync_jobs": {
+      "count": 12,
+      "rows": [
+        {
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-08",
+          "to_date": "2026-10-08",
+          "cursor_date": "2026-10-08",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 16,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-08T15:39:35.169+00:00",
+          "updated_at": "2026-10-08T15:42:08.34+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-08-01",
+          "to_date": "2026-10-02",
+          "cursor_date": "2026-10-02",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 3528,
+          "pages": 64,
+          "attempts": 0,
+          "next_at": "2026-10-07T16:25:35.268+00:00",
+          "updated_at": "2026-10-07T16:26:24.419+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "updates",
+          "covers_sales": false
+        },
+        {
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "mode": "backfill",
+          "status": "retry",
+          "from_date": "2026-10-03",
+          "to_date": "2026-10-06",
+          "cursor_date": "2026-10-05",
+          "page_offset": 0,
+          "pending_index": 29,
+          "processed": 135,
+          "pages": 3,
+          "attempts": 221,
+          "next_at": "2026-10-16T19:34:44.223+00:00",
+          "updated_at": "2026-10-16T18:34:44.223+00:00",
+          "error_code": null,
+          "last_error": "Identificador Olist inválido.",
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-08",
+          "to_date": "2026-10-08",
+          "cursor_date": "2026-10-08",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 19,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-08T15:38:34.996+00:00",
+          "updated_at": "2026-10-08T15:41:05.395+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-07",
+          "to_date": "2026-10-07",
+          "cursor_date": "2026-10-07",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 82,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-07T17:48:35.192+00:00",
+          "updated_at": "2026-10-07T17:49:20.269+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "mode": "backfill",
+          "status": "retry",
+          "from_date": "2026-10-03",
+          "to_date": "2026-10-06",
+          "cursor_date": "2026-10-05",
+          "page_offset": 0,
+          "pending_index": 11,
+          "processed": 102,
+          "pages": 3,
+          "attempts": 241,
+          "next_at": "2026-10-16T19:08:04.196+00:00",
+          "updated_at": "2026-10-16T18:08:04.196+00:00",
+          "error_code": null,
+          "last_error": "Identificador Olist inválido.",
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-07",
+          "to_date": "2026-10-07",
+          "cursor_date": "2026-10-07",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 35,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-07T17:35:34.194+00:00",
+          "updated_at": "2026-10-07T17:41:10.258+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-08",
+          "to_date": "2026-10-08",
+          "cursor_date": "2026-10-08",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 54,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-08T15:49:35.8+00:00",
+          "updated_at": "2026-10-08T15:50:04.974+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "mode": "backfill",
+          "status": "retry",
+          "from_date": "2026-08-01",
+          "to_date": "2026-10-02",
+          "cursor_date": "2026-08-23",
+          "page_offset": 0,
+          "pending_index": 78,
+          "processed": 2615,
+          "pages": 41,
+          "attempts": 226,
+          "next_at": "2026-10-16T19:25:04.636+00:00",
+          "updated_at": "2026-10-16T18:25:04.636+00:00",
+          "error_code": null,
+          "last_error": "Identificador Olist inválido.",
+          "query_phase": "updates",
+          "covers_sales": false
+        },
+        {
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-07",
+          "to_date": "2026-10-07",
+          "cursor_date": "2026-10-07",
+          "page_offset": 0,
+          "pending_index": 0,
+          "processed": 40,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-07T17:37:36.056+00:00",
+          "updated_at": "2026-10-07T17:40:21.2+00:00",
+          "error_code": null,
+          "last_error": null,
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "mode": "backfill",
+          "status": "retry",
+          "from_date": "2026-10-03",
+          "to_date": "2026-10-06",
+          "cursor_date": "2026-10-06",
+          "page_offset": 100,
+          "pending_index": 53,
+          "processed": 479,
+          "pages": 7,
+          "attempts": 222,
+          "next_at": "2026-10-16T18:50:06.818+00:00",
+          "updated_at": "2026-10-16T17:50:06.818+00:00",
+          "error_code": null,
+          "last_error": "Identificador Olist inválido.",
+          "query_phase": "sales",
+          "covers_sales": true
+        },
+        {
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "mode": "backfill",
+          "status": "retry",
+          "from_date": "2026-08-01",
+          "to_date": "2026-10-02",
+          "cursor_date": "2026-08-04",
+          "page_offset": 0,
+          "pending_index": 8,
+          "processed": 212,
+          "pages": 4,
+          "attempts": 242,
+          "next_at": "2026-10-16T18:44:05.129+00:00",
+          "updated_at": "2026-10-16T17:44:05.129+00:00",
+          "error_code": null,
+          "last_error": "Identificador Olist inválido.",
+          "query_phase": "updates",
+          "covers_sales": false
+        }
+      ]
+    },
+    "analytics_cron_runs": {
+      "count": 2880,
+      "rows": [
+        {
+          "requested_at": "2026-10-16T18:38:00.013391+00:00",
+          "request_id": 14916
+        },
+        {
+          "requested_at": "2026-10-16T18:37:00.027657+00:00",
+          "request_id": 14915
+        },
+        {
+          "requested_at": "2026-10-16T18:36:00.013085+00:00",
+          "request_id": 14914
+        },
+        {
+          "requested_at": "2026-10-16T18:35:00.073651+00:00",
+          "request_id": 14913
+        },
+        {
+          "requested_at": "2026-10-16T18:34:00.013297+00:00",
+          "request_id": 14912
+        },
+        {
+          "requested_at": "2026-10-16T18:33:00.01308+00:00",
+          "request_id": 14911
+        },
+        {
+          "requested_at": "2026-10-16T18:32:00.120716+00:00",
+          "request_id": 14910
+        },
+        {
+          "requested_at": "2026-10-16T18:31:00.026506+00:00",
+          "request_id": 14909
+        },
+        {
+          "requested_at": "2026-10-16T18:30:00.016465+00:00",
+          "request_id": 14908
+        },
+        {
+          "requested_at": "2026-10-16T18:29:00.033696+00:00",
+          "request_id": 14907
+        }
+      ]
+    },
+    "analytics_orders": {
+      "count": 6762,
+      "errorCode": null
+    },
+    "analytics_items": {
+      "count": 6943,
+      "errorCode": null
+    },
+    "analytics_products": {
+      "count": 425,
+      "errorCode": null
+    },
+    "analytics_order_aliases": {
+      "count": 6762,
+      "errorCode": null
+    },
+    "analytics_sources": {
+      "count": 14,
+      "errorCode": null
+    },
+    "tiny_integrations": {
+      "count": 1,
+      "errorCode": null
+    }
+  },
+  "http": [
+    {
+      "path": "/analytics/abc",
+      "status": 307,
+      "location": "/login?next=%2Fanalytics%2Fabc",
+      "server": "Vercel"
+    },
+    {
+      "path": "/api/analytics/options",
+      "status": 401,
+      "location": null,
+      "server": "Vercel"
+    },
+    {
+      "path": "/api/analytics/sync",
+      "status": 401,
+      "location": null,
+      "server": "Vercel"
+    },
+    {
+      "path": "/api/internal/analytics-sync",
+      "status": 405,
+      "location": null,
+      "server": "Vercel"
+    }
+  ],
+  "v13Column": {
+    "code": "42703",
+    "message": "column analytics_sync_jobs.last_claimed_at does not exist"
+  },
+  "cron": {
+    "code": "PGRST106",
+    "message": "Invalid schema: cron"
+  },
+  "net": {
+    "code": "PGRST106",
+    "message": "Invalid schema: net"
+  },
+  "reports": [
+    {
+      "names": [
+        "Todas"
+      ],
+      "ms": 1235,
+      "orders": 6514,
+      "entities": 416,
+      "grossCents": "48255021",
+      "rankOrClassDifferences": 0
+    },
+    {
+      "names": [
+        "Olist 1"
+      ],
+      "ms": 891,
+      "orders": 2865,
+      "entities": 183,
+      "grossCents": "16645415",
+      "rankOrClassDifferences": 0
+    },
+    {
+      "names": [
+        "Olist 2"
+      ],
+      "ms": 775,
+      "orders": 305,
+      "entities": 51,
+      "grossCents": "6663643",
+      "rankOrClassDifferences": 0
+    },
+    {
+      "names": [
+        "Olist 3"
+      ],
+      "ms": 879,
+      "orders": 3344,
+      "entities": 182,
+      "grossCents": "24945963",
+      "rankOrClassDifferences": 0
+    },
+    {
+      "names": [
+        "Olist 1",
+        "Olist 3"
+      ],
+      "ms": 983,
+      "orders": 6209,
+      "entities": 365,
+      "grossCents": "41591378",
+      "rankOrClassDifferences": 0
+    },
+    {
+      "names": [
+        "Olist 1",
+        "Olist 2"
+      ],
+      "ms": 867,
+      "orders": 3170,
+      "entities": 234,
+      "grossCents": "23309058",
+      "rankOrClassDifferences": 0
+    }
+  ],
+  "coverage": [
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-08-03",
+      "from_date": "2026-08-01",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-04",
+      "from_date": "2026-10-03",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-10-07",
+      "covers_sales": true,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-08-22",
+      "from_date": "2026-08-01",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-10-07",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-04",
+      "from_date": "2026-08-01",
+      "covers_sales": true,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-10-07",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-05",
+      "from_date": "2026-10-03",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    }
+  ],
+  "rpcSignatures": [
+    "/analytics_cron_runs",
+    "/analytics_orders",
+    "/analytics_order_aliases",
+    "/analytics_items",
+    "/analytics_products",
+    "/analytics_companies",
+    "/analytics_sync_jobs",
+    "/analytics_sources",
+    "/analytics_connections",
+    "/rpc/analytics_drilldown",
+    "/rpc/analytics_assert_member",
+    "/rpc/analytics_abc",
+    "/rpc/analytics_relink_legacy",
+    "/rpc/analytics_reconcile_source",
+    "/rpc/analytics_ensure_coverage",
+    "/rpc/analytics_job_status",
+    "/rpc/analytics_filtered_items",
+    "/rpc/analytics_cancel_order",
+    "/rpc/analytics_coverage",
+    "/rpc/analytics_options",
+    "/rpc/analytics_ingest",
+    "/rpc/analytics_match",
+    "/rpc/invoke_analytics_sync",
+    "/rpc/analytics_claim_job",
+    "/rpc/analytics_schedule_range"
+  ]
+}

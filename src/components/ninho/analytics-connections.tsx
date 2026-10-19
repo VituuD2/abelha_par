@@ -230,8 +230,9 @@ export function AnalyticsConnections() {
   useEffect(() => {
     if (!pending) return;
     const timer = setInterval(() => {
+      if (document.visibilityState === "hidden") return;
       void load();
-    }, 5000);
+    }, 15000);
     return () => clearInterval(timer);
   }, [pending, load]);
   const save = async (body: unknown) => {

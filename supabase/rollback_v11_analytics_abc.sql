@@ -10,6 +10,7 @@ DROP FUNCTION IF EXISTS public.invoke_analytics_sync();
 DROP TABLE IF EXISTS public.analytics_cron_runs;
 DROP FUNCTION IF EXISTS public.analytics_ensure_coverage(uuid,uuid,jsonb);
 DROP FUNCTION IF EXISTS public.analytics_job_status(uuid,uuid);
+DROP FUNCTION IF EXISTS public.analytics_claim_jobs(uuid,integer);
 DROP FUNCTION IF EXISTS public.analytics_schedule_range(uuid,uuid,date,date,text);
 DROP FUNCTION IF EXISTS public.analytics_relink_legacy(uuid,uuid,uuid,integer,uuid,text,text,text);
 DO $$ BEGIN

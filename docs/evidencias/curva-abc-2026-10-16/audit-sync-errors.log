@@ -1,0 +1,20 @@
+✔ Olist HTTP client maps network timeouts to retry, bounds Retry-After and validates response contracts (25.8963ms)
+✔ real-world zero catalog id no longer poisons a checkpoint: all unlinked lines are ingested once and no /produtos/0 is requested (6.9469ms)
+✔ a deleted catalog product (404) retains its valid scoped ID and order values without blocking history (0.9707ms)
+✔ recent denied enrichment check prevents repeating the catalog request even when an older enriched snapshot exists (0.8357ms)
+✔ required Olist calls distinguish 401/403 from retryable 429/5xx and preserve the pending order (3.5358ms)
+✔ analytics ingests all origins, persists progress, caches products and releases the original lease (1.0478ms)
+✔ rate limiting preserves pending order and schedules a retry without persisting a partial sale (0.4485ms)
+✔ an incremental job uses update date; inaccessible optional enrichment is flagged, not invented (0.8391ms)
+✔ new incremental coverage waits for both sale and update scans to complete (0.5658ms)
+✔ a worker traverses short pages and empty days within one lease instead of waiting another minute per day (0.7135ms)
+✔ parallel cron reserves distinct accounts once and starts all workers without waiting for another account's API (1.1713ms)
+✔ expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying (0.5524ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 613.3175

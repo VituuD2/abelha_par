@@ -9,6 +9,54 @@ const {
 const { normalizeOrder } = require("../src/lib/analytics/normalize.ts");
 const { parseABCFilters } = require("../src/lib/analytics/filters.ts");
 const { coversPeriod } = require("../src/lib/analytics/coverage.ts");
+const { reportReliability } = require("../src/lib/analytics/reliability.ts");
+const { exportCoverageMetadata } = require("../src/lib/analytics/export.ts");
+
+test("unlinked Olist items retain exact money and unique order/position identity without inventing catalog equivalence", () => {
+  const raw = { id: 71, data: "2026-10-05", situacao: 6, itens: [0, 0].map(() => ({
+    produto: { id: 0, sku: "SAME", descricao: "Item real" }, quantidade: "0.5", valorUnitario: "12.3456",
+  })) };
+  const n = normalizeOrder(raw, "c1", "s1", "2026-10-16T00:00:00Z");
+  assert.deepEqual(n.items.map(i => i.product_id), ["order:71:item:0", "order:71:item:1"]);
+  assert.deepEqual(n.items.map(i => i.gross_cents), ["617", "617"]);
+  assert.ok(n.order.quality_flags.includes("item_sem_vinculo_catalogo"));
+  assert.match(n.items[0].name, /sem vínculo de catálogo/);
+  assert.equal(n.items[0].parent_id, null);
+  assert.equal(normalizeOrder(raw, "c1", "s1", "2026-10-16T00:00:00Z").items[0].product_id, n.items[0].product_id);
+  assert.notEqual(normalizeOrder({ ...raw, id: 72 }, "c1", "s1", "2026-10-16T00:00:00Z").items[0].product_id, n.items[0].product_id);
+  assert.throws(() => normalizeOrder({ ...raw, itens: [{ ...raw.itens[0], produto: { id: "bad" } }] }, "c1", "s1", "2026-10-16T00:00:00Z"), /Identificador/);
+});
+
+test("coverage distinguishes missing history, import, sync failure and genuinely empty filtered results; exports share selected scope", () => {
+  const filters = { from: "2026-09-01", to: "2026-09-30", selections: { companies: ["co1"] } };
+  const status = { companies: [{ id: "co1", name: "Olist 1" }, { id: "co2", name: "Olist 2" }],
+    connections: [{ id: "c1", company_id: "co1", name: "Olist 1", enabled: true, verified_at: "2026-09-01" },
+      { id: "c2", company_id: "co2", name: "Olist 2", enabled: true }], jobs: [], coverage: [] };
+  assert.equal(reportReliability(status, filters).state, "uncovered");
+  const j = { connection_id: "c1", mode: "backfill", status: "queued", from_date: filters.from, to_date: filters.to };
+  status.jobs.push(j);
+  assert.equal(reportReliability(status, filters).state, "importing");
+  j.last_error = "Falha"; j.status = "retry";
+  assert.equal(reportReliability(status, filters).state, "sync_error");
+  assert.match(reportReliability(status, filters).emptyTitle, /sincronização com falha/);
+  j.status = "completed"; j.last_error = null; status.coverage.push(j);
+  assert.equal(reportReliability(status, filters).state, "covered");
+  assert.match(reportReliability(status, filters).emptyTitle, /Nenhuma venda elegível/);
+  const metadata = exportCoverageMetadata(filters, status).flat().join(" ");
+  assert.match(metadata, /provisória/);
+  assert.match(metadata, /Olist 1/);
+  assert.doesNotMatch(metadata, /Olist 2/);
+  assert.equal(reportReliability(status, { ...filters, selections: {} }).complete, false);
+});
+const { progressVersion } = require("../src/lib/analytics/progress.ts");
+
+test("progress version ignores heartbeats and row ordering but detects imported orders and coverage changes",()=>{
+  const s={connections:[{id:"c",enabled:true}],jobs:[{id:"a",connection_id:"c",status:"queued",processed:3},{id:"b",connection_id:"c",status:"queued",processed:0}],coverage:[]};
+  const version=progressVersion(s);
+  assert.equal(progressVersion({...s,jobs:[...s.jobs].reverse().map(j=>({...j,updated_at:"new-heartbeat"}))}),version);
+  assert.notEqual(progressVersion({...s,jobs:[{...s.jobs[0],processed:4},s.jobs[1]]}),version);
+  assert.notEqual(progressVersion({...s,coverage:[{connection_id:"c",from_date:"2026-08-01",to_date:"2026-08-01"}]}),version);
+});
 const {
   createAnalyticsState,
   verifyAnalyticsState,

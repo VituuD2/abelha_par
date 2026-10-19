@@ -1,0 +1,217 @@
+{
+  "at": "2026-10-16T18:35:08.378Z",
+  "runtime": "v24.18.1",
+  "environment": "PGlite in-memory, synthetic; one process/connection; not production concurrency",
+  "scenarios": [
+    {
+      "orders": 10000,
+      "items": 10000,
+      "products": 5000,
+      "seedMs": 1150,
+      "sqlMs": [
+        205.98,
+        236.21,
+        233.98
+      ],
+      "pageRows": 100,
+      "entities": 5000,
+      "paretoPoints": 60,
+      "jsonBytes": 43304,
+      "exportAggregationMs": 261,
+      "exportEntities": 5000,
+      "exportJsonBytes": 1356792,
+      "productFilterMs": 13,
+      "threeSerializedQueriesMs": 1393,
+      "rssMiB": 424,
+      "explain": [
+        {
+          "QUERY PLAN": [
+            {
+              "Plan": {
+                "Node Type": "Function Scan",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Function Name": "analytics_filtered_items",
+                "Alias": "analytics_filtered_items",
+                "Startup Cost": 0.25,
+                "Total Cost": 10.25,
+                "Plan Rows": 1000,
+                "Plan Width": 224,
+                "Actual Startup Time": 364.561,
+                "Actual Total Time": 370.224,
+                "Actual Rows": 10000,
+                "Actual Loops": 1,
+                "Disabled": false,
+                "Shared Hit Blocks": 150185,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+              },
+              "Planning": {
+                "Shared Hit Blocks": 0,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+              },
+              "Planning Time": 0.103,
+              "Triggers": [],
+              "Execution Time": 374.578
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "orders": 50000,
+      "items": 50000,
+      "products": 5000,
+      "seedMs": 4174,
+      "sqlMs": [
+        1473.65,
+        1302,
+        1427.09
+      ],
+      "pageRows": 100,
+      "entities": 5000,
+      "paretoPoints": 60,
+      "jsonBytes": 43788,
+      "exportAggregationMs": 1350,
+      "exportEntities": 5000,
+      "exportJsonBytes": 1371976,
+      "productFilterMs": 19,
+      "threeSerializedQueriesMs": 3765,
+      "rssMiB": 511,
+      "explain": [
+        {
+          "QUERY PLAN": [
+            {
+              "Plan": {
+                "Node Type": "Function Scan",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Function Name": "analytics_filtered_items",
+                "Alias": "analytics_filtered_items",
+                "Startup Cost": 0.25,
+                "Total Cost": 10.25,
+                "Plan Rows": 1000,
+                "Plan Width": 224,
+                "Actual Startup Time": 1102.031,
+                "Actual Total Time": 1141.647,
+                "Actual Rows": 50000,
+                "Actual Loops": 1,
+                "Disabled": false,
+                "Shared Hit Blocks": 630182,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 900,
+                "Temp Written Blocks": 900
+              },
+              "Planning": {
+                "Shared Hit Blocks": 0,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+              },
+              "Planning Time": 0.077,
+              "Triggers": [],
+              "Execution Time": 1173.314
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "orders": 100000,
+      "items": 100000,
+      "products": 5000,
+      "seedMs": 5354,
+      "sqlMs": [
+        3056.36,
+        2779.96,
+        2841.29
+      ],
+      "pageRows": 100,
+      "entities": 5000,
+      "paretoPoints": 60,
+      "jsonBytes": 43801,
+      "exportAggregationMs": 3472,
+      "exportEntities": 5000,
+      "exportJsonBytes": 1371989,
+      "productFilterMs": 27,
+      "threeSerializedQueriesMs": 9986,
+      "rssMiB": 620,
+      "explain": [
+        {
+          "QUERY PLAN": [
+            {
+              "Plan": {
+                "Node Type": "Function Scan",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Function Name": "analytics_filtered_items",
+                "Alias": "analytics_filtered_items",
+                "Startup Cost": 0.25,
+                "Total Cost": 10.25,
+                "Plan Rows": 1000,
+                "Plan Width": 224,
+                "Actual Startup Time": 2998.789,
+                "Actual Total Time": 3059.573,
+                "Actual Rows": 100000,
+                "Actual Loops": 1,
+                "Disabled": false,
+                "Shared Hit Blocks": 1530182,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 1799,
+                "Temp Written Blocks": 1799
+              },
+              "Planning": {
+                "Shared Hit Blocks": 0,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+              },
+              "Planning Time": 0.04,
+              "Triggers": [],
+              "Execution Time": 3094.01
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

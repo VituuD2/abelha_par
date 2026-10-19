@@ -1,0 +1,179 @@
+node.exe : npm notice run scanner-checkout@1.0.0 test
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\User\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...kout@1.0.0 test:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run node --test tests/*.test.cjs
+✔ anonymous and blocked analytics calls never read data; connection operations require admin (10.5186ms)
+✔ report ignores forged workspace/user, validates filters and caps browser page size (4.7709ms)
+✔ a scheduling outage remains actionable while returning the report already available (1.2278ms)
+✔ background report refreshes reuse imported data without rescheduling historical coverage (0.8437ms)
+✔ legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials (13.6818ms)
+✔ additional accounts use their own client credentials and coalesce refreshes while persisting encrypted pairs (130.2663ms)
+✔ failed token persistence retries the same pair without a second OAuth exchange (311.2021ms)
+✔ legacy analytics references the existing authorization; removal never falls through to another OAuth account (73.7964ms)
+✔ each changed access token must identify the expected company, including a legacy reconnect (28.8938ms)
+✔ analytical cron rejects missing/mismatched authorization before any work (52.4114ms)
+✔ cron processes durable queues with no browser and reports renewal failures without stopping other accounts (18.3236ms)
+✔ migration is idempotent, links legacy credentials without changing scanner and restricts browser access (6533.2475ms)
+✔ group setup is scoped, repeatable, creates pending accounts and never fabricates authorizations (43.0621ms)
+✔ idempotent imports replace changed items, stale lease fails, per-account lease serializes (177.6229ms)
+✔ SQL math matches engine for modes, metrics and sorting without changing rank; cancellation is excluded (72.4316ms)
+✔ omnichannel consolidation scopes same SKUs by company and supports arbitrary company/source combinations (41.088ms)
+✔ exports return all ranked entities and drilldown reuses the exact filtered scope (9.1751ms)
+✔ foreign admins and inactive users cannot query; RLS and compound FKs prevent workspace mixing (16.1089ms)
+✔ explicit verified external-account mapping reconciles duplicate sales and preserves aliases on later imports (20.7111ms)
+✔ cancellation updates existing sales even without item payloads and rejects stale leases (29.2921ms)
+✔ coverage merges completed intervals independently of recent incremental job history (12.7981ms)
+✔ missing-history scheduling subtracts covered and reserved spans, retains failed checkpoints and validates member scope (40.6402ms)
+✔ coverage includes proven incrementals and checkpoint days, but never update-only scans or gaps (156.8978ms)
+✔ incremental scheduling refreshes the current day without duplicate active or minute-by-minute completed jobs (321.6418ms)
+✔ bulk leases reserve distinct accounts and recent jobs rotate fairly with the initial backfill (134.994ms)
+✔ legacy relink verifies workspace, operational snapshot and CNPJ, then resumes the original cursor without changing scanner tokens (42.8858ms)
+✔ cron SQL validates Vault, is repeatable, restricts invocation and records only request identifiers (32.8039ms)
+✔ large analytical data is aggregated on SQL and returns only a bounded page and Pareto (3905.0015ms)
+ℹ 50,000 orders/items; 5,000 products; SQL aggregate 990.1 ms; response 45670 bytes. Local PGlite, not production SLA.
+✔ rollback removes only the analytics layer and preserves operational credentials and history (72.1557ms)
+✔ progress version ignores heartbeats and row ordering but detects imported orders and coverage changes (2.2982ms)
+✔ Tiny legacy and strict modes differ at crossings and preserve exact boundaries (3.9797ms)
+✔ empty, zero, one entity, deterministic ties, quantity and many entities (41.8ms)
+✔ decimal money is exact, large amounts remain strings, lines round once (2.3657ms)
+✔ normalizer scopes customer/product identities, uses documented parent and flags missing enrichment (5.4451ms)
+✔ filters validate dimensions, dates, limits and default statuses (2.629ms)
+✔ coverage joins adjacent complete backfills and never claims gaps or incremental scans cover history (18.0527ms)
+✔ OAuth state binds user, workspace, connection and configuration version; rejects tampering and expiry (10.7667ms)
+✔ OAuth saves encrypted tokens only after confirming the company and rejects replay (24.4174ms)
+✔ account HTTP 403 reports its cause without retrying or saving unverified tokens (3.0694ms)
+✔ account HTTP 401 reports its cause without retrying or saving unverified tokens (19.1752ms)
+✔ account HTTP 429 reports its cause without retrying or saving unverified tokens (5.2873ms)
+✔ a transient account lookup is retried with the same token without exchanging the code twice (1211.5933ms)
+✔ an unavailable account lookup stops after one retry and records the recoverable failure (1221.9665ms)
+✔ account identity company never links tokens to the wrong company (3.2606ms)
+✔ account identity account_response never links tokens to the wrong company (1.431ms)
+▶ malformed OAuth responses, token network errors and refused exchanges have distinct errors
+  ✔ token_response (5.0054ms)
+  ✔ token_request (2.2694ms)
+  ✔ exchange (6.7515ms)
+✔ malformed OAuth responses, token network errors and refused exchanges have distinct errors (16.3061ms)
+✔ failed persistence returns save and leaves the authorization pending (1.706ms)
+✔ a callback cannot overwrite a newer flow or mark it with a stale error (1.2529ms)
+✔ analytics ingests all origins, persists progress, caches products and releases the original lease (8.5473ms)
+✔ rate limiting preserves pending order and schedules a retry without persisting a partial sale (2.4838ms)
+✔ an incremental job uses update date; inaccessible optional enrichment is flagged, not invented (1.3098ms)
+✔ new incremental coverage waits for both sale and update scans to complete (1.1272ms)
+✔ a worker traverses short pages and empty days within one lease instead of waiting another minute per day (1.859ms)
+✔ parallel cron reserves distinct accounts once and starts all workers without waiting for another account's API (4.7652ms)
+✔ expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying (3.1554ms)
+✔ dashboard renders cards and only the selected page, applies multi-company filters and keeps server rank on sort (1125.3384ms)
+✔ drilldown traces orders and native dialog closes; client tab changes grouping on server (362.0666ms)
+✔ dashboard polls existing reports as imports advance without asking the browser to run a worker (330.6148ms)
+✔ missing coverage stays visibly partial and a server error does not leave a misleading old result (152.6466ms)
+✔ Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked (94.5002ms)
+✔ Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow (37.1364ms)
+✔ OAuth refresh lease is exclusive and stale workers cannot overwrite a reconnect or release a newer lease (3175.9752ms)
+✔ migrations retain history and prevent browser writes to sessions, credentials and batches (11.4591ms)
+✔ finalization rejects incomplete and foreign sessions and returns the same batch after a retry (21.0541ms)
+✔ revision comparison prevents a late tracking update from overwriting a scan (8.7505ms)
+✔ webhook arriving during processing is queued again; expired workers cannot finish a reclaimed job (29.1542ms)
+✔ operators cannot access Ninho or mutate any connection, even with forged user metadata (12.6437ms)
+✔ blocked sessions and missing membership storage fail closed (1.017ms)
+✔ an active operator fetches orders through workspace credentials and shares their cache (3.6455ms)
+✔ live menu permissions identify the authenticated operator and cannot be cached (5.3378ms)
+✔ webhook signatures retain the old URL initially and reject it after rotation (1.7347ms)
+✔ admin creates an account and membership in the current workspace without returning its password (1.023ms)
+✔ failed membership creation rolls back the new account and malformed bodies are rejected before creating it (4.0574ms)
+✔ atomic scans preserve tracking rules, reject duplicates and return small confirmations (3616.6525ms)
+✔ atomic scans serialize competing readers, reject ambiguous labels and protect workspace access (44.0384ms)
+✔ migration preserves encrypted credentials, history, webhook ID and creator, and initializes roles once (18.4214ms)
+✔ operators read shared history through RLS; foreign and blocked members cannot (33.5162ms)
+✔ membership RPC rejects operators, foreign admins and removal of the last active admin (7.6195ms)
+✔ an operator finalizes a shared session created by another member, preserving authorship and idempotency (23.3207ms)
+✔ shared cache and queue accept workspace writes while legacy inserts stay compatible (30.608ms)
+✔ webhook changes require admin and rotating the URL resets receipt without changing tokens (40.8195ms)
+✔ validated mapping uses store order number and integration, independent of names and ERP number (2.1327ms)
+✔ missing, unpaid, cancelled, cross-store, repeated and ambiguous orders block reconciliation (0.8197ms)
+✔ duplicate normalized tracking is blocked both before and during scanning (1.8773ms)
+✔ Shift selection follows visible sort order; hidden selections survive and hidden anchor is ignored (1.3765ms)
+✔ selection works in either fetch order, persists through navigation, invalidates on edits, isolates accounts (12.3065ms)
+✔ Nuvemshop adapter separates IDs and uses documented auth, pagination and rate limit headers (29.8377ms)
+✔ Olist pagination does not stop on a page without Nuvemshop orders and advances dates (3.5292ms)
+✔ server scan failure never marks an order; a successful retry restores authoritative state (1.2326ms)
+✔ date boundaries use São Paulo and reject impossible dates; official webhook uses dados.id (25.6919ms)
+✔ 100 complete list records require one provider call and are cached server-side before returning (12.2711ms)
+✔ omitted fields trigger detail fallback; explicit null tracking is a valid fresh snapshot (1.7654ms)
+✔ a cache write failure prevents a successful preparation response (1.621ms)
+✔ operational connection status uses shared credentials without exposing webhook URL or tokens (2.7238ms)
+✔ confirmation frees the next scan immediately, keeps unchanged references and completes after the last save (39.8469ms)
+✔ stale snapshot synchronizes other scans and tracking; legacy full responses remain supported (0.871ms)
+✔ finishing one request cannot clear the busy state of the next request (1.6112ms)
+✔ network and duplicate errors pause scans without falsely marking checked or being dismissed by success (2.7162ms)
+✔ late scan responses cannot update a switched session and tracking refresh survives compact confirmations (15.008ms)
+✔ large batches render only one page of orders (1431.8456ms)
+✔ switching from admin to operator removes privileges immediately and ignores the old account response (7.8999ms)
+✔ a late admin response cannot reverse the latest role update for the same account (1.2527ms)
+✔ logout, mismatched identities and failed permission checks cannot keep the admin menu (1.9944ms)
+✔ unmount discards pending responses instead of updating a new login (2.6325ms)
+✔ creation ignores forged client snapshot and uses only workspace-scoped server records while retaining the creator (12.3196ms)
+▶ creation rejects an omitted duplicate candidate and expired selection
+  ✔ duplicate omitted by browser (2.2494ms)
+  ✔ expired server snapshot (1.1976ms)
+✔ creation rejects an omitted duplicate candidate and expired selection (4.1537ms)
+✔ unauthenticated creation and scans are rejected without reading or writing orders (1.4459ms)
+✔ scan uses one atomic RPC with server identity and exposes timings; a foreign session returns 404 (3.5285ms)
+✔ invalid scans never call the database and atomic errors retain their HTTP status (20.4861ms)
+✔ missing migration falls back with revision retry; uncertain writes never trigger fallback (7.637ms)
+✔ both desktop and mobile navigation omit Ninho for an operator (25.0297ms)
+✔ both desktop and mobile navigation include Ninho for a verified admin (5.3346ms)
+✔ Curva ABC has its own themed navigation in desktop and mobile for all members (9.8701ms)
+✔ healthy access token does not make any provider request (3.633ms)
+✔ simultaneous requests rotate once and save the new encrypted pair (5.2685ms)
+✔ database lease serializes rotation across independent server instances (532.3842ms)
+▶ database failure and invalid_client never masquerade as an expired authorization
+  ✔ storage (0.6777ms)
+  ✔ provider 400 (1.0074ms)
+  ✔ provider 401 (0.8577ms)
+  ✔ provider 429 (0.8885ms)
+  ✔ provider 503 (0.7634ms)
+✔ database failure and invalid_client never masquerade as an expired authorization (5.0116ms)
+▶ invalid_grant requires reconnection but an expired refresh does not discard usable access
+  ✔ revoked (0.9007ms)
+  ✔ still usable (0.4231ms)
+  ✔ both expired (0.3797ms)
+✔ invalid_grant requires reconnection but an expired refresh does not discard usable access (2.111ms)
+✔ refresh nearing expiry is renewed even while the access token is still valid (0.7526ms)
+[olist-token-refresh] attention required {
+  ok: false,
+  checked: 1,
+  renewed: 0,
+  reconnect: 1,
+  failed: 0,
+  morePending: false
+}
+✔ failed persistence retries the same token pair without a second provider exchange (256.8237ms)
+✔ a reconnect during refresh cannot be overwritten by the older request (1.0803ms)
+▶ missing refresh expiry retains the previous deadline and malformed responses preserve credentials
+  ✔ omitted deadline (0.5622ms)
+  ✔ malformed (0.4589ms)
+✔ missing refresh expiry retains the previous deadline and malformed responses preserve credentials (1.2559ms)
+✔ cron rejects unauthorized requests and only renews due integrations without order requests (3.6611ms)
+✔ late tracking preserves scans, counts, responsible, metadata and error state; then allows completion (3.4525ms)
+✔ empty updates cannot replace known codes, and previous sessions cannot update a new lot (0.3632ms)
+✔ empty tracking never matches; API rejects missing, whitespace, oversized and pending orders (0.3849ms)
+✔ refresh visits every missing order in batches and retries empty codes without interrupting scans (33.01ms)
+✔ rate limit respects retry time and recovers automatically (2.3914ms)
+✔ network failure retries; leaving the scanner cancels requests and ignores their late responses (1.4362ms)
+ℹ tests 144
+ℹ suites 0
+ℹ pass 144
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16749.8846
+npm notice
+npm notice New minor version of npm available! 12.1.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

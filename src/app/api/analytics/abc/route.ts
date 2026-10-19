@@ -39,10 +39,12 @@ export async function POST(request: Request) {
       );
     // Return existing data even if scheduling is temporarily unavailable.
     let sync;
-    try {
-      sync = await ensureFilterCoverage(auth.access.workspaceId, auth.access.user.id, filters);
-    } catch (reason) {
-      sync = { error: reason instanceof Error ? reason.message : "Agendamento indisponível." };
+    if (body.ensureCoverage !== false) {
+      try {
+        sync = await ensureFilterCoverage(auth.access.workspaceId, auth.access.user.id, filters);
+      } catch (reason) {
+        sync = { error: reason instanceof Error ? reason.message : "Agendamento indisponível." };
+      }
     }
     return NextResponse.json(
       { ...result, sync },

@@ -1,4 +1,4 @@
--- Run AFTER v12 and deployment. Independent of the hourly operational token cron.
+-- Run AFTER v13 and deployment. Independent of the hourly operational token cron.
 -- Vault: abelha_par_app_url (HTTPS origin), abelha_par_cron_secret (server CRON_SECRET).
 -- Never put secrets or OAuth tokens in versioned SQL or cron.job commands.
 BEGIN;

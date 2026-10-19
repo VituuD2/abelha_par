@@ -16,8 +16,10 @@ import {
   DIMENSIONS,
   ORDER_STATUSES,
 } from "@/lib/analytics/config";
-import { coversPeriod, type CoverageJob } from "@/lib/analytics/coverage";
+import { type CoverageJob } from "@/lib/analytics/coverage";
+import { reportReliability } from "@/lib/analytics/reliability";
 import { ConnectionProgress } from "./connection-progress";
+import { progressVersion } from "@/lib/analytics/progress";
 import type {
   ABCFilters,
   ABCResult,
@@ -148,7 +150,7 @@ function MultiFilter({
         )
           .then((data) => setRemote(data[dimension] || []))
           .catch((e) => {
-            if (e.name !== "AbortError") setSearchError(true);
+            if (!abort.signal.aborted && e.name !== "AbortError") setSearchError(true);
           });
       }, 250);
     return () => {
@@ -214,12 +216,12 @@ function MultiFilter({
           </div>
           {options.length >= 200 && (
             <p className="text-xs">
-              Exibindo at? 200 op??es. Busque no servidor para encontrar outras.
+              Exibindo até 200 opções. Busque no servidor para encontrar outras.
             </p>
           )}
           {searchError && (
             <p role="status" className="text-xs text-red-800">
-              Busca temporariamente indispon?vel.
+              Busca temporariamente indisponível.
             </p>
           )}
         </div>
@@ -355,7 +357,8 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
     [size, setSize] = useState(50),
     [sort, setSort] = useState("rank"),
     [direction, setDirection] = useState("asc"),
-    [refresh, setRefresh] = useState(0);
+    [refresh, setRefresh] = useState(0),
+    [dataRefresh, setDataRefresh] = useState(0);
   const [columns, setColumns] = useState<Column[]>(
       Object.keys(labels) as Column[],
     ),
@@ -365,19 +368,34 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
     [drillError, setDrillError] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const resultScope = useRef("");
+  const scheduledFilters = useRef("");
+  const statusSequence = useRef(0);
+  const lastProgress = useRef("");
+  const optionsLoadedAt = useRef(0);
   useEffect(() => {
     const abort = new AbortController();
+    const sequence = ++statusSequence.current;
     jsonRequest("/api/analytics/options", undefined, abort.signal)
       .then((data) => {
-        if (!abort.signal.aborted) setStatus(data);
+        if (abort.signal.aborted) return;
+        optionsLoadedAt.current = Date.now();
+        if (sequence === statusSequence.current) {
+          lastProgress.current = progressVersion(data);
+          setStatus(data);
+        } else {
+          // A status read after scheduling may be newer than these filter options.
+          setStatus((current) => current ? { ...current, options: data.options } : data);
+        }
       })
       .catch((e) => {
-        if (e.name !== "AbortError") setError(e.message);
+        if (!abort.signal.aborted && e.name !== "AbortError") setError(e.message);
       });
     return () => abort.abort();
   }, [refresh]);
   useEffect(() => {
     const abort = new AbortController();
+    const filterScope = JSON.stringify(filters);
+    const ensureCoverage = scheduledFilters.current !== filterScope;
     const scope = JSON.stringify({ filters, page, size, sort, direction });
     if (resultScope.current !== scope) {
       setResult(null);
@@ -387,21 +405,29 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
     setError(null);
     jsonRequest(
       "/api/analytics/abc",
-      { filters, page, size, sort, direction },
+      { filters, page, size, sort, direction, ensureCoverage },
       abort.signal,
     )
       .then((data) => {
         if (!abort.signal.aborted) {
           setResult(data);
           if (data.sync?.error) setError(data.sync.error);
-          // Scheduling may have added jobs after the initial status request.
-          jsonRequest("/api/analytics/options", undefined, abort.signal)
-            .then((next) => { if (!abort.signal.aborted) setStatus(next); })
-            .catch((e) => { if (e.name !== "AbortError") setError(e.message); });
+          else if (ensureCoverage) scheduledFilters.current = filterScope;
+          if (ensureCoverage) {
+            const sequence = ++statusSequence.current;
+            jsonRequest("/api/analytics/sync", undefined, abort.signal)
+              .then((next) => {
+                if (!abort.signal.aborted && sequence === statusSequence.current) {
+                  lastProgress.current = progressVersion(next);
+                  setStatus((current) => ({ ...next, options: current?.options || {} }));
+                }
+              })
+              .catch((e) => { if (!abort.signal.aborted && e.name !== "AbortError") setError(e.message); });
+          }
         }
       })
       .catch((e) => {
-        if (e.name !== "AbortError") {
+        if (!abort.signal.aborted && e.name !== "AbortError") {
           setError(e.message);
           setResult(null);
         }
@@ -410,12 +436,35 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [filters, page, size, sort, direction, refresh]);
+  }, [filters, page, size, sort, direction, refresh, dataRefresh]);
   const pendingImports = status?.jobs.some((j) => ["queued", "running", "retry"].includes(j.status));
   useEffect(() => {
     if (!pendingImports) return;
-    const timer = setInterval(() => setRefresh((value) => value + 1), 5000);
-    return () => clearInterval(timer);
+    const abort = new AbortController();
+    let reading = false;
+    const poll = async () => {
+      if (reading || document.visibilityState === "hidden") return;
+      reading = true;
+      const sequence = ++statusSequence.current;
+      try {
+        const next = await jsonRequest("/api/analytics/sync", undefined, abort.signal);
+        if (abort.signal.aborted || sequence !== statusSequence.current) return;
+        const version = progressVersion(next);
+        const changed = version !== lastProgress.current;
+        lastProgress.current = version;
+        setStatus((current) => ({ ...next, options: current?.options || {} }));
+        if (changed) {
+          if (Date.now() - optionsLoadedAt.current >= 60000 ||
+            !next.jobs.some((j: CoverageJob) => ["queued", "running", "retry"].includes(j.status)))
+            setRefresh((value) => value + 1);
+          else setDataRefresh((value) => value + 1);
+        }
+      } catch (reason) {
+        if (!abort.signal.aborted) setError(reason instanceof Error ? reason.message : "Progresso indisponível.");
+      } finally { reading = false; }
+    };
+    const timer = setInterval(poll, 15000);
+    return () => { clearInterval(timer); abort.abort(); };
   }, [pendingImports]);
   useEffect(() => {
     if (!entity) return;
@@ -431,45 +480,14 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
         if (!abort.signal.aborted) setDrill(data);
       })
       .catch((e) => {
-        if (e.name !== "AbortError") setDrillError(e.message);
+        if (!abort.signal.aborted && e.name !== "AbortError") setDrillError(e.message);
       });
     return () => abort.abort();
   }, [entity, drillPage, filters]);
-  const selectedConnections =
-    status?.connections.filter(
-      (c) =>
-        (!filters.selections.companies?.length ||
-          filters.selections.companies.includes(c.company_id)) &&
-        (!filters.selections.connections?.length ||
-          filters.selections.connections.includes(c.id)) &&
-        (!filters.selections.sources?.length ||
-          status?.sources?.some((source) => source.connection_id === c.id && filters.selections.sources?.includes(source.id))),
-    ) || [];
-  const companies =
-    status?.companies.filter(
-      (c) =>
-        (!filters.selections.companies?.length ||
-        filters.selections.companies.includes(c.id)) &&
-        (!(filters.selections.connections?.length || filters.selections.sources?.length) ||
-          selectedConnections.some((connection) => connection.company_id === c.id)),
-    ) || [];
-  const incomplete =
-    companies.some(
-      (c) => !selectedConnections.some((conn) => conn.company_id === c.id),
-    ) ||
-    !selectedConnections.length ||
-    selectedConnections.some(
-      (c) =>
-        !c.enabled ||
-        !c.verified_at ||
-        !coversPeriod(
-          status?.coverage || status?.jobs || [],
-          c.id,
-          filters.from,
-          filters.to,
-        ) ||
-        c.last_error,
-    );
+  const reliability = status ? reportReliability(status, filters) : null;
+  const selectedConnections = reliability?.connections || [];
+  const companies = reliability?.companies || [];
+  const incomplete = !reliability?.complete;
   const select = (dimension: Dimension, values: string[]) =>
     setDraft((f) => ({
       ...f,
@@ -826,6 +844,11 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               líquida após devoluções, CMV e margem exigem dados adicionais e
               não são calculados nesta versão.
             </p>
+            <p className="text-xs text-[var(--color-text-secondary)]">
+              No modo Tiny histórico, a classe usa o acumulado anterior. No estrito,
+              usa o acumulado após a linha: um único produto com 100% fica na classe C.
+              Igualdade com 80% ou 95% avança para a classe seguinte.
+            </p>
           </div>
         )}
         <div className="flex flex-wrap gap-3">
@@ -905,7 +928,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
           <h2 className="font-semibold">
             {incomplete
               ? "Escopo parcial · confira a cobertura antes de concluir"
-              : "Histórico importado para o período selecionado"}
+              : "Histórico importado para o período selecionado · análise provisória"}
           </h2>
           <p className="text-sm text-[var(--color-text-secondary)]">
             {companies.map((c) => c.name).join(" + ") ||
@@ -917,8 +940,12 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               0,
             )}{" "}
             seleções dimensionais. Valores brutos dos itens; frete e despesas
-            excluídos. Situações canceladas excluídas.
+            excluídos. Descontos globais e devoluções não são deduzidos.
+            Situações canceladas excluídas.
           </p>
+          <p className="text-xs">Cobertura de importação não comprova reconciliação com o ERP.
+            Itens sem vínculo de catálogo permanecem separados por pedido e sinalizados no nome;
+            não representam produtos equivalentes. Valide uma amostra de controle antes de decidir.</p>
           <div className="flex flex-wrap gap-3">
             {selectedConnections.map((c) => (
               <div
@@ -1117,7 +1144,7 @@ export function ABCDashboard({ isAdmin }: { isAdmin: boolean }) {
               {!result.total && (
                 <div className="p-10 text-center">
                   <h3 className="font-semibold">
-                    Nenhuma venda elegível neste escopo
+                    {reliability?.emptyTitle || "Cobertura ainda não verificada"}
                   </h3>
                   <p className="text-sm mt-2 text-[var(--color-text-secondary)]">
                     Confira o período, as situações, as empresas e a cobertura

@@ -10,6 +10,12 @@ export function id(v: unknown): string {
     throw new Error("Identificador Olist inválido.");
   return raw;
 }
+/** An ERP order can contain an unlinked item (product id 0). Never join it by SKU/name. */
+export function orderItemProductId(productId: unknown, orderId: unknown, position: number): string {
+  if (productId == null || productId === "" || productId === 0 || productId === "0")
+    return `order:${id(orderId)}:item:${position}`;
+  return id(productId);
+}
 export const nullable = (v: unknown) => string(v) || null;
 export function saleDate(v: unknown): string {
   const raw = string(v);
@@ -48,7 +54,7 @@ export function normalizeOrder(
   const items = raw.itens.map((value, index) => {
     const item = object(value),
       product = object(item.produto),
-      productId = id(product.id),
+      productId = orderItemProductId(product.id, externalId, index),
       detail = products[productId] || {},
       parent = object(detail.produtoPai);
     const quantity = string(item.quantidade),
@@ -61,12 +67,14 @@ export function normalizeOrder(
     } catch {
       /* Missing relation remains individual. */
     }
+    const unlinked = productId.startsWith("order:");
+    if (unlinked) quality.push("item_sem_vinculo_catalogo");
     if (!detail.id) quality.push("produto_sem_enriquecimento");
     return {
       position: index,
       product_id: productId,
-      name:
-        string(detail.descricao || product.descricao) || `Produto ${productId}`,
+      name: (string(detail.descricao || product.descricao) || (unlinked ? "Item da venda" : `Produto ${productId}`)) +
+        (unlinked ? " · sem vínculo de catálogo" : ""),
       sku: nullable(detail.sku || product.sku),
       parent_id: parentId,
       parent_name: parentId ? nullable(parent.descricao) : null,

@@ -1,0 +1,17 @@
+node.exe : npm notice run scanner-checkout@1.0.0 lint
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\User\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...kout@1.0.0 lint:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run eslint src next.config.ts
+
+E:\Users\User\Documents\ESTUDOS\abelha_par\src\components\history\batch-table.tsx
+  7:10  warning  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+E:\Users\User\Documents\ESTUDOS\abelha_par\src\components\scanner\success-popup.tsx
+  5:24  warning  'Package' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 2 problems (0 errors, 2 warnings)
+

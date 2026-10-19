@@ -1,4 +1,5 @@
 import type { ABCFilters, ABCResult, ABCRow } from "./types";
+import { reportReliability, type CoverageStatus } from "./reliability";
 export const EXPORT_COLUMNS = [
   "Ranking",
   "Entidade",
@@ -42,7 +43,7 @@ export function exportMetadata(filters: ABCFilters, result: ABCResult) {
     ["Gerado em", result.generatedAt],
     [
       "Fonte canônica",
-      "Olist; valor bruto dos itens, sem frete/despesas; cancelados excluídos",
+      "Olist; valor bruto dos itens, sem frete/despesas; descontos globais e devoluções não deduzidos; cancelados excluídos",
     ],
     ["Período", `${filters.from} a ${filters.to}`],
     ["Agrupamento", filters.grouping],
@@ -52,5 +53,26 @@ export function exportMetadata(filters: ABCFilters, result: ABCResult) {
     ["Base", filters.basis],
     ["Filtros", JSON.stringify(filters.selections)],
     ["Entidades", String(result.total)],
+  ];
+}
+
+export function exportCoverageMetadata(filters: ABCFilters, status: CoverageStatus) {
+  const scope = reportReliability(status, filters);
+  return [
+    ["Confiabilidade", "Análise provisória; reconciliação financeira com o ERP não comprovada"],
+    ["Cobertura no período", scope.complete ? "Importada" : "Parcial ou não confirmada"],
+    ["Estado de sincronização", scope.state],
+    ["Empresas selecionadas", scope.companies.map(c => c.name).join(" + ")],
+    ["Itens sem vínculo", "Separados por pedido; não consolidados por SKU/nome; identificados na tabela"],
+    ...scope.companies.filter(c => !scope.connections.some(conn => conn.company_id === c.id))
+      .map(c => ["Empresa pendente", c.name + ": sem conexão"]),
+    ...scope.connections.flatMap(c => [
+      ["Conexão", c.name],
+      ["Última importação · " + c.name, c.last_synced_at || "Não registrada"],
+      ["Pendência · " + c.name, c.last_error || (!c.enabled ? "Pausada" : !c.verified_at ? "CNPJ não validado" : "Sem erro informado")],
+      ...(status.coverage || status.jobs).filter(j => j.connection_id === c.id && j.status === "completed" && (j.mode === "backfill" || j.covers_sales) &&
+        j.from_date <= filters.to && j.to_date >= filters.from)
+        .map(j => ["Intervalo importado · " + c.name, `${j.from_date < filters.from ? filters.from : j.from_date} a ${j.to_date > filters.to ? filters.to : j.to_date}`]),
+    ]),
   ];
 }

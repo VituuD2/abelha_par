@@ -80,6 +80,8 @@ before(async () => {
   await db.exec(sql("migration_v11_analytics_abc.sql"));
   await db.exec(sql("migration_v12_analytics_automation.sql"));
   await db.exec(sql("migration_v12_analytics_automation.sql"));
+  await db.exec(sql("migration_v13_analytics_parallel.sql"));
+  await db.exec(sql("migration_v13_analytics_parallel.sql"));
   for (const [i, c] of [conn1, conn2, conn3].entries()) {
     await db.query(
       "INSERT INTO analytics_companies(id,workspace_id,name) VALUES($1,$2,$3)",
@@ -531,6 +533,37 @@ test("incremental scheduling refreshes the current day without duplicate active 
     assert.equal(visible.length,11);
     assert.equal(visible.filter(s=>s.status==='queued').length,1);
     assert.equal(visible.some(s=>s.pending_ids!==undefined),false);
+  } finally {await db.exec("ROLLBACK");}
+});
+
+test("bulk leases reserve distinct accounts and recent jobs rotate fairly with the initial backfill", async () => {
+  await db.exec("BEGIN");
+  try {
+    const ids=["44000000-0000-4000-8000-000000000001","44000000-0000-4000-8000-000000000002","44000000-0000-4000-8000-000000000003"];
+    // Isolate these worker candidates from other fixtures in this transaction.
+    await db.query("UPDATE analytics_sync_jobs SET status='completed',lease_token=null,lease_until=null WHERE workspace_id=$1",[ws]);
+    await db.query("UPDATE analytics_connections SET sync_lock=null,sync_locked_until=null WHERE workspace_id=$1",[ws]);
+    for(const [index,c] of ids.entries()) {
+      await db.query("INSERT INTO analytics_connections(id,workspace_id,company_id,name) VALUES($1,$2,$3,'Parallel')",[c,ws,[conn1,conn2,conn3][index]]);
+      await db.query("INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date) VALUES($1,$2,'backfill','2026-08-01','2026-10-02','2026-08-01')",[ws,c]);
+      assert.equal((await db.query("SELECT analytics_schedule_range($1,$2,'2026-10-05','2026-10-06','incremental') count",[ws,c])).rows[0].count,1);
+    }
+    const alias="44000000-0000-4000-8000-000000000004";
+    await db.query("INSERT INTO analytics_connections(id,workspace_id,company_id,name) VALUES($1,$2,$3,'Same ERP account')",[alias,ws,conn1]);
+    await db.query("INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date) VALUES($1,$2,'backfill','2026-10-05','2026-10-06','2026-10-05')",[ws,alias]);
+    const jobs=(await db.query("SELECT * FROM analytics_claim_jobs($1,3)",[ws])).rows;
+    assert.equal(jobs.length,3);
+    assert.equal(new Set(jobs.map(j=>j.connection_id)).size,3);
+    assert.ok(jobs.every(j=>j.mode==='incremental'));
+    assert.ok(jobs.every(j=>j.connection_id!==alias));
+    assert.equal((await db.query("SELECT * FROM analytics_claim_jobs($1,3)",[ws])).rows.length,0);
+    await db.query("UPDATE analytics_sync_jobs SET status='queued',lease_token=null,lease_until=null WHERE connection_id=ANY($1::uuid[])",[ids]);
+    await db.query("UPDATE analytics_connections SET sync_lock=null,sync_locked_until=null WHERE id=ANY($1::uuid[])",[ids]);
+    const history=(await db.query("SELECT * FROM analytics_claim_jobs($1,3)",[ws])).rows;
+    assert.equal(history.length,3);
+    assert.ok(history.every(j=>j.mode==='backfill'));
+    await expectDbError(()=>db.query("SELECT * FROM analytics_claim_jobs($1,4)",[ws]),/INVALID_WORKER_LIMIT/);
+    assert.equal((await db.query("SELECT has_function_privilege('authenticated','analytics_claim_jobs(uuid,integer)','EXECUTE') allowed")).rows[0].allowed,false);
   } finally {await db.exec("ROLLBACK");}
 });
 

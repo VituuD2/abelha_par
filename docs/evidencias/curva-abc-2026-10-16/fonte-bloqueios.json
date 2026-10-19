@@ -1,0 +1,164 @@
+{
+  "at": "2026-10-16T18:29:57.272Z",
+  "mode": "GET only; credentials never emitted",
+  "connections": [
+    {
+      "name": "Olist 2",
+      "blocked": [
+        {
+          "cursor": "2026-10-05",
+          "status": 200,
+          "ms": 634,
+          "lastError": "Identificador Olist inválido.",
+          "idMatches": true,
+          "orderStatus": 6,
+          "itemCount": 1,
+          "productIds": [
+            {
+              "idType": "number",
+              "idValid": false,
+              "idZero": true,
+              "hasSku": true,
+              "hasDescription": true
+            }
+          ],
+          "hasInvoice": true,
+          "normalize": "Identificador Olist inválido."
+        },
+        {
+          "cursor": "2026-08-04",
+          "status": 200,
+          "ms": 1185,
+          "lastError": "Identificador Olist inválido.",
+          "idMatches": true,
+          "orderStatus": 6,
+          "itemCount": 1,
+          "productIds": [
+            {
+              "idType": "number",
+              "idValid": false,
+              "idZero": true,
+              "hasSku": true,
+              "hasDescription": true
+            }
+          ],
+          "hasInvoice": true,
+          "normalize": "Identificador Olist inválido."
+        }
+      ],
+      "info": {
+        "status": 200,
+        "ms": 625,
+        "identityMatches": true
+      }
+    },
+    {
+      "name": "Olist 3",
+      "blocked": [
+        {
+          "cursor": "2026-10-05",
+          "status": 200,
+          "ms": 596,
+          "lastError": "Identificador Olist inválido.",
+          "idMatches": true,
+          "orderStatus": 6,
+          "itemCount": 3,
+          "productIds": [
+            {
+              "idType": "number",
+              "idValid": true,
+              "idZero": false,
+              "hasSku": true,
+              "hasDescription": true
+            },
+            {
+              "idType": "number",
+              "idValid": true,
+              "idZero": false,
+              "hasSku": true,
+              "hasDescription": true
+            },
+            {
+              "idType": "number",
+              "idValid": false,
+              "idZero": true,
+              "hasSku": true,
+              "hasDescription": true
+            }
+          ],
+          "hasInvoice": true,
+          "normalize": "Identificador Olist inválido."
+        }
+      ],
+      "info": {
+        "status": 200,
+        "ms": 277,
+        "identityMatches": true
+      }
+    },
+    {
+      "name": "Olist 1",
+      "blocked": [
+        {
+          "cursor": "2026-08-23",
+          "status": 200,
+          "ms": 369,
+          "lastError": "Identificador Olist inválido.",
+          "idMatches": true,
+          "orderStatus": 6,
+          "itemCount": 1,
+          "productIds": [
+            {
+              "idType": "number",
+              "idValid": false,
+              "idZero": true,
+              "hasSku": true,
+              "hasDescription": true
+            }
+          ],
+          "hasInvoice": true,
+          "normalize": "Identificador Olist inválido."
+        },
+        {
+          "cursor": "2026-10-06",
+          "status": 200,
+          "ms": 667,
+          "lastError": "Identificador Olist inválido.",
+          "idMatches": true,
+          "orderStatus": 5,
+          "itemCount": 3,
+          "productIds": [
+            {
+              "idType": "number",
+              "idValid": true,
+              "idZero": false,
+              "hasSku": true,
+              "hasDescription": true
+            },
+            {
+              "idType": "number",
+              "idValid": false,
+              "idZero": true,
+              "hasSku": true,
+              "hasDescription": true
+            },
+            {
+              "idType": "number",
+              "idValid": false,
+              "idZero": true,
+              "hasSku": true,
+              "hasDescription": true
+            }
+          ],
+          "hasInvoice": true,
+          "normalize": "Identificador Olist inválido."
+        }
+      ],
+      "info": {
+        "status": 200,
+        "ms": 686,
+        "identityMatches": true
+      }
+    }
+  ]
+}

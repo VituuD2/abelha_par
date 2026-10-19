@@ -1,5 +1,7 @@
 # IMPLEMENTAÇÃO CURVA ABC — RELATÓRIO FINAL
 
+> Documento histórico. A [auditoria verificável de 16/10/2026](curva-abc-auditoria-2026-10-16.md) encontrou importações reais bloqueadas, divergências na amostra e v13 ausente no banco acessível. Consulte-a para o estado atual; a implementação descrita abaixo não representa homologação produtiva.
+
 Referência: 02/10/2026. Entrega em código local, sem migração, publicação ou importação em produção. Menu **Néctar**, título interno **Curva ABC**, rota `/analytics/abc`. Relacionados: [auditoria e matriz de campos](curva-abc-auditoria.md), [implantação e operação](curva-abc-implantacao.md).
 
 ## 1. Arquitetura encontrada

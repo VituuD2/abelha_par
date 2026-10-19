@@ -4,7 +4,7 @@ const { test } = require("node:test"),
 const admin = require("../src/lib/supabase/admin.ts"),
   auth = require("../src/lib/analytics/auth.ts"),
   provider = require("../src/lib/analytics/olist-client.ts");
-const { processAnalyticsBatch } = require("../src/lib/analytics/sync.ts");
+const { processAnalyticsBatch, processAnalyticsBatches } = require("../src/lib/analytics/sync.ts");
 const { AnalyticsActionError } = require("../src/lib/analytics/sync-errors.ts");
 function fixture() {
   const job = {
@@ -128,6 +128,79 @@ const raw = (id, channel) => ({
     },
   ],
 });
+test("real-world zero catalog id no longer poisons a checkpoint: all unlinked lines are ingested once and no /produtos/0 is requested", async t => {
+  const f = fixture(), paths = [];
+  t.mock.method(admin, "createAdminClient", () => f.db);
+  t.mock.method(auth, "analyticsToken", async () => "test-token");
+  t.mock.method(auth, "ensureAnalyticsIdentity", async () => {});
+  t.mock.method(provider, "olistRequest", async (_t, _c, path) => {
+    paths.push(path);
+    if (path.startsWith("/pedidos?")) return { itens: [{ id: 1 }, { id: 2 }], paginacao: { total: 2 } };
+    if (path.endsWith("/marcadores")) return { itens: [] };
+    if (path.startsWith("/produtos/")) throw new Error("An unlinked line has no catalog endpoint");
+    const b = raw(path.endsWith("/1") ? 1 : 2, 101);
+    b.itens[0].produto.id = 0;
+    b.itens.push({ ...b.itens[0] });
+    return b;
+  });
+  const result = await processAnalyticsBatch("workspace");
+  assert.equal(result.processed, 2);
+  assert.equal(f.job.status, "completed");
+  assert.equal(f.ingested.length, 2);
+  const ids = f.ingested.flatMap(p => p.p_items.map(i => i.product_id));
+  assert.equal(new Set(ids).size, 4);
+  assert.equal(paths.some(p => p.startsWith("/produtos/")), false);
+  assert.ok(f.ingested.every(p => p.p_order.quality_flags.includes("item_sem_vinculo_catalogo")));
+});
+
+test("a deleted catalog product (404) retains its valid scoped ID and order values without blocking history", async t => {
+  const f = fixture();
+  t.mock.method(admin, "createAdminClient", () => f.db);
+  t.mock.method(auth, "analyticsToken", async () => "test-token");
+  t.mock.method(auth, "ensureAnalyticsIdentity", async () => {});
+  t.mock.method(provider, "olistRequest", async (_t, _c, path) => {
+    if (path.startsWith("/pedidos?")) return { itens: [{ id: 1 }], paginacao: { total: 1 } };
+    if (path.startsWith("/produtos/")) throw new provider.AnalyticsApiError(404);
+    if (path.endsWith("/marcadores")) return { itens: [] };
+    return raw(1, 101);
+  });
+  assert.equal((await processAnalyticsBatch("workspace")).processed, 1);
+  assert.equal(f.job.status, "completed");
+  assert.equal(f.ingested[0].p_items[0].product_id, "10");
+  assert.equal(f.ingested[0].p_items[0].gross_cents, "1000");
+  assert.ok(f.ingested[0].p_order.quality_flags.includes("produto_sem_enriquecimento"));
+});
+
+test("recent denied enrichment check prevents repeating the catalog request even when an older enriched snapshot exists", async t => {
+  const f=fixture();
+  f.tables.analytics_products.push({workspace_id:"workspace",connection_id:"connection",external_id:"10",name:"Snapshot real",sku:"SKU",enriched_at:"2020-01-01T00:00:00Z",enrichment_checked_at:"2099-01-01T00:00:00Z"});
+  t.mock.method(admin,"createAdminClient",()=>f.db);
+  t.mock.method(auth,"analyticsToken",async()=>"test-token");
+  t.mock.method(auth,"ensureAnalyticsIdentity",async()=>{});
+  t.mock.method(provider,"olistRequest",async(_t,_c,path)=>{
+    if(path.startsWith("/pedidos?"))return {itens:[{id:1}],paginacao:{total:1}};
+    if(path.endsWith("/marcadores"))return {itens:[]};
+    assert.ok(!path.startsWith("/produtos/"));return raw(1,101);
+  });
+  assert.equal((await processAnalyticsBatch("workspace")).processed,1);
+});
+
+test("required Olist calls distinguish 401/403 from retryable 429/5xx and preserve the pending order", async t => {
+  for (const [http,status,code] of [[401,"failed","authorization_required"],[403,"failed","permission_required"],[429,"retry",null],[503,"retry",null]]) {
+    const f=fixture();
+    t.mock.method(admin,"createAdminClient",()=>f.db);
+    t.mock.method(auth,"analyticsToken",async()=>"test-token");
+    t.mock.method(auth,"ensureAnalyticsIdentity",async()=>{});
+    t.mock.method(provider,"olistRequest",async(_t,_c,path)=>{
+      if(path.startsWith("/pedidos?"))return {itens:[{id:1}],paginacao:{total:1}};
+      throw new provider.AnalyticsApiError(http,60);
+    });
+    await processAnalyticsBatch("workspace");
+    assert.equal(f.job.status,status);assert.equal(f.job.error_code,code);
+    assert.deepEqual(f.job.pending_ids,["1"]);assert.equal(f.job.pending_index,0);
+    assert.equal(f.ingested.length,0);
+  }
+});
 test("analytics ingests all origins, persists progress, caches products and releases the original lease", async (t) => {
   t.mock.method(auth, "ensureAnalyticsIdentity", async () => {});
   const f = fixture(),
@@ -217,17 +290,60 @@ test("new incremental coverage waits for both sale and update scans to complete"
     return { itens: [], paginacao: { total: 0 } };
   });
   await processAnalyticsBatch("workspace");
-  assert.equal(f.job.status, "queued");
-  assert.equal(f.job.query_phase, "updates");
-  assert.equal(f.job.cursor_date, "2026-09-01");
-  // Simulate the next cron lease, independent of any browser request.
-  f.job.lease_token = "lease";
-  f.job.lease_until = "2099-01-01T00:00:00Z";
-  f.tables.analytics_connections[0].sync_lock = "lease";
-  await processAnalyticsBatch();
   assert.equal(f.job.status, "completed");
   assert.match(paths[0], /dataInicial=2026-09-01/);
   assert.match(paths[1], /dataAtualizacao=2026-09-01/);
+});
+
+test("a worker traverses short pages and empty days within one lease instead of waiting another minute per day", async t => {
+  const f=fixture(), paths=[];
+  f.job.to_date="2026-09-05";
+  t.mock.method(admin,"createAdminClient",()=>f.db);
+  t.mock.method(auth,"analyticsToken",async()=>"token");
+  t.mock.method(auth,"ensureAnalyticsIdentity",async()=>{});
+  t.mock.method(provider,"olistRequest",async(_t,_c,path)=>{paths.push(path);return {itens:[],paginacao:{total:0}};});
+  await processAnalyticsBatch("workspace");
+  assert.equal(f.job.status,"completed");
+  assert.equal(f.job.pages,5);
+  assert.equal(paths.length,5);
+  assert.equal(f.tables.analytics_connections[0].sync_lock,null);
+});
+
+test("parallel cron reserves distinct accounts once and starts all workers without waiting for another account's API", async t => {
+  const fixtures=[fixture(),fixture(),fixture()];
+  for(const [index,f] of fixtures.entries()) {
+    f.job.id="job"+index; f.job.connection_id="connection"+index;
+    f.tables.analytics_connections[0].id=f.job.connection_id;
+  }
+  const tables={};
+  for(const f of fixtures) for(const [name,rows] of Object.entries(f.tables)) {
+    tables[name] ||= []; tables[name].push(...rows);
+  }
+  const base=fixtures[0];
+  Object.assign(base.tables,tables);
+  const calls=[];
+  const originalRpc=base.db.rpc;
+  base.db.rpc=async(name,args)=>{
+    calls.push(name);
+    if(name==="analytics_claim_jobs") {assert.equal(args.p_limit,3);return {data:fixtures.map(f=>({...f.job})),error:null};}
+    return originalRpc(name,args);
+  };
+  t.mock.method(admin,"createAdminClient",()=>base.db);
+  const started=[];
+  let release;
+  const allStarted=new Promise(resolve=>{release=resolve;});
+  t.mock.method(auth,"analyticsToken",async(_workspace,connection)=>{
+    started.push(connection); if(started.length===3)release(); await allStarted; return "token";
+  });
+  t.mock.method(auth,"ensureAnalyticsIdentity",async()=>{});
+  t.mock.method(provider,"olistRequest",async()=>({itens:[],paginacao:{total:0}}));
+  const result=await processAnalyticsBatches("workspace");
+  assert.equal(result.accounts,3);
+  assert.equal(new Set(started).size,3);
+  assert.equal(calls.filter(name=>name==="analytics_claim_jobs").length,1);
+  assert.equal(calls.includes("analytics_claim_job"),false);
+  assert.equal(result.error,undefined);
+  assert.ok(fixtures.every(f=>f.job.status==="completed"));
 });
 
 test("expired authorization blocks a checkpoint with reconnection guidance; transient outages keep retrying", async (t) => {

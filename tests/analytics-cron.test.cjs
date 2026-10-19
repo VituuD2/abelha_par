@@ -21,7 +21,7 @@ test("cron processes durable queues with no browser and reports renewal failures
   const calls = [];
   t.mock.method(auth,"refreshDueAnalyticsTokens",async()=>({checked:1,reconnect:1,failed:0}));
   t.mock.method(sync,"enqueueIncremental",async()=>{calls.push("incremental");});
-  t.mock.method(sync,"processAnalyticsBatch",async(workspace,budget)=>{calls.push({workspace,budget});return {processed:3,pending:true};});
+  t.mock.method(sync,"processAnalyticsBatches",async(workspace,budget)=>{calls.push({workspace,budget});return {processed:3,pending:true};});
   const response=await cron.POST(new Request("http://localhost/api/internal/analytics-sync",{method:"POST",headers:{authorization:"Bearer test-cron-secret"}}));
   assert.equal(response.status,503);
   const body=await response.json();

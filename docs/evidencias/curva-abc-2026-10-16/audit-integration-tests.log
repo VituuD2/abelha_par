@@ -1,0 +1,10 @@
+✔ independent mathematical oracle agrees with SQL and TS across edge cases, metrics, ties, limits, paging and visual sort (3035.4675ms)
+✔ unlinked order lines reconcile exactly through normalized payload, SQL ingest, report API, CSV and XLSX; all company combinations isolate correctly (284.3192ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4449.6011

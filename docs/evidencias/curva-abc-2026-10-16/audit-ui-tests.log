@@ -1,0 +1,16 @@
+✔ dashboard renders cards and only the selected page, applies multi-company filters and keeps server rank on sort (714.9364ms)
+✔ drilldown traces orders and native dialog closes; client tab changes grouping on server (178.3772ms)
+✔ dashboard polls existing reports as imports advance without asking the browser to run a worker (406.4188ms)
+✔ missing coverage stays visibly partial and a server error does not leave a misleading old result (310.77ms)
+✔ late success and network failure from aborted reports cannot overwrite the latest grouping (77.8981ms)
+✔ operator can recover after export failure without losing the report or getting stuck exporting (33.1118ms)
+✔ Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked (58.2333ms)
+✔ Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow (14.4725ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2943.5568

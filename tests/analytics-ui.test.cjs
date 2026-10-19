@@ -94,7 +94,7 @@ before(() => {
   global.fetch = async (url, options = {}) => {
     const body = options.body ? JSON.parse(options.body) : undefined;
     requests.push({ url, body });
-    let data = url.includes("options")
+    let data = url.includes("options") || url.endsWith("/sync")
       ? state
       : url.includes("drilldown")
         ? {
@@ -197,7 +197,7 @@ test("drilldown traces orders and native dialog closes; client tab changes group
 });
 test("dashboard polls existing reports as imports advance without asking the browser to run a worker", async t => {
   let tick;
-  t.mock.method(global,"setInterval",callback=>{tick=callback;return 999;});
+  t.mock.method(global,"setInterval",(callback,interval)=>{assert.equal(interval,15000);tick=callback;return 999;});
   t.mock.method(global,"clearInterval",()=>{});
   const pending = { connection_id:"c1",mode:"backfill",status:"queued",from_date:"2026-08-01",to_date:"2026-10-02",cursor_date:"2026-08-01",processed:3 };
   state.jobs.push(pending);
@@ -205,12 +205,21 @@ test("dashboard polls existing reports as imports advance without asking the bro
   assert.equal(typeof tick,"function");
   assert.match(document.body.textContent,/3 pedidos processados/);
   const before=requests.filter(r=>r.url.endsWith("/abc")).length;
+  const requestsBeforeHidden=requests.length;
+  Object.defineProperty(document,"visibilityState",{configurable:true,value:"hidden"});
+  try {
+    await act(async()=>tick());
+    assert.equal(requests.length,requestsBeforeHidden);
+  } finally {delete document.visibilityState;}
+  await act(async()=>tick());
+  assert.equal(requests.filter(r=>r.url.endsWith("/abc")).length,before);
   pending.processed=6;
   pending.cursor_date="2026-08-02";
   await act(async()=>tick());
   assert.ok(requests.filter(r=>r.url.endsWith("/abc")).length>before);
   assert.match(document.body.textContent,/6 pedidos processados/);
-  assert.equal(requests.some(r=>r.url.includes("/analytics/sync")),false);
+  assert.equal(requests.some(r=>r.url.includes("/analytics/sync") && r.body),false);
+  assert.equal(requests.filter(r=>r.url.endsWith("/abc")).at(-1).body.ensureCoverage,false);
   state.jobs.pop();
   await click(button("Atualizar"));
 });
@@ -236,6 +245,37 @@ test("missing coverage stays visibly partial and a server error does not leave a
     ).length,
     0,
   );
+});
+
+test("late success and network failure from aborted reports cannot overwrite the latest grouping", async t => {
+  for (const lateFailure of [false, true]) {
+    let settleOld, first = true;
+    const latest = { rows: [rows[0]],total:1,revenue:"100",quantity:"1",orders:1,classes:{},top10:100,pareto:[rows[0]],generatedAt:"2026-10-16T00:00:00Z" };
+    t.mock.method(global,"fetch",async (url) => {
+      if (!url.endsWith("/abc")) return Response.json(state);
+      if (first) { first=false; return new Promise((resolve,reject)=>{settleOld=()=>lateFailure?reject(new TypeError("obsolete network failure")):resolve(Response.json({...latest,rows:[{...rows[0],name:"Obsoleto"}]}));}); }
+      return Response.json({...latest,rows:[{...rows[0],name:"Resultado atual"}]});
+    });
+    await act(async()=>root.render(React.createElement(ABCDashboard,{isAdmin:false,key:"race-"+lateFailure})));
+    await click(button("Clientes"));
+    assert.match(document.querySelector("tbody").textContent,/Resultado atual/);
+    await act(async()=>settleOld());
+    assert.match(document.querySelector("tbody").textContent,/Resultado atual/);
+    assert.doesNotMatch(document.body.textContent,/obsolete network failure|Obsoleto/);
+  }
+});
+
+test("operator can recover after export failure without losing the report or getting stuck exporting", async t => {
+  const latest={rows:[rows[0]],total:1,revenue:"100",quantity:"1",orders:1,classes:{},top10:100,pareto:[rows[0]],generatedAt:"2026-10-16T00:00:00Z"};
+  t.mock.method(global,"fetch",async(url)=>url.endsWith("/export")
+    ? Response.json({error:"Exportação temporariamente indisponível"},{status:503})
+    : Response.json(url.endsWith("/abc")?latest:state));
+  await act(async()=>root.render(React.createElement(ABCDashboard,{isAdmin:false,key:"operator-export"})));
+  await click(button("CSV completo"));
+  assert.match(document.querySelector('[role="alert"]').textContent,/Exportação temporariamente/);
+  assert.equal(button("CSV completo").disabled,false);
+  assert.equal(document.querySelectorAll("tbody tr").length,1);
+  assert.equal(document.querySelector('a[href="/ninho"]'),null);
 });
 
 test("Ninho explains a failed OAuth callback and keeps reauthorization available while CNPJ validation is blocked", async t => {

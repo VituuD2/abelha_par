@@ -106,6 +106,14 @@ test("a scheduling outage remains actionable while returning the report already 
   assert.equal(JSON.stringify(body).includes("sensitive"),false);
 });
 
+test("background report refreshes reuse imported data without rescheduling historical coverage",async t=>{
+  const calls=[];
+  t.mock.method(access,"authorize",async()=>({access:{workspaceId:"trusted",user:{id:"member"},role:"operator"}}));
+  t.mock.method(admin,"createAdminClient",()=>({rpc:async(name)=>{calls.push(name);return {data:{rows:[],total:0},error:null};}}));
+  assert.equal((await abc.POST(request({filters,ensureCoverage:false}))).status,200);
+  assert.deepEqual(calls,["analytics_abc"]);
+});
+
 test("legacy repair derives its integration, token and CNPJ from the authorized workspace and never updates operational credentials", async t => {
   const tiny=require("../src/lib/tiny-auth.ts"), provider=require("../src/lib/analytics/olist-client.ts");
   const {encryptToken}=require("../src/lib/token-crypto.ts");
