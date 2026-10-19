@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-19T19:39:54.521Z",
+  "readOnly": true,
+  "source": "local machine to Supabase",
+  "limitations": "Reads only. Does not measure authenticated browser scans, writes, audio or server-to-database latency.",
+  "samples": [
+    {
+      "sample": 1,
+      "query": "active membership (one record)",
+      "milliseconds": 109,
+      "rows": 1
+    },
+    {
+      "sample": 1,
+      "query": "latest session metadata (one record, no orders)",
+      "milliseconds": 126,
+      "rows": 1
+    },
+    {
+      "sample": 2,
+      "query": "active membership (one record)",
+      "milliseconds": 86,
+      "rows": 1
+    },
+    {
+      "sample": 2,
+      "query": "latest session metadata (one record, no orders)",
+      "milliseconds": 57,
+      "rows": 1
+    },
+    {
+      "sample": 3,
+      "query": "active membership (one record)",
+      "milliseconds": 66,
+      "rows": 1
+    },
+    {
+      "sample": 3,
+      "query": "latest session metadata (one record, no orders)",
+      "milliseconds": 52,
+      "rows": 1
+    }
+  ],
+  "atomicScanRpcAvailable": true
+}

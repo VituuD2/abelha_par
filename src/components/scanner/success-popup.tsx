@@ -2,8 +2,7 @@
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Package } from "lucide-react";
-import { playSuccess } from "@/lib/sounds";
+import { CheckCircle2 } from "lucide-react";
 import { preventTrackingTransfer } from "@/lib/scanner-input-guard";
 import type { ScanOrder } from "@/types";
 
@@ -16,7 +15,6 @@ interface SuccessPopupProps {
 export function SuccessPopup({ visible, order, onDismiss }: SuccessPopupProps) {
   useEffect(() => {
     if (visible) {
-      playSuccess();
       const timer = setTimeout(onDismiss, 2000);
       return () => clearTimeout(timer);
     }

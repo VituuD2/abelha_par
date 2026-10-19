@@ -66,7 +66,6 @@ export default function HistoryPage() {
     <>
       <Header
         title="Favos de Mel"
-        subtitle="Encontre pedidos conferidos e consulte os lotes finalizados."
         breadcrumbs={["Abelha Par", "Favos de Mel"]}
       />
 
@@ -85,9 +84,6 @@ export default function HistoryPage() {
               {loading ? "Consultando histórico…" : error ? "Histórico indisponível" : search.query
                 ? `${matchingOrders} pedido${matchingOrders !== 1 ? "s" : ""} em ${total} lote${total !== 1 ? "s" : ""}`
                 : `${total} lote${total !== 1 ? "s" : ""} registrado${total !== 1 ? "s" : ""}`}
-            </p>
-            <p className="text-[12px] text-[var(--color-text-tertiary)]">
-              Dados salvos no Supabase
             </p>
           </div>
         </div>
@@ -123,7 +119,6 @@ export default function HistoryPage() {
           </div>
           <button type="submit" className="btn-primary">Buscar</button>
         </div>
-        <p id="history-search-hint" className="text-xs text-[var(--color-text-secondary)]">Pesquisa em todos os lotes finalizados, inclusive os mais antigos.</p>
       </form>
 
       {/* Content */}

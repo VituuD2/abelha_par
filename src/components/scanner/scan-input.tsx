@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Barcode, ScanLine } from "lucide-react";
 import { useScanStore } from "@/stores/scan-store";
 import { isPasteShortcut, isTransferredInput } from "@/lib/scanner-input-guard";
-import { prepareAudio, playVictory } from "@/lib/sounds";
+import { prepareAudio } from "@/lib/sounds";
 
 interface ScanInputProps {
   disabled?: boolean;
@@ -41,12 +41,9 @@ export function ScanInput({ disabled = false }: ScanInputProps) {
     if (!code || isDisabled) return;
     // Unlock audio during the gesture, before waiting for the server response.
     prepareAudio();
-    const sessionId = useScanStore.getState().sessionId;
     setValue("");
     setTransferNotice(null);
     await processBarcode(code);
-    const current = useScanStore.getState();
-    if (current.sessionId === sessionId && current.state === "complete" && current.currentResult?.type === "success") playVictory();
   }, [isDisabled, processBarcode, value]);
 
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {

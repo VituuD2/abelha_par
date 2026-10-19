@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import type { ScanOrder, ScannerState, ScanResult, ScanSubmission, StoredScanSession } from "@/types";
 import { hasTrackingCode } from "@/lib/tracking";
 import { applyScan } from "@/lib/scan-session";
+import { playScanConfirmation } from "@/lib/sounds";
 
 interface ScanStore {
   ownerId: string | null;
@@ -80,11 +81,15 @@ export const useScanStore = create<ScanStore>()(persist((set, get) => ({
       if (session) {
         if (session.id !== sessionId) throw new Error("Resposta de confirmação inválida.");
         const complete = session.orders.every(order => order.status === "checked");
+        // Audio is independent of React's render/effect scheduling. Never confirm
+        // a failed request or a response belonging to a previous session.
+        if (result.type === "success") playScanConfirmation(complete);
         set({ ...counts(session.orders), revision: session.revision, currentResult: result, state: result.type === "success" && complete ? "complete" : result.type, busy: false });
       } else {
         if (!confirmation || confirmation.sessionId !== sessionId || (result.type === "success" && !result.order)) throw new Error("Resposta de confirmação inválida.");
         const orders = result.type === "success" ? get().orders.map(order => order.id === result.order!.id ? result.order! : order) : get().orders;
         const { scannedCount, totalCount } = confirmation;
+        if (result.type === "success") playScanConfirmation(scannedCount === totalCount);
         set({ orders, scannedCount, totalCount, progress: totalCount ? scannedCount / totalCount * 100 : 0,
           revision: confirmation.revision, currentResult: result, state: result.type === "success" && scannedCount === totalCount ? "complete" : result.type, busy: false });
       }

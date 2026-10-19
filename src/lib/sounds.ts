@@ -7,7 +7,7 @@ let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext {
   if (!audioContext || audioContext.state === "closed") {
-    audioContext = new AudioContext();
+    audioContext = new AudioContext({ latencyHint: "interactive" });
   }
   return audioContext;
 }
@@ -18,6 +18,14 @@ export function prepareAudio(): void {
     const ctx = getAudioContext();
     if (ctx.state === "suspended") void ctx.resume().catch(() => {});
   } catch { /* Sound is optional on devices without Web Audio. */ }
+}
+
+/** Start feedback after persistence is confirmed, before rendering the list. */
+export function playScanConfirmation(complete: boolean): void {
+  try {
+    if (complete) playVictory();
+    else playSuccess();
+  } catch { /* Audio failure must never turn a saved scan into an error. */ }
 }
 
 /** Original short 8-bit victory fanfare; no game recording or melody is bundled. */
@@ -68,6 +76,7 @@ export function playSuccess(): void {
 
     oscillator.start(ctx.currentTime);
     oscillator.stop(ctx.currentTime + 0.2);
+    oscillator.onended = () => { oscillator.disconnect(); gainNode.disconnect(); };
   } catch {
     // Fallback: try HTML Audio
     const audio = new Audio("/sounds/success.mp3");
@@ -96,6 +105,7 @@ export function playError(): void {
 
     oscillator.start(ctx.currentTime);
     oscillator.stop(ctx.currentTime + 0.4);
+    oscillator.onended = () => { oscillator.disconnect(); gainNode.disconnect(); };
   } catch {
     const audio = new Audio("/sounds/error.mp3");
     audio.play().catch(() => {});

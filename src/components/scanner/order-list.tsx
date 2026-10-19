@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import type { ScanOrder } from "@/types";
 import { motion } from "framer-motion";
 import { hasTrackingCode } from "@/lib/tracking";
-import { preventTrackingTransfer } from "@/lib/scanner-input-guard";
 
 interface OrderListProps {
   orders: ScanOrder[];
@@ -106,17 +105,14 @@ const OrderRow = memo(function OrderRow({ order }: { order: ScanOrder }) {
           {order.clientName}
         </p>
         <div className="flex items-center gap-2 mt-0.5">
-          {isMissingTracking ? (
-            <p className="text-[11px] font-semibold text-[var(--color-accent-red)]">
-              Pedido sem código de rastreio
-            </p>
-          ) : (
-            <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono select-none" draggable={false}
-              onCopy={preventTrackingTransfer} onCut={preventTrackingTransfer} onDragStart={preventTrackingTransfer}>
-              {order.trackingCode}
-            </p>
+          {isMissingTracking && (
+            <>
+              <p className="text-[11px] font-semibold text-[var(--color-accent-red)]">
+                Pedido sem código de rastreio
+              </p>
+              <span className="text-[10px] text-[var(--color-text-tertiary)]">•</span>
+            </>
           )}
-          <span className="text-[10px] text-[var(--color-text-tertiary)]">•</span>
           <p className="text-[11px] text-[var(--color-text-tertiary)]">
             {orderReference(order)}
           </p>
