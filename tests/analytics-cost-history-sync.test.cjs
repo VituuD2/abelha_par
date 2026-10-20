@@ -19,7 +19,7 @@ test('history parser keeps provider effective dates separate from fetch time and
  const duplicate=normalizeCostHistoryPage({itens:[raw,raw],paginacao:{total:3}},0);
  assert.equal(duplicate.events.length,1);assert.equal(duplicate.count,2);assert.equal(duplicate.done,false);
  for(const body of [{},{itens:[{data:'2026-02-30'}]},{itens:[{data:'yesterday'}]},{itens:[{data:'2026-09-15 25:00:00'}]},{itens:[],paginacao:{total:1}}])assert.throws(()=>normalizeCostHistoryPage(body,0));
- assert.equal(parseABCFilters(filters).costBasis,'average');assert.equal(parseABCFilters({...filters,costBasis:'purchase'}).costBasis,'purchase');
+ assert.equal(parseABCFilters(filters).costBasis,'purchase');assert.equal(parseABCFilters({...filters,costBasis:'average'}).costBasis,'average');
  assert.throws(()=>parseABCFilters({...filters,costBasis:'current'}),/CMV/);
 });
 

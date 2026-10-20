@@ -1,0 +1,604 @@
+{
+  "at": "2026-10-20T16:05:28.792Z",
+  "readOnly": true,
+  "connection": {
+    "name": "Olist 1",
+    "enabled": true,
+    "sync_locked_until": "2026-10-20T16:06:35.34029+00:00",
+    "last_processed_at": "2026-10-20T16:05:05.34029+00:00"
+  },
+  "sync": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "page_offset": 0,
+      "scan_id": "413db21a-86f2-4517-8c3c-0b3f305827b7",
+      "next_at": "2026-10-20T16:29:04.678731+00:00",
+      "last_synced_at": "2026-10-20T15:59:04.678731+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:59:04.678731+00:00"
+    }
+  ],
+  "status": {
+    "total": 119,
+    "pending": 0,
+    "completed": 119,
+    "last_error": null,
+    "updated_at": "2026-10-20T16:03:02.930245+00:00",
+    "last_synced_at": "2026-10-20T15:13:03.235035+00:00"
+  },
+  "jobs": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527915",
+      "sku": "CMPO00B-K001",
+      "provider_revision": "1d45642cf78ee9b5303d0f2d852889a66284ebae9cd51dba52256f94f5dcc6ad",
+      "page_offset": 0,
+      "scan_id": "e5e6e289-8b5d-4d1a-aa05-3c2df85627dd",
+      "next_at": "2026-10-21T15:25:06.754102+00:00",
+      "last_synced_at": "2026-10-20T15:25:06.754102+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:25:06.754102+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527929",
+      "sku": "CMPO00C-K001",
+      "provider_revision": "8bbbf864677ea6d5586584f2834d44c9a0e30f9300de7ccc83fbfaf028e16e6b",
+      "page_offset": 0,
+      "scan_id": "babb451a-0e1b-4279-965f-bcb55ce3a5c7",
+      "next_at": "2026-10-21T15:25:10.899389+00:00",
+      "last_synced_at": "2026-10-20T15:25:10.899389+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:25:10.899389+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527920",
+      "sku": "CMPO00N-K001",
+      "provider_revision": "5781f0f91b3896bfa58aaf6e34b3b4b7ed291a473442f7f3fe6f5bfa460c7a70",
+      "page_offset": 0,
+      "scan_id": "616a397f-a374-4dc9-ad02-252f9fae65cf",
+      "next_at": "2026-10-21T15:25:08.767045+00:00",
+      "last_synced_at": "2026-10-20T15:25:08.767045+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:25:08.767045+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527794",
+      "sku": "CMPO0B3-K001",
+      "provider_revision": "1daadb4f67b0e5adb6d1f5e4546567b7e4d262ca1310c1b8c6cda5dba8dd2967",
+      "page_offset": 0,
+      "scan_id": "3ec82335-633a-4f24-af02-87a52659444b",
+      "next_at": "2026-10-21T15:13:05.096566+00:00",
+      "last_synced_at": "2026-10-20T15:13:05.096566+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:13:05.096566+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527823",
+      "sku": "DDCO00A-K001",
+      "provider_revision": "b2baf1b8ba04d9c69622f99fa846598ba88f35219ae33eb4cfa0e5a69cb283f3",
+      "page_offset": 0,
+      "scan_id": "44d96965-9e9b-43c7-adc8-8294880ab8f1",
+      "next_at": "2026-10-21T15:16:04.333747+00:00",
+      "last_synced_at": "2026-10-20T15:16:04.333747+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:16:04.333747+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527786",
+      "sku": "ACTM000-K010",
+      "provider_revision": "95899fe4eb90740271ff81d247bb4054da6a29ba71d1b6df163956736f8d5a88",
+      "page_offset": 0,
+      "scan_id": "e0add5cd-4e44-4ad9-941f-e77ca2f895ff",
+      "next_at": "2026-10-21T15:52:07.653847+00:00",
+      "last_synced_at": "2026-10-20T15:52:07.653847+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:52:07.653847+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528124",
+      "sku": "ACTM001-K002",
+      "provider_revision": "500250015109433e5aedca38af76898071b05f26282e7af17c4620fc53a8bbb0",
+      "page_offset": 0,
+      "scan_id": "e1b7c97c-9986-46c5-85f4-9cf55d9b1b96",
+      "next_at": "2026-10-21T15:38:05.692167+00:00",
+      "last_synced_at": "2026-10-20T15:38:05.692167+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:38:05.692167+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528156",
+      "sku": "DDCO00C-K001",
+      "provider_revision": "b2baf1b8ba04d9c69622f99fa846598ba88f35219ae33eb4cfa0e5a69cb283f3",
+      "page_offset": 0,
+      "scan_id": "9d2c9a7b-f3e9-46e0-963f-3ad6377b5aa0",
+      "next_at": "2026-10-21T15:45:11.943718+00:00",
+      "last_synced_at": "2026-10-20T15:45:11.943718+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:45:11.943718+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527958",
+      "sku": "DDCO00N-K001",
+      "provider_revision": "b2baf1b8ba04d9c69622f99fa846598ba88f35219ae33eb4cfa0e5a69cb283f3",
+      "page_offset": 0,
+      "scan_id": "b03877af-6304-437b-8226-994063f50aad",
+      "next_at": "2026-10-21T15:27:06.542729+00:00",
+      "last_synced_at": "2026-10-20T15:27:06.542729+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:27:06.542729+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528024",
+      "sku": "DDCO00U-K001",
+      "provider_revision": "620b3440683775059d8b0a2ffdbf597fc1ce6f6907dcfbd8a71be11d1d981768",
+      "page_offset": 0,
+      "scan_id": "f510d17c-5ead-4851-a9e8-1dec251b15e9",
+      "next_at": "2026-10-21T15:31:06.836962+00:00",
+      "last_synced_at": "2026-10-20T15:31:06.836962+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:31:06.836962+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342528046",
+      "sku": "DDCO00V-K001",
+      "provider_revision": "8ce6ff6a3e8261ba7fbec4be26a138f8763d9945cb7be64979a2b8da2357ce96",
+      "page_offset": 0,
+      "scan_id": "e6b24529-1e38-451f-a39c-0974c8091856",
+      "next_at": "2026-10-21T15:32:07.37005+00:00",
+      "last_synced_at": "2026-10-20T15:32:07.37005+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:32:07.37005+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527802",
+      "sku": "SBGF00M-K001",
+      "provider_revision": "de8f151b9a4abbc31e7072790a1f2423ae52b98d51ced24f2aefd0aeaeb7c197",
+      "page_offset": 0,
+      "scan_id": "2ff3bc09-d878-4f8f-a692-53daad618214",
+      "next_at": "2026-10-21T15:14:03.110607+00:00",
+      "last_synced_at": "2026-10-20T15:14:03.110607+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:14:03.110607+00:00"
+    },
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527782",
+      "sku": "SBLL001-K001",
+      "provider_revision": "c921a5934219357e33748cabd6215353f13c3c831335e769f023e6114fb9c00b",
+      "page_offset": 0,
+      "scan_id": "ff7164b5-6ff7-4156-a0ba-43163d4dd4a8",
+      "next_at": "2026-10-21T15:52:05.545333+00:00",
+      "last_synced_at": "2026-10-20T15:52:05.545333+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:52:05.545333+00:00"
+    }
+  ],
+  "products": [
+    {
+      "external_id": "342527782",
+      "sku": "SBLL001-K001",
+      "cost_cents": 1704,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "c921a5934219357e33748cabd6215353f13c3c831335e769f023e6114fb9c00b"
+    },
+    {
+      "external_id": "342527786",
+      "sku": "ACTM000-K010",
+      "cost_cents": 165,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "95899fe4eb90740271ff81d247bb4054da6a29ba71d1b6df163956736f8d5a88"
+    },
+    {
+      "external_id": "342527794",
+      "sku": "CMPO0B3-K001",
+      "cost_cents": 2725,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "1daadb4f67b0e5adb6d1f5e4546567b7e4d262ca1310c1b8c6cda5dba8dd2967"
+    },
+    {
+      "external_id": "342527802",
+      "sku": "SBGF00M-K001",
+      "cost_cents": 12000,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "de8f151b9a4abbc31e7072790a1f2423ae52b98d51ced24f2aefd0aeaeb7c197"
+    },
+    {
+      "external_id": "342527823",
+      "sku": "DDCO00A-K001",
+      "cost_cents": 2040,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "b2baf1b8ba04d9c69622f99fa846598ba88f35219ae33eb4cfa0e5a69cb283f3"
+    },
+    {
+      "external_id": "342527915",
+      "sku": "CMPO00B-K001",
+      "cost_cents": 2345,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "1d45642cf78ee9b5303d0f2d852889a66284ebae9cd51dba52256f94f5dcc6ad"
+    },
+    {
+      "external_id": "342527920",
+      "sku": "CMPO00N-K001",
+      "cost_cents": 2725,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "5781f0f91b3896bfa58aaf6e34b3b4b7ed291a473442f7f3fe6f5bfa460c7a70"
+    },
+    {
+      "external_id": "342527929",
+      "sku": "CMPO00C-K001",
+      "cost_cents": 2345,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "8bbbf864677ea6d5586584f2834d44c9a0e30f9300de7ccc83fbfaf028e16e6b"
+    },
+    {
+      "external_id": "342527958",
+      "sku": "DDCO00N-K001",
+      "cost_cents": 2040,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "b2baf1b8ba04d9c69622f99fa846598ba88f35219ae33eb4cfa0e5a69cb283f3"
+    },
+    {
+      "external_id": "342528024",
+      "sku": "DDCO00U-K001",
+      "cost_cents": 2040,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "620b3440683775059d8b0a2ffdbf597fc1ce6f6907dcfbd8a71be11d1d981768"
+    },
+    {
+      "external_id": "342528046",
+      "sku": "DDCO00V-K001",
+      "cost_cents": 2040,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "8ce6ff6a3e8261ba7fbec4be26a138f8763d9945cb7be64979a2b8da2357ce96"
+    },
+    {
+      "external_id": "342528124",
+      "sku": "ACTM001-K002",
+      "cost_cents": 360,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "500250015109433e5aedca38af76898071b05f26282e7af17c4620fc53a8bbb0"
+    },
+    {
+      "external_id": "342528156",
+      "sku": "DDCO00C-K001",
+      "cost_cents": 2040,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "b2baf1b8ba04d9c69622f99fa846598ba88f35219ae33eb4cfa0e5a69cb283f3"
+    }
+  ],
+  "events": [
+    {
+      "external_id": "342527915",
+      "sku": "CMPO00B-K001",
+      "effective_at": "2026-07-07T03:00:00+00:00",
+      "effective_day": "2026-07-07",
+      "purchase_cents": 2345,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527920",
+      "sku": "CMPO00N-K001",
+      "effective_at": "2026-07-07T03:00:00+00:00",
+      "effective_day": "2026-07-07",
+      "purchase_cents": 2725,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527929",
+      "sku": "CMPO00C-K001",
+      "effective_at": "2026-07-07T03:00:00+00:00",
+      "effective_day": "2026-07-07",
+      "purchase_cents": 2345,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527794",
+      "sku": "CMPO0B3-K001",
+      "effective_at": "2026-07-07T03:00:00+00:00",
+      "effective_day": "2026-07-07",
+      "purchase_cents": 2725,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527782",
+      "sku": "SBLL001-K001",
+      "effective_at": "2026-05-28T03:00:00+00:00",
+      "effective_day": "2026-05-28",
+      "purchase_cents": 1704,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527802",
+      "sku": "SBGF00M-K001",
+      "effective_at": "2026-05-28T03:00:00+00:00",
+      "effective_day": "2026-05-28",
+      "purchase_cents": 12000,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527823",
+      "sku": "DDCO00A-K001",
+      "effective_at": "2026-03-31T03:00:00+00:00",
+      "effective_day": "2026-03-31",
+      "purchase_cents": 2040,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342528156",
+      "sku": "DDCO00C-K001",
+      "effective_at": "2026-03-31T03:00:00+00:00",
+      "effective_day": "2026-03-31",
+      "purchase_cents": 2040,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527794",
+      "sku": "CMPO0B3-K001",
+      "effective_at": "2026-03-26T03:00:00+00:00",
+      "effective_day": "2026-03-26",
+      "purchase_cents": 2500,
+      "average_cents": 2500,
+      "current": true
+    },
+    {
+      "external_id": "342527920",
+      "sku": "CMPO00N-K001",
+      "effective_at": "2026-03-26T03:00:00+00:00",
+      "effective_day": "2026-03-26",
+      "purchase_cents": 2500,
+      "average_cents": 2500,
+      "current": true
+    },
+    {
+      "external_id": "342527802",
+      "sku": "SBGF00M-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 11400,
+      "average_cents": 11400,
+      "current": true
+    },
+    {
+      "external_id": "342527786",
+      "sku": "ACTM000-K010",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 165,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527782",
+      "sku": "SBLL001-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 1600,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342528124",
+      "sku": "ACTM001-K002",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 360,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527915",
+      "sku": "CMPO00B-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 2150,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527929",
+      "sku": "CMPO00C-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 2150,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527920",
+      "sku": "CMPO00N-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 0,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527794",
+      "sku": "CMPO0B3-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 0,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342528156",
+      "sku": "DDCO00C-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 0,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342527958",
+      "sku": "DDCO00N-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 2040,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342528024",
+      "sku": "DDCO00U-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 2040,
+      "average_cents": 0,
+      "current": true
+    },
+    {
+      "external_id": "342528046",
+      "sku": "DDCO00V-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 2040,
+      "average_cents": 0,
+      "current": true
+    }
+  ],
+  "eventLimit": 1000,
+  "provider": [
+    {
+      "sku": "ACTM001-K002",
+      "external_id": "342528124",
+      "paginacao": {
+        "limit": 100,
+        "offset": 0,
+        "total": 1
+      },
+      "itens": [
+        {
+          "data": "2000-01-01",
+          "precoCusto": 3.6,
+          "custoMedio": 0,
+          "saldoAnterior": 0,
+          "saldoAtual": 48,
+          "impostosRecuperaveis": 0
+        }
+      ],
+      "normalization": {
+        "ok": true,
+        "count": 1,
+        "done": true
+      }
+    },
+    {
+      "sku": "SBLL001-K001",
+      "external_id": "342527782",
+      "paginacao": {
+        "limit": 100,
+        "offset": 0,
+        "total": 2
+      },
+      "itens": [
+        {
+          "data": "2026-05-28",
+          "precoCusto": 17.04,
+          "custoMedio": 0,
+          "saldoAnterior": 0,
+          "saldoAtual": 0,
+          "impostosRecuperaveis": 0
+        },
+        {
+          "data": "2000-01-01",
+          "precoCusto": 16,
+          "custoMedio": 0,
+          "saldoAnterior": 0,
+          "saldoAtual": 800,
+          "impostosRecuperaveis": 0
+        }
+      ],
+      "normalization": {
+        "ok": true,
+        "count": 2,
+        "done": true
+      }
+    },
+    {
+      "sku": "DDCO00A-K001",
+      "external_id": "342527823",
+      "paginacao": {
+        "limit": 100,
+        "offset": 0,
+        "total": 1
+      },
+      "itens": [
+        {
+          "data": "2026-03-31",
+          "precoCusto": 20.4,
+          "custoMedio": 0,
+          "saldoAnterior": 0,
+          "saldoAtual": 0,
+          "impostosRecuperaveis": 0
+        }
+      ],
+      "normalization": {
+        "ok": true,
+        "count": 1,
+        "done": true
+      }
+    }
+  ]
+}

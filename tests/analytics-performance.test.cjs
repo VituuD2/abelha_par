@@ -148,11 +148,12 @@ test('component analysis exposes historical total cost and applies an explicit p
   await render('historical-cost-basis');assert.match(document.body.textContent,/1\.100,00/);
   assert.match(document.body.textContent,/Custos posteriores/);
   const control=[...document.querySelectorAll('select')].find(select=>select.querySelector('option[value="purchase"]'));
-  assert.equal(control.value,'average');
-  await act(async()=>{control.value='purchase';control.dispatchEvent(new dom.window.Event('change',{bubbles:true}));});
-  await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Analisar vendas').click());
+  assert.equal(control.value,'purchase');
   assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.costBasis,'purchase');
-  assert.match(document.body.textContent,/Custo de compra vigente/);
+  await act(async()=>{control.value='average';control.dispatchEvent(new dom.window.Event('change',{bubbles:true}));});
+  await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Analisar vendas').click());
+  assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.costBasis,'average');
+  assert.match(document.body.textContent,/Custo médio vigente/);
 });
 
 test('Ninho lets an administrator resume a retry checkpoint without creating a new historical range',async t=>{

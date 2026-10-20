@@ -34,6 +34,7 @@ test("composition report and drilldown use the server catalog and ignore forged 
   assert.deepEqual(Object.keys(calls[0].args.p_rules.unlinkedRules).sort(),["2165","CMNV150-K002"]);
   assert.equal(calls[0].args.p_actor,"trusted-user");
   assert.equal(calls[0].args.p_workspace,compositionCatalog.workspaceIds[0]);
+  assert.equal(calls[0].args.p_filters.costBasis,"purchase");
   const drill=require("../src/app/api/analytics/drilldown/route.ts");
   const detail=await drill.POST(new Request("http://localhost/api/analytics/drilldown",{method:"POST",body:JSON.stringify({...requestBody,entity:"composition:HBCOMAX-K001",page:2})}));
   assert.equal(detail.status,200);
@@ -52,15 +53,21 @@ test("a catalog is never silently applied to another workspace with coincident S
   assert.equal(reads,0);
 });
 
-test("missing CMV gives an actionable value-report error instead of blaming the migration", async t => {
+test("missing historical cost identifies the chosen basis without claiming sync or permission failure", async t => {
   t.mock.method(access,"authorize",async()=>({access:{workspaceId:compositionCatalog.workspaceIds[0],user:{id:"trusted-user"},role:"operator"}}));
   t.mock.method(admin,"createAdminClient",()=>({rpc:async()=>({data:null,error:{message:"CMV_REQUIRED:ACFS000-K001"}})}));
   const response=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify({filters:{...filters,grouping:"composition"},ensureCoverage:false})}));
-  assert.equal(response.status,400);
-  const {error}=await response.json();
+  assert.equal(response.status,422);
+  assert.equal(response.headers.get('cache-control'),'no-store');
+  const {error,code,costBasis,missingCostSkus}=await response.json();
+  assert.equal(code,'HISTORICAL_COST_UNAVAILABLE');assert.equal(costBasis,'purchase');assert.deepEqual(missingCostSkus,['ACFS000-K001']);
   assert.match(error,/CMV unitário.*ACFS000-K001/);
+  assert.match(error,/base Custo de compra/);
   assert.match(error,/métrica Quantidade/);
-  assert.doesNotMatch(error,/migração/);
+  assert.doesNotMatch(error,/migração|permissão|aguarde a sincronização/);
+  const average=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify({filters:{...filters,grouping:"composition",costBasis:"average"},ensureCoverage:false})}));
+  assert.equal(average.status,422);
+  const body=await average.json();assert.equal(body.costBasis,'average');assert.match(body.error,/base Custo médio/);assert.match(body.error,/Selecione Custo de compra por vigência/);
 });
 const request = (body) =>
   new Request("http://localhost/api/analytics/abc", {

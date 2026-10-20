@@ -1,4 +1,5 @@
 import type { ABCFilters, ABCResult, ABCRow } from "./types";
+import { ABC_DEFAULTS } from "./config";
 import { reportReliability, type CoverageStatus } from "./reliability";
 export const EXPORT_COLUMNS = [
   "Ranking",
@@ -63,7 +64,7 @@ export function exportMetadata(filters: ABCFilters, result: ABCResult) {
       ...(result.composition.costSource?.kind === "olist" ? [
         ["Composição · atualização do CMV", result.composition.costSource.lastSyncedAt || "Primeira sincronização em andamento"],
         ["Composição · erro na atualização do CMV", result.composition.costSource.lastError || ""],
-        ["Composição · base do CMV", result.composition.costSource.basis || filters.costBasis || "average"],
+        ["Composição · base do CMV", result.composition.costSource.basis || filters.costBasis || ABC_DEFAULTS.costBasis],
         ["Composição · custo histórico das unidades (centavos)", result.composition.periodCostCents ?? "Incompleto"],
         ["Composição · custo histórico conhecido (centavos)", result.composition.knownCostCents || "0"],
         ["Composição · itens sem custo histórico", String(result.composition.costMissingLines || 0)],

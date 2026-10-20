@@ -9,6 +9,9 @@ export const ABC_DEFAULTS = {
   thresholdA: 80,
   thresholdB: 95,
   metric: "revenue",
+  // This operation maintains precoCusto; custoMedio is zero for several sold products.
+  // Both methods still resolve the ERP history at the sale's effective date.
+  costBasis: "purchase",
   statuses: [1, 5, 6],
 } as const;
 export const ORDER_STATUSES: Record<number, string> = {

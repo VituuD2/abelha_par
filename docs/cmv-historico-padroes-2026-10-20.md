@@ -1,6 +1,6 @@
 # CMV histórico: pesquisa, decisão e implementação
 
-Esta revisão substitui a política de custo atual da entrega v18. A Curva ABC passa a usar **custo médio histórico da Olist 1, vigente no dia de cada operação**, com alternativa explícita de custo de compra histórico. A data de sincronização não é a data de vigência.
+Esta revisão substitui a política de custo atual da entrega v18. A Curva ABC usa **custo histórico da Olist 1, vigente no dia de cada operação**. Após validar os dados reais da operação, o padrão da aplicação é **custo de compra histórico**, com alternativa explícita de custo médio histórico. A data de sincronização não é a data de vigência. Consulte o [diagnóstico dos custos médios zerados](olist-cmv-bases-2026-10-20.md).
 
 ## O que as plataformas documentam
 
@@ -15,7 +15,7 @@ Fontes primárias: [Olist — CMV no DRE](https://ajuda.olist.com/relatorios-de-
 
 ## Método escolhido e exemplo
 
-A recomendação para esta aplicação é importar o **custo médio já calculado pelo ERP**, preservando a data de cada mudança. Isso evita tentar reconstruir estoques e custos a partir de informações incompletas. A Olist documenta que a formação de preços pondera o saldo anterior e as entradas, considerando despesas da compra e os impostos configurados. Não subtraímos os impostos recuperáveis novamente do valor retornado. [Olist — formação de preços](https://ajuda.olist.com/pt_BR/precificacao/formacao-de-precos).
+Quando a operação mantém o custo médio, a recomendação é importar o **custo médio já calculado pelo ERP**, preservando a data de cada mudança. Isso evita tentar reconstruir estoques e custos a partir de informações incompletas. Nesta operação, a inspeção de produção encontrou custos médios vigentes zerados para 13 componentes vendidos, com custos de compra históricos positivos. Por isso a aplicação inicia em custo de compra por vigência; custo médio continua sendo uma escolha explícita para quando seus dados estiverem disponíveis. A Olist documenta que a formação de preços pondera o saldo anterior e as entradas, considerando despesas da compra e os impostos configurados. Não subtraímos os impostos recuperáveis novamente do valor retornado. [Olist — formação de preços](https://ajuda.olist.com/pt_BR/precificacao/formacao-de-precos).
 
 ```text
 novo custo médio = (saldo anterior × custo médio anterior
@@ -43,7 +43,7 @@ As páginas são armazenadas em staging. O histórico publicado de um produto s�
 ## Regras temporais e limites
 
 - Para cada SKU e dia de operação, é escolhido o último evento de custo anterior ou igual ao dia. Um custo futuro nunca preenche uma lacuna anterior.
-- A base padrão é `custoMedio`; o filtro **Base do CMV histórico** permite selecionar `precoCusto` para comparação ou conciliação com outra configuração do ERP.
+- A base padrão da aplicação é `precoCusto`; o filtro **Base do CMV histórico** permite selecionar `custoMedio`. A aplicação envia a escolha explicitamente às RPCs v19; o padrão SQL legado dessas funções não muda nesta correção.
 - O histórico pode conter horários, que são preservados. Os pedidos analíticos atuais armazenam a data comercial, sem horário; por isso a apuração usa o **último custo do dia**, em `America/Sao_Paulo`. Não representa ordenação intradiária. A tela e a exportação informam essa granularidade.
 - A visão Pedidos usa a data da venda. A visão atual de NF da aplicação usa a data de emissão já armazenada, enquanto o DRE oficial da Olist usa autorização. Essa diferença deve ser considerada ao conciliar; esta mudança não transforma a Curva ABC em DRE fiscal.
 - Um histórico ausente, custo médio inválido/zero ou conflito no mesmo instante fica pendente. Não é convertido em custo zero, nem preenchido por um registro posterior. Quantidades continuam disponíveis; o total de custo indica a parcela conhecida e os itens faltantes.

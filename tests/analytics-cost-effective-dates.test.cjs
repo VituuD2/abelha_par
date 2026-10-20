@@ -4,6 +4,7 @@ const {isolatedDatabase,ws,connections,filters}=require('../scripts/analytics-is
 const {compositionRulesForWorkspace}=require('../src/lib/analytics/composition-server.ts');
 const catalog=require('../src/lib/analytics/data/composition-catalog.json');
 const {normalizeCostHistoryPage}=require('../src/lib/analytics/cost-history-sync.ts');
+const {parseABCFilters}=require('../src/lib/analytics/filters.ts');
 const rules={...compositionRulesForWorkspace(catalog.workspaceIds[0]),referenceCosts:{'ACFS000-K001':'999999','ACTM000-K010':'1'}};
 const f={...filters,grouping:'composition',costBasis:'average'};
 const skus=['ACFS000-K001','ACTM000-K010'];let db;
@@ -52,6 +53,24 @@ test('September uses each sale effective cost, includes opening August cost, and
  const purchase=await report({costBasis:'purchase'});assert.equal(purchase.rows.find(p=>p.sku===skus[0]).revenue,'7501');
  assert.equal(Number(purchase.composition.periodCostCents),1000);
  const invoiced=await report({basis:'invoiced'});assert.equal(invoiced.rows.find(p=>p.sku===skus[0]).revenue,'8000');
+}));
+
+test('Olist zero-average history uses dated purchase costs by default and preserves an explicit average failure',()=>fixture(async()=>{
+ const evidence=JSON.parse(readFileSync('docs/evidencias/olist-cmv-20261020160538/diagnostico.json','utf8'));
+ const history=evidence.provider.find(p=>p.sku==='SBLL001-K001').itens;
+ await publish({10:[...history,ev('2026-10-01',99,0)],11:[ev('2000-01-01',1.65,0)]});
+ const parsed=parseABCFilters({...filters,grouping:'composition'});
+ assert.equal(parsed.costBasis,'purchase');
+ const result=await report(parsed);
+ assert.equal(result.composition.costSource.field,'precoCusto');
+ assert.equal(Number(result.composition.periodCostCents),3738); // Two sales: (17.04 + 1.65) * 2.
+ assert.equal(result.composition.unallocatedLines,0);assert.equal(result.composition.costMissingLines,0);
+ assert.equal(result.rows.reduce((sum,row)=>sum+BigInt(row.revenue),0n),20002n);
+ assert.equal(await cost('2026-05-27','purchase'),'1600.0000');
+ assert.equal(await cost('2026-05-28','purchase'),'1704.0000');
+ assert.equal(await cost('2026-09-20','purchase'),'1704.0000');
+ assert.equal(await cost('2026-09-20','average'),null);
+ await reject(()=>report({...parsed,costBasis:'average'}),/CMV_REQUIRED:/);
 }));
 
 test('future cost updates never reprice September; repeated history imports are idempotent and keep audit rows',()=>fixture(async()=>{

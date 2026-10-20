@@ -237,7 +237,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     thresholdA: ABC_DEFAULTS.thresholdA,
     thresholdB: ABC_DEFAULTS.thresholdB,
     basis: "orders",
-    costBasis: "average",
+    costBasis: ABC_DEFAULTS.costBasis,
     selections: { statuses: ABC_DEFAULTS.statuses.map(String) },
   }));
   const [filters, setFilters] = useState(draft),
@@ -612,10 +612,11 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </label>
           {draft.grouping === "composition" && <label className="text-sm font-medium">
             Base do CMV histórico
-            <select className="field mt-2" value={draft.costBasis || "average"} onChange={e => setDraft(f => ({ ...f, costBasis: e.target.value as ABCFilters["costBasis"] }))}>
-              <option value="average">Custo médio por vigência</option>
+            <select className="field mt-2" value={draft.costBasis || ABC_DEFAULTS.costBasis} onChange={e => setDraft(f => ({ ...f, costBasis: e.target.value as ABCFilters["costBasis"] }))}>
               <option value="purchase">Custo de compra por vigência</option>
+              <option value="average">Custo médio por vigência</option>
             </select>
+            <span className="mt-1 block text-xs text-neutral-500">A base selecionada usa o histórico válido na data da venda. Custo médio zerado ou ausente não é substituído pelo custo de compra.</span>
           </label>}
         </div>
         <div className="flex flex-wrap items-center gap-2">

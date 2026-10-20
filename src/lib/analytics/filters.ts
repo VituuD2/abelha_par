@@ -53,7 +53,7 @@ export function parseABCFilters(value: unknown): ABCFilters {
     mode: f.mode,
     grouping: f.grouping as ABCFilters["grouping"],
     basis: f.basis as ABCFilters["basis"],
-    costBasis: (f.costBasis || "average") as ABCFilters["costBasis"],
+    costBasis: (f.costBasis || ABC_DEFAULTS.costBasis) as ABCFilters["costBasis"],
     thresholdA: a,
     thresholdB: b,
     selections,
