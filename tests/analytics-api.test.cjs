@@ -26,7 +26,7 @@ test("composition report and drilldown use the server catalog and ignore forged 
   const requestBody={filters:{...filters,grouping:"composition"},ensureCoverage:false,workspaceId:"foreign",p_rules:{rules:{"HBCOMAX-K001S":{target:"FORGED",factor:"999"}},unlinkedRules:{"HBCOMAX-K001S":{target:"FORGED",factor:"999"}}}};
   const response=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify(requestBody)}));
   assert.equal(response.status,200);
-  assert.equal(calls[0].name,"analytics_abc_components_v19");
+  assert.equal(calls[0].name,"analytics_abc_components_v21");
   assert.deepEqual(calls[0].args.p_rules.referenceCosts,{});
   assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].target,"HBCOMAX-K001");
   assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].factor,"1");
@@ -38,7 +38,7 @@ test("composition report and drilldown use the server catalog and ignore forged 
   const drill=require("../src/app/api/analytics/drilldown/route.ts");
   const detail=await drill.POST(new Request("http://localhost/api/analytics/drilldown",{method:"POST",body:JSON.stringify({...requestBody,entity:"composition:HBCOMAX-K001",page:2})}));
   assert.equal(detail.status,200);
-  assert.equal(calls[1].name,"analytics_drilldown_components_v19");
+  assert.equal(calls[1].name,"analytics_drilldown_components_v21");
   assert.deepEqual(calls[1].args.p_rules,calls[0].args.p_rules);
   assert.equal(calls[1].args.p_offset,50);
 });
@@ -68,6 +68,24 @@ test("missing historical cost identifies the chosen basis without claiming sync 
   const average=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify({filters:{...filters,grouping:"composition",costBasis:"average"},ensureCoverage:false})}));
   assert.equal(average.status,422);
   const body=await average.json();assert.equal(body.costBasis,'average');assert.match(body.error,/base Custo médio/);assert.match(body.error,/Selecione Custo de compra por vigência/);
+});
+
+test("an absent or overwritten v21 returns a schema update error rather than blaming the ERP cost", async t => {
+  t.mock.method(access,"authorize",async()=>({access:{workspaceId:compositionCatalog.workspaceIds[0],user:{id:"trusted-user"},role:"admin"}}));
+  t.mock.method(require('../src/lib/analytics/server.ts'),'analyticsStatus',async()=>({companies:[],connections:[],jobs:[],sources:[],coverage:[]}));
+  const drill=require('../src/app/api/analytics/drilldown/route.ts');
+  for(const error of [{code:'PGRST202',message:'Could not find the function'},{code:'P0001',message:'ANALYTICS_V21_REQUIRED'}]){
+    const calls=[];
+    t.mock.method(admin,'createAdminClient',()=>({rpc:async(name)=>{calls.push(name);return{data:null,error};}}));
+    for(const [route,extra] of [[abc,{ensureCoverage:false}],[drill,{entity:'composition:ACFS000-K001'}],[exportApi,{format:'csv'}]]){
+      const response=await route.POST(new Request('http://localhost/api/analytics/test',{method:'POST',body:JSON.stringify({filters:{...filters,grouping:'composition'},...extra})}));
+      assert.equal(response.status,503);assert.equal(response.headers.get('cache-control'),'no-store');
+      const body=await response.json();assert.equal(body.code,'ANALYTICS_MIGRATION_REQUIRED');assert.equal(body.migration,'v21');
+      assert.match(body.error,/migration_v21_analytics_zero_signed_costs.sql inteiro/);
+      assert.equal(body.missingCostSkus,undefined);assert.doesNotMatch(body.error,/libere.*permissão|custo.*indisponível/);
+    }
+    assert.deepEqual(calls,['analytics_abc_components_v21','analytics_drilldown_components_v21','analytics_abc_components_v21']);
+  }
 });
 const request = (body) =>
   new Request("http://localhost/api/analytics/abc", {

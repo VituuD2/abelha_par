@@ -33,6 +33,7 @@ A versão principal avança para 3 porque o fluxo de conferência passou a depen
 - Valores monetários negativos preservados nos itens, totais e descontos dos pedidos.
 - Custos informados zero ou negativos aceitos; a Fita Seios continua com custo zero. O CMV mantém o sinal e o rateio usa a magnitude dos custos; se todos forem zero, usa as quantidades dos componentes.
 - Distinção entre custo zero informado e custo desconhecido; interface e exportações identificam as regras e as lacunas.
+- Entradas de consulta v21 verificam a política do banco e identificam migração ausente ou substituída, sem atribuir o problema ao custo do produto.
 
 ### Identificação da versão
 

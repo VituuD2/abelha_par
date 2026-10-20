@@ -866,7 +866,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       {(error || schedulingError) && (
         <div className="card p-5 text-red-800" role="alert">
           {(typeof error === "string" ? error : error?.message) || schedulingError}
-          {isAdmin && !(error instanceof AnalyticsRequestError && error.code === "HISTORICAL_COST_UNAVAILABLE") && (
+          {isAdmin && !(error instanceof AnalyticsRequestError && ["HISTORICAL_COST_UNAVAILABLE", "ANALYTICS_MIGRATION_REQUIRED"].includes(error.code || "")) && (
             <p className="mt-2">
               <Link href="/ninho" className="underline">
                 Verificar conexões no Ninho

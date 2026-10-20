@@ -142,6 +142,30 @@ DECLARE result jsonb; BEGIN
  RETURN result;
 END $$;
 
--- CREATE OR REPLACE retains existing service-role-only grants and signatures.
+-- Versioned entrypoints prevent the new application from silently calling v19 math.
+CREATE OR REPLACE FUNCTION public.analytics_abc_components_v21(p_workspace uuid,p_actor uuid,p_filters jsonb,p_rules jsonb,p_offset integer DEFAULT 0,p_limit integer DEFAULT 50,p_sort text DEFAULT 'rank',p_direction text DEFAULT 'asc')
+RETURNS jsonb LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$
+DECLARE rules jsonb; BEGIN
+ PERFORM analytics_assert_member(p_workspace,p_actor);
+ IF coalesce(p_filters->>'costBasis','average') NOT IN ('purchase','average') THEN RAISE EXCEPTION 'INVALID_COST_BASIS'; END IF;
+ rules := analytics_historical_cost_rules(p_workspace,p_filters,p_rules);
+ IF rules#>>'{costSource,allocationPolicy}' IS DISTINCT FROM 'signed_cost_magnitude_zero_quantity' THEN RAISE EXCEPTION 'ANALYTICS_V21_REQUIRED'; END IF;
+ RETURN analytics_abc_components(p_workspace,p_actor,p_filters,rules,p_offset,p_limit,p_sort,p_direction);
+END $$;
+
+CREATE OR REPLACE FUNCTION public.analytics_drilldown_components_v21(p_workspace uuid,p_actor uuid,p_filters jsonb,p_rules jsonb,p_entity text,p_offset integer DEFAULT 0)
+RETURNS jsonb LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$
+DECLARE rules jsonb; BEGIN
+ PERFORM analytics_assert_member(p_workspace,p_actor);
+ IF coalesce(p_filters->>'costBasis','average') NOT IN ('purchase','average') THEN RAISE EXCEPTION 'INVALID_COST_BASIS'; END IF;
+ rules := analytics_historical_cost_rules(p_workspace,p_filters,p_rules);
+ IF rules#>>'{costSource,allocationPolicy}' IS DISTINCT FROM 'signed_cost_magnitude_zero_quantity' THEN RAISE EXCEPTION 'ANALYTICS_V21_REQUIRED'; END IF;
+ RETURN analytics_drilldown_components(p_workspace,p_actor,p_filters,rules,p_entity,p_offset);
+END $$;
+
+REVOKE ALL ON FUNCTION public.analytics_abc_components_v21(uuid,uuid,jsonb,jsonb,integer,integer,text,text),public.analytics_drilldown_components_v21(uuid,uuid,jsonb,jsonb,text,integer) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.analytics_abc_components_v21(uuid,uuid,jsonb,jsonb,integer,integer,text,text),public.analytics_drilldown_components_v21(uuid,uuid,jsonb,jsonb,text,integer) TO service_role;
+
+-- The shared functions retain their existing service-role-only grants/signatures.
 NOTIFY pgrst, 'reload schema';
 COMMIT;

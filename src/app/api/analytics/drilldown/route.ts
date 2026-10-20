@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { authorize } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { parseABCFilters } from "@/lib/analytics/filters";
-import { analyticsError } from "@/lib/analytics/server";
+import { analyticsError, assertHistoricalCostMigration } from "@/lib/analytics/server";
 import { compositionRulesForWorkspace } from "@/lib/analytics/composition-server";
 export async function POST(request: Request) {
   const auth = await authorize("analytics:read");
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       throw new Error("Entidade inválida.");
     const composed = filters.grouping === "composition";
     const { data, error } = await createAdminClient().rpc(
-      composed ? "analytics_drilldown_components_v19" : "analytics_drilldown",
+      composed ? "analytics_drilldown_components_v21" : "analytics_drilldown",
       {
         p_workspace: auth.access.workspaceId,
         p_actor: auth.access.user.id,
@@ -30,6 +30,7 @@ export async function POST(request: Request) {
         p_offset: (page - 1) * 50,
       },
     );
+    if (composed) assertHistoricalCostMigration(error);
     if (error)
       throw new Error("Não foi possível abrir os pedidos desta entidade.");
     return NextResponse.json(data, {

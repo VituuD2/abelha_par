@@ -23,6 +23,14 @@ async function main(){
  const [sync,jobs,products,events,status]=queries.map((r,i)=>checked(r,['sync','jobs','products','events','status'][i]));
  const result={at:new Date().toISOString(),readOnly:true,connection:{name:connection.name,enabled:connection.enabled,sync_locked_until:connection.sync_locked_until,last_processed_at:connection.last_processed_at},sync,status,jobs,products,events,eventLimit:1000};
  console.log(JSON.stringify(result,null,2));
+ if(fita){
+  const [resolved,policy]=await Promise.all([
+   db.rpc('analytics_cost_at',{p_workspace:workspace,p_sku:'ACFS000-K001',p_day:'2026-09-10',p_basis:'purchase'},{get:true}),
+   db.rpc('analytics_historical_cost_rules',{p_workspace:workspace,p_filters:{costBasis:'purchase',basis:'orders'},p_rules:{}}),
+  ]);
+  result.compatibility={costAtSale:checked(resolved,'effective cost'),allocationPolicy:checked(policy,'historical policy')?.costSource?.allocationPolicy||null,expectedPolicy:'signed_cost_magnitude_zero_quantity'};
+  console.log(JSON.stringify({compatibility:result.compatibility},null,2));
+ }
  if(process.argv.includes('--report')){
   const {compositionRulesForWorkspace}=require('../src/lib/analytics/composition-server.ts');
   const member=checked(await db.from('workspace_members').select('user_id').eq('workspace_id',workspace).eq('active',true).limit(1).single(),'active member');

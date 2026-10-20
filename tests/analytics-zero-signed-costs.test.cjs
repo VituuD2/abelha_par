@@ -42,7 +42,7 @@ async function publish(histories){
  }
  await db.query('SELECT analytics_release_cost_history($1,$2,$3)',[ws,batch.connection_id,batch.lease]);
 }
-async function report(patch={},customRules=rules){return(await db.query('SELECT analytics_abc_components_v19($1,$2,$3,$4) result',[ws,ws,JSON.stringify({...f,...patch}),JSON.stringify(customRules)])).rows[0].result;}
+async function report(patch={},customRules=rules){return(await db.query('SELECT analytics_abc_components_v21($1,$2,$3,$4) result',[ws,ws,JSON.stringify({...f,...patch}),JSON.stringify(customRules)])).rows[0].result;}
 async function cost(day,basis='purchase'){return(await db.query('SELECT analytics_cost_at($1,$2,$3,$4) cost',[ws,skus[0],day,basis])).rows[0].cost;}
 const row=(result,sku)=>result.rows.find(r=>r.sku===sku);
 function conserved(result,expected){assert.equal(result.revenue,String(expected));assert.equal(result.rows.reduce((sum,r)=>sum+BigInt(r.revenue),0n),BigInt(expected));assert.equal(result.composition.unallocatedLines,0);assert.equal(result.composition.costMissingLines,0);}
@@ -54,6 +54,8 @@ test('real September kit accepts the ERP zero cost for Fita Seios and preserves 
  assert.equal(row(result,skus[1]).revenue,'2838');assert.equal(Number(result.composition.periodCostCents),165);
  assert.equal(result.composition.zeroCostLines,1);assert.deepEqual(result.composition.missingCostSkus,[]);
  assert.equal(await cost('2026-09-10'),'0.0000');
+ const audit=await db.exec(readFileSync('supabase/audit_cmv_v21_readonly.sql','utf8').replaceAll(catalog.workspaceIds[0],ws));
+ assert.deepEqual(audit[0].rows[0],{report_v21_available:true,drilldown_v21_available:true,allocation_policy:'signed_cost_magnitude_zero_quantity',fita_purchase_cents:'0.0000'});
  // Average zero is a valid explicit value too; no method substitution.
  conserved(await report({costBasis:'average'}),2838);
 }));
@@ -92,7 +94,7 @@ test('zero and negative changes respect effective dates; a later nonzero value n
  const september=await report();conserved(september,2838);assert.equal(Number(september.composition.periodCostCents),165);
  await sale({externalId:'2',date:'2026-09-20'});
  const period=await report();conserved(period,5676);assert.equal(Number(period.composition.periodCostCents),230);
- const detail=(await db.query('SELECT analytics_drilldown_components_v19($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(f),JSON.stringify(rules),'composition:ACFS000-K001'])).rows[0].result;
+ const detail=(await db.query('SELECT analytics_drilldown_components_v21($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(f),JSON.stringify(rules),'composition:ACFS000-K001'])).rows[0].result;
  assert.equal(detail.sources[0].costVersions,2);assert.equal(detail.sources[0].minReferenceCostCents,'-100.0000');assert.equal(detail.sources[0].maxReferenceCostCents,'0.0000');
 }));
 
@@ -128,5 +130,15 @@ test('exports and formatting identify zero, negative and quantity-based allocati
  for(const role of ['anon','authenticated']){
   assert.equal((await db.query("SELECT has_function_privilege($1,'analytics_cost_at(uuid,text,date,text)','execute') allowed",[role])).rows[0].allowed,false);
   assert.equal((await db.query("SELECT has_table_privilege($1,'analytics_cost_events','select') allowed",[role])).rows[0].allowed,false);
+  for(const signature of ['analytics_abc_components_v21(uuid,uuid,jsonb,jsonb,integer,integer,text,text)','analytics_drilldown_components_v21(uuid,uuid,jsonb,jsonb,text,integer)'])
+   assert.equal((await db.query('SELECT has_function_privilege($1,$2,\'execute\') allowed',[role,signature])).rows[0].allowed,false);
  }
+}));
+
+test('versioned entrypoints detect a v19 reapplication before producing a misleading cost error',()=>fixture(async()=>{
+ await publish({10:[ev(0)],11:[ev(1.65)]});conserved(await report(),2838);
+ // Keep this simulated reapplication inside the fixture's rollback transaction.
+ await db.exec(readFileSync('supabase/migration_v19_analytics_cost_effective_dates.sql','utf8').replace(/^BEGIN;\s*$/m,'').replace(/^COMMIT;\s*$/m,''));
+ await reject(()=>report(),/ANALYTICS_V21_REQUIRED/);
+ await reject(()=>db.query('SELECT analytics_drilldown_components_v21($1,$2,$3,$4,$5)',[ws,ws,JSON.stringify(f),JSON.stringify(rules),'composition:ACFS000-K001']),/ANALYTICS_V21_REQUIRED/);
 }));
