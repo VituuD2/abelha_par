@@ -1,4 +1,7 @@
 ﻿"use client";
+import { Select } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
 import { ConnectionProgress } from "@/components/analytics/connection-progress";
@@ -105,20 +108,20 @@ function SourceForm({
         {source.name} · {name}
       </h4>
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-xs">
-          Tipo
-          <select
+        <div className="text-xs">
+          <Select
+            label="Tipo"
             className="field mt-1"
             value={kind}
-            onChange={(e) => setKind(e.target.value)}
+            onValueChange={(e) => setKind(e)}
           >
             <option value="unknown">Não classificado</option>
             <option value="marketplace">Marketplace</option>
             <option value="site">Site</option>
             <option value="direct">Venda direta</option>
             <option value="other">Outro</option>
-          </select>
-        </label>
+          </Select>
+        </div>
         <label className="text-xs">
           Marketplace
           <input
@@ -446,14 +449,14 @@ export function AnalyticsConnections() {
             });
           }}
         >
-          <label className="text-sm block">
-            Empresa
-            <select
+          <div className="text-sm block">
+            <Select
+              label="Empresa"
               className="field mt-1"
               value={companyId}
-              onChange={(e) => {
-                setCompanyId(e.target.value);
-                const c = state?.companies.find((c) => c.id === e.target.value);
+              onValueChange={(e) => {
+                setCompanyId(e);
+                const c = state?.companies.find((c) => c.id === e);
                 setCompanyName(c?.name || "");
                 setTaxId(c?.tax_id || "");
               }}
@@ -464,8 +467,8 @@ export function AnalyticsConnections() {
                   {c.name}
                 </option>
               ))}
-            </select>
-          </label>
+            </Select>
+          </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-sm">
               Nome
@@ -530,12 +533,12 @@ export function AnalyticsConnections() {
             className="field text-xs"
             value={`${callbackOrigin}/api/analytics/oauth/callback`}
           />
-          <label className="block text-sm">
-            Aplicativo
-            <select
+          <div className="block text-sm">
+            <Select
+              label="Aplicativo"
               className="field mt-1"
               value={credentialConnection}
-              onChange={(e) => setCredentialConnection(e.target.value)}
+              onValueChange={(e) => setCredentialConnection(e)}
             >
               <option value="">Nova conexão</option>
               {state?.connections
@@ -545,17 +548,17 @@ export function AnalyticsConnections() {
                     {c.name}
                   </option>
                 ))}
-            </select>
-          </label>
+            </Select>
+          </div>
           {!credentialConnection && (
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="text-sm">
-                Empresa
-                <select
+              <div className="text-sm">
+                <Select
+                  label="Empresa"
                   required
                   className="field mt-1"
                   value={newCompany}
-                  onChange={(e) => setNewCompany(e.target.value)}
+                  onValueChange={(e) => setNewCompany(e)}
                 >
                   <option value="">Selecionar…</option>
                   {state?.companies.map((c) => (
@@ -563,8 +566,8 @@ export function AnalyticsConnections() {
                       {c.name}
                     </option>
                   ))}
-                </select>
-              </label>
+                </Select>
+              </div>
               <label className="text-sm">
                 Nome da conexão
                 <input
@@ -650,13 +653,13 @@ export function AnalyticsConnections() {
           }}
           className="grid gap-3 sm:grid-cols-3"
         >
-          <label className="text-sm">
-            Conexão
-            <select
+          <div className="text-sm">
+            <Select
+              label="Conexão"
               required
               className="field mt-1"
               value={importConnection}
-              onChange={(e) => setImportConnection(e.target.value)}
+              onValueChange={(e) => setImportConnection(e)}
             >
               <option value="">Selecionar…</option>
               {state?.connections
@@ -666,30 +669,28 @@ export function AnalyticsConnections() {
                     {c.name}
                   </option>
                 ))}
-            </select>
-          </label>
-          <label className="text-sm">
-            De
-            <input
+            </Select>
+          </div>
+          <div className="text-sm">
+            <DatePicker
+              label="De"
               required
-              type="date"
               className="field mt-1"
               value={from}
               max={to || undefined}
-              onChange={(e) => setFrom(e.target.value)}
+              onValueChange={(e) => setFrom(e)}
             />
-          </label>
-          <label className="text-sm">
-            Até
-            <input
+          </div>
+          <div className="text-sm">
+            <DatePicker
+              label="Até"
               required
-              type="date"
               className="field mt-1"
               value={to}
               min={from || undefined}
-              onChange={(e) => setTo(e.target.value)}
+              onValueChange={(e) => setTo(e)}
             />
-          </label>
+          </div>
           <div className="sm:col-span-3 flex flex-wrap gap-3">
             <button className="btn-primary" disabled={busy}>
               Importar período

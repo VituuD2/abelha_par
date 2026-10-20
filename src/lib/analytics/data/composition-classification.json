@@ -5,6 +5,13 @@
   "decision": "Inferencias de negocio avaliadas em 19/10/2026 a partir de cadastro simples, nome da variacao, quantidade e referencia visual. Sem heuristica global por sufixo.",
   "aliases": [
     {
+      "sku": "GOUT00M-K001S",
+      "name": "Kit Garrafa Outlet - Grafia out 1un",
+      "components": [
+        { "sku": "GOUT00G-K001", "name": "Garrafa Outlet Grafias", "quantity": "1" }
+      ]
+    },
+    {
       "sku": "CMNV150-K002",
       "name": "2 Und. Nivea Creme 150ml Lata Azul - Tipo De Embalagem Pote - Pote",
       "components": [

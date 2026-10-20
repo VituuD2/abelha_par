@@ -8,7 +8,7 @@ export const revalidate = 0;
 export default async function NinhoPage() {
   await requirePagePermission("ninho:access");
   return <>
-    <Header title="Ninho" subtitle="Cuide das conexões e dos acessos da sua colmeia." breadcrumbs={["Abelha Par", "Ninho"]} />
+    <Header title="Ninho" breadcrumbs={["Abelha Par", "Ninho"]} />
     <NinhoSettings />
   </>;
 }

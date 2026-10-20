@@ -37,7 +37,6 @@ export default function LoginPage() {
           </div>
           <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[var(--color-accent-blue)] mb-2">Abelha Par</p>
           <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Acesso do operador</h1>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-2">Entre para acessar a conferência de pedidos.</p>
         </div>
         <label className="block text-sm font-medium text-[var(--color-text-secondary)]">E-mail
           <input className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] px-3.5 py-3 text-[var(--color-text-primary)] transition-colors focus:border-[var(--color-accent-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/20" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />

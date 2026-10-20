@@ -1,4 +1,7 @@
 "use client";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Select } from "@/components/ui/select";
+
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -255,6 +258,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     [loading, setLoading] = useState(true),
     [exporting, setExporting] = useState(false),
     [advanced, setAdvanced] = useState(false),
+    [filtersExpanded, setFiltersExpanded] = useState(false),
     [page, setPage] = useState(1),
     [size, setSize] = useState(50),
     [sort, setSort] = useState("rank"),
@@ -265,9 +269,15 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       Object.keys(labels) as Column[],
     ),
     [entity, setEntity] = useState<ABCRow | null>(null),
-    [drill, setDrill] = useState<Drill | null>(null),
-    [drillPage, setDrillPage] = useState(1),
+    [drillResult, setDrillResult] = useState<{ scope: string; page: number; data: Drill } | null>(null),
+    [drillRequest, setDrillRequest] = useState({ page: 1 }),
+    [drillLoading, setDrillLoading] = useState(false),
     [drillError, setDrillError] = useState<string | null>(null);
+  const drillScope = entity ? JSON.stringify({ filters, entity: entity.entityId }) : "";
+  const currentDrill = drillResult?.scope === drillScope ? drillResult : null;
+  const drill = currentDrill?.data;
+  const drillPage = currentDrill?.page || 1;
+  const drillTotalPages = Math.max(1, Math.ceil((drill?.total || 0) / 50));
   const dialog = useRef<HTMLDialogElement>(null);
   const resultScope = useRef("");
   const scheduledFilters = useRef("");
@@ -404,21 +414,24 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   useEffect(() => {
     if (!entity) return;
     const abort = new AbortController();
-    setDrill(null);
+    setDrillLoading(true);
     setDrillError(null);
     jsonRequest(
       "/api/analytics/drilldown",
-      { filters, entity: entity.entityId, page: drillPage },
+      { filters, entity: entity.entityId, page: drillRequest.page },
       abort.signal,
     )
       .then((data) => {
-        if (!abort.signal.aborted) setDrill(data);
+        if (!abort.signal.aborted) setDrillResult({ scope: drillScope, page: drillRequest.page, data });
       })
       .catch((e) => {
         if (!abort.signal.aborted && e.name !== "AbortError") setDrillError(e.message);
+      })
+      .finally(() => {
+        if (!abort.signal.aborted) setDrillLoading(false);
       });
     return () => abort.abort();
-  }, [entity, drillPage, filters]);
+  }, [entity, drillRequest, filters, drillScope]);
   const reliability = status ? reportReliability(status, filters) : null;
   const selectedConnections = reliability?.connections || [];
   const companies = reliability?.companies || [];
@@ -455,7 +468,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   );
   const openEntity = (row: ABCRow) => {
     setEntity(row);
-    setDrillPage(1);
+    setDrillRequest({ page: 1 });
+    setDrillError(null);
     dialog.current?.showModal();
   };
   const cell = (row: ABCRow, column: Column) =>
@@ -474,7 +488,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     ) : column === "name" ? (
       <button
         className="font-medium text-left hover:underline underline-offset-4"
-        onClick={() => openEntity(row)}
+        onClick={event => { event.stopPropagation(); openEntity(row); }}
       >
         {row.name}
       </button>
@@ -485,21 +499,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     <div className="space-y-6 max-w-[1240px] mx-auto pb-6">
       <section className="card p-5 sm:p-6 bg-gradient-to-r from-amber-100/60 to-white space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-sm mt-2 text-[var(--color-text-secondary)]">
-              Combine empresas e origens. Compare os registros Olist ou consolide
-              kits com regras de composição confirmadas.
-            </p>
-          </div>
-          <button
-            className="btn-ghost"
-            onClick={() => setRefresh((v) => v + 1)}
-            disabled={loading}
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Atualizar
-          </button>
-        </div>
         <div className="flex flex-wrap gap-2" role="tablist" aria-label="Análises">
           <button
             role="tab"
@@ -541,7 +540,15 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             Clientes
           </button>
         </div>
-        {(filters.grouping === "product" || filters.grouping === "parent") && <p className="text-sm text-stone-600">Produtos Olist apresenta os cadastros por conta. Para somar vendas diretas e kits nos produtos simples, selecione Produtos base.</p>}
+          <button
+            className="btn-ghost"
+            onClick={() => setRefresh((v) => v + 1)}
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            Atualizar
+          </button>
+        </div>
       </section>
       <form
         className="card p-5 sm:p-6 space-y-4"
@@ -551,91 +558,95 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           setFilters({ ...draft });
         }}
       >
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <label className="text-sm font-medium">
-            De
-            <input
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="text-sm font-medium">
+            <DatePicker
+              label="De"
               required
-              type="date"
               className="field mt-2"
               value={draft.from}
               max={draft.to}
-              onChange={(e) =>
-                setDraft((f) => ({ ...f, from: e.target.value }))
-              }
+              onValueChange={(e) =>
+                setDraft((f) => ({ ...f, from: e }))}
             />
-          </label>
-          <label className="text-sm font-medium">
-            Até
-            <input
+          </div>
+          <div className="text-sm font-medium">
+            <DatePicker
+              label="Até"
               required
-              type="date"
               className="field mt-2"
               value={draft.to}
               min={draft.from}
-              onChange={(e) => setDraft((f) => ({ ...f, to: e.target.value }))}
+              onValueChange={(e) => setDraft((f) => ({ ...f, to: e }))}
             />
-          </label>
-          <label className="text-sm font-medium">
-            Métrica
-            <select
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {[7, 30, 90].map(n => <button
+            type="button"
+            key={n}
+            className="btn-ghost text-xs"
+            onClick={() => setDraft(f => ({ ...f, from: dayBefore(today(), n - 1), to: today() }))}
+          >Últimos {n} dias</button>)}
+          <button className="btn-primary" type="submit" disabled={loading}>Analisar vendas</button>
+          <button
+            type="button"
+            className="btn-ghost sm:ml-auto"
+            aria-expanded={filtersExpanded}
+            aria-controls="abc-extra-filters"
+            onClick={() => { setFiltersExpanded(value => !value); setAdvanced(false); }}
+          >
+            <Filter className="w-4 h-4" />
+            {filtersExpanded ? "Recolher filtros" : "Mais filtros"}
+          </button>
+        </div>
+        {filtersExpanded && <div id="abc-extra-filters" className="space-y-4 border-t border-[var(--color-border-light)] pt-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="text-sm font-medium">
+            <Select
+              label="Métrica"
               className="field mt-2"
               value={draft.metric}
-              onChange={(e) =>
+              onValueChange={(e) =>
                 setDraft((f) => ({
                   ...f,
-                  metric: e.target.value as ABCFilters["metric"],
-                }))
-              }
+                  metric: e as ABCFilters["metric"],
+                }))}
             >
               <option value="revenue">Valor bruto dos itens</option>
               <option value="quantity">Quantidade vendida</option>
-            </select>
-          </label>
-          <label className="text-sm font-medium">
-            Base
-            <select
+            </Select>
+          </div>
+          <div className="text-sm font-medium">
+            <Select
+              label="Base"
               className="field mt-2"
               value={draft.basis}
-              onChange={(e) =>
+              onValueChange={(e) =>
                 setDraft((f) => ({
                   ...f,
-                  basis: e.target.value as ABCFilters["basis"],
-                }))
-              }
+                  basis: e as ABCFilters["basis"],
+                }))}
             >
               <option value="orders">Pedidos · data da venda</option>
               <option value="invoiced">
                 Pedidos com NF autorizada · emissão
               </option>
-            </select>
-          </label>
-          {draft.grouping === "composition" && <label className="text-sm font-medium">
-            Base do CMV histórico
-            <select className="field mt-2" value={draft.costBasis || ABC_DEFAULTS.costBasis} onChange={e => setDraft(f => ({ ...f, costBasis: e.target.value as ABCFilters["costBasis"] }))}>
+            </Select>
+          </div>
+          {draft.grouping === "composition" && <div className="text-sm font-medium"><Select label="Base do CMV histórico" className="field mt-2" value={draft.costBasis || ABC_DEFAULTS.costBasis} onValueChange={e => setDraft(f => ({ ...f, costBasis: e as ABCFilters["costBasis"] }))}>
               <option value="purchase">Custo de compra por vigência</option>
               <option value="average">Custo médio por vigência</option>
-            </select>
+            </Select>
             <span className="mt-1 block text-xs text-neutral-500">A base selecionada usa o histórico na data da venda. Valores zerados ou negativos informados são aceitos, sem trocar a base de custo.</span>
-          </label>}
+          </div>}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {[7, 30, 90, 365].map((n) => (
-            <button
-              type="button"
-              key={n}
-              className="btn-ghost text-xs"
-              onClick={() =>
-                setDraft((f) => ({
-                  ...f,
-                  from: dayBefore(today(), n - 1),
-                  to: today(),
-                }))
-              }
-            >
-              Últimos {n} dias
-            </button>
-          ))}
+          <button
+            type="button"
+            className="btn-ghost text-xs"
+            onClick={() => setDraft(f => ({ ...f, from: dayBefore(today(), 364), to: today() }))}
+          >Últimos 365 dias</button>
           <button
             type="button"
             className="btn-ghost text-xs"
@@ -715,17 +726,16 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 ))}
             </div>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <label className="text-sm">
-                Regra ABC
-                <select
+              <div className="text-sm">
+                <Select
+                  label="Regra ABC"
                   className="field mt-2"
                   value={draft.mode}
-                  onChange={(e) =>
+                  onValueChange={(e) =>
                     setDraft((f) => ({
                       ...f,
-                      mode: e.target.value as ABCFilters["mode"],
-                    }))
-                  }
+                      mode: e as ABCFilters["mode"],
+                    }))}
                 >
                   <option value="TINY_LEGACY">
                     Tiny histórico · acumulado anterior
@@ -733,8 +743,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   <option value="STRICT_CUMULATIVE">
                     Estrito · acumulado após a linha
                   </option>
-                </select>
-              </label>
+                </Select>
+              </div>
               <label className="text-sm">
                 Limite A (%)
                 <input
@@ -772,25 +782,24 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 />
               </label>
               {draft.grouping !== "customer" && (
-                <label className="text-sm">
-                  Agrupar produtos
-                  <select
+                <div className="text-sm">
+                  <Select
+                    label="Agrupar produtos"
                     className="field mt-2"
                     value={draft.grouping}
-                    onChange={(e) =>
+                    onValueChange={(e) =>
                       setDraft((f) => ({
                         ...f,
-                        grouping: e.target.value as ABCFilters["grouping"],
-                      }))
-                    }
+                        grouping: e as ABCFilters["grouping"],
+                      }))}
                   >
                     <option value="product">
                       Registro da empresa / variação
                     </option>
                     <option value="parent">Produto pai documentado</option>
                     <option value="composition">Produto base · composição confirmada</option>
-                  </select>
-                </label>
+                  </Select>
+                </div>
               )}
             </div>
             <p className="text-xs text-[var(--color-text-secondary)]">
@@ -806,9 +815,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </div>
         )}
         <div className="flex flex-wrap gap-3">
-          <button className="btn-primary" type="submit" disabled={loading}>
-            Analisar vendas
-          </button>
           <button
             type="button"
             className="btn-ghost"
@@ -862,6 +868,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             Somente sites classificados
           </button>
         </div>
+        </div>}
       </form>
       {(error || schedulingError) && (
         <div className="card p-5 text-red-800" role="alert">
@@ -919,7 +926,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               );
             })}
           </div>
-          {result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação">
+          {isAdmin && result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação">
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
             <p className="text-sm text-stone-600">{result.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. {result.composition.costSource?.allocationPolicy !== "signed_cost_magnitude_zero_quantity" && "O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais."}</p>
             <p className="text-xs text-stone-600">CMV de referência: {result.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {result.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {result.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(result.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
@@ -973,10 +980,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   </button>
                 </div>
               </div>
-              <p className="text-xs text-[var(--color-text-secondary)]">
-                Clique no nome para ver empresas, origens e pedidos. A ordenação
-                da tabela preserva o ranking e o acumulado ABC.
-              </p>
               <details>
                 <summary className="text-sm cursor-pointer">
                   Colunas da tabela
@@ -1047,7 +1050,15 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                       key={row.entityId}
                       data-abc-entity={row.entityId}
                       data-highlighted={paretoHighlighted(row, highlightRow, !!highlight?.cumulative)}
-                      className={`border-t border-[var(--color-border-light)] transition-colors duration-75 motion-reduce:transition-none ${paretoHighlighted(row, highlightRow, !!highlight?.cumulative) ? "bg-amber-100/75 ring-1 ring-inset ring-amber-300" : "hover:bg-amber-50/50"}`}
+                      className={`cursor-pointer border-t border-[var(--color-border-light)] transition-colors duration-75 motion-reduce:transition-none ${paretoHighlighted(row, highlightRow, !!highlight?.cumulative) ? "bg-amber-100/75 ring-1 ring-inset ring-amber-300" : "hover:bg-amber-50/50"}`}
+                      tabIndex={0}
+                      aria-label={`Ver pedidos de ${row.name}`}
+                      onClick={() => openEntity(row)}
+                      onKeyDown={event => {
+                        if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
+                          event.preventDefault(); openEntity(row);
+                        }
+                      }}
                       onPointerEnter={() => updateHighlight({ entityId: row.entityId, cumulative: false, origin: "table" })}
                       onPointerLeave={() => { if (highlight?.origin === "table") updateHighlight(null); }}
                       onFocus={() => updateHighlight({ entityId: row.entityId, cumulative: false, origin: "table" })}
@@ -1078,21 +1089,19 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               )}
             </div>
             <div className="p-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border-light)]">
-              <label className="text-xs flex items-center gap-2">
-                Por página
-                <select
+              <div className="text-xs flex items-center gap-2"><Select label="Por página" inline
                   className="field w-auto"
                   value={size}
-                  onChange={(e) => {
-                    setSize(Number(e.target.value));
+                  onValueChange={(e) => {
+                    setSize(Number(e));
                     setPage(1);
                   }}
                 >
                   {[25, 50, 100].map((n) => (
                     <option key={n}>{n}</option>
                   ))}
-                </select>
-              </label>
+                </Select>
+              </div>
               <div className="flex items-center gap-3">
                 <button
                   aria-label="Página anterior"
@@ -1122,7 +1131,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         ref={dialog}
         onClose={() => {
           setEntity(null);
-          setDrill(null);
+          setDrillResult(null);
+          setDrillError(null);
+          setDrillLoading(false);
         }}
         className="m-auto rounded-3xl bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] p-0 w-[min(960px,94vw)] max-h-[88vh] backdrop:bg-black/40"
       >
@@ -1137,10 +1148,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               <X className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            Escopo atual · valores referentes aos itens desta entidade · origem
-            rastreável por conexão.
-          </p>
           {drillError && (
             <p role="alert" className="text-red-800">
               {drillError}
@@ -1149,11 +1156,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           {!drill && !drillError && <p role="status">Consultando pedidos…</p>}
           {drill && (
             <>
-              {!!drill.sources?.length && <section className="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-4 space-y-2">
-                <h3 className="font-semibold text-sm">Origem da composição</h3>
-                <p className="text-xs text-stone-600">Quantidade vendida × fator = unidades do produto base. Os valores abaixo são atribuídos somente a este produto; o valor original do kit serve para conferência.</p>
-                <ul className="space-y-2 text-sm">{drill.sources.map(source => <li key={`${source.sku}:${source.factor}`}><span className="font-mono text-xs">{source.sku || "Sem SKU"}</span> · {source.name}<span className="block text-xs text-stone-600">{number(source.quantity)} × {number(source.factor)} = {number(source.baseQuantity)} un. base · valor atribuído {money(source.revenue)}</span><span className="block text-xs text-stone-500">Valor original dos itens de origem: {money(source.originalRevenue)}{source.referenceCostCents && ` · CMV por unidade base: ${money(source.referenceCostCents)}`}{(source.costVersions || 0) > 1 && ` · CMV variou de ${money(source.minReferenceCostCents || "0")} a ${money(source.maxReferenceCostCents || "0")} no intervalo; rateio calculado por venda`}</span>{!!source.unallocatedLines && <span className="block text-xs text-amber-800">{source.unallocatedLines} itens com rateio pendente por falta de CMV em um componente.</span>}{!!source.ignoredComponents?.length && <span className="block text-xs text-stone-500">Componentes auxiliares fora da análise: {source.ignoredComponents.join(", ")}</span>}</li>)}</ul>
-              </section>}
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
                   ["Por empresa", drill.companies],
@@ -1175,7 +1177,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   </div>
                 ))}
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" aria-busy={drillLoading}>
                 <table className="text-sm w-full">
                   <thead>
                     <tr>
@@ -1215,25 +1217,31 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   </tbody>
                 </table>
               </div>
-              <div className="flex gap-3 items-center">
+              <div className="flex flex-wrap gap-3 items-center">
                 <button
+                  type="button"
                   className="btn-ghost"
-                  disabled={drillPage === 1}
-                  onClick={() => setDrillPage((v) => v - 1)}
+                  disabled={drillLoading || drillPage === 1}
+                  onClick={() => setDrillRequest({ page: drillPage - 1 })}
                 >
                   Anterior
                 </button>
+                <Select label="Página" inline value={drillPage} disabled={drillLoading || drillTotalPages === 1} popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: Number(value) })}>
+                  {Array.from({ length: drillTotalPages }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
+                </Select>
                 <p className="text-sm">
-                  {drillPage} / {Math.max(1, Math.ceil(drill.total / 50))} ·{" "}
+                  de {drillTotalPages} ·{" "}
                   {drill.total} pedidos
                 </p>
                 <button
+                  type="button"
                   className="btn-ghost"
-                  disabled={drillPage * 50 >= drill.total}
-                  onClick={() => setDrillPage((v) => v + 1)}
+                  disabled={drillLoading || drillPage >= drillTotalPages}
+                  onClick={() => setDrillRequest({ page: drillPage + 1 })}
                 >
                   Próxima
                 </button>
+                {drillLoading && <span role="status" className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]"><RefreshCw className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />Carregando página {drillRequest.page}…</span>}
               </div>
             </>
           )}

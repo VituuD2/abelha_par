@@ -1,12 +1,12 @@
 "use client";
 
 import { useId, useRef, type PointerEvent as ReactPointerEvent } from "react";
-import { BarChart3, MousePointer2 } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import { money, number, pct } from "@/lib/analytics/format";
 import { paretoAtPercentage, paretoHighlighted, type ParetoHighlight } from "@/lib/analytics/pareto";
 import type { ABCResult, ABCRow } from "@/lib/analytics/types";
 
-const width = 860, left = 48, plot = 780, bottom = 230;
+const left = 48, bottom = 230;
 const y = (value: number) => bottom - Math.max(0, Math.min(100, value)) * 1.85;
 const classColor = { A: "#d97706", B: "#eab308", C: "#a8a29e" };
 
@@ -19,10 +19,11 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
   onOpen: (row: ABCRow) => void;
   entityLabel?: "produto" | "cliente";
 }) {
-  const tooltipId = useId(), hintId = useId();
+  const tooltipId = useId();
   const touch = useRef(false);
   const rows = result.pareto, count = rows.length;
   if (!count) return null;
+  const plot = Math.max(780, count * 10), width = left + plot + 32;
   const x = (index: number) => left + ((index + 0.5) * plot) / count;
   const active = rows.find(row => row.entityId === highlight?.entityId) || null;
   const activeIndex = active ? rows.indexOf(active) : -1;
@@ -33,7 +34,7 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
     const row = paretoAtPercentage(rows, value);
     if (row) onHighlight({ entityId: row.entityId, cumulative: true, origin: "chart", targetPercentage: value });
   };
-  const path = (items: ABCRow[]) => items.map(row => `${x(rows.indexOf(row))},${y(row.cumulative)}`).join(" ");
+  const path = (items: ABCRow[]) => items.map((row, index) => `${x(index)},${y(row.cumulative)}`).join(" ");
   const inspectPointer = (event: ReactPointerEvent<SVGSVGElement>) => {
     touch.current = event.pointerType === "touch";
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -53,7 +54,6 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="font-semibold flex items-center gap-2"><BarChart3 className="w-5 h-5 text-amber-700" />Concentração das vendas</h2>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">Explore um {entityLabel} na barra ou o conjunto acumulado na curva.</p>
         </div>
         <div className="flex gap-4 text-xs text-stone-600">
           <span className="flex items-center gap-1.5"><i className="w-2.5 h-2.5 rounded-sm bg-amber-600" />Individual</span>
@@ -63,12 +63,14 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
       <div className="relative md:min-h-[290px] rounded-2xl border border-stone-200/80 bg-gradient-to-b from-stone-50/60 to-white">
         <div className="overflow-x-auto rounded-2xl">
           <svg
-            className="block w-full min-w-[540px] rounded-2xl focus-visible:outline-2 focus-visible:outline-amber-600 focus-visible:-outline-offset-2"
+            className="block w-full cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:outline-amber-600 focus-visible:-outline-offset-2"
+            style={{ minWidth: Math.max(540, left + count * 10 + 32) }}
             viewBox={`0 0 ${width} 270`}
             role="img"
             tabIndex={0}
             aria-label={`Gráfico de Pareto: ${result.total} entidades; os dez primeiros concentram ${pct(result.top10)}`}
-            aria-describedby={`${hintId}${active ? ` ${tooltipId}` : ""}`}
+            aria-describedby={active ? tooltipId : undefined}
+            aria-keyshortcuts="ArrowLeft ArrowRight Home End Enter Escape"
             onPointerMove={inspectPointer}
             onPointerDown={inspectPointer}
             onPointerLeave={() => { if (!touch.current) clear(); }}
@@ -161,11 +163,6 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
           onKeyDown={event => { if (event.key === "Escape") onHighlight(null); }}
         >{value}%</button>)}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--color-text-secondary)]">
-        <p id={hintId} className="flex items-center gap-1.5"><MousePointer2 className="h-3.5 w-3.5 shrink-0" />Passe o mouse ou toque. Use ← →; Shift destaca o acumulado; Enter abre pedidos; Esc limpa.</p>
-        <p>Referências A: {a}% · B: {b}%</p>
-      </div>
-      {result.total > count && <p className="text-xs text-stone-500">Exibindo os primeiros {count} de {result.total} registros, que chegam a {pct(rows[count - 1].cumulative)}. Percentuais além desse ponto destacam apenas os registros exibidos; o acumulado considera o conjunto completo.</p>}
     </section>
   );
 }

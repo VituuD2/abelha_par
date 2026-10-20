@@ -1,4 +1,7 @@
 "use client";
+import { Select } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
@@ -79,8 +82,8 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
   return <section className="card p-6 flex flex-col gap-4 h-full">
     <div className="flex items-center gap-3"><div className="p-3 rounded-xl bg-[var(--color-accent-blue)]/10"><Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" /></div><div><h2 className="text-xl font-semibold">Pedidos Olist</h2><p className="text-sm text-[var(--color-text-secondary)]">Conexão compartilhada da colmeia</p></div><span className={`badge ml-auto ${connected ? "badge-checked" : "badge-pending"}`}>{checking ? "Verificando…" : connected ? "Conectada" : "Indisponível"}</span></div>
     {checking ? <Loader2 className="w-6 h-6 animate-spin mx-auto my-8" /> : connected ? <>
-      <label className="text-sm">Critério de busca<select className="field mt-1" value={dateMode} onChange={event => setDateMode(event.target.value as "created" | "updated")} disabled={loading}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></select></label>
-      <div className="grid sm:grid-cols-2 gap-3"><label className="text-sm">De<input className="field mt-1" type="date" value={dateFrom} max={dateTo} disabled={loading} onChange={event => setDateFrom(event.target.value)} /></label><label className="text-sm">Até<input className="field mt-1" type="date" value={dateTo} min={dateFrom} disabled={loading} onChange={event => setDateTo(event.target.value)} /></label></div>
+      <div className="text-sm"><Select label="Critério de busca" className="field mt-1" value={dateMode} onValueChange={event => setDateMode(event as "created" | "updated")} disabled={loading}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></Select></div>
+      <div className="grid sm:grid-cols-2 gap-3"><div className="text-sm"><DatePicker label="De" className="field mt-1"  value={dateFrom} max={dateTo} disabled={loading} onValueChange={event => setDateFrom(event)} /></div><div className="text-sm"><DatePicker label="Até" className="field mt-1"  value={dateTo} min={dateFrom} disabled={loading} onValueChange={event => setDateTo(event)} /></div></div>
       <button className="btn-primary mt-auto" disabled={disabled || loading} onClick={handleFetch}>{loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}{loading ? `${count || 0} pedidos carregados…` : "Buscar pedidos"}</button>
       {count !== null && !loading && !error && <p role="status" className="text-sm text-[var(--color-accent-green)]">{count} pedidos carregados.</p>}
     </> : <div className="space-y-3 py-5"><p>{message || "A conexão Olist precisa de atenção do administrador."}</p>{can("ninho:access") ? <Link href="/ninho" className="btn-primary">Abrir Ninho</Link> : <p className="text-sm text-[var(--color-text-secondary)]">Peça a um administrador para revisar a conexão no Ninho.</p>}<button className="btn-ghost" onClick={check}>Verificar novamente</button></div>}

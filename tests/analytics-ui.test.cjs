@@ -9,6 +9,7 @@ const dom = new JSDOM('<!doctype html><div id="app"></div>', {
   url: "http://localhost:3000/analytics/abc",
 });
 global.window = dom.window;
+require('./dom-setup.cjs')(dom.window);
 global.document = dom.window.document;
 global.HTMLElement = dom.window.HTMLElement;
 global.IS_REACT_ACT_ENVIRONMENT = true;
@@ -161,6 +162,7 @@ test("dashboard renders cards and only the selected page, applies multi-company 
   assert.equal(document.querySelectorAll("tbody tr").length, 50);
   assert.equal(document.querySelectorAll('svg[role="img"]').length, 1);
   assert.equal(document.querySelector('[role="alert"]'), null);
+  await click(button("Mais filtros"));
   for (const name of ["Empresa 1", "Empresa 3"]) {
     const label = [...document.querySelectorAll("label")].find(
       (l) => l.textContent === name,
@@ -324,22 +326,23 @@ test("Ninho exposes a clear lost legacy link repair and keeps OAuth credentials 
   assert.equal(calls.some(c=>c.url.includes("oauth")||c.url.includes("/auth/disconnect")),false);
 });
 
-test("quantity analysis discloses missing CMV and separates attributed value from original kit value in drilldown", async t => {
+test("quantity analysis discloses missing CMV while product details omit scope and composition notes", async t => {
   dom.window.history.replaceState(null,"","/analytics/abc");
   const row={...rows[0],entityId:"composition:ACBF000-K050",sku:"ACBF000-K050",quantity:"2",revenue:"0"};
   const composition={version:"test-cost",revenuePolicy:"cost",costSource:{kind:"olist",name:"Olist 1",field:"precos.precoCusto",lastSyncedAt:"2026-10-20T12:00:00Z"},originalRevenue:"10000",unallocatedRevenue:"10000",unallocatedLines:1,mixedLines:1,missingCostSkus:["ACFS000-K001"],mappedEntities:1,pendingTotal:0,pending:[]};
   t.mock.method(global,"fetch",async(url)=>Response.json(url.includes("options")||url.endsWith("/sync")?state:url.includes("drilldown")?{
     total:1,companies:[],channels:[],orders:[],sources:[{sku:"ACTM011-K011",name:"Kit",factor:"1",quantity:"2",baseQuantity:"2",revenue:"0",originalRevenue:"10000",referenceCostCents:"500",unallocatedLines:1}],
   }:{rows:[row],total:1,revenue:"0",quantity:"2",orders:1,classes:{},pareto:[row],top10:100,generatedAt:"2026-10-19",composition}));
-  await act(async()=>root.render(React.createElement(ABCDashboard,{key:"missing-cmv",isAdmin:false})));
+  await act(async()=>root.render(React.createElement(ABCDashboard,{key:"missing-cmv",isAdmin:true})));
   assert.match(document.querySelector('[role="alert"]').textContent,/Rateio incompleto.*ACFS000-K001/);
   assert.match(document.body.textContent,/Valor atribuído aos produtos/);
   assert.match(document.body.textContent,/CMV de refer.ncia: Olist 1.*atualizado automaticamente/);
   await click(button("Produto 0"));
   const detail=document.querySelector("dialog").textContent;
-  assert.match(detail,/Valor original dos itens de origem:/);
-  assert.match(detail,/CMV por unidade base:/);
-  assert.match(detail,/rateio pendente por falta de CMV/);
+  assert.doesNotMatch(detail,/Escopo atual|Origem da composição|Quantidade vendida × fator|Valor original dos itens de origem:|CMV por unidade base:|rateio pendente por falta de CMV|ACTM011-K011/);
+  assert.match(detail,/Por empresa/);
+  assert.match(detail,/Por integração \/ canal/);
+  assert.ok(document.querySelector('dialog table'));
   await click(document.querySelector('button[aria-label="Fechar detalhes"]'));
 });
 
@@ -370,7 +373,7 @@ test("the reviewed workspace opens consolidated products for admin and operator;
   assert.equal(document.querySelector('[role="tab"][aria-selected="true"]').textContent,'Produtos base');
   await click(button('Produtos Olist'));
   assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.grouping,'product');
-  assert.match(document.body.textContent,/Produtos Olist apresenta os cadastros por conta/);
+  assert.doesNotMatch(document.body.textContent,/Produtos Olist apresenta os cadastros por conta/);
   await click(button('Produtos base'));
   assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.grouping,'composition');
 });

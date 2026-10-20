@@ -1,4 +1,6 @@
 "use client";
+import { Select } from "@/components/ui/select";
+
 
 import { useCallback, useEffect, useState } from "react";
 import { Cloud } from "lucide-react";
@@ -45,7 +47,7 @@ export function NuvemshopConnection() {
     {connected && <form className="space-y-4 pt-5 border-t border-[var(--color-border-light)]" onSubmit={event => { event.preventDefault(); void save("PATCH"); }}>
       <div><h3 className="font-semibold">Vínculo com a Olist</h3><p className="text-xs text-[var(--color-text-secondary)] mt-1">Defina como os pedidos das duas plataformas se correspondem.</p></div>
       <label className="block text-sm">ID da integração Nuvemshop na Olist<input className="field mt-1" type="number" min="1" step="1" required value={mapping.ecommerceId || ""} disabled={busy} onChange={event => setMapping({ ...mapping, ecommerceId: Number(event.target.value) })} /></label>
-      <div className="grid sm:grid-cols-2 gap-4"><label className="text-sm">Referência Nuvemshop<select className="field mt-1" value={mapping.referenceKind} disabled={busy} onChange={event => setMapping({ ...mapping, referenceKind: event.target.value as "id" | "number" })}><option value="number">Número do pedido</option><option value="id">ID interno do pedido</option></select></label><label className="text-sm">Campo correspondente na Olist<select className="field mt-1" value={mapping.referenceField} disabled={busy} onChange={event => setMapping({ ...mapping, referenceField: event.target.value as ReconciliationConfig["referenceField"] })}><option value="ecommerceOrderNumber">Número do pedido no e-commerce</option><option value="ecommerceChannelOrderNumber">Número do pedido no canal de venda</option></select></label></div>
+      <div className="grid sm:grid-cols-2 gap-4"><div className="text-sm"><Select label="Referência Nuvemshop" className="field mt-1" value={mapping.referenceKind} disabled={busy} onValueChange={event => setMapping({ ...mapping, referenceKind: event as "id" | "number" })}><option value="number">Número do pedido</option><option value="id">ID interno do pedido</option></Select></div><div className="text-sm"><Select label="Campo correspondente na Olist" className="field mt-1" value={mapping.referenceField} disabled={busy} onValueChange={event => setMapping({ ...mapping, referenceField: event as ReconciliationConfig["referenceField"] })}><option value="ecommerceOrderNumber">Número do pedido no e-commerce</option><option value="ecommerceChannelOrderNumber">Número do pedido no canal de venda</option></Select></div></div>
       <div className="flex flex-wrap gap-3"><button className="btn-primary" disabled={busy || !mapping.ecommerceId}>Salvar vínculo</button><button type="button" className="btn-ghost text-[var(--color-accent-red)]" disabled={busy} onClick={() => save("DELETE")}>Remover conexão</button></div>
     </form>}
     {error && <p role="alert" className="text-sm text-[var(--color-accent-red)]">{error}</p>}

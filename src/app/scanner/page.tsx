@@ -68,7 +68,6 @@ export default function ScannerPage() {
       <>
         <Header
           title="Scanner"
-          subtitle="Carregando..."
           breadcrumbs={["Scanner Checkout", "Scanner"]}
         />
         <div className="flex items-center justify-center h-[50vh]">
@@ -88,7 +87,6 @@ export default function ScannerPage() {
     <>
       <Header
         title="Bipagem"
-        subtitle={`Escaneie o código de rastreamento de cada pedido`}
         breadcrumbs={["Scanner Checkout", "Scanner", "Bipagem"]}
       />
 

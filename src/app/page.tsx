@@ -96,7 +96,7 @@ export default function DashboardPage() {
 
   const ready = result && !result.issues.length && result.orders.length === selected.length && selected.length > 0;
   return <>
-    <Header title="Preparar conferência" subtitle="Selecione os pedidos do dia na Nuvemshop e confira a correspondência na Olist." breadcrumbs={["Abelha Par", "Preparação"]} />
+    <Header title="Preparar conferência" breadcrumbs={["Abelha Par", "Preparação"]} />
     <ActiveSessions />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <section className="card p-6 flex flex-col gap-4">

@@ -11,7 +11,6 @@ export default async function ABCPage() {
     <>
       <Header
         title="Curva ABC"
-        subtitle="Descubra os produtos e clientes que concentram as vendas da operação."
         breadcrumbs={["Abelha Par", "Curva ABC"]}
       />
       <ABCDashboard

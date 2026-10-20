@@ -1,4 +1,7 @@
 "use client";
+import { Select } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -100,13 +103,13 @@ export default function OrdersPage() {
     finally { if (!controller.signal.aborted) setBusy(false); }
   };
   return <>
-    <Header title="Pedidos Nuvemshop" subtitle="Selecione os pedidos preparados para o lote de hoje" breadcrumbs={["Abelha Par", "Pedidos Nuvemshop"]} />
+    <Header title="Pedidos Nuvemshop" breadcrumbs={["Abelha Par", "Pedidos Nuvemshop"]} />
     {!checkingConnection && !connected && <section className="card p-5 mb-5"><p>A conexão Nuvemshop precisa estar disponível para buscar os pedidos.</p>{can("ninho:access") ? <Link href="/ninho" className="btn-ghost mt-2">Configurar no Ninho</Link> : <p className="text-sm mt-2 text-[var(--color-text-secondary)]">Peça ao administrador para revisar a conexão no Ninho.</p>}</section>}
     <section className="card p-5 sm:p-6 mb-5">
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
-        <label className="text-sm">Buscar por<select className="field mt-1" value={mode} onChange={event => setMode(event.target.value)}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></select></label>
-        <label className="text-sm">De<input className="field mt-1" type="date" value={from} max={to} onChange={event => setFrom(event.target.value)} /></label>
-        <label className="text-sm">Até<input className="field mt-1" type="date" value={to} min={from} onChange={event => setTo(event.target.value)} /></label>
+        <div className="text-sm"><Select label="Buscar por" className="field mt-1" value={mode} onValueChange={event => setMode(event)}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></Select></div>
+        <div className="text-sm"><DatePicker label="De" className="field mt-1"  value={from} max={to} onValueChange={event => setFrom(event)} /></div>
+        <div className="text-sm"><DatePicker label="Até" className="field mt-1"  value={to} min={from} onValueChange={event => setTo(event)} /></div>
         <button onClick={fetchOrders} disabled={!connected || busy} className="btn-primary h-[44px]"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} />{busy ? `${loaded} carregados…` : "Buscar pedidos"}</button>
       </div>
       <p className="mt-3 text-xs text-[var(--color-text-secondary)]">A data de atualização inclui pagamentos confirmados depois da criação. Amplie o período para selecionar pedidos antigos preparados hoje.</p>
@@ -117,9 +120,9 @@ export default function OrdersPage() {
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold text-lg">Sua seleção do dia</h2><p className="text-sm text-[var(--color-text-secondary)]">{orders.length} carregados · {filtered.length} no filtro · {selectedIds.length} selecionados</p></div><span className="badge badge-pending">Shift + clique para selecionar um intervalo</span></div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <label className="relative"><span className="sr-only">Pesquisar pedidos</span><Search className="absolute left-3 top-3.5 w-4 h-4 text-[var(--color-text-tertiary)]" /><input className="field !pl-9" placeholder="Pedido, cliente ou ID" value={search} onChange={event => setSearch(event.target.value)} /></label>
-          <label><span className="sr-only">Filtrar pagamento</span><select className="field" value={payment} onChange={event => setPayment(event.target.value)}><option value="">Todos os pagamentos</option>{Object.entries(paymentLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-          <label><span className="sr-only">Filtrar envio</span><select className="field" value={shipping} onChange={event => setShipping(event.target.value)}><option value="">Todos os envios</option>{[...new Set(orders.map(order => order.shippingStatus))].filter(Boolean).map(value => <option key={value} value={value}>{shippingLabels[value] || value}</option>)}</select></label>
-          <label><span className="sr-only">Ordenar pedidos</span><select className="field" value={sort} onChange={event => setSort(event.target.value)}><option value="number-desc">Número: maior primeiro</option><option value="created-desc">Criação: mais recente</option><option value="name">Cliente: A–Z</option></select></label>
+          <div><Select aria-label="Filtrar pagamento" className="field" value={payment} onValueChange={event => setPayment(event)}><option value="">Todos os pagamentos</option>{Object.entries(paymentLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Select></div>
+          <div><Select aria-label="Filtrar envio" className="field" value={shipping} onValueChange={event => setShipping(event)}><option value="">Todos os envios</option>{[...new Set(orders.map(order => order.shippingStatus))].filter(Boolean).map(value => <option key={value} value={value}>{shippingLabels[value] || value}</option>)}</Select></div>
+          <div><Select aria-label="Ordenar pedidos" className="field" value={sort} onValueChange={event => setSort(event)}><option value="number-desc">Número: maior primeiro</option><option value="created-desc">Criação: mais recente</option><option value="name">Cliente: A–Z</option></Select></div>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-sm">
           <label className="flex items-center gap-2"><input type="checkbox" checked={allFilteredSelected} disabled={busy || !eligibleFiltered.length} onChange={() => { const next = new Set(selectedIds); for (const id of eligibleFiltered) { if (allFilteredSelected) next.delete(id); else next.add(id); } usePreparationStore.getState().setSelectedIds([...next]); anchor.current = null; }} />Selecionar todos os aptos do filtro ({eligibleFiltered.length})</label>
@@ -129,7 +132,7 @@ export default function OrdersPage() {
         {hiddenCount > 0 && <p className="text-xs text-[var(--color-accent-orange)]">{hiddenCount} pedido(s) selecionado(s) estão fora do filtro atual e continuam no lote.</p>}
       </div>
       <div className="overflow-x-auto"><table className="w-full text-sm"><thead className="bg-[var(--color-bg-primary)] text-left text-[var(--color-text-secondary)]"><tr><th className="p-3 w-10"><span className="sr-only">Seleção</span></th><th className="p-3">Pedido / cliente</th><th className="p-3">Criação</th><th className="p-3">Pagamento</th><th className="p-3">Envio</th><th className="p-3 text-right">Valor</th></tr></thead><tbody>
-        {visible.map(order => <tr key={order.id} onClick={event => toggle(order, event.shiftKey)} className={`border-t border-[var(--color-border-light)] select-none ${eligible(order) ? "cursor-pointer hover:bg-[var(--color-accent-yellow)]/10" : "opacity-60"} ${selected.has(order.id) ? "bg-[var(--color-accent-yellow)]/15" : ""}`}>
+        {visible.map(order => <tr key={order.id} onClick={event => toggle(order, event.shiftKey)} className={`border-t border-[var(--color-border-light)] select-none ${eligible(order) && !busy ? "cursor-pointer hover:bg-[var(--color-accent-yellow)]/10" : "cursor-not-allowed opacity-60"} ${selected.has(order.id) ? "bg-[var(--color-accent-yellow)]/15" : ""}`}>
           <td className="p-3"><input aria-label={`Selecionar pedido ${order.number}`} type="checkbox" checked={selected.has(order.id)} disabled={busy || !eligible(order)} onChange={() => {}} onClick={event => { event.stopPropagation(); toggle(order, event.shiftKey); }} /></td>
           <td className="p-3"><p className="font-semibold">#{order.number} <span className="font-normal text-[var(--color-text-secondary)]">{order.clientName || "Cliente não informado"}</span></p><p className="text-xs text-[var(--color-text-tertiary)]">ID {order.id}{order.status === "cancelled" ? " · Cancelado" : ""}</p></td>
           <td className="p-3 whitespace-nowrap">{new Date(order.createdAt).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>

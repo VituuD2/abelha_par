@@ -40,7 +40,6 @@ export default function ForgotPasswordPage() {
           </div>
           <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.13em] text-[var(--color-accent-blue)]">Abelha Par</p>
           <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Redefinir senha</h1>
-          <p className="mt-2 text-sm text-[var(--color-text-secondary)]">Enviaremos um link seguro para você criar uma nova senha.</p>
         </div>
 
         {isSent ? (

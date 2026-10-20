@@ -35,6 +35,17 @@ A versão principal avança para 3 porque o fluxo de conferência passou a depen
 - Distinção entre custo zero informado e custo desconhecido; interface e exportações identificam as regras e as lacunas.
 - Entradas de consulta v21 verificam a política do banco e identificam migração ausente ou substituída, sem atribuir o problema ao custo do produto.
 
+### Ajustes de interface — 20/10/2026
+
+- Filtros da Curva ABC começam compactos; opções extras e regras adicionais expandem separadamente.
+- Regras da consolidação visíveis somente para administradores.
+- Pareto completo, sem o corte de 60 entidades, com largura proporcional à quantidade de produtos e tabela paginada; requer a [v22](supabase/migration_v22_analytics_full_pareto.sql) após v21.
+- Removidos subtítulos das telas e os textos de orientação e corte do gráfico.
+- Calendários e menus de seleção compartilhados com React Aria, em português e no tema âmbar; campos de texto, caixas de seleção e estados de foco padronizados em todo o site.
+- Cursores de controles ativos, campos e opções desabilitadas revisados; a linha inteira da Curva ABC abre os pedidos com clique, Enter ou Espaço.
+- Detalhes de cada produto sem o texto de escopo e a seção Origem da composição.
+- Modal de pedidos com seleção direta de página; mantém tabela e totais durante a navegação e em falhas, com indicador de carregamento e proteção contra respostas de produtos já fechados.
+
 ### Identificação da versão
 
 - Versão do pacote e do lockfile alinhadas em `3.0.0`.

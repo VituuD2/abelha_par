@@ -4,11 +4,10 @@ import { ChevronRight } from "lucide-react";
 
 interface HeaderProps {
   title: string;
-  subtitle?: string;
   breadcrumbs?: string[];
 }
 
-export function Header({ title, subtitle, breadcrumbs }: HeaderProps) {
+export function Header({ title, breadcrumbs }: HeaderProps) {
   return (
     <header className="mb-8 sm:mb-10">
       {breadcrumbs && breadcrumbs.length > 0 && (
@@ -26,11 +25,6 @@ export function Header({ title, subtitle, breadcrumbs }: HeaderProps) {
       <h1 className="text-[30px] sm:text-[34px] font-bold text-[var(--color-text-primary)] tracking-[-0.035em] leading-tight">
         {title}
       </h1>
-      {subtitle && (
-        <p className="max-w-2xl text-[15px] sm:text-[16px] text-[var(--color-text-secondary)] mt-2">
-          {subtitle}
-        </p>
-      )}
     </header>
   );
 }
