@@ -17,8 +17,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   try {
     const started = Date.now();
-    const renewal = await refreshDueAnalyticsTokens();
-    await enqueueIncremental();
+    const renewal = await refreshDueAnalyticsTokens()
+      .catch(() => ({ checked: 0, reconnect: 0, failed: 1 }));
+    // Existing durable jobs can progress even if scheduling or proactive renewal is unavailable.
+    const scheduling = await enqueueIncremental().then(() => ({ ok: true, error: null }))
+      .catch(() => ({ ok: false, error: "Agendamento incremental indisponível; nova tentativa no próximo ciclo." }));
     const costs = Date.now() - started < 15000
       ? await (async () => {
           const history = await processCostHistorySync();
@@ -27,11 +30,11 @@ export async function POST(request: Request) {
       : { processed: 0, pending: true };
     const budget = 45000 - (Date.now() - started);
     if (budget < 15000)
-      return NextResponse.json({ processed: 0, pending: true, renewal, costs }, { status: renewal.reconnect || renewal.failed || costs.error ? 503 : 200 });
+      return NextResponse.json({ processed: 0, pending: true, renewal, costs, scheduling }, { status: renewal.reconnect || renewal.failed || costs.error || !scheduling.ok ? 503 : 200 });
     const result = await processAnalyticsBatches(undefined, budget);
     return NextResponse.json(
-      { ...result, renewal, costs, ...(renewal.reconnect ? { guidance: "Reconecte a conta indicada no Ninho para retomar seu checkpoint." } : {}) },
-      { status: result.error || renewal.reconnect || renewal.failed || costs.error ? 503 : 200 },
+      { ...result, renewal, costs, scheduling, elapsedMs: Date.now() - started, ...(renewal.reconnect ? { guidance: "Reconecte a conta indicada no Ninho para retomar seu checkpoint." } : {}) },
+      { status: result.error || renewal.reconnect || renewal.failed || costs.error || !scheduling.ok ? 503 : 200 },
     );
   } catch {
     return NextResponse.json(

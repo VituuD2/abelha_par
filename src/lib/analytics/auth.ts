@@ -6,7 +6,7 @@ import { getValidTinyToken } from "@/lib/tiny-auth";
 import type { AnalyticsConnection } from "./types";
 import { olistRequest } from "./olist-client";
 import { string } from "./normalize";
-import { AnalyticsActionError } from "./sync-errors";
+import { AnalyticsActionError, analyticsDatabaseError } from "./sync-errors";
 
 export const TOKEN_URL =
   "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
@@ -26,7 +26,8 @@ export async function ensureAnalyticsIdentity(
     .eq("workspace_id", workspace)
     .eq("id", connectionId)
     .single();
-  if (current.error || !current.data?.enabled)
+  if (current.error) throw analyticsDatabaseError("Conexão analítica indisponível.", current.error, current.status);
+  if (!current.data?.enabled)
     throw new Error("Conexão analítica indisponível.");
   const c = current.data;
   const company = await db
@@ -35,7 +36,8 @@ export async function ensureAnalyticsIdentity(
     .eq("workspace_id", workspace)
     .eq("id", c.company_id)
     .single();
-  if (company.error || !company.data?.tax_id)
+  if (company.error) throw analyticsDatabaseError("Cadastro da empresa indisponível.", company.error, company.status);
+  if (!company.data?.tax_id)
     throw new Error(
       "Identifique o CNPJ desta empresa no Ninho antes de importar.",
     );
@@ -211,14 +213,15 @@ export function analyticsToken(
   return pending;
 }
 async function read(workspace: string, connectionId: string) {
-  const { data, error } = await createAdminClient()
+  const { data, error, status } = await createAdminClient()
     .from("analytics_connections")
     .select("*")
     .eq("workspace_id", workspace)
     .eq("id", connectionId)
     .abortSignal(AbortSignal.timeout(3000))
     .maybeSingle();
-  if (error || !data?.enabled)
+  if (error) throw analyticsDatabaseError("Conexão analítica indisponível.", error, status);
+  if (!data?.enabled)
     throw new Error("Conexão analítica indisponível.");
   return data as AnalyticsConnection;
 }

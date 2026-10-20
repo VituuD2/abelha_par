@@ -48,3 +48,23 @@ test("cost worker failure does not prevent the sales workers from advancing",asy
   const response=await cron.POST(new Request('http://localhost/api/internal/analytics-sync',{method:'POST',headers:{authorization:'Bearer cost-cron-test'}}));
   const body=await response.json();assert.equal(response.status,503);assert.equal(body.processed,7);assert.ok(body.costs.error);
 });
+
+test('thrown renewal and scheduling failures still run the existing durable sales queues', async t => {
+  const previous = process.env.CRON_SECRET;
+  process.env.CRON_SECRET = 'isolation-test';
+  t.after(() => { if (previous === undefined) delete process.env.CRON_SECRET; else process.env.CRON_SECRET = previous; });
+  const calls = [];
+  t.mock.method(auth, 'refreshDueAnalyticsTokens', async () => { calls.push('renewal'); throw Error('private database details'); });
+  t.mock.method(sync, 'enqueueIncremental', async () => { calls.push('schedule'); throw Error('private database details'); });
+  t.mock.method(costHistory, 'processCostHistorySync', async () => ({claimed: false, processed: 0}));
+  t.mock.method(costSync, 'processCostSync', async () => ({processed: 0}));
+  t.mock.method(sync, 'processAnalyticsBatches', async () => { calls.push('sales'); return {processed: 9, pending: true}; });
+  const response = await cron.POST(new Request('http://localhost/api/internal/analytics-sync', {method: 'POST', headers: {authorization: 'Bearer isolation-test'}}));
+  const body = await response.json();
+  assert.equal(response.status, 503);
+  assert.equal(body.processed, 9);
+  assert.equal(body.renewal.failed, 1);
+  assert.equal(body.scheduling.ok, false);
+  assert.deepEqual(calls, ['renewal', 'schedule', 'sales']);
+  assert.equal(JSON.stringify(body).includes('private database details'), false);
+});

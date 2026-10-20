@@ -4,6 +4,7 @@ const { test } = require("node:test"),
 const admin = require("../src/lib/supabase/admin.ts"),
   auth = require("../src/lib/analytics/auth.ts"),
   provider = require("../src/lib/analytics/olist-client.ts");
+const realOlistRequest = provider.olistRequest;
 const { processAnalyticsBatch, processAnalyticsBatches } = require("../src/lib/analytics/sync.ts");
 const { AnalyticsActionError } = require("../src/lib/analytics/sync-errors.ts");
 function fixture() {
@@ -390,4 +391,82 @@ test("expired authorization blocks a checkpoint with reconnection guidance; tran
   assert.equal(f.job.status, "retry");
   assert.equal(f.job.error_code, null);
   assert.deepEqual(f.job.pending_ids, ["123"]);
+});
+
+test('a marker 503 retries the same GET without refetching or skipping the pending sale', async t => {
+  const f = fixture(), paths = [], logs = [];
+  let now = 1_800_000_000_000, markerCalls = 0;
+  t.mock.method(Date, 'now', () => now);
+  t.mock.method(global, 'setTimeout', (fn, ms) => { now += ms; queueMicrotask(fn); });
+  t.mock.method(console, 'info', message => logs.push(JSON.parse(message)));
+  t.mock.method(admin, 'createAdminClient', () => f.db);
+  t.mock.method(auth, 'analyticsToken', async () => 'private-token');
+  t.mock.method(auth, 'ensureAnalyticsIdentity', async () => {});
+  t.mock.method(provider, 'olistRequest', (...args) => realOlistRequest(...args));
+  t.mock.method(global, 'fetch', async url => {
+    const path = new URL(url).pathname.replace('/public-api/v3', ''); paths.push(path);
+    if (path === '/pedidos') return Response.json({itens: [{id: 1}], paginacao: {total: 1}});
+    if (path === '/pedidos/1') return Response.json(raw(1, 101));
+    if (path === '/produtos/10') return Response.json({id: 10, descricao: 'Produto'});
+    if (path.endsWith('/marcadores')) return ++markerCalls === 1 ? new Response(null, {status: 503}) : Response.json([]);
+    throw Error(path);
+  });
+  const result = await processAnalyticsBatch();
+  assert.equal(result.pending, false, JSON.stringify({result, logs, paths}));
+  assert.equal(f.job.status, 'completed');
+  assert.equal(f.ingested.length, 1);
+  assert.equal(f.job.processed, 1);
+  assert.equal(paths.filter(p => p === '/pedidos/1').length, 1);
+  assert.equal(markerCalls, 2);
+  assert.equal(logs[0].retries, 1);
+  assert.equal(logs[0].transientFailures, 1);
+  assert.equal(JSON.stringify(logs).includes('private-token'), false);
+});
+
+test('source cache avoids repeated writes and still persists metadata changes within the batch', async t => {
+  for (const names of [['Canal', 'Canal', 'Canal'], ['Canal', 'Outro', 'Canal']]) {
+    const f = fixture(); let sourceWrites = 0;
+    const from = f.db.from;
+    f.db.from = table => {
+      const query = from(table), upsert = query.upsert;
+      query.upsert = value => { if (table === 'analytics_sources') sourceWrites++; return upsert(value); };
+      return query;
+    };
+    t.mock.method(admin, 'createAdminClient', () => f.db);
+    t.mock.method(auth, 'analyticsToken', async () => 'token');
+    t.mock.method(auth, 'ensureAnalyticsIdentity', async () => {});
+    t.mock.method(provider, 'olistRequest', async (_token, _connection, path) => {
+      if (path.startsWith('/pedidos?')) return {itens: [{id: 1}, {id: 2}, {id: 3}], paginacao: {total: 3}};
+      if (path.endsWith('/marcadores')) return {itens: []};
+      if (path.startsWith('/produtos/')) return {id: 10, descricao: 'Produto'};
+      const index = Number(path.split('/').at(-1));
+      return {...raw(index, 101), ecommerce: {id: 101, nome: names[index - 1]}};
+    });
+    await processAnalyticsBatch();
+    assert.equal(f.job.status, 'completed');
+    assert.equal(f.ingested.length, 3);
+    assert.equal(sourceWrites, names.includes('Outro') ? 3 : 1);
+    assert.equal(f.tables.analytics_sources[0].name, 'Canal');
+  }
+});
+
+test('running out of request budget yields without marking a failure or advancing a pending sale', async t => {
+  const f = fixture(); f.job.pending_ids = ['123'];
+  t.mock.method(admin, 'createAdminClient', () => f.db);
+  t.mock.method(auth, 'analyticsToken', async () => 'token');
+  t.mock.method(auth, 'ensureAnalyticsIdentity', async () => {});
+  t.mock.method(provider, 'olistRequest', async () => { throw new provider.AnalyticsBudgetExceeded(); });
+  const result = await processAnalyticsBatch();
+  assert.equal(result.error, null);
+  assert.equal(f.job.status, 'queued');
+  assert.equal(f.job.attempts, 0);
+  assert.equal(f.job.pending_index, 0);
+  assert.deepEqual(f.job.pending_ids, ['123']);
+  assert.equal(f.ingested.length, 0);
+});
+
+test('database diagnostics preserve safe status and codes without exposing database details', () => {
+  const { analyticsDatabaseError } = require('../src/lib/analytics/sync-errors.ts');
+  assert.match(analyticsDatabaseError('Conexão indisponível.', {code: 'PGRST000', message: 'private details'}, 503).message, /PGRST000; HTTP 503/);
+  assert.equal(analyticsDatabaseError('Falha.', {code: 'private token content'}).message, 'Falha. [banco: unavailable]');
 });

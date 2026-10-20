@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-20T19:52:41.754Z",
+  "readOnly": true,
+  "orders": [
+    {
+      "jobId": "737e7bf5-3a10-4447-90fa-b989810aa1b7",
+      "mode": "backfill",
+      "status": "queued",
+      "cursor": "2026-09-30",
+      "pendingIndex": 72,
+      "processed": 6566,
+      "checkpointUpdatedAt": "2026-10-20T19:52:33.999+00:00",
+      "orderId": "393334921",
+      "detailAndPacingMs": 2924,
+      "items": 1,
+      "distinctProducts": 1,
+      "productsChecked": 1,
+      "cachedProducts": 1,
+      "freshProducts": 1,
+      "batchedCacheReadMs": 127,
+      "hasInvoice": true,
+      "normalization": {
+        "ok": true
+      }
+    },
+    {
+      "jobId": "ee9f6b3f-e116-4857-a9c1-467f473977e3",
+      "mode": "backfill",
+      "status": "queued",
+      "cursor": "2026-07-25",
+      "pendingIndex": 3,
+      "processed": 174,
+      "checkpointUpdatedAt": "2026-10-20T19:50:34.514+00:00",
+      "orderId": "378967544",
+      "detailAndPacingMs": 2878,
+      "items": 1,
+      "distinctProducts": 1,
+      "productsChecked": 1,
+      "cachedProducts": 1,
+      "freshProducts": 1,
+      "batchedCacheReadMs": 96,
+      "hasInvoice": true,
+      "normalization": {
+        "ok": true
+      }
+    }
+  ],
+  "connection": "Olist 1"
+}

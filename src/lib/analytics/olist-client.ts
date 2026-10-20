@@ -5,6 +5,7 @@ export class AnalyticsApiError extends Error {
   constructor(
     public status: number,
     public retryAfter = 30,
+    public kind: "http" | "timeout" | "network" = "http",
   ) {
     super(
       status === 429
@@ -13,49 +14,76 @@ export class AnalyticsApiError extends Error {
           ? "A autorização Olist foi recusada. Reconecte esta conta no Ninho."
           : status === 403
             ? "O aplicativo Olist não tem permissão para esta consulta. Confira as permissões e reconecte esta conta no Ninho."
-            : `Consulta Olist indisponível (HTTP ${status}).`,
+            : kind === "http" ? `Consulta Olist indisponível (HTTP ${status}).`
+              : `Consulta Olist indisponível (${kind === "timeout" ? "tempo limite excedido" : "falha de rede"}; retomada programada).`,
     );
   }
 }
 const slots = new Map<string, number>();
+export class AnalyticsBudgetExceeded extends Error {}
+export type OlistAttempt = { status: number; kind: "http" | "timeout" | "network"; elapsedMs: number; waitMs: number; retry: boolean };
+type RequestOptions = {
+  deadlineMs?: number;
+  retryTransient?: boolean;
+  onAttempt?: (attempt: OlistAttempt) => void;
+};
 /** A DB sync lease serializes each account across instances; pacing also includes enrichment calls. */
 export async function olistRequest(
   token: string,
   connectionId: string,
   path: string,
+  options: RequestOptions = {},
 ): Promise<Record<string, unknown>> {
-  const now = Date.now(),
-    next = Math.max(now, slots.get(connectionId) || 0);
-  slots.set(connectionId, next + 2100);
-  if (next > now)
-    await new Promise((resolve) => setTimeout(resolve, next - now));
-  let response: Response;
-  try {
-    response = await fetch(API + path, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-      signal: AbortSignal.timeout(10_000),
-    });
-  } catch {
-    throw new AnalyticsApiError(503);
+  // Retries are opt-in for workers with an explicit deadline. Never retry writes or OAuth.
+  const deadline = options.deadlineMs ?? Infinity;
+  let notBefore = 0;
+  for (let attempt = 0; ; attempt++) {
+    const now = Date.now(), next = Math.max(now, slots.get(connectionId) || 0, notBefore);
+    if (next + 10_000 > deadline) throw new AnalyticsBudgetExceeded();
+    slots.set(connectionId, next + 2100);
+    const waitMs = next - now;
+    if (waitMs > 0) await new Promise((resolve) => setTimeout(resolve, waitMs));
+    if (Date.now() + 10_000 > deadline) throw new AnalyticsBudgetExceeded();
+    const started = Date.now();
+    let failure: AnalyticsApiError | undefined, retryHeader: string | null = null;
+    let response: Response | undefined, body: unknown;
+    try {
+      response = await fetch(API + path, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (response.ok) {
+        try { body = await response.json(); }
+        catch (reason) { if (!(reason instanceof SyntaxError)) throw reason; }
+      } else {
+        const retry = retryHeader = response.headers.get("retry-after");
+        const seconds = retry && /^\d+$/.test(retry) ? Number(retry)
+          : retry ? (Date.parse(retry) - Date.now()) / 1000 : 30;
+        failure = new AnalyticsApiError(response.status,
+          Math.min(3600, Math.max(3, Number.isFinite(seconds) ? seconds : 30)));
+        await response.body?.cancel();
+      }
+    } catch (reason) {
+      failure ??= new AnalyticsApiError(503, 30,
+        reason instanceof Error && ["TimeoutError", "AbortError"].includes(reason.name) ? "timeout" : "network");
+    }
+    options.onAttempt?.({ status: failure?.status ?? response!.status, kind: failure?.kind ?? "http",
+      elapsedMs: Date.now() - started, waitMs, retry: attempt > 0 });
+    if (failure) {
+      // One extra GET at most, still paced. Long Retry-After/429 go to the durable queue.
+      const retryAt = retryHeader ? Date.now() + failure.retryAfter * 1000
+        : Math.max(Date.now(), slots.get(connectionId) || 0) + 500 + Math.floor(Math.random() * 500);
+      const nextAttempt = Math.max(retryAt, slots.get(connectionId) || 0);
+      if (options.retryTransient && Number.isFinite(deadline) && attempt === 0
+        && [502, 503, 504].includes(failure.status) && nextAttempt + 10_000 <= deadline) {
+        notBefore = retryAt;
+        continue;
+      }
+      throw failure;
+    }
+    if (Array.isArray(body) && /^\/pedidos\/\d+\/marcadores$/.test(path)) return { itens: body };
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("Resposta Olist inválida.");
+    return body as Record<string, unknown>;
   }
-  if (!response.ok) {
-    const retry = response.headers.get("retry-after");
-    const seconds =
-      retry && /^\d+$/.test(retry)
-        ? Number(retry)
-        : retry
-          ? (Date.parse(retry) - Date.now()) / 1000
-          : 30;
-    throw new AnalyticsApiError(
-      response.status,
-      Math.min(3600, Math.max(3, Number.isFinite(seconds) ? seconds : 30)),
-    );
-  }
-  const body: unknown = await response.json().catch(() => null);
-  if (Array.isArray(body) && /^\/pedidos\/\d+\/marcadores$/.test(path))
-    return { itens: body };
-  if (!body || typeof body !== "object" || Array.isArray(body))
-    throw new Error("Resposta Olist inválida.");
-  return body as Record<string, unknown>;
 }

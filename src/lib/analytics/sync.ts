@@ -2,12 +2,11 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { saoPauloDate } from "@/lib/dates";
 import { analyticsToken, ensureAnalyticsIdentity } from "./auth";
-import { AnalyticsApiError, olistRequest } from "./olist-client";
+import { AnalyticsApiError, AnalyticsBudgetExceeded as YieldBatch, olistRequest, type OlistAttempt } from "./olist-client";
 import { id, normalizeOrder, nullable, object, orderItemProductId, string } from "./normalize";
 import type { ABCFilters, SyncJob } from "./types";
 import { AnalyticsActionError } from "./sync-errors";
 
-class YieldBatch extends Error {}
 const tomorrow = (day: string) =>
   new Date(Date.parse(day + "T12:00:00Z") + 86400000)
     .toISOString()
@@ -115,6 +114,16 @@ export async function processAnalyticsBatch(
   const lease = job.lease_token;
   let processed = 0;
   let failed = false;
+  const metrics = { apiRequests: 0, apiMs: 0, pacingMs: 0, retries: 0, transientFailures: 0, timeouts: 0, networkFailures: 0, sourceCacheHits: 0 };
+  const onAttempt = (attempt: OlistAttempt) => {
+    metrics.apiRequests++;
+    metrics.apiMs += attempt.elapsedMs;
+    metrics.pacingMs += attempt.waitMs;
+    if (attempt.retry) metrics.retries++;
+    if (attempt.status >= 500) metrics.transientFailures++;
+    if (attempt.kind === "timeout") metrics.timeouts++;
+    if (attempt.kind === "network") metrics.networkFailures++;
+  };
   const checkpoint = async (patch: Record<string, unknown>) => {
     const result = await db
       .from("analytics_sync_jobs")
@@ -134,9 +143,14 @@ export async function processAnalyticsBatch(
     await ensureAnalyticsIdentity(job.workspace_id, job.connection_id, token);
     const query = async (path: string) => {
       if (Date.now() - started > budgetMs - 12000) throw new YieldBatch();
-      return olistRequest(token, job.connection_id, path);
+      return olistRequest(token, job.connection_id, path, {
+        deadlineMs: started + budgetMs - 2000,
+        retryTransient: true,
+        onAttempt,
+      });
     };
     const productCache = new Map<string, Record<string, unknown>>();
+    const sourceCache = new Map<string, { fingerprint: string; id: string }>();
     // Small pages and empty days should not waste the rest of a cron invocation.
     while (true) {
       if (!job.pending_ids.length) {
@@ -200,22 +214,27 @@ export async function processAnalyticsBatch(
           sourceKey =
             string(ecommerce.id) ||
             `direct:${string(raw.origemPedido) || "unknown"}`;
-        const src = await db
-          .from("analytics_sources")
-          .upsert(
-            {
-              workspace_id: job.workspace_id,
-              connection_id: job.connection_id,
-              external_id: sourceKey,
-              name: string(ecommerce.nome) || "Sem integração identificada",
-              channel: nullable(ecommerce.canalVenda),
-            },
-            { onConflict: "workspace_id,connection_id,external_id" },
-          )
-          .select("id")
-          .single();
-        if (src.error)
-          throw new Error("Não foi possível salvar a origem da venda.");
+        const source = {
+          workspace_id: job.workspace_id,
+          connection_id: job.connection_id,
+          external_id: sourceKey,
+          name: string(ecommerce.nome) || "Sem integração identificada",
+          channel: nullable(ecommerce.canalVenda),
+        };
+        const sourceCacheKey = JSON.stringify(source);
+        const cachedSource = sourceCache.get(sourceKey);
+        let sourceId = cachedSource?.fingerprint === sourceCacheKey ? cachedSource.id : undefined;
+        if (sourceId) metrics.sourceCacheHits++;
+        else {
+          const src = await db
+            .from("analytics_sources")
+            .upsert(source, { onConflict: "workspace_id,connection_id,external_id" })
+            .select("id")
+            .single();
+          if (src.error) throw new Error("Não foi possível salvar a origem da venda.");
+          sourceId = src.data.id as string;
+          sourceCache.set(sourceKey, { fingerprint: sourceCacheKey, id: sourceId });
+        }
         const products: Record<string, Record<string, unknown>> = {};
         if (!Array.isArray(raw.itens))
           throw new Error("Pedido sem itens no detalhe Olist.");
@@ -358,7 +377,7 @@ export async function processAnalyticsBatch(
         const normalized = normalizeOrder(
           raw,
           job.connection_id,
-          src.data.id,
+          sourceId,
           fetchedAt,
           products,
           invoice,
@@ -486,6 +505,8 @@ export async function processAnalyticsBatch(
       .eq("workspace_id", job.workspace_id)
       .eq("id", job.connection_id)
       .eq("sync_lock", lease);
+    console.info(JSON.stringify({ event: "analytics_import_batch", jobId: job.id, connectionId: job.connection_id,
+      mode: job.mode, processed, failed, elapsedMs: Date.now() - started, ...metrics }));
   }
 }
 
