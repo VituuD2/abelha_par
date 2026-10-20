@@ -394,6 +394,7 @@ test("expired authorization blocks a checkpoint with reconnection guidance; tran
 });
 
 test('a marker 503 retries the same GET without refetching or skipping the pending sale', async t => {
+  require('./olist-quota-mock.cjs')(t);
   const f = fixture(), paths = [], logs = [];
   let now = 1_800_000_000_000, markerCalls = 0;
   t.mock.method(Date, 'now', () => now);

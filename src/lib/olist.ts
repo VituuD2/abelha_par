@@ -2,13 +2,10 @@ import { extractYampiId } from "./regex";
 import { normalizeOrderId } from "./order-id";
 import { normalizeExternalReference } from "./reconciliation";
 import type { OlistApiOrder, OlistOrder } from "@/types";
+import { acquireOlistPermit, recordOlistResult, OlistBudgetExceeded, OlistQuotaWait } from "./olist-api-control";
 
 const API_BASE = "https://api.tiny.com.br/public-api/v3";
 const DETAIL_CONCURRENCY = 2;
-// Some accounts have limits below the published account maximum. Keep detail
-// calls below 30/minute per process; provider throttling is also respected.
-const DETAIL_REQUEST_INTERVAL_MS = 2_100;
-let nextDetailRequestAt = 0;
 
 export class TinyRateLimitError extends Error {
   constructor(public readonly retryAfterSeconds: number) {
@@ -31,6 +28,7 @@ export class TinyApiError extends Error {
 export type OlistDateMode = "created" | "updated";
 
 interface FetchOrdersParams {
+  workspaceId?: string;
   token: string;
   dateFrom: string;
   dateTo?: string;
@@ -39,12 +37,12 @@ interface FetchOrdersParams {
 }
 interface TinyListResponse { itens?: OlistApiOrder[]; paginacao?: { total?: number } }
 
-export async function fetchOlistOrdersPage({ token, dateFrom, dateTo = dateFrom, dateMode = "created", ecommerceId, cursor = { day: 0, offset: 0 } }: FetchOrdersParams & { cursor?: { day: number; offset: number } }) {
+export async function fetchOlistOrdersPage({ token, workspaceId, dateFrom, dateTo = dateFrom, dateMode = "created", ecommerceId, cursor = { day: 0, offset: 0 } }: FetchOrdersParams & { cursor?: { day: number; offset: number } }) {
   const dates = dateMode === "updated" ? enumerateDates(dateFrom, dateTo) : [dateFrom];
   if (!dates[cursor.day]) throw new Error("Página de consulta inválida.");
   const filters: Record<string, string> = dateMode === "updated" ? { dataAtualizacao: dates[cursor.day] } : { dataInicial: dateFrom, dataFinal: dateTo };
   const params = new URLSearchParams({ ...filters, orderBy: "desc", limit: "100", offset: String(cursor.offset) });
-  const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers: { Authorization: `Bearer ${token}` } });
+  const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers: { Authorization: `Bearer ${token}` } }, workspaceId);
   if (!response.ok) throw new TinyApiError("list", response.status, await getProviderErrorMessage(response), getProviderRequestId(response));
   const data = await response.json() as TinyListResponse;
   if (!Array.isArray(data.itens)) throw new Error("Resposta inválida da Olist.");
@@ -77,13 +75,13 @@ export interface TinyConnectionResult {
   wwwAuthenticate: string | null;
 }
 
-export async function testTinyConnection(token: string): Promise<TinyConnectionResult> {
+export async function testTinyConnection(token: string, workspaceId?: string): Promise<TinyConnectionResult> {
   try {
     // Validate against the resource the application actually uses. `/info`
     // requires the separate "Informações da Conta" permission and therefore
     // produced a false disconnected state for applications allowed to read
     // only orders.
-    const response = await fetchTiny(`${API_BASE}/pedidos?limit=1`, { headers: { Authorization: `Bearer ${token}` } });
+    const response = await fetchTiny(`${API_BASE}/pedidos?limit=1`, { headers: { Authorization: `Bearer ${token}` } }, workspaceId);
     return {
       ok: response.ok,
       status: response.status,
@@ -125,6 +123,7 @@ async function getProviderErrorMessage(response: Response) {
 
 export async function fetchOlistOrders({
   token,
+  workspaceId,
   dateFrom,
   dateTo,
   dateMode = "created",
@@ -140,7 +139,7 @@ export async function fetchOlistOrders({
       headers,
       dateMode === "created"
         ? { dataInicial: dateFrom, dataFinal: endDate }
-        : { dataAtualizacao: queryDate }
+        : { dataAtualizacao: queryDate }, workspaceId
     );
     for (const item of items) {
       if (isNuvemshopOrder(item, ecommerceId)) allItems.set(item.id, item);
@@ -152,7 +151,7 @@ export async function fetchOlistOrders({
   return Array.from(allItems.values()).map(normalizeOlistOrder);
 }
 
-async function fetchOrdersPageRange(headers: Record<string, string>, filters: Record<string, string>): Promise<OlistApiOrder[]> {
+async function fetchOrdersPageRange(headers: Record<string, string>, filters: Record<string, string>, workspaceId?: string): Promise<OlistApiOrder[]> {
   const allItems: OlistApiOrder[] = [];
   const limit = 100;
   let offset = 0;
@@ -165,7 +164,7 @@ async function fetchOrdersPageRange(headers: Record<string, string>, filters: Re
       limit: String(limit),
       offset: String(offset),
     });
-    const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers });
+    const response = await fetchTiny(`${API_BASE}/pedidos?${params}`, { headers }, workspaceId);
     if (!response.ok) throw new Error(`Tiny API returned ${response.status}`);
 
     const data = await response.json() as TinyListResponse;
@@ -176,10 +175,10 @@ async function fetchOrdersPageRange(headers: Record<string, string>, filters: Re
   return allItems;
 }
 
-export async function resolveOlistOrders(token: string, orderIds: number[]): Promise<OlistOrder[]> {
+export async function resolveOlistOrders(token: string, orderIds: number[], workspaceId?: string): Promise<OlistOrder[]> {
   const headers = { Authorization: `Bearer ${token}` };
   return mapWithConcurrency(orderIds, DETAIL_CONCURRENCY, async (id) => {
-    const detail = await fetchOrderDetail(id, headers);
+    const detail = await fetchOrderDetail(id, headers, workspaceId);
     return normalizeOlistOrder(detail);
   });
 }
@@ -237,9 +236,8 @@ function enumerateDates(dateFrom: string, dateTo: string) {
   return dates;
 }
 
-async function fetchOrderDetail(orderId: number, headers: Record<string, string>): Promise<OlistApiOrder> {
-  await waitForDetailSlot();
-  const response = await fetchTiny(`${API_BASE}/pedidos/${orderId}`, { headers });
+async function fetchOrderDetail(orderId: number, headers: Record<string, string>, workspaceId?: string): Promise<OlistApiOrder> {
+  const response = await fetchTiny(`${API_BASE}/pedidos/${orderId}`, { headers }, workspaceId);
   if (!response.ok) {
     throw new TinyApiError(
       "detail",
@@ -252,10 +250,25 @@ async function fetchOrderDetail(orderId: number, headers: Record<string, string>
   return response.json() as Promise<OlistApiOrder>;
 }
 
-async function fetchTiny(url: string, options: RequestInit): Promise<Response> {
+async function fetchTiny(url: string, options: RequestInit, workspaceId?: string): Promise<Response> {
+  const deadline = Date.now() + 25000;
   const signal = options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(25_000)]) : AbortSignal.timeout(25_000);
   for (let attempt = 0; attempt < 3; attempt += 1) {
-    const response = await fetch(url, { ...options, cache: "no-store", signal });
+    const permit = await acquireOlistPermit({ workspaceId }, "operational", attempt > 0, deadline, 1000).catch(reason => {
+      if (reason instanceof OlistQuotaWait) throw new TinyRateLimitError(reason.retryAfterSeconds);
+      if (reason instanceof OlistBudgetExceeded) throw new TinyRateLimitError(3);
+      throw reason;
+    });
+    const started = Date.now();
+    let response: Response;
+    try { response = await fetch(url, { ...options, cache: "no-store", signal }); }
+    catch (reason) {
+      const kind = reason instanceof Error && ["TimeoutError", "AbortError"].includes(reason.name) ? "timeout" : "network";
+      await recordOlistResult(permit, 0, Date.now() - started, kind);
+      throw reason;
+    }
+    await recordOlistResult(permit, response.status, Date.now() - started, "http", response.headers,
+      response.status === 429 ? getRetryAfterSeconds(response) : undefined);
     if (response.status === 429) {
       const retryAfter = getRetryAfterSeconds(response);
       throw new TinyRateLimitError(retryAfter);
@@ -278,13 +291,6 @@ function getRetryAfterSeconds(response: Response) {
     seconds = reset > 1e12 ? (reset - Date.now()) / 1000 : reset > 1e9 ? reset - Date.now() / 1000 : reset;
   }
   return Number.isFinite(seconds) && seconds > 0 ? Math.min(3600, Math.ceil(seconds)) : 60;
-}
-
-async function waitForDetailSlot() {
-  const now = Date.now();
-  const scheduled = Math.max(now, nextDetailRequestAt);
-  nextDetailRequestAt = scheduled + DETAIL_REQUEST_INTERVAL_MS;
-  await sleep(scheduled - now);
 }
 
 function sleep(ms: number) {

@@ -1,5 +1,6 @@
 require('./setup.cjs');
-const {test}=require('node:test');
+const {test,beforeEach}=require('node:test');
+beforeEach(t=>require('./olist-quota-mock.cjs')(t,0));
 const assert=require('node:assert/strict');
 const auth=require('../src/lib/access.ts');
 const admin=require('../src/lib/supabase/admin.ts');

@@ -5,6 +5,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
 import { ConnectionProgress } from "@/components/analytics/connection-progress";
+import { OlistApiMonitor } from "./olist-api-monitor";
 import type { CoverageJob } from "@/lib/analytics/coverage";
 import type { CostSyncStatus } from "@/lib/analytics/types";
 import {
@@ -318,6 +319,7 @@ export function AnalyticsConnections() {
           {notice}
         </p>
       )}
+      <OlistApiMonitor />
       <div className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2">
         <h3 className="font-semibold">CMV da Olist 1</h3>
         <p className="text-xs text-[var(--color-text-secondary)]">

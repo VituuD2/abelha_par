@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   try {
     const connection = await getNuvemshopConnection(access.workspaceId);
     const mapping = connection?.mapping || getReconciliationConfig();
-    const page = await fetchOlistOrdersPage({ token: tokenResult.token, dateFrom, dateTo, dateMode, ecommerceId: mapping?.ecommerceId, cursor: body.cursor });
+    const page = await fetchOlistOrdersPage({ token: tokenResult.token, workspaceId: access.workspaceId, dateFrom, dateTo, dateMode, ecommerceId: mapping?.ecommerceId, cursor: body.cursor });
     await cacheOlistOrders(access.workspaceId, page.orders);
     return NextResponse.json({ ...page, mapping, fetchedAt: new Date().toISOString() });
   } catch (error) {

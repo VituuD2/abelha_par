@@ -1,5 +1,6 @@
 require('./setup.cjs');
-const { test } = require('node:test');
+const { test, beforeEach } = require('node:test');
+beforeEach(t => require('./olist-quota-mock.cjs')(t));
 const assert = require('node:assert/strict');
 const { olistRequest, AnalyticsApiError } = require('../src/lib/analytics/olist-client.ts');
 const { AnalyticsBudgetExceeded } = require('../src/lib/analytics/olist-client.ts');

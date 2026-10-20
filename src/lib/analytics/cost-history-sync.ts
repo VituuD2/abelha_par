@@ -69,7 +69,7 @@ export async function processCostHistorySync(): Promise<{ claimed: boolean; proc
       if (Date.now() - started > 8000) break; // Leave room for one provider timeout and the sales workers.
       current = job;
       const params = new URLSearchParams({ limit: "100", offset: String(job.page_offset) });
-      const page = normalizeCostHistoryPage(await olistRequest(token, batch.connection_id, `/produtos/${job.external_id}/custos?${params}`), job.page_offset);
+      const page = normalizeCostHistoryPage(await olistRequest(token, batch.connection_id, `/produtos/${job.external_id}/custos?${params}`, { source: "costs" }), job.page_offset);
       const saved = await db.rpc("analytics_finish_cost_history_page", { ...scope,
         p_external: job.external_id, p_scan: job.scan_id, p_offset: job.page_offset,
         p_count: page.count, p_events: page.events, p_done: page.done,

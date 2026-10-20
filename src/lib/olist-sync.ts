@@ -120,7 +120,7 @@ export async function resolveAndCacheOlistOrders(
       });
 
   if (idsToResolve.length > 0) {
-    const resolved = await resolveOlistOrders(token, idsToResolve);
+    const resolved = await resolveOlistOrders(token, idsToResolve, workspaceId);
     const now = new Date().toISOString();
     const { error: upsertError } = cacheAvailable ? await supabase.from("olist_order_cache").upsert(
       resolved.map((order) => ({
@@ -197,7 +197,7 @@ export async function discoverCurrentUpdatesForAllIntegrations() {
       const token = await getValidTinyToken(workspaceId);
       if (!token.token) throw new Error(token.message || "Conexão Tiny indisponível.");
       const connection = await getNuvemshopConnection(workspaceId);
-      const page = await fetchOlistOrdersPage({ token: token.token, dateFrom: day, dateTo: day, dateMode: "updated", ecommerceId: (connection?.mapping || getReconciliationConfig())?.ecommerceId, cursor: { day: 0, offset: checkpoint?.discovery_offset || 0 } });
+      const page = await fetchOlistOrdersPage({ token: token.token, workspaceId, dateFrom: day, dateTo: day, dateMode: "updated", ecommerceId: (connection?.mapping || getReconciliationConfig())?.ecommerceId, cursor: { day: 0, offset: checkpoint?.discovery_offset || 0 } });
       await cacheOlistOrders(workspaceId, page.orders);
       await enqueueOlistOrders(workspaceId, page.orders.filter(order => order.needsDetail).map(order => order.id), true);
       const nextDay = day < today ? saoPauloDate(new Date(new Date(`${day}T12:00:00-03:00`).getTime() + 86_400_000)) : day;

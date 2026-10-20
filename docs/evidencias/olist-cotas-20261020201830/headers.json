@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-20T20:18:30.256Z",
+  "readOnly": true,
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "at": "2026-10-20T20:18:30.698Z",
+      "httpStatus": 200,
+      "limit": 120,
+      "remaining": 105,
+      "resetSeconds": 26,
+      "identityMatches": true,
+      "usedObserved": 15
+    },
+    {
+      "name": "Olist 2",
+      "at": "2026-10-20T20:18:30.948Z",
+      "httpStatus": 200,
+      "limit": 60,
+      "remaining": 45,
+      "resetSeconds": 26,
+      "identityMatches": true,
+      "usedObserved": 15
+    },
+    {
+      "name": "Olist 3",
+      "at": "2026-10-20T20:18:31.288Z",
+      "httpStatus": 200,
+      "limit": 60,
+      "remaining": 44,
+      "resetSeconds": 26,
+      "identityMatches": true,
+      "usedObserved": 16
+    }
+  ]
+}

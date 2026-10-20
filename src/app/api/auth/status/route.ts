@@ -34,7 +34,7 @@ export async function GET(request: Request) {
       message: result.message || null,
     });
   }
-  const connection = await testTinyConnection(result.token);
+  const connection = await testTinyConnection(result.token, access.workspaceId);
   if (connection.ok) {
     return NextResponse.json({
       isConnected: true,

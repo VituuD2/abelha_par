@@ -1,4 +1,6 @@
 import "server-only";
+import { acquireOlistPermit, recordOlistResult, OlistBudgetExceeded, OlistQuotaWait, type OlistSource } from "@/lib/olist-api-control";
+export { OlistBudgetExceeded as AnalyticsBudgetExceeded } from "@/lib/olist-api-control";
 
 const API = "https://api.tiny.com.br/public-api/v3";
 export class AnalyticsApiError extends Error {
@@ -19,10 +21,9 @@ export class AnalyticsApiError extends Error {
     );
   }
 }
-const slots = new Map<string, number>();
-export class AnalyticsBudgetExceeded extends Error {}
 export type OlistAttempt = { status: number; kind: "http" | "timeout" | "network"; elapsedMs: number; waitMs: number; retry: boolean };
 type RequestOptions = {
+  source?: OlistSource;
   deadlineMs?: number;
   retryTransient?: boolean;
   onAttempt?: (attempt: OlistAttempt) => void;
@@ -37,13 +38,21 @@ export async function olistRequest(
   // Retries are opt-in for workers with an explicit deadline. Never retry writes or OAuth.
   const deadline = options.deadlineMs ?? Infinity;
   let notBefore = 0;
+  let previousFailure: AnalyticsApiError | undefined;
   for (let attempt = 0; ; attempt++) {
-    const now = Date.now(), next = Math.max(now, slots.get(connectionId) || 0, notBefore);
-    if (next + 10_000 > deadline) throw new AnalyticsBudgetExceeded();
-    slots.set(connectionId, next + 2100);
-    const waitMs = next - now;
+    const now = Date.now(), next = Math.max(now, notBefore);
+    if (next + 10_000 > deadline) throw previousFailure || new OlistBudgetExceeded();
+    let waitMs = next - now;
     if (waitMs > 0) await new Promise((resolve) => setTimeout(resolve, waitMs));
-    if (Date.now() + 10_000 > deadline) throw new AnalyticsBudgetExceeded();
+    const source = path === "/info" ? "identity" : options.source || "orders";
+    const permit = await acquireOlistPermit({ connectionId }, source, attempt > 0, Number.isFinite(deadline) ? deadline : Date.now() + 18000)
+      .catch(reason => {
+        if (previousFailure && reason instanceof OlistBudgetExceeded) throw previousFailure;
+        if (reason instanceof OlistQuotaWait) throw new AnalyticsApiError(429, reason.retryAfterSeconds);
+        throw reason;
+      });
+    waitMs += permit.waitMs;
+    if (Date.now() + 10_000 > deadline) throw previousFailure || new OlistBudgetExceeded();
     const started = Date.now();
     let failure: AnalyticsApiError | undefined, retryHeader: string | null = null;
     let response: Response | undefined, body: unknown;
@@ -58,8 +67,10 @@ export async function olistRequest(
         catch (reason) { if (!(reason instanceof SyntaxError)) throw reason; }
       } else {
         const retry = retryHeader = response.headers.get("retry-after");
+        const reset = response.headers.get("x-ratelimit-reset");
         const seconds = retry && /^\d+$/.test(retry) ? Number(retry)
-          : retry ? (Date.parse(retry) - Date.now()) / 1000 : 30;
+          : retry ? (Date.parse(retry) - Date.now()) / 1000
+          : response.status === 429 && /^\d+$/.test(reset || "") ? Number(reset) : 30;
         failure = new AnalyticsApiError(response.status,
           Math.min(3600, Math.max(3, Number.isFinite(seconds) ? seconds : 30)));
         await response.body?.cancel();
@@ -70,14 +81,17 @@ export async function olistRequest(
     }
     options.onAttempt?.({ status: failure?.status ?? response!.status, kind: failure?.kind ?? "http",
       elapsedMs: Date.now() - started, waitMs, retry: attempt > 0 });
+    await recordOlistResult(permit, failure?.status ?? response!.status, Date.now() - started,
+      failure?.kind ?? "http", response?.headers, failure?.status === 429 ? failure.retryAfter : undefined);
     if (failure) {
       // One extra GET at most, still paced. Long Retry-After/429 go to the durable queue.
       const retryAt = retryHeader ? Date.now() + failure.retryAfter * 1000
-        : Math.max(Date.now(), slots.get(connectionId) || 0) + 500 + Math.floor(Math.random() * 500);
-      const nextAttempt = Math.max(retryAt, slots.get(connectionId) || 0);
+        : Date.now() + 500 + Math.floor(Math.random() * 500);
+      const nextAttempt = retryAt;
       if (options.retryTransient && Number.isFinite(deadline) && attempt === 0
         && [502, 503, 504].includes(failure.status) && nextAttempt + 10_000 <= deadline) {
         notBefore = retryAt;
+        previousFailure = failure;
         continue;
       }
       throw failure;

@@ -58,7 +58,7 @@ export async function processCostSync(): Promise<{ processed: number; pending?: 
     const token = await analyticsToken(job.workspace_id, job.connection_id);
     await ensureAnalyticsIdentity(job.workspace_id, job.connection_id, token);
     const params = new URLSearchParams({ limit: "100", offset: String(job.page_offset) });
-    const page = normalizeCostPage(await olistRequest(token, job.connection_id, `/produtos?${params}`), job.page_offset);
+    const page = normalizeCostPage(await olistRequest(token, job.connection_id, `/produtos?${params}`, { source: "costs" }), job.page_offset);
     const saved = await db.rpc("analytics_finish_cost_page", { ...args, p_products: page.products, p_done: page.done });
     if (saved.error) throw new Error(saved.error.code === "23514" && /analytics_product_costs_cost_cents_check/.test(saved.error.message || "")
       ? "O banco ainda bloqueia custos negativos. Aplique a migração v21 e reprograme a atualização do CMV."
