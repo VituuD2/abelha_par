@@ -11,9 +11,11 @@ test('history parser keeps provider effective dates separate from fetch time and
   {data:'15/09/2026',precoCusto:'12.345678',custoMedio:'9.876543'},
   {data:'2026-09-15 16:20:30',precoCusto:4,custoMedio:0},
   {data:'2026-09-15T23:59:00-03:00',precoCusto:5},
+  {data:'2026-09-16',precoCusto:'-12.345678',custoMedio:'-0.000001'},
  ]},0);
  assert.equal(page.events[0].effective_at,'2026-09-15');assert.equal(page.events[0].purchase_cents,'1234.5678');assert.equal(page.events[0].average_cents,'987.6543');
  assert.equal(page.events[1].effective_at,'2026-09-15 16:20:30');assert.equal(page.events[1].average_cents,'0.0000');assert.equal(page.events[2].average_cents,null);
+ assert.equal(page.events[3].purchase_cents,'-1234.5678');assert.equal(page.events[3].average_cents,'-0.0001');
  assert.equal(page.done,true);
  const raw={data:'2026-09-01',precoCusto:1,custoMedio:2};
  const duplicate=normalizeCostHistoryPage({itens:[raw,raw],paginacao:{total:3}},0);

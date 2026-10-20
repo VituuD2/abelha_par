@@ -6,7 +6,8 @@ const {createClient}=require('@supabase/supabase-js');
 const {decryptToken}=require('../src/lib/token-crypto.ts');
 const {normalizeCostHistoryPage}=require('../src/lib/analytics/cost-history-sync.ts');
 const workspace=require('../src/lib/analytics/data/composition-catalog.json').workspaceIds[0];
-const skus='ACTM000-K010 ACTM001-K002 CMPO00B-K001 CMPO00C-K001 CMPO00N-K001 CMPO0B3-K001 DDCO00A-K001 DDCO00C-K001 DDCO00N-K001 DDCO00U-K001 DDCO00V-K001 SBGF00M-K001 SBLL001-K001'.split(' ');
+const fita=process.argv.includes('--fita-seios');
+const skus=fita?['ACFS000-K001']:'ACTM000-K010 ACTM001-K002 CMPO00B-K001 CMPO00C-K001 CMPO00N-K001 CMPO0B3-K001 DDCO00A-K001 DDCO00C-K001 DDCO00N-K001 DDCO00U-K001 DDCO00V-K001 SBGF00M-K001 SBLL001-K001'.split(' ');
 const db=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)})}});
 const checked=(result,label)=>{if(result.error)throw Error(`${label}: ${result.error.code||'read failed'} ${result.error.message}`);return result.data;};
 async function main(){
@@ -27,13 +28,20 @@ async function main(){
   const member=checked(await db.from('workspace_members').select('user_id').eq('workspace_id',workspace).eq('active',true).limit(1).single(),'active member');
   result.reports=[];
   for(const costBasis of ['average','purchase']){
-   const filters={from:'2026-09-21',to:'2026-10-20',metric:'revenue',mode:'TINY_LEGACY',grouping:'composition',basis:'orders',costBasis,thresholdA:80,thresholdB:95,selections:{statuses:['1','5','6']}};
+   const filters={from:fita?'2026-09-01':'2026-09-21',to:fita?'2026-09-30':'2026-10-20',metric:'revenue',mode:'TINY_LEGACY',grouping:'composition',basis:'orders',costBasis,thresholdA:80,thresholdB:95,selections:{statuses:['1','5','6']}};
    // Read-only report RPC uses POST because the reviewed catalog exceeds URL limits.
    const response=await db.rpc('analytics_abc_components_v19',{p_workspace:workspace,p_actor:member.user_id,p_filters:filters,p_rules:compositionRulesForWorkspace(workspace),p_offset:0,p_limit:50,p_sort:'rank',p_direction:'asc'});
    const data=response.data;
    result.reports.push({filters,error:response.error?{code:response.error.code,message:response.error.message}:null,total:data?.total,revenue:data?.revenue,composition:data?.composition});
   }
   console.log(JSON.stringify({reports:result.reports},null,2));
+  if(fita){
+   const filters={...result.reports.find(r=>r.filters.costBasis==='purchase').filters,metric:'quantity'};
+   const detail=checked(await db.rpc('analytics_drilldown_components_v19',{p_workspace:workspace,p_actor:member.user_id,p_filters:filters,p_rules:compositionRulesForWorkspace(workspace),p_entity:'composition:ACFS000-K001',p_offset:0}),'component detail');
+   // Product/order references only; never customer data or credentials.
+   result.affected={total:detail.total,sources:detail.sources,orders:detail.orders?.map(o=>({id:o.id,date:o.date,status:o.status,company:o.company,quantity:o.quantity}))};
+   console.log(JSON.stringify({affected:result.affected},null,2));
+  }
  }
  if(process.argv.includes('--provider')){
   if(!connection.access_token||!(Date.parse(connection.expires_at||'')>Date.now()))throw Error('Stored token expired/missing; no refresh performed.');
@@ -41,7 +49,7 @@ async function main(){
   async function get(resource){await new Promise(resolve=>setTimeout(resolve,Math.max(0,previous+3000-Date.now())));previous=Date.now();const response=await fetch('https://api.tiny.com.br/public-api/v3'+resource,{headers:{Authorization:'Bearer '+token},signal:AbortSignal.timeout(15000)});if(!response.ok)return{httpStatus:response.status};return response.json();}
   const identity=await get('/info');if(String(identity.cpfCnpj).replace(/\D/g,'')!=='13397731000164')throw Error('ERP identity mismatch.');
   result.provider=[];
-  for(const sku of ['ACTM001-K002','SBLL001-K001','DDCO00A-K001']){
+  for(const sku of fita?skus:['ACTM001-K002','SBLL001-K001','DDCO00A-K001']){
    const product=products.find(p=>p.sku===sku);if(!product)continue;
    const raw=await get(`/produtos/${product.external_id}/custos?limit=100&offset=0`);
    // Persist only cost fields: exclude unrelated provider data.

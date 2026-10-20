@@ -57,7 +57,9 @@ export function exportMetadata(filters: ABCFilters, result: ABCResult) {
     ...(result.composition ? [
       ["Composição · versão", result.composition.version],
       ["Composição · quantidade", "Unidades do produto base = quantidade vendida × fator documentado"],
-      ["Composição · valor", "Rateio por CMV de referência × quantidade de cada componente; centavos residuais pelos maiores restos, com desempate por SKU"],
+      ["Composição · valor", result.composition.costSource?.allocationPolicy === "signed_cost_magnitude_zero_quantity"
+        ? "Rateio pela magnitude do CMV histórico × quantidade; todos os custos zero: quantidade dos componentes; CMV mantém o sinal; centavos pelos maiores restos, com desempate por SKU"
+        : "Rateio por CMV de referência × quantidade de cada componente; centavos residuais pelos maiores restos, com desempate por SKU"],
       ["Composição · fonte do CMV", result.composition.costSource?.kind === "olist"
         ? `${result.composition.costSource.name}; campo ${result.composition.costSource.field}; custo histórico por vigência; fechamento diário America/Sao_Paulo; sem usar custo futuro ou substituir a base de custo`
         : result.composition.costSource ? `${result.composition.costSource.file}; aba ${result.composition.costSource.sheet}; coluna ${result.composition.costSource.column}; SHA-256 ${result.composition.costSource.sha256}` : "Não informada"],
@@ -68,6 +70,9 @@ export function exportMetadata(filters: ABCFilters, result: ABCResult) {
         ["Composição · custo histórico das unidades (centavos)", result.composition.periodCostCents ?? "Incompleto"],
         ["Composição · custo histórico conhecido (centavos)", result.composition.knownCostCents || "0"],
         ["Composição · itens sem custo histórico", String(result.composition.costMissingLines || 0)],
+        ["Composição · itens com custo zero informado", String(result.composition.zeroCostLines || 0)],
+        ["Composição · itens com custo negativo", String(result.composition.negativeCostLines || 0)],
+        ["Composição · kits rateados por quantidade por custos zerados", String(result.composition.quantityAllocationLines || 0)],
       ] : []),
       ["Composição · valor original (centavos)", result.composition.originalRevenue],
       ["Composição · valor atribuído (centavos)", result.revenue],

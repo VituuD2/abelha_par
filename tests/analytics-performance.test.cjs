@@ -167,3 +167,29 @@ test('Ninho lets an administrator resume a retry checkpoint without creating a n
  const requests=calls.filter(c=>c.options.method==='POST');assert.equal(requests.length,1);
  assert.equal(requests[0].url,'/api/analytics/sync');assert.deepEqual(JSON.parse(requests[0].options.body),{action:'retry',job:'blocked'});
 });
+
+test('zero and negative CMV totals render normally with the disclosed allocation policy',async t=>{
+ let cost='0.0000';
+ t.mock.method(global,'fetch',async(url)=>{
+  if(url.endsWith('/abc'))return Response.json({...result,composition:{version:'v21',revenuePolicy:'cost',
+   costSource:{kind:'olist',policy:'effective_date',basis:'purchase',name:'Olist 1',allocationPolicy:'signed_cost_magnitude_zero_quantity'},
+   periodCostCents:cost,knownCostCents:cost,costMissingLines:0,zeroCostLines:1,negativeCostLines:cost.startsWith('-')?1:0,quantityAllocationLines:1,
+   pending:[],pendingTotal:0,mappedEntities:1,originalRevenue:result.revenue,unallocatedLines:0,missingCostSkus:[],
+  }});
+  return Response.json(url.endsWith('/coverage')?{sync:{scheduled:0}}:status());
+ });
+ await render('zero-cost-accepted');assert.equal(document.querySelector('[role="alert"]'),null);
+ assert.match(document.body.textContent,/custo informado zero/);assert.match(document.body.textContent,/todos os custos zerados foram rateados/);
+ assert.match(document.body.textContent,/magnitude dos custos/);assert.match(document.body.textContent,/R\$\s*0,00/);
+ cost='-100.0000';await render('negative-cost-accepted');assert.equal(document.querySelector('[role="alert"]'),null);
+ assert.match(document.body.textContent,/custo negativo, preservado no CMV/);assert.match(document.body.textContent,/−R\$\s*1,00/);
+});
+
+test('missing cost data is not presented as a connection fault',async t=>{
+ t.mock.method(global,'fetch',async(url)=>url.endsWith('/abc')
+  ? Response.json({code:'HISTORICAL_COST_UNAVAILABLE',error:'Falta um valor informado com vigência.'},{status:422})
+  : Response.json(url.endsWith('/coverage')?{sync:{scheduled:0}}:status()));
+ await act(async()=>root.render(React.createElement(ABCDashboard,{key:'cost-data-error',isAdmin:true,initialGrouping:'composition'})));
+ assert.match(document.querySelector('[role="alert"]').textContent,/Falta um valor informado/);
+ assert.doesNotMatch(document.querySelector('[role="alert"]').textContent,/Verificar conexões/);
+});

@@ -105,7 +105,7 @@ export function normalizeOrder(
         (total, item) => total + BigInt(item.gross_cents),
         BigInt(0),
       ),
-      declared = decimalField(string(raw.valorTotalProdutos), "valorTotalProdutos", false, 2);
+      declared = decimalField(string(raw.valorTotalProdutos), "valorTotalProdutos", true, 2);
     if (sum !== declared) quality.push("total_itens_diverge_do_total_produtos");
   }
   let customerId: string | null = null;
@@ -158,13 +158,13 @@ export function normalizeOrder(
     total_cents: decimalField(
       string(raw.valorTotalPedido ?? raw.valorTotalProdutos ?? "0"),
       "valorTotalPedido",
-      false,
+      true,
       2,
     ).toString(),
     discount_cents: decimalField(
       string(raw.valorDesconto ?? "0"),
       "valorDesconto",
-      false,
+      true,
       2,
     ).toString(),
     fetched_at: fetchedAt,

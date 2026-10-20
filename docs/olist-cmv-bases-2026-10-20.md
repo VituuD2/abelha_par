@@ -1,5 +1,7 @@
 # Curva ABC: custos médios zerados na Olist 1
 
+Este documento registra o diagnóstico e a primeira correção. **Decisão posterior do responsável:** aceitar custos informados zero ou negativos, inclusive manter a Fita Seios em zero. A [migração v21](cmv-zero-negativo-v21-2026-10-20.md) substitui o bloqueio por custo zero descrito abaixo. Ausência de histórico continua distinta de zero informado.
+
 O POST de 20/10/2026 às 13:02:23 (São Paulo) foi bloqueado porque a aplicação selecionava custo médio por padrão. Os 13 SKUs da mensagem possuem **custo médio vigente zero**, mas custo de compra histórico positivo anterior ao período. A mensagem anterior atribuía o caso a histórico pendente/permissões sem verificar essa causa.
 
 ## Verificação em produção, somente leitura

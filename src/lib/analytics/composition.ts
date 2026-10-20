@@ -29,6 +29,7 @@ export type CompositionCostSource = {
   connectionId?: string | null;
   field?: string;
   policy?: "current_reference" | "effective_date";
+  allocationPolicy?: "signed_cost_magnitude_zero_quantity";
   basis?: "average" | "purchase";
   granularity?: "day";
   dateBasis?: "orders" | "invoiced";
@@ -61,7 +62,7 @@ export function buildCompositionRules(kits: CompositionKit[], version: string, i
   const result: CompositionRules = {
     version, rules: {}, bundles: {}, unlinkedRules: {}, unlinkedBundles: {}, pending: Object.fromEntries(Object.entries(options.pending || {}).map(([sku, reason]) => [compositionSku(sku), reason])),
     ignoredComponentSkus: [...ignored], revenuePolicy: "cost",
-    referenceCosts: Object.fromEntries((options.baseProducts || []).filter(p => p.referenceCostCents && /^\d+$/.test(p.referenceCostCents) && BigInt(p.referenceCostCents) > BigInt(0)).map(p => [compositionSku(p.sku), p.referenceCostCents!])),
+    referenceCosts: Object.fromEntries((options.baseProducts || []).filter(p => p.referenceCostCents !== undefined && /^-?\d+$/.test(p.referenceCostCents)).map(p => [compositionSku(p.sku), p.referenceCostCents!])),
   };
   const sources = new Map<string, CompositionKit>();
   const canonicalNames = new Map<string, string>();

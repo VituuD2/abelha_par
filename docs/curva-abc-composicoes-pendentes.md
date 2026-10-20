@@ -14,7 +14,7 @@ Os 41 combos documentados com componentes diferentes agora são desmembrados nos
 | --- | --- | --- | --- | --- |
 | ACFS000-K001 | Fita Seios | Mantido zerado por decisão do responsável | 53 | ACTM011-K011, TSTM-1 |
 
-O responsável solicitou manter a Fita Seios zerada, pois acredita que não há vendas. Essa ausência de vendas não foi comprovada por nova consulta. Se aparecer venda de combo afetado, suas quantidades continuam disponíveis e o valor fica sinalizado como não rateado; não atribuir custo por suposição.
+Em 20/10/2026, a consulta de produção confirmou uma venda do combo ACTM011-K011 em 10/09/2026, de R$ 28,38, incluindo uma Fita Seios. O responsável reafirmou: **“deixa 0 por hora”** e solicitou aceitar valores monetários zerados ou negativos. A migração v21 mantém o custo informado zero, inclui a quantidade da fita e permite ratear o kit. Custo zero contribui com peso zero quando há outros componentes com custo; se todos forem zero, a receita é dividida pela quantidade de componentes. Não atribuir um custo positivo por suposição. Veja [a correção v21](cmv-zero-negativo-v21-2026-10-20.md).
 
 ## Unidades confirmadas
 

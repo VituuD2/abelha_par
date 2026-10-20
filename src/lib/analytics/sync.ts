@@ -378,6 +378,8 @@ export async function processAnalyticsBatch(
           throw new Error(
             ingested.error.code === "23514" && /analytics_items_(unit_price|gross_cents)_check/.test(ingested.error.message || "")
               ? `Pedido Olist ${raw.id}: o banco ainda bloqueia valores negativos de itens. Aplique a migração v20 para preservar os valores da Olist e retome este checkpoint.`
+              : ingested.error.code === "23514" && /analytics_orders_total_cents_check/.test(ingested.error.message || "")
+                ? `Pedido Olist ${raw.id}: o banco ainda bloqueia totais negativos. Aplique a migração v21 e retome este checkpoint.`
             : ingested.error.message?.includes("IDENTITY_CHANGED")
               ? "Identidade externa alterada. Requer reconciliação administrativa antes de importar."
               : "Não foi possível gravar o pedido analítico atomicamente.",

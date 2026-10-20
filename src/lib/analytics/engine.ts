@@ -23,7 +23,7 @@ export function unitsDecimal(value: bigint, scale = 6): string {
     ? `${sign}${raw.slice(0, -scale)}.${raw.slice(-scale)}`
     : sign + raw;
 }
-/** Prices/credits may be signed; stock quantities and reference costs stay non-negative. */
+/** Monetary values, including reference costs and credits, may be signed. */
 export function signedDecimalUnits(value: string | number, scale = 6): bigint {
   const raw = String(value).trim();
   if (!/^-?\d+(\.\d+)?$/.test(raw)) throw new Error("Valor decimal inválido.");

@@ -82,6 +82,9 @@ export interface ABCResult {
     periodCostCents?: string | null;
     knownCostCents?: string;
     costMissingLines?: number;
+    zeroCostLines?: number;
+    negativeCostLines?: number;
+    quantityAllocationLines?: number;
     pendingTotal: number;
     pending: { sku: string; name: string; reason: string; orders: number }[];
   };

@@ -98,6 +98,9 @@ function dayBefore(day: string, n: number) {
     .slice(0, 10);
 }
 export { money } from "@/lib/analytics/format";
+class AnalyticsRequestError extends Error {
+  constructor(message: string, readonly code?: string) { super(message); }
+}
 async function jsonRequest(path: string, body?: unknown, signal?: AbortSignal) {
   const response = await fetch(
     path,
@@ -112,7 +115,7 @@ async function jsonRequest(path: string, body?: unknown, signal?: AbortSignal) {
   );
   const data = await response.json();
   if (!response.ok)
-    throw new Error(data.error || "Não foi possível consultar os dados.");
+    throw new AnalyticsRequestError(data.error || "Não foi possível consultar os dados.", data.code);
   return data;
 }
 function MultiFilter({
@@ -247,7 +250,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const highlightRow = result?.pareto.find(row => row.entityId === highlight?.entityId) || result?.rows.find(row => row.entityId === highlight?.entityId) || null;
   const updateHighlight = (next: ParetoHighlight | null) => setHighlight(current =>
     current?.entityId === next?.entityId && current?.cumulative === next?.cumulative && current?.origin === next?.origin && current?.targetPercentage === next?.targetPercentage ? current : next);
-  const [error, setError] = useState<string | null>(null),
+  const [error, setError] = useState<string | AnalyticsRequestError | null>(null),
     [schedulingError, setSchedulingError] = useState<string | null>(null),
     [loading, setLoading] = useState(true),
     [exporting, setExporting] = useState(false),
@@ -350,7 +353,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       })
       .catch((e) => {
         if (!abort.signal.aborted && e.name !== "AbortError") {
-          setError(e.message);
+          setError(e instanceof AnalyticsRequestError ? e : e.message);
           setResult(null);
         }
       })
@@ -483,9 +486,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       <section className="card p-5 sm:p-6 bg-gradient-to-r from-amber-100/60 to-white space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold">
-              Onde estão as vendas da sua operação?
-            </h2>
             <p className="text-sm mt-2 text-[var(--color-text-secondary)]">
               Combine empresas e origens. Compare os registros Olist ou consolide
               kits com regras de composição confirmadas.
@@ -616,7 +616,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               <option value="purchase">Custo de compra por vigência</option>
               <option value="average">Custo médio por vigência</option>
             </select>
-            <span className="mt-1 block text-xs text-neutral-500">A base selecionada usa o histórico válido na data da venda. Custo médio zerado ou ausente não é substituído pelo custo de compra.</span>
+            <span className="mt-1 block text-xs text-neutral-500">A base selecionada usa o histórico na data da venda. Valores zerados ou negativos informados são aceitos, sem trocar a base de custo.</span>
           </label>}
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -865,8 +865,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       </form>
       {(error || schedulingError) && (
         <div className="card p-5 text-red-800" role="alert">
-          {error || schedulingError}
-          {isAdmin && (
+          {(typeof error === "string" ? error : error?.message) || schedulingError}
+          {isAdmin && !(error instanceof AnalyticsRequestError && error.code === "HISTORICAL_COST_UNAVAILABLE") && (
             <p className="mt-2">
               <Link href="/ninho" className="underline">
                 Verificar conexões no Ninho
@@ -921,9 +921,13 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </div>
           {result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação">
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
-            <p className="text-sm text-stone-600">{result.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais.</p>
+            <p className="text-sm text-stone-600">{result.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. {result.composition.costSource?.allocationPolicy !== "signed_cost_magnitude_zero_quantity" && "O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais."}</p>
             <p className="text-xs text-stone-600">CMV de referência: {result.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {result.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {result.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(result.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
             {result.composition.periodCostCents != null && <p className="text-sm text-stone-700">Custo de referência das unidades vendidas: <strong>{money(result.composition.periodCostCents)}</strong>. Soma das quantidades × custo histórico aplicável de cada componente.</p>}
+            {result.composition.costSource?.allocationPolicy === "signed_cost_magnitude_zero_quantity" && <p className="text-xs text-stone-600">O CMV preserva valores zerados e negativos. O rateio da receita usa a magnitude dos custos; quando todos os custos do kit são zero, usa a quantidade de cada componente. Centavos residuais são distribuídos sem alterar o valor original da venda.</p>}
+            {!!result.composition.zeroCostLines && <p className="text-xs text-stone-600">{result.composition.zeroCostLines} itens vendidos incluem componente com custo informado zero.</p>}
+            {!!result.composition.negativeCostLines && <p className="text-xs text-stone-600">{result.composition.negativeCostLines} itens vendidos incluem componente com custo negativo, preservado no CMV.</p>}
+            {!!result.composition.quantityAllocationLines && <p className="text-xs text-stone-600">{result.composition.quantityAllocationLines} kits com todos os custos zerados foram rateados pela quantidade dos componentes.</p>}
             {!!result.composition.costMissingLines && <p className="text-xs text-amber-800">Custo de referência total incompleto: {result.composition.costMissingLines} itens sem custo histórico válido. Parcela conhecida: {money(result.composition.knownCostCents || "0")}. Valores ausentes não são considerados custo zero.</p>}
             {result.composition.costSource?.lastError && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">A atualização do CMV está pendente: {result.composition.costSource.lastError} O relatório usa a última referência disponível.</p>}
             {!!result.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">Rateio incompleto: {money(result.composition.unallocatedRevenue)} de {result.composition.unallocatedLines} itens vendidos aguardam CMV de {result.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(result.composition.originalRevenue)}.</p>}

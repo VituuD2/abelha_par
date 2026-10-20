@@ -1,0 +1,148 @@
+{
+  "at": "2026-10-20T16:15:26.117Z",
+  "readOnly": true,
+  "connection": {
+    "name": "Olist 1",
+    "enabled": true,
+    "sync_locked_until": "2026-10-20T16:16:40.330741+00:00",
+    "last_processed_at": "2026-10-20T16:15:10.330741+00:00"
+  },
+  "sync": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "page_offset": 0,
+      "scan_id": "413db21a-86f2-4517-8c3c-0b3f305827b7",
+      "next_at": "2026-10-20T16:29:04.678731+00:00",
+      "last_synced_at": "2026-10-20T15:59:04.678731+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:59:04.678731+00:00"
+    }
+  ],
+  "status": {
+    "total": 119,
+    "pending": 0,
+    "completed": 119,
+    "last_error": null,
+    "updated_at": "2026-10-20T16:03:02.930245+00:00",
+    "last_synced_at": "2026-10-20T15:13:03.235035+00:00"
+  },
+  "jobs": [
+    {
+      "workspace_id": "fd694ddc-a2a6-4a56-9a4b-21b507b4645d",
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "external_id": "342527818",
+      "sku": "ACFS000-K001",
+      "provider_revision": "e4b127be887f0f522c6962cd36732c265ec75822b25e8106885a6e0b62f7cdf9",
+      "page_offset": 0,
+      "scan_id": "c4e42650-cfd4-43df-b258-d2d916a55fa0",
+      "next_at": "2026-10-21T15:15:11.124216+00:00",
+      "last_synced_at": "2026-10-20T15:15:11.124216+00:00",
+      "last_error": null,
+      "attempts": 0,
+      "updated_at": "2026-10-20T15:15:11.124216+00:00"
+    }
+  ],
+  "products": [
+    {
+      "external_id": "342527818",
+      "sku": "ACFS000-K001",
+      "cost_cents": 0,
+      "active": true,
+      "checked_at": "2026-10-20T15:11:04.8256+00:00",
+      "provider_revision": "e4b127be887f0f522c6962cd36732c265ec75822b25e8106885a6e0b62f7cdf9"
+    }
+  ],
+  "events": [
+    {
+      "external_id": "342527818",
+      "sku": "ACFS000-K001",
+      "effective_at": "2000-01-01T02:00:00+00:00",
+      "effective_day": "2000-01-01",
+      "purchase_cents": 0,
+      "average_cents": 0,
+      "current": true
+    }
+  ],
+  "eventLimit": 1000,
+  "reports": [
+    {
+      "filters": {
+        "from": "2026-09-01",
+        "to": "2026-09-30",
+        "metric": "revenue",
+        "mode": "TINY_LEGACY",
+        "grouping": "composition",
+        "basis": "orders",
+        "costBasis": "average",
+        "thresholdA": 80,
+        "thresholdB": 95,
+        "selections": {
+          "statuses": [
+            "1",
+            "5",
+            "6"
+          ]
+        }
+      },
+      "error": {
+        "code": "P0001",
+        "message": "CMV_REQUIRED:ACBF000-K050, ACFS000-K001, ACTM000-K010, ACTM001-K002, CMPO00B-K001, CMPO00C-K001, CMPO00N-K001, CMPO0B3-K001, DDCO00N-K001, DDCO00V-K001, SBGF00M-K001, SBLL001-K001"
+      }
+    },
+    {
+      "filters": {
+        "from": "2026-09-01",
+        "to": "2026-09-30",
+        "metric": "revenue",
+        "mode": "TINY_LEGACY",
+        "grouping": "composition",
+        "basis": "orders",
+        "costBasis": "purchase",
+        "thresholdA": 80,
+        "thresholdB": 95,
+        "selections": {
+          "statuses": [
+            "1",
+            "5",
+            "6"
+          ]
+        }
+      },
+      "error": {
+        "code": "P0001",
+        "message": "CMV_REQUIRED:ACFS000-K001"
+      }
+    }
+  ],
+  "affected": {
+    "total": 1,
+    "sources": [
+      {
+        "sku": "ACTM011-K011",
+        "name": "KIT - Tapa-mamilo (10) + Fita Seios (1)",
+        "factor": "1",
+        "revenue": "0",
+        "quantity": "1.000000",
+        "baseQuantity": "1.000000",
+        "costVersions": 0,
+        "originalRevenue": "2838",
+        "unallocatedLines": 1,
+        "ignoredComponents": [],
+        "referenceCostCents": null,
+        "maxReferenceCostCents": null,
+        "minReferenceCostCents": null
+      }
+    ],
+    "orders": [
+      {
+        "id": "389268170",
+        "date": "2026-09-10",
+        "status": 6,
+        "company": "Olist 1",
+        "quantity": "1.000000"
+      }
+    ]
+  }
+}

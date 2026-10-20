@@ -18,7 +18,7 @@ test('cost listing preserves sub-cent precision and never uses selling price or 
   assert.equal(page.products[0].cost_cents,'1234.5678');
   assert.equal(page.products[0].sku,'ACFS000-K001');
   assert.equal(page.products[1].cost_cents,'0.0000');
-  assert.equal(page.products[2].cost_cents,null);assert.equal(page.products[3].cost_cents,null);
+  assert.equal(page.products[2].cost_cents,null);assert.equal(page.products[3].cost_cents,'-200.0000');
   assert.equal(page.products[4].sku,null);assert.equal(page.products[4].active,false);
   assert.equal(page.products[5].active,false);assert.equal(page.products[6].active,true);
   assert.equal(page.done,true);

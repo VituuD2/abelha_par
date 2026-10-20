@@ -1,11 +1,10 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { analyticsToken, ensureAnalyticsIdentity } from "./auth";
-import { decimalUnits, unitsDecimal } from "./engine";
 import { id, object, string } from "./normalize";
 import { AnalyticsApiError, olistRequest } from "./olist-client";
 import { createHash } from "crypto";
-import { queueCostHistory } from "./cost-history-sync";
+import { costCents, queueCostHistory } from "./cost-history-sync";
 
 export async function costSyncStatus(workspace: string) {
   const db = createAdminClient();
@@ -26,9 +25,7 @@ export function normalizeCostPage(body: Record<string, unknown>, offset: number)
   const products = body.itens.map(value => {
     const product = object(value), prices = object(product.precos);
     const raw = prices.precoCusto;
-    let cost: string | null = null;
-    if ((typeof raw === "string" || typeof raw === "number") && /^\d+(?:\.\d{1,6})?$/.test(String(raw)))
-      cost = unitsDecimal(decimalUnits(raw, 6), 4); // BRL -> cents, preserving sub-cent costs.
+    const cost = costCents(raw); // BRL -> signed cents, preserving sub-cent costs.
     const sku = string(product.sku).toUpperCase();
     if (sku.length > 200) throw new Error("SKU Olist excede 200 caracteres.");
     const provider_revision = createHash("sha256").update(JSON.stringify([
@@ -63,7 +60,9 @@ export async function processCostSync(): Promise<{ processed: number; pending?: 
     const params = new URLSearchParams({ limit: "100", offset: String(job.page_offset) });
     const page = normalizeCostPage(await olistRequest(token, job.connection_id, `/produtos?${params}`), job.page_offset);
     const saved = await db.rpc("analytics_finish_cost_page", { ...args, p_products: page.products, p_done: page.done });
-    if (saved.error) throw new Error("A reserva de custos mudou; a página será retomada.");
+    if (saved.error) throw new Error(saved.error.code === "23514" && /analytics_product_costs_cost_cents_check/.test(saved.error.message || "")
+      ? "O banco ainda bloqueia custos negativos. Aplique a migração v21 e reprograme a atualização do CMV."
+      : "A reserva de custos mudou; a página será retomada.");
     await queueCostHistory(job.workspace_id);
     return { processed: page.products.length, pending: !page.done };
   } catch (reason) {

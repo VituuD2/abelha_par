@@ -10,6 +10,7 @@ import { BeeSettingsIcon } from "@/components/layout/bee-settings-icon";
 import { NectarIcon } from "@/components/layout/nectar-icon";
 import { NECTAR_MODULE } from "@/lib/analytics/config";
 import { can, type Role } from "@/lib/permissions";
+import { APP_VERSION_LABEL } from "@/lib/app-version";
 
 function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -122,7 +123,7 @@ export function Sidebar({ role }: { role: Role | null }) {
               Abelha Par Logística
             </p>
             <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">
-              v2.1.1 - 08182600
+              {APP_VERSION_LABEL}
             </p>
           </div>
         </div>

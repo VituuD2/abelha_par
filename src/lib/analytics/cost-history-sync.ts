@@ -3,13 +3,13 @@ import { createHash } from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { analyticsToken, ensureAnalyticsIdentity } from "./auth";
 import { compositionRulesForWorkspace, hasCompositionCatalog } from "./composition-server";
-import { decimalUnits, unitsDecimal } from "./engine";
+import { signedDecimalUnits, unitsDecimal } from "./engine";
 import { object, string } from "./normalize";
 import { AnalyticsApiError, olistRequest } from "./olist-client";
 
 export const costCents = (value: unknown) =>
-  (typeof value === "string" || typeof value === "number") && /^\d+(?:\.\d{1,6})?$/.test(String(value))
-    ? unitsDecimal(decimalUnits(value, 6), 4) : null;
+  (typeof value === "string" || typeof value === "number") && /^-?\d+(?:\.\d{1,6})?$/.test(String(value))
+    ? unitsDecimal(signedDecimalUnits(value, 6), 4) : null;
 
 function effectiveDate(value: unknown) {
   const raw = string(value);

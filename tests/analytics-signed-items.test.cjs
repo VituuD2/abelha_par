@@ -26,7 +26,8 @@ test('invalid fields identify the order and exact item while negative quantities
   const raw=structuredClone(source);raw.itens[2][field]=value;
   assert.throws(()=>normalizeOrder(raw,'c','s','now'),pattern);
  }
- const raw={...source,valorTotalPedido:-1};assert.throws(()=>normalizeOrder(raw,'c','s','now'),/382643017.*valorTotalPedido/);
+ const raw={...source,valorTotalPedido:-1,valorTotalProdutos:-1,valorDesconto:-0.5};
+ const signed=normalizeOrder(raw,'c','s','now');assert.equal(signed.order.total_cents,'-100');assert.equal(signed.order.discount_cents,'-50');
 });
 
 test('v20 alone permits atomic idempotent ingestion and signed ABC totals while preserving the 522-order checkpoint',async()=>{

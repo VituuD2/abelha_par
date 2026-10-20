@@ -10,7 +10,7 @@ import { ABC_DEFAULTS } from "./config";
 class HistoricalCostUnavailable extends Error {
   readonly code = "HISTORICAL_COST_UNAVAILABLE";
   constructor(readonly costBasis: NonNullable<ABCFilters["costBasis"]>, readonly missingCostSkus: string[]) {
-    super(`CMV unitário histórico indisponível na base ${costBasis === "average" ? "Custo médio" : "Custo de compra"} da Olist 1 para ${missingCostSkus.join(", ")}. O valor dessa base pode estar zerado, ausente ou sem vigência anterior ou igual à data da venda. ${costBasis === "average" ? "Selecione Custo de compra por vigência para usar o histórico de compra, se disponível. " : "Confira os valores e as datas no histórico de custos da Olist 1. "}Para consultar as quantidades enquanto isso, selecione a métrica Quantidade.`);
+    super(`CMV unitário histórico indisponível na base ${costBasis === "average" ? "Custo médio" : "Custo de compra"} da Olist 1 para ${missingCostSkus.join(", ")}. Falta um valor informado com vigência anterior ou igual à data da venda, ou há registros conflitantes. Valores informados zerados ou negativos são aceitos. ${costBasis === "average" ? "Selecione Custo de compra por vigência para usar o histórico de compra, se disponível. " : "Confira os valores e as datas no histórico de custos da Olist 1. "}Para consultar as quantidades enquanto isso, selecione a métrica Quantidade.`);
   }
 }
 
