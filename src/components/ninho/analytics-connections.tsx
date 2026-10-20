@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
 import { ConnectionProgress } from "@/components/analytics/connection-progress";
 import type { CoverageJob } from "@/lib/analytics/coverage";
+import type { CostSyncStatus } from "@/lib/analytics/types";
 import {
   analyticsOAuthErrors,
   type AnalyticsOAuthErrorCode,
@@ -53,6 +54,7 @@ type State = {
   sources: Source[];
   jobs: Job[];
   coverage?: CoverageJob[];
+  costSync?: CostSyncStatus | null;
 };
 async function call(path: string, body?: unknown) {
   const response = await fetch(
@@ -226,7 +228,7 @@ export function AnalyticsConnections() {
   }, [load]);
   const pending = state?.jobs.some((j) =>
     ["queued", "running", "retry"].includes(j.status),
-  );
+  ) || !!(state?.costSync?.connection_id && state.costSync.next_at && state.costSync.next_at <= new Date().toISOString());
   useEffect(() => {
     if (!pending) return;
     const timer = setInterval(() => {
@@ -240,8 +242,10 @@ export function AnalyticsConnections() {
     setError(null);
     setNotice(null);
     try {
-      await call("/api/analytics/connections", body);
-      setNotice("Configuração analítica salva.");
+      const saved = await call("/api/analytics/connections", body);
+      setNotice(saved?.scheduled
+        ? "Atualização do CMV programada para a próxima execução da rotina do servidor."
+        : "Configuração analítica salva.");
       await load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao configurar.");
@@ -311,6 +315,20 @@ export function AnalyticsConnections() {
           {notice}
         </p>
       )}
+      <div className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2">
+        <h3 className="font-semibold">CMV da Olist 1</h3>
+        <p className="text-xs text-[var(--color-text-secondary)]">
+          Os produtos base usam o histórico de custos da Olist 1, respeitando a vigência no dia da venda. Alterações do catálogo antecipam a atualização do histórico; uma revisão diária recupera correções retroativas.
+          {state?.costSync?.history?.last_synced_at
+            ? ` Históricos sincronizados até: ${new Date(state.costSync.history.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.`
+            : " Aguardando a primeira sincronização dos históricos. Confira a conexão da Olist 1 e a permissão de leitura de Produtos/custos."}
+          {!!state?.costSync?.page_offset && ` Atualização em andamento: ${state.costSync.page_offset} produtos consultados.`}
+        </p>
+        {state?.costSync?.history && <p className="text-xs text-[var(--color-text-secondary)]">Históricos disponíveis: {state.costSync.history.completed}/{state.costSync.history.total} produtos. Atualizações pendentes: {state.costSync.history.pending}.</p>}
+        {state?.costSync?.last_error && <p role="alert" className="text-xs text-red-800">{state.costSync.last_error}</p>}
+        {state?.costSync?.history?.last_error && <p role="alert" className="text-xs text-red-800">{state.costSync.history.last_error}</p>}
+        <button className="btn-ghost" disabled={busy || !state} onClick={() => save({ action: "refresh-costs" })}>Programar atualização do CMV</button>
+      </div>
       <div className="space-y-3">
         {state?.connections.map((c) => {
           const configured = c.credential_kind === "legacy" || !!c.client_id;
@@ -706,7 +724,7 @@ export function AnalyticsConnections() {
               {j.last_error && (
                 <p className="mt-1 text-red-800">{j.last_error}</p>
               )}
-              {j.status === "failed" && !j.error_code && (
+              {["failed", "retry"].includes(j.status) && !j.error_code && (
                 <button
                   className="btn-ghost mt-2"
                   disabled={busy}

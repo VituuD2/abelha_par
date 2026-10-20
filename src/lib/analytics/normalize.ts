@@ -1,4 +1,4 @@
-import { decimalUnits, lineCents } from "./engine";
+import { decimalUnits, signedDecimalUnits, lineCents } from "./engine";
 type Raw = Record<string, unknown>;
 export const object = (v: unknown): Raw =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Raw) : {};
@@ -51,6 +51,13 @@ export function normalizeOrder(
   if (!Array.isArray(raw.itens) || !raw.itens.length)
     throw new Error("Pedido sem itens; importação aguardando detalhe válido.");
   const quality: string[] = [];
+  const decimalField = (value: string, field: string, signed = false, scale = 6) => {
+    try {
+      return signed ? signedDecimalUnits(value, scale) : decimalUnits(value, scale);
+    } catch {
+      throw new Error(`Pedido Olist ${externalId}, ${field}: valor decimal inválido${signed ? "" : " ou negativo"}.`);
+    }
+  };
   const items = raw.itens.map((value, index) => {
     const item = object(value),
       product = object(item.produto),
@@ -59,8 +66,10 @@ export function normalizeOrder(
       parent = object(detail.produtoPai);
     const quantity = string(item.quantidade),
       price = string(item.valorUnitario);
-    if (decimalUnits(quantity) <= BigInt(0))
-      throw new Error("Quantidade inválida no item do pedido.");
+    if (decimalField(quantity, `item ${index + 1}, quantidade`) <= BigInt(0))
+      throw new Error(`Pedido Olist ${externalId}, item ${index + 1}: quantidade deve ser positiva.`);
+    if (decimalField(price, `item ${index + 1}, valorUnitario`, true) < BigInt(0))
+      quality.push("item_com_preco_negativo");
     let parentId: string | null = null;
     try {
       parentId = id(parent.id);
@@ -96,7 +105,7 @@ export function normalizeOrder(
         (total, item) => total + BigInt(item.gross_cents),
         BigInt(0),
       ),
-      declared = decimalUnits(string(raw.valorTotalProdutos), 2);
+      declared = decimalField(string(raw.valorTotalProdutos), "valorTotalProdutos", false, 2);
     if (sum !== declared) quality.push("total_itens_diverge_do_total_produtos");
   }
   let customerId: string | null = null;
@@ -146,12 +155,16 @@ export function normalizeOrder(
     invoice_status: invoiceStatus,
     invoice_eligible: invoiceEligible,
     status,
-    total_cents: decimalUnits(
+    total_cents: decimalField(
       string(raw.valorTotalPedido ?? raw.valorTotalProdutos ?? "0"),
+      "valorTotalPedido",
+      false,
       2,
     ).toString(),
-    discount_cents: decimalUnits(
+    discount_cents: decimalField(
       string(raw.valorDesconto ?? "0"),
+      "valorDesconto",
+      false,
       2,
     ).toString(),
     fetched_at: fetchedAt,

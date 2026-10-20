@@ -24,6 +24,8 @@ export function parseABCFilters(value: unknown): ABCFilters {
     throw new Error("Agrupamento inválido.");
   if (!["orders", "invoiced"].includes(String(f.basis)))
     throw new Error("Base de venda inválida.");
+  if (f.costBasis !== undefined && f.costBasis !== "average" && f.costBasis !== "purchase")
+    throw new Error("Base de CMV inválida.");
   const a = Number(f.thresholdA),
     b = Number(f.thresholdB);
   if (!(Number.isFinite(a) && Number.isFinite(b) && a > 0 && a < b && b < 100))
@@ -51,6 +53,7 @@ export function parseABCFilters(value: unknown): ABCFilters {
     mode: f.mode,
     grouping: f.grouping as ABCFilters["grouping"],
     basis: f.basis as ABCFilters["basis"],
+    costBasis: (f.costBasis || "average") as ABCFilters["costBasis"],
     thresholdA: a,
     thresholdB: b,
     selections,

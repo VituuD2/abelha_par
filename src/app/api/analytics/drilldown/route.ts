@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       throw new Error("Entidade inválida.");
     const composed = filters.grouping === "composition";
     const { data, error } = await createAdminClient().rpc(
-      composed ? "analytics_drilldown_components_v16" : "analytics_drilldown",
+      composed ? "analytics_drilldown_components_v19" : "analytics_drilldown",
       {
         p_workspace: auth.access.workspaceId,
         p_actor: auth.access.user.id,

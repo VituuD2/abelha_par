@@ -1,5 +1,7 @@
+import { signedDecimalUnits } from "./engine";
+
 export function money(cents: string) {
-  const value = BigInt(cents), absolute = value < BigInt(0) ? -value : value;
+  const value = signedDecimalUnits(cents, 0), absolute = value < BigInt(0) ? -value : value;
   return `${value < BigInt(0) ? "−" : ""}R$ ${(absolute / BigInt(100)).toLocaleString("pt-BR")},${(absolute % BigInt(100)).toString().padStart(2, "0")}`;
 }
 export function number(value: string | number): string {

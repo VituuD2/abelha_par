@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import type { AccessContext } from "@/lib/access";
 import type { ABCFilters } from "./types";
 import { compositionRulesForWorkspace } from "./composition-server";
+import { costSyncStatus } from "./cost-sync";
 
 export function analyticsError(reason: unknown, status = 400) {
   return NextResponse.json(
@@ -25,7 +26,7 @@ export async function report(
   direction = "asc",
 ) {
   const composed = filters.grouping === "composition";
-  const { data, error } = await createAdminClient().rpc(composed ? "analytics_abc_components_v16" : "analytics_abc", {
+  const { data, error } = await createAdminClient().rpc(composed ? "analytics_abc_components_v19" : "analytics_abc", {
     p_workspace: access.workspaceId,
     p_actor: access.user.id,
     p_filters: filters,
@@ -40,16 +41,16 @@ export async function report(
       error.message.includes("MEMBER_REQUIRED")
         ? "Seu acesso mudou. Entre novamente."
         : composed && error.message.includes("CMV_REQUIRED:")
-          ? `Informe o CMV unitário dos produtos ${error.message.split("CMV_REQUIRED:")[1]}. Para consultar as quantidades enquanto isso, selecione a métrica Quantidade.`
+          ? `CMV unitário histórico pendente da Olist 1 para ${error.message.split("CMV_REQUIRED:")[1]}. É necessário um custo válido com vigência anterior ou igual à data da venda no período selecionado. Confira o histórico e a permissão de leitura de Produtos dessa conta no Ninho e aguarde a sincronização. Para consultar as quantidades enquanto isso, selecione a métrica Quantidade.`
         : composed
-          ? "Não foi possível consultar os produtos base. Confira a migração v16 e tente novamente."
+          ? "Não foi possível consultar os produtos base. Confira a migração v19 e tente novamente."
           : "Não foi possível consultar a Curva ABC. Confira a migração v11 e tente novamente.",
     );
   return data;
 }
 export async function analyticsStatus(workspace: string, actor: string) {
   const db = createAdminClient();
-  const [companies, connections, jobs, sources, coverage] = await Promise.all([
+  const [companies, connections, jobs, sources, coverage, costSync] = await Promise.all([
     db
       .from("analytics_companies")
       .select("id,name,tax_id")
@@ -71,6 +72,7 @@ export async function analyticsStatus(workspace: string, actor: string) {
       .eq("workspace_id", workspace)
       .order("name"),
     db.rpc("analytics_coverage", { p_workspace: workspace, p_actor: actor }),
+    costSyncStatus(workspace),
   ]);
   if ([companies, connections, jobs, sources, coverage].some((r) => r.error))
     throw new Error(
@@ -82,5 +84,6 @@ export async function analyticsStatus(workspace: string, actor: string) {
     jobs: jobs.data || [],
     sources: sources.data || [],
     coverage: coverage.data || [],
+    costSync,
   };
 }

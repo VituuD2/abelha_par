@@ -4,6 +4,10 @@
 
 O código está implementado. Estes passos ativam o módulo no ambiente escolhido; a produção não foi migrada nem recebeu importações nesta entrega.
 
+> Olist 2 — 20/10/2026: o histórico com 522 pedidos parou no pedido 382643017 por preço unitário −R$ 5,94. Há correção testada e migração v20 independente para preservar valores com sinal, sem reiniciar o período. Ver [causa, evidências e retomada](olist2-bloqueio-decimal-2026-10-20.md).
+
+> CMV — 20/10/2026: o rateio passa a usar o custo histórico da Olist 1 por data de vigência, com custo médio como padrão e opção de custo de compra. Aplicar v18 e v19 antes do novo código e conferir a leitura de Produtos/custos. Ver [pesquisa, regras e implantação do CMV histórico](cmv-historico-padroes-2026-10-20.md).
+
 ## Sequência de implantação
 
 1. Confirmar v9 (workspaces) e v10 (bipagem atômica) no banco.

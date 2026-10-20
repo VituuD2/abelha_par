@@ -26,7 +26,8 @@ test("composition report and drilldown use the server catalog and ignore forged 
   const requestBody={filters:{...filters,grouping:"composition"},ensureCoverage:false,workspaceId:"foreign",p_rules:{rules:{"HBCOMAX-K001S":{target:"FORGED",factor:"999"}},unlinkedRules:{"HBCOMAX-K001S":{target:"FORGED",factor:"999"}}}};
   const response=await abc.POST(new Request("http://localhost/api/analytics/abc",{method:"POST",body:JSON.stringify(requestBody)}));
   assert.equal(response.status,200);
-  assert.equal(calls[0].name,"analytics_abc_components_v16");
+  assert.equal(calls[0].name,"analytics_abc_components_v19");
+  assert.deepEqual(calls[0].args.p_rules.referenceCosts,{});
   assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].target,"HBCOMAX-K001");
   assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].factor,"1");
   assert.equal(calls[0].args.p_rules.unlinkedRules["HBCOMAX-K001S"],undefined);
@@ -36,7 +37,7 @@ test("composition report and drilldown use the server catalog and ignore forged 
   const drill=require("../src/app/api/analytics/drilldown/route.ts");
   const detail=await drill.POST(new Request("http://localhost/api/analytics/drilldown",{method:"POST",body:JSON.stringify({...requestBody,entity:"composition:HBCOMAX-K001",page:2})}));
   assert.equal(detail.status,200);
-  assert.equal(calls[1].name,"analytics_drilldown_components_v16");
+  assert.equal(calls[1].name,"analytics_drilldown_components_v19");
   assert.deepEqual(calls[1].args.p_rules,calls[0].args.p_rules);
   assert.equal(calls[1].args.p_offset,50);
 });
@@ -217,4 +218,42 @@ test("legacy repair derives its integration, token and CNPJ from the authorized 
   assert.equal(calls[0].args.p_access_token,encrypted);
   assert.equal(calls[0].args.p_version,3);
   assert.equal(JSON.stringify(await response.json()).includes("token"),false);
+});
+
+test("manual cost refresh schedules only the authorized workspace without a provider request",async t=>{
+  const calls=[];
+  t.mock.method(access,'authorize',async permission=>{assert.equal(permission,'integrations:manage');return{access:{workspaceId:'trusted',user:{id:'admin'},role:'admin'}};});
+  t.mock.method(admin,'createAdminClient',()=>({
+    rpc:async name=>{assert.equal(name,'analytics_seed_cost_sources');return{error:null};},
+    from(table){assert.equal(table,'analytics_cost_sync');const chain={
+      update(patch){assert.ok(patch.next_at);return chain;},
+      eq(key,value){calls.push([key,value]);return chain;},select(){return chain;},
+      async maybeSingle(){return{data:{connection_id:'olist1'}};},
+    };return chain;},
+  }));
+  const provider=require('../src/lib/analytics/olist-client.ts');
+  t.mock.method(provider,'olistRequest',async()=>{throw Error('Must not query Olist');});
+  const response=await connections.POST(request({action:'refresh-costs',workspaceId:'forged',connection_id:'olist2'}));
+  assert.equal(response.status,200);assert.deepEqual(calls,[['workspace_id','trusted']]);
+  assert.deepEqual(await response.json(),{scheduled:true});
+});
+
+test("manual checkpoint retry accepts retry/failed only, enforces management permission and preserves import progress",async t=>{
+  const api=require('../src/app/api/analytics/sync/route.ts'),next=require('next/server'),calls=[],callbacks=[];
+  t.mock.method(next,'after',callback=>{callbacks.push(callback);});
+  t.mock.method(access,'authorize',async permission=>{assert.equal(permission,'analytics:manage');return{access:{workspaceId:'trusted',user:{id:'admin'}}};});
+  t.mock.method(admin,'createAdminClient',()=>({from(table){assert.equal(table,'analytics_sync_jobs');const chain={
+    update(patch){calls.push({patch});return chain;},eq(key,value){calls.push({eq:[key,value]});return chain;},
+    in(key,value){calls.push({in:[key,value]});return chain;},is(key,value){calls.push({is:[key,value]});return chain;},
+    select(){return chain;},async single(){return{data:{id:'checkpoint'},error:null};},
+  };return chain;}}));
+  const response=await api.POST(request({action:'retry',job:'checkpoint',workspaceId:'foreign',processed:0,pending_index:0}));
+  assert.equal(response.status,202);assert.equal(callbacks.length,1);
+  assert.ok(calls.some(c=>c.eq?.[0]==='workspace_id'&&c.eq[1]==='trusted'));
+  assert.ok(calls.some(c=>c.is?.[0]==='error_code'&&c.is[1]===null));
+  assert.deepEqual(calls.find(c=>c.in).in,['status',['failed','retry']]);
+  const patch=calls.find(c=>c.patch).patch;
+  for(const field of ['processed','pending_index','pending_ids','cursor_date','page_offset','pages','from_date','to_date'])assert.equal(field in patch,false);
+  t.mock.method(access,'authorize',async()=>({response:Response.json({error:'Negado'},{status:403})}));
+  const before=calls.length;assert.equal((await api.POST(request({action:'retry',job:'checkpoint'}))).status,403);assert.equal(calls.length,before);
 });

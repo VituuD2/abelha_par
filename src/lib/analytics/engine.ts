@@ -23,12 +23,20 @@ export function unitsDecimal(value: bigint, scale = 6): string {
     ? `${sign}${raw.slice(0, -scale)}.${raw.slice(-scale)}`
     : sign + raw;
 }
+/** Prices/credits may be signed; stock quantities and reference costs stay non-negative. */
+export function signedDecimalUnits(value: string | number, scale = 6): bigint {
+  const raw = String(value).trim();
+  if (!/^-?\d+(\.\d+)?$/.test(raw)) throw new Error("Valor decimal inválido.");
+  return raw.startsWith("-") ? -decimalUnits(raw.slice(1), scale) : decimalUnits(raw, scale);
+}
 export function lineCents(
   price: string | number,
   quantity: string | number,
 ): string {
-  const product = decimalUnits(price) * decimalUnits(quantity);
-  return ((product + BigInt("5000000000")) / BigInt("10000000000")).toString();
+  const product = signedDecimalUnits(price) * decimalUnits(quantity);
+  const absolute = product < BigInt(0) ? -product : product;
+  const rounded = (absolute + BigInt("5000000000")) / BigInt("10000000000");
+  return (product < BigInt(0) ? -rounded : rounded).toString();
 }
 export function rankABC(
   input: {
@@ -54,7 +62,7 @@ export function rankABC(
     ...row,
     value:
       metric === "revenue"
-        ? decimalUnits(row.revenue, 0)
+        ? signedDecimalUnits(row.revenue, 0)
         : decimalUnits(row.quantity),
     qty: decimalUnits(row.quantity),
   }));

@@ -9,7 +9,7 @@ const { parseABCFilters } = require('../src/lib/analytics/filters.ts');
 const { exportMetadata } = require('../src/lib/analytics/export.ts');
 const { rankABC } = require('../src/lib/analytics/engine.ts');
 const catalog = require('../src/lib/analytics/data/composition-catalog.json');
-const rules = compositionRulesForWorkspace(catalog.workspaceIds[0]);
+const {rules} = require('./legacy-composition-rules.cjs');
 const composedFilters = { ...filters, grouping: 'composition' };
 let db, sale;
 const migration = readFileSync('supabase/migration_v14_v15_analytics_complete.sql', 'utf8');

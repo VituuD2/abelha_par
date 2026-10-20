@@ -1,0 +1,328 @@
+diff --git a/src/app/api/analytics/sync/route.ts b/src/app/api/analytics/sync/route.ts
+index d7a553da..affec7dd 100644
+--- a/src/app/api/analytics/sync/route.ts
++++ b/src/app/api/analytics/sync/route.ts
+@@ -37,7 +37,7 @@ export async function POST(request: Request) {
+         })
+         .eq("workspace_id", auth.access.workspaceId)
+         .eq("id", b.job)
+-        .eq("status", "failed")
++        .in("status", ["failed", "retry"])
+         .is("error_code", null)
+         .select("id")
+         .single();
+diff --git a/src/lib/analytics/engine.ts b/src/lib/analytics/engine.ts
+index c63bb11d..d23b32aa 100644
+--- a/src/lib/analytics/engine.ts
++++ b/src/lib/analytics/engine.ts
+@@ -23,12 +23,20 @@ export function unitsDecimal(value: bigint, scale = 6): string {
+     ? `${sign}${raw.slice(0, -scale)}.${raw.slice(-scale)}`
+     : sign + raw;
+ }
++/** Prices/credits may be signed; stock quantities and reference costs stay non-negative. */
++export function signedDecimalUnits(value: string | number, scale = 6): bigint {
++  const raw = String(value).trim();
++  if (!/^-?\d+(\.\d+)?$/.test(raw)) throw new Error("Valor decimal inválido.");
++  return raw.startsWith("-") ? -decimalUnits(raw.slice(1), scale) : decimalUnits(raw, scale);
++}
+ export function lineCents(
+   price: string | number,
+   quantity: string | number,
+ ): string {
+-  const product = decimalUnits(price) * decimalUnits(quantity);
+-  return ((product + BigInt("5000000000")) / BigInt("10000000000")).toString();
++  const product = signedDecimalUnits(price) * decimalUnits(quantity);
++  const absolute = product < BigInt(0) ? -product : product;
++  const rounded = (absolute + BigInt("5000000000")) / BigInt("10000000000");
++  return (product < BigInt(0) ? -rounded : rounded).toString();
+ }
+ export function rankABC(
+   input: {
+@@ -54,7 +62,7 @@ export function rankABC(
+     ...row,
+     value:
+       metric === "revenue"
+-        ? decimalUnits(row.revenue, 0)
++        ? signedDecimalUnits(row.revenue, 0)
+         : decimalUnits(row.quantity),
+     qty: decimalUnits(row.quantity),
+   }));
+diff --git a/src/lib/analytics/format.ts b/src/lib/analytics/format.ts
+index bd0ce2ec..8c396cf3 100644
+--- a/src/lib/analytics/format.ts
++++ b/src/lib/analytics/format.ts
+@@ -1,5 +1,7 @@
++import { signedDecimalUnits } from "./engine";
++
+ export function money(cents: string) {
+-  const value = BigInt(cents), absolute = value < BigInt(0) ? -value : value;
++  const value = signedDecimalUnits(cents, 0), absolute = value < BigInt(0) ? -value : value;
+   return `${value < BigInt(0) ? "−" : ""}R$ ${(absolute / BigInt(100)).toLocaleString("pt-BR")},${(absolute % BigInt(100)).toString().padStart(2, "0")}`;
+ }
+ export function number(value: string | number): string {
+diff --git a/src/lib/analytics/normalize.ts b/src/lib/analytics/normalize.ts
+index 37ae5ead..5870c942 100644
+--- a/src/lib/analytics/normalize.ts
++++ b/src/lib/analytics/normalize.ts
+@@ -1,4 +1,4 @@
+-import { decimalUnits, lineCents } from "./engine";
++import { decimalUnits, signedDecimalUnits, lineCents } from "./engine";
+ type Raw = Record<string, unknown>;
+ export const object = (v: unknown): Raw =>
+   v && typeof v === "object" && !Array.isArray(v) ? (v as Raw) : {};
+@@ -51,6 +51,13 @@ export function normalizeOrder(
+   if (!Array.isArray(raw.itens) || !raw.itens.length)
+     throw new Error("Pedido sem itens; importação aguardando detalhe válido.");
+   const quality: string[] = [];
++  const decimalField = (value: string, field: string, signed = false, scale = 6) => {
++    try {
++      return signed ? signedDecimalUnits(value, scale) : decimalUnits(value, scale);
++    } catch {
++      throw new Error(`Pedido Olist ${externalId}, ${field}: valor decimal inválido${signed ? "" : " ou negativo"}.`);
++    }
++  };
+   const items = raw.itens.map((value, index) => {
+     const item = object(value),
+       product = object(item.produto),
+@@ -59,8 +66,10 @@ export function normalizeOrder(
+       parent = object(detail.produtoPai);
+     const quantity = string(item.quantidade),
+       price = string(item.valorUnitario);
+-    if (decimalUnits(quantity) <= BigInt(0))
+-      throw new Error("Quantidade inválida no item do pedido.");
++    if (decimalField(quantity, `item ${index + 1}, quantidade`) <= BigInt(0))
++      throw new Error(`Pedido Olist ${externalId}, item ${index + 1}: quantidade deve ser positiva.`);
++    if (decimalField(price, `item ${index + 1}, valorUnitario`, true) < BigInt(0))
++      quality.push("item_com_preco_negativo");
+     let parentId: string | null = null;
+     try {
+       parentId = id(parent.id);
+@@ -96,7 +105,7 @@ export function normalizeOrder(
+         (total, item) => total + BigInt(item.gross_cents),
+         BigInt(0),
+       ),
+-      declared = decimalUnits(string(raw.valorTotalProdutos), 2);
++      declared = decimalField(string(raw.valorTotalProdutos), "valorTotalProdutos", false, 2);
+     if (sum !== declared) quality.push("total_itens_diverge_do_total_produtos");
+   }
+   let customerId: string | null = null;
+@@ -146,12 +155,16 @@ export function normalizeOrder(
+     invoice_status: invoiceStatus,
+     invoice_eligible: invoiceEligible,
+     status,
+-    total_cents: decimalUnits(
++    total_cents: decimalField(
+       string(raw.valorTotalPedido ?? raw.valorTotalProdutos ?? "0"),
++      "valorTotalPedido",
++      false,
+       2,
+     ).toString(),
+-    discount_cents: decimalUnits(
++    discount_cents: decimalField(
+       string(raw.valorDesconto ?? "0"),
++      "valorDesconto",
++      false,
+       2,
+     ).toString(),
+     fetched_at: fetchedAt,
+diff --git a/src/lib/analytics/sync.ts b/src/lib/analytics/sync.ts
+index b8d30d6f..4da08447 100644
+--- a/src/lib/analytics/sync.ts
++++ b/src/lib/analytics/sync.ts
+@@ -376,7 +376,9 @@ export async function processAnalyticsBatch(
+         });
+         if (ingested.error)
+           throw new Error(
+-            ingested.error.message?.includes("IDENTITY_CHANGED")
++            ingested.error.code === "23514" && /analytics_items_(unit_price|gross_cents)_check/.test(ingested.error.message || "")
++              ? `Pedido Olist ${raw.id}: o banco ainda bloqueia valores negativos de itens. Aplique a migração v20 para preservar os valores da Olist e retome este checkpoint.`
++            : ingested.error.message?.includes("IDENTITY_CHANGED")
+               ? "Identidade externa alterada. Requer reconciliação administrativa antes de importar."
+               : "Não foi possível gravar o pedido analítico atomicamente.",
+           );
+diff --git a/tests/analytics-engine.test.cjs b/tests/analytics-engine.test.cjs
+index 99cbc07b..5e7576fd 100644
+--- a/tests/analytics-engine.test.cjs
++++ b/tests/analytics-engine.test.cjs
+@@ -125,7 +125,11 @@ test("decimal money is exact, large amounts remain strings, lines round once", (
+   assert.equal(lineCents("0.1", "3"), "30");
+   assert.equal(lineCents("0.005", "1"), "1");
+   assert.equal(lineCents("12.3456", "0.5"), "617");
+-  assert.throws(() => lineCents("-1", "1"));
++  assert.equal(lineCents("-1", "1"), "-100");
++  assert.equal(lineCents("-0.005", "1"), "-1");
++  assert.equal(lineCents("-12.3456", "0.5"), "-617");
++  assert.throws(() => lineCents("-1", "-1"));
++  assert.throws(() => decimalUnits("-1"));
+   assert.equal(
+     exportRow(row("a", "900719925474099399"))[3],
+     "9007199254740993.99",
+diff --git a/src/components/ninho/analytics-connections.tsx b/src/components/ninho/analytics-connections.tsx
+--- a/src/components/ninho/analytics-connections.tsx
++++ b/src/components/ninho/analytics-connections.tsx
+@@ -706,7 +706,7 @@ export function AnalyticsConnections() {
+               {j.last_error && (
+                 <p className="mt-1 text-red-800">{j.last_error}</p>
+               )}
+-              {j.status === "failed" && !j.error_code && (
++              {["failed", "retry"].includes(j.status) && !j.error_code && (
+                 <button
+                   className="btn-ghost mt-2"
+                   disabled={busy}
+diff --git a/supabase/migration_v20_analytics_signed_item_amounts.sql b/supabase/migration_v20_analytics_signed_item_amounts.sql
+new file mode 100644
+--- /dev/null
++++ b/supabase/migration_v20_analytics_signed_item_amounts.sql
+@@ -0,0 +1,13 @@
++-- Independent hotfix: apply after v13+; does not require or activate v18/v19 CMV features.
++-- ERP order 382643017 has a negative unit price. Preserve its actual sign and quantity.
++BEGIN;
++ALTER TABLE public.analytics_items DROP CONSTRAINT IF EXISTS analytics_items_unit_price_check;
++ALTER TABLE public.analytics_items DROP CONSTRAINT IF EXISTS analytics_items_gross_cents_check;
++ALTER TABLE public.analytics_items DROP CONSTRAINT IF EXISTS analytics_items_amount_sign_check;
++ALTER TABLE public.analytics_items ADD CONSTRAINT analytics_items_amount_sign_check CHECK (
++ (unit_price>=0 AND gross_cents>=0) OR (unit_price<0 AND gross_cents<=0)
++);
++-- Keep quantity>0, numeric precision, tenant FKs, leases, atomic ingestion and RLS intact.
++-- No rows, job counters, date cursors, pending IDs, costs or ERP values are changed here.
++NOTIFY pgrst, 'reload schema';
++COMMIT;
+diff --git a/tests/analytics-signed-items.test.cjs b/tests/analytics-signed-items.test.cjs
+new file mode 100644
+--- /dev/null
++++ b/tests/analytics-signed-items.test.cjs
+@@ -0,0 +1,59 @@
++require('./setup.cjs');
++const {test,before,after}=require('node:test'),assert=require('node:assert/strict'),{readFileSync}=require('node:fs');
++const {isolatedDatabase,ws,connections,filters,query}=require('../scripts/analytics-isolated.cjs');
++const {normalizeOrder}=require('../src/lib/analytics/normalize.ts');
++const {lineCents,decimalUnits,rankABC}=require('../src/lib/analytics/engine.ts');
++const {money}=require('../src/lib/analytics/format.ts');
++const source=require('../docs/evidencias/olist2-decimal-20261020145558/diagnostico.json').sanitizedInput;
++const migration=readFileSync('supabase/migration_v20_analytics_signed_item_amounts.sql','utf8');
++let db;
++before(async()=>{db=await isolatedDatabase();});after(async()=>{await db?.close();});
++
++test('the real blocked Olist 2 order preserves the negative item and reconciles with the order total',()=>{
++ const result=normalizeOrder(source,connections[1],connections[1],'2026-10-20T15:00:00Z');
++ assert.deepEqual(result.items.map(item=>item.gross_cents),['3205','140308','-594']);
++ assert.equal(result.items[2].unit_price,'-5.94');assert.equal(result.items[2].quantity,'1');
++ assert.equal(result.order.total_cents,'142919');
++ assert.equal(result.items.reduce((sum,item)=>sum+BigInt(item.gross_cents),0n).toString(),result.order.total_cents);
++ assert.ok(result.order.quality_flags.includes('item_com_preco_negativo'));
++ assert.ok(result.order.quality_flags.includes('total_itens_diverge_do_total_produtos'));
++ for(const [price,qty,expected] of [['-0.005','1','-1'],['-12.3456','0.5','-617'],['-0.000001','0.1','0'],['-9007199254740993.99','1','-900719925474099399']])assert.equal(lineCents(price,qty),expected);
++ assert.throws(()=>decimalUnits('-1'));assert.throws(()=>lineCents('1','-1'));
++});
++
++test('invalid fields identify the order and exact item while negative quantities remain rejected',()=>{
++ for(const [field,value,pattern]of [['quantidade',-1,/382643017.*item 3.*quantidade/],['quantidade',0,/382643017.*item 3.*quantidade/],['valorUnitario','NaN',/382643017.*item 3.*valorUnitario/],['valorUnitario','- 5.94',/382643017.*item 3.*valorUnitario/]]){
++  const raw=structuredClone(source);raw.itens[2][field]=value;
++  assert.throws(()=>normalizeOrder(raw,'c','s','now'),pattern);
++ }
++ const raw={...source,valorTotalPedido:-1};assert.throws(()=>normalizeOrder(raw,'c','s','now'),/382643017.*valorTotalPedido/);
++});
++
++test('v20 alone permits atomic idempotent ingestion and signed ABC totals while preserving the 522-order checkpoint',async()=>{
++ const pending=Array.from({length:51},(_,i)=>i===43?'382643017':String(400000000+i));
++ const inserted=(await db.query(`INSERT INTO analytics_sync_jobs(workspace_id,connection_id,mode,from_date,to_date,cursor_date,pages,processed,pending_ids,pending_index,page_done)
++ VALUES($1,$2,'backfill','2026-08-01','2026-10-02','2026-08-10',10,522,$3,43,true) RETURNING id`,[ws,connections[1],JSON.stringify(pending)])).rows[0];
++ const job=(await db.query('SELECT * FROM analytics_claim_job($1)',[ws])).rows[0];assert.equal(job.id,inserted.id);
++ const n=normalizeOrder(source,connections[1],connections[1],'2026-10-20T15:00:00Z');
++ const ingest=()=>db.query('SELECT analytics_ingest($1,$2,$3,$4) id',[job.id,job.lease_token,JSON.stringify(n.order),JSON.stringify(n.items)]);
++ await db.exec('BEGIN; SAVEPOINT old_schema');await assert.rejects(ingest,/analytics_items_(unit_price|gross_cents)_check/);await db.exec('ROLLBACK TO SAVEPOINT old_schema; COMMIT');
++ assert.equal((await db.query('SELECT count(*) n FROM analytics_orders')).rows[0].n,0);
++ await db.exec(migration);await db.exec(migration);
++ const checkpoint=(await db.query('SELECT processed,pending_index,pages,cursor_date::text cursor_date FROM analytics_sync_jobs WHERE id=$1',[job.id])).rows[0];
++ assert.deepEqual(checkpoint,{processed:522,pending_index:43,pages:10,cursor_date:'2026-08-10'});
++ const first=(await ingest()).rows[0].id;assert.equal((await ingest()).rows[0].id,first);
++ const stored=(await db.query('SELECT unit_price,gross_cents FROM analytics_items WHERE position=2')).rows[0];
++ assert.equal(stored.unit_price,'-5.940000');assert.equal(stored.gross_cents,'-594');
++ assert.equal((await db.query('SELECT count(*) n FROM analytics_orders')).rows[0].n,1);assert.equal((await db.query('SELECT count(*) n FROM analytics_items')).rows[0].n,3);
++ const result=await query(db,{...filters,from:'2026-08-01',to:'2026-10-02'});
++ assert.equal(result.revenue,'142919');assert.equal(Number(result.quantity),6);assert.equal(result.rows.find(row=>row.sku==='SBLL001-K001').revenue,'-594');
++ const ranked=rankABC(result.rows);assert.deepEqual(ranked.map(row=>[row.entityId,row.rank,row.class]),result.rows.map(row=>[row.entityId,row.rank,row.class]));
++ await db.exec('BEGIN; SAVEPOINT invalid_quantity');await assert.rejects(()=>db.query('UPDATE analytics_items SET quantity=-1 WHERE position=2'),/analytics_items_quantity_check/);await db.exec('ROLLBACK TO SAVEPOINT invalid_quantity; COMMIT');
++ await db.exec('BEGIN; SAVEPOINT invalid_sign');await assert.rejects(()=>db.query('UPDATE analytics_items SET gross_cents=594 WHERE position=2'),/analytics_items_amount_sign_check/);await db.exec('ROLLBACK TO SAVEPOINT invalid_sign; COMMIT');
++});
++
++test('money displays signed amounts and exact PostgreSQL numeric costs with sub-cent display rounding',()=>{
++ assert.match(money('-594'),/5,94/);assert.ok(money('-594').startsWith('−'));
++ assert.equal(money('1800.0000000000'),money('1800'));
++ assert.equal(money('-0.5000'),money('-1'));assert.equal(money('100.4999'),money('100'));
++});
+diff --git a/docs/evidencias/olist2-decimal-20261020145558/diagnostico.json b/docs/evidencias/olist2-decimal-20261020145558/diagnostico.json
+new file mode 100644
+--- /dev/null
++++ b/docs/evidencias/olist2-decimal-20261020145558/diagnostico.json
+@@ -0,0 +1,70 @@
++{
++  "at": "2026-10-20T14:55:58.441Z",
++  "readOnly": true,
++  "connection": "Olist 2",
++  "identityConfirmed": true,
++  "checkpoint": {
++    "id": "1af1f19a-24cf-427e-b4bb-3fb317c051c0",
++    "mode": "backfill",
++    "status": "retry",
++    "from_date": "2026-08-01",
++    "to_date": "2026-10-02",
++    "cursor_date": "2026-08-10",
++    "page_offset": 0,
++    "pages": 10,
++    "processed": 522,
++    "pending_index": 43,
++    "attempts": 28,
++    "last_error": "Valor decimal inválido ou negativo.",
++    "next_at": "2026-10-20T15:28:08.822+00:00",
++    "updated_at": "2026-10-20T14:28:08.822+00:00",
++    "pendingCount": 51,
++    "pendingOrderId": "382643017"
++  },
++  "invalidFields": [
++    {
++      "field": "itens[2].valorUnitario",
++      "value": -5.94,
++      "type": "number"
++    }
++  ],
++  "normalization": {
++    "ok": false,
++    "error": "Valor decimal inválido ou negativo."
++  },
++  "sanitizedInput": {
++    "id": 382643017,
++    "data": "2026-08-10",
++    "situacao": 1,
++    "cliente": {},
++    "itens": [
++      {
++        "produto": {
++          "id": 347838085,
++          "sku": "SBCC000-K001"
++        },
++        "quantidade": 1,
++        "valorUnitario": 32.05
++      },
++      {
++        "produto": {
++          "id": 347843027,
++          "sku": "SBGF00M-K001S"
++        },
++        "quantidade": 4,
++        "valorUnitario": 350.77
++      },
++      {
++        "produto": {
++          "id": 347843664,
++          "sku": "SBLL001-K001"
++        },
++        "quantidade": 1,
++        "valorUnitario": -5.94
++      }
++    ],
++    "valorTotalPedido": 1429.19,
++    "valorTotalProdutos": 1429.18,
++    "valorDesconto": 0
++  }
++}

@@ -128,6 +128,27 @@ const raw = (id, channel) => ({
     },
   ],
 });
+
+test("the 522-order checkpoint advances past the real signed-price order without restarting the historical range",async t=>{
+  const f=fixture(),evidence=require('../docs/evidencias/olist2-decimal-20261020145558/diagnostico.json');
+  Object.assign(f.job,{from_date:'2026-08-01',to_date:'2026-10-02',cursor_date:'2026-08-10',pages:10,processed:522,
+    pending_ids:Array.from({length:45},(_,i)=>i===43?'382643017':String(400000000+i)),pending_index:43,page_done:true,attempts:28});
+  t.mock.method(admin,'createAdminClient',()=>f.db);t.mock.method(auth,'analyticsToken',async()=> 'token');t.mock.method(auth,'ensureAnalyticsIdentity',async()=>{});
+  let firstPage=true;
+  t.mock.method(provider,'olistRequest',async(_t,_c,path)=>{
+    if(path.endsWith('/marcadores'))return{itens:[]};
+    if(path.startsWith('/produtos/'))return{id:Number(path.split('/').at(-1)),descricao:'Produto'};
+    if(path==='/pedidos/382643017')return structuredClone(evidence.sanitizedInput);
+    if(path==='/pedidos/400000044')throw new provider.AnalyticsApiError(429,60);
+    if(path.startsWith('/pedidos?')){firstPage=false;throw Error('Must resume pending IDs before listing another page');}
+    throw Error(path);
+  });
+  const result=await processAnalyticsBatch('workspace');
+  assert.equal(result.processed,1);assert.equal(f.job.processed,523);assert.equal(f.job.pending_index,44);
+  assert.equal(f.job.cursor_date,'2026-08-10');assert.equal(f.job.pages,10);assert.equal(firstPage,true);
+  assert.equal(f.ingested.length,1);assert.equal(f.ingested[0].p_items[2].gross_cents,'-594');
+  assert.equal(f.job.status,'retry');assert.ok(f.ingested[0].p_order.quality_flags.includes('item_com_preco_negativo'));
+});
 test("real-world zero catalog id no longer poisons a checkpoint: all unlinked lines are ingested once and no /produtos/0 is requested", async t => {
   const f = fixture(), paths = [];
   t.mock.method(admin, "createAdminClient", () => f.db);

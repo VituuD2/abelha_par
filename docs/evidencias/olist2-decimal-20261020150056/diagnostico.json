@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-20T15:00:56.716Z",
+  "readOnly": true,
+  "connection": "Olist 2",
+  "identityConfirmed": true,
+  "checkpoint": {
+    "id": "1af1f19a-24cf-427e-b4bb-3fb317c051c0",
+    "mode": "backfill",
+    "status": "retry",
+    "from_date": "2026-08-01",
+    "to_date": "2026-10-02",
+    "cursor_date": "2026-08-10",
+    "page_offset": 0,
+    "pages": 10,
+    "processed": 522,
+    "pending_index": 43,
+    "attempts": 28,
+    "last_error": "Valor decimal inválido ou negativo.",
+    "next_at": "2026-10-20T15:28:08.822+00:00",
+    "updated_at": "2026-10-20T14:28:08.822+00:00",
+    "pendingCount": 51,
+    "pendingOrderId": "382643017"
+  },
+  "invalidFields": [
+    {
+      "field": "itens[2].valorUnitario",
+      "value": -5.94,
+      "type": "number"
+    }
+  ],
+  "normalization": {
+    "ok": true,
+    "totalCents": "142919",
+    "discountCents": "0",
+    "qualityFlags": [
+      "produto_sem_enriquecimento",
+      "item_com_preco_negativo",
+      "total_itens_diverge_do_total_produtos",
+      "cliente_sem_id"
+    ]
+  },
+  "sanitizedInput": {
+    "id": 382643017,
+    "data": "2026-08-10",
+    "situacao": 1,
+    "cliente": {},
+    "itens": [
+      {
+        "produto": {
+          "id": 347838085,
+          "sku": "SBCC000-K001"
+        },
+        "quantidade": 1,
+        "valorUnitario": 32.05
+      },
+      {
+        "produto": {
+          "id": 347843027,
+          "sku": "SBGF00M-K001S"
+        },
+        "quantidade": 4,
+        "valorUnitario": 350.77
+      },
+      {
+        "produto": {
+          "id": 347843664,
+          "sku": "SBLL001-K001"
+        },
+        "quantidade": 1,
+        "valorUnitario": -5.94
+      }
+    ],
+    "valorTotalPedido": 1429.19,
+    "valorTotalProdutos": 1429.18,
+    "valorDesconto": 0
+  }
+}

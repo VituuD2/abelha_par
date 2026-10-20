@@ -8,6 +8,7 @@ import { analyticsToken } from "@/lib/analytics/auth";
 import { olistRequest } from "@/lib/analytics/olist-client";
 import { object, string } from "@/lib/analytics/normalize";
 import { analyticsError, analyticsStatus } from "@/lib/analytics/server";
+import { queueCostHistory } from "@/lib/analytics/cost-history-sync";
 export const dynamic = "force-dynamic";
 export async function GET() {
   const auth = await authorize("integrations:manage");
@@ -28,6 +29,15 @@ export async function POST(request: Request) {
     workspace = auth.access.workspaceId;
   try {
     const b = await request.json();
+    if (b.action === "refresh-costs") {
+      const seeded = await db.rpc("analytics_seed_cost_sources");
+      if (seeded.error) throw new Error("Confira a migração v18 antes de atualizar o CMV.");
+      const scheduled = await db.from("analytics_cost_sync").update({ next_at: new Date().toISOString() })
+        .eq("workspace_id", workspace).select("connection_id").maybeSingle();
+      if (scheduled.error || !scheduled.data) throw new Error("Cadastre a empresa e a conexão da Olist 1 com o CNPJ 13.397.731/0001-64 no Ninho.");
+      await queueCostHistory(workspace, true);
+      return NextResponse.json({ scheduled: true });
+    }
     if (b.action === "company") {
       const name = string(b.name),
         tax = string(b.taxId).replace(/\D/g, "");

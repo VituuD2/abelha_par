@@ -28,9 +28,11 @@ import type {
   ABCRow,
   Dimension,
   Option,
+  CostSyncStatus,
 } from "@/lib/analytics/types";
 
 type Status = {
+  costSync?: CostSyncStatus | null;
   coverage?: CoverageJob[];
   companies: { id: string; name: string; tax_id: string | null }[];
   sources?: { id: string; connection_id: string }[];
@@ -48,7 +50,7 @@ type Status = {
 };
 type Drill = {
   total: number;
-  sources?: { sku: string; name: string; factor: string; quantity: string; baseQuantity: string; revenue: string; originalRevenue: string; referenceCostCents: string | null; unallocatedLines: number; ignoredComponents?: string[] }[];
+  sources?: { sku: string; name: string; factor: string; quantity: string; baseQuantity: string; revenue: string; originalRevenue: string; referenceCostCents: string | null; unallocatedLines: number; ignoredComponents?: string[]; costVersions?: number; minReferenceCostCents?: string; maxReferenceCostCents?: string }[];
   companies: {
     name: string;
     revenue: string;
@@ -235,6 +237,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     thresholdA: ABC_DEFAULTS.thresholdA,
     thresholdB: ABC_DEFAULTS.thresholdB,
     basis: "orders",
+    costBasis: "average",
     selections: { statuses: ABC_DEFAULTS.statuses.map(String) },
   }));
   const [filters, setFilters] = useState(draft),
@@ -366,7 +369,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       pendingProgressRefresh.current = null;
     };
   }, [filters, page, size, sort, direction, refresh, dataRefresh, refreshFromProgress]);
-  const pendingImports = status?.jobs.some((j) => ["queued", "running", "retry"].includes(j.status));
+  // Poll local progress only. The cron owns every provider request, including costs.
+  const pendingImports = status?.jobs.some((j) => ["queued", "running", "retry"].includes(j.status)) ||
+    (filters.grouping === "composition" && !!status?.costSync?.connection_id);
   useEffect(() => {
     if (!pendingImports) return;
     const abort = new AbortController();
@@ -605,6 +610,13 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               </option>
             </select>
           </label>
+          {draft.grouping === "composition" && <label className="text-sm font-medium">
+            Base do CMV histórico
+            <select className="field mt-2" value={draft.costBasis || "average"} onChange={e => setDraft(f => ({ ...f, costBasis: e.target.value as ABCFilters["costBasis"] }))}>
+              <option value="average">Custo médio por vigência</option>
+              <option value="purchase">Custo de compra por vigência</option>
+            </select>
+          </label>}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {[7, 30, 90, 365].map((n) => (
@@ -909,7 +921,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           {result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação">
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
             <p className="text-sm text-stone-600">{result.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais.</p>
-            <p className="text-xs text-stone-600">CMV de referência: coluna {result.composition.costSource?.column || "L"} da planilha {result.composition.costSource?.file || "de produtos"}. Este rateio gerencial usa o custo da planilha, sem recalcular o custo histórico de cada venda.</p>
+            <p className="text-xs text-stone-600">CMV de referência: {result.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {result.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {result.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(result.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
+            {result.composition.periodCostCents != null && <p className="text-sm text-stone-700">Custo de referência das unidades vendidas: <strong>{money(result.composition.periodCostCents)}</strong>. Soma das quantidades × custo histórico aplicável de cada componente.</p>}
+            {!!result.composition.costMissingLines && <p className="text-xs text-amber-800">Custo de referência total incompleto: {result.composition.costMissingLines} itens sem custo histórico válido. Parcela conhecida: {money(result.composition.knownCostCents || "0")}. Valores ausentes não são considerados custo zero.</p>}
+            {result.composition.costSource?.lastError && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">A atualização do CMV está pendente: {result.composition.costSource.lastError} O relatório usa a última referência disponível.</p>}
             {!!result.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">Rateio incompleto: {money(result.composition.unallocatedRevenue)} de {result.composition.unallocatedLines} itens vendidos aguardam CMV de {result.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(result.composition.originalRevenue)}.</p>}
             <p className="text-xs text-stone-500">Filtros de SKU, produto e produto pai selecionam os registros originais da venda antes da consolidação. Regra {result.composition.version}.</p>
             {!!result.composition.ignoredComponentSkus?.length && <p className="text-xs text-stone-600">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
@@ -1132,7 +1147,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               {!!drill.sources?.length && <section className="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-4 space-y-2">
                 <h3 className="font-semibold text-sm">Origem da composição</h3>
                 <p className="text-xs text-stone-600">Quantidade vendida × fator = unidades do produto base. Os valores abaixo são atribuídos somente a este produto; o valor original do kit serve para conferência.</p>
-                <ul className="space-y-2 text-sm">{drill.sources.map(source => <li key={`${source.sku}:${source.factor}`}><span className="font-mono text-xs">{source.sku || "Sem SKU"}</span> · {source.name}<span className="block text-xs text-stone-600">{number(source.quantity)} × {number(source.factor)} = {number(source.baseQuantity)} un. base · valor atribuído {money(source.revenue)}</span><span className="block text-xs text-stone-500">Valor original dos itens de origem: {money(source.originalRevenue)}{source.referenceCostCents && ` · CMV por unidade base: ${money(source.referenceCostCents)}`}</span>{!!source.unallocatedLines && <span className="block text-xs text-amber-800">{source.unallocatedLines} itens com rateio pendente por falta de CMV em um componente.</span>}{!!source.ignoredComponents?.length && <span className="block text-xs text-stone-500">Componentes auxiliares fora da análise: {source.ignoredComponents.join(", ")}</span>}</li>)}</ul>
+                <ul className="space-y-2 text-sm">{drill.sources.map(source => <li key={`${source.sku}:${source.factor}`}><span className="font-mono text-xs">{source.sku || "Sem SKU"}</span> · {source.name}<span className="block text-xs text-stone-600">{number(source.quantity)} × {number(source.factor)} = {number(source.baseQuantity)} un. base · valor atribuído {money(source.revenue)}</span><span className="block text-xs text-stone-500">Valor original dos itens de origem: {money(source.originalRevenue)}{source.referenceCostCents && ` · CMV por unidade base: ${money(source.referenceCostCents)}`}{(source.costVersions || 0) > 1 && ` · CMV variou de ${money(source.minReferenceCostCents || "0")} a ${money(source.maxReferenceCostCents || "0")} no intervalo; rateio calculado por venda`}</span>{!!source.unallocatedLines && <span className="block text-xs text-amber-800">{source.unallocatedLines} itens com rateio pendente por falta de CMV em um componente.</span>}{!!source.ignoredComponents?.length && <span className="block text-xs text-stone-500">Componentes auxiliares fora da análise: {source.ignoredComponents.join(", ")}</span>}</li>)}</ul>
               </section>}
               <div className="grid gap-4 sm:grid-cols-2">
                 {[

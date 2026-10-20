@@ -1,6 +1,15 @@
 export type ABCMode = "TINY_LEGACY" | "STRICT_CUMULATIVE";
 export type ABCMetric = "revenue" | "quantity";
 export type ABCGrouping = "product" | "parent" | "customer" | "composition";
+export type CostSyncStatus = {
+  connection_id?: string;
+  page_offset?: number;
+  last_synced_at?: string | null;
+  last_error?: string | null;
+  next_at?: string;
+  updated_at?: string;
+  history?: { total: number; completed: number; pending: number; last_synced_at: string | null; last_error: string | null; updated_at: string | null } | null;
+};
 export type Dimension =
   | "companies"
   | "connections"
@@ -30,6 +39,7 @@ export interface ABCFilters {
   thresholdA: number;
   thresholdB: number;
   basis: "orders" | "invoiced";
+  costBasis?: "average" | "purchase";
   selections: Partial<Record<Dimension, string[]>>;
 }
 export interface ABCRow {
@@ -61,7 +71,7 @@ export interface ABCResult {
   composition?: {
     version: string;
     revenuePolicy: "cost";
-    costSource: { file: string; sheet: string; column: string; sha256: string };
+    costSource: import("./composition").CompositionCostSource;
     originalRevenue: string;
     unallocatedRevenue: string;
     unallocatedLines: number;
@@ -69,6 +79,9 @@ export interface ABCResult {
     missingCostSkus: string[];
     ignoredComponentSkus?: string[];
     mappedEntities: number;
+    periodCostCents?: string | null;
+    knownCostCents?: string;
+    costMissingLines?: number;
     pendingTotal: number;
     pending: { sku: string; name: string; reason: string; orders: number }[];
   };

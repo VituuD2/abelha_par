@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         })
         .eq("workspace_id", auth.access.workspaceId)
         .eq("id", b.job)
-        .eq("status", "failed")
+        .in("status", ["failed", "retry"])
         .is("error_code", null)
         .select("id")
         .single();

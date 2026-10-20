@@ -21,7 +21,23 @@ export type CompositionRules = {
   ignoredComponentSkus: string[];
   revenuePolicy: "cost";
   referenceCosts: Record<string, string>;
-  costSource?: { file: string; sheet: string; column: string; sha256: string };
+  costSource?: CompositionCostSource;
+};
+export type CompositionCostSource = {
+  kind?: "olist";
+  name?: string;
+  connectionId?: string | null;
+  field?: string;
+  policy?: "current_reference" | "effective_date";
+  basis?: "average" | "purchase";
+  granularity?: "day";
+  dateBasis?: "orders" | "invoiced";
+  lastSyncedAt?: string | null;
+  lastError?: string | null;
+  file?: string;
+  sheet?: string;
+  column?: string;
+  sha256?: string;
 };
 export const compositionSku = (value: string) => value.trim().toUpperCase();
 

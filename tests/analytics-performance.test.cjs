@@ -100,3 +100,69 @@ test('import progress never aborts a slow initial report and coalesces several u
   now+=15000;current.jobs[0].processed=4;await act(async()=>tick());assert.equal(reports,2);
   Object.defineProperty(document,'visibilityState',{value:'visible',configurable:true});
 });
+
+test('cost progress recovers an open component report with no pending sales jobs and never starts a browser worker',async t=>{
+  let tick,reports=0;const current=status(),calls=[];
+  current.costSync={connection_id:'olist1',updated_at:'2026-10-20T12:00:00Z',last_synced_at:null};
+  t.mock.method(global,'setInterval',(fn,ms)=>{assert.equal(ms,15000);tick=fn;return 1});
+  t.mock.method(global,'clearInterval',()=>{});
+  t.mock.method(global,'fetch',async(url,options={})=>{
+    calls.push({url,options});
+    if(url.endsWith('/abc')){reports++;return current.costSync.last_synced_at?Response.json(result):Response.json({error:'CMV pendente da Olist 1'},{status:400});}
+    return Response.json(url.endsWith('/coverage')?{sync:{scheduled:0}}:current);
+  });
+  await render('cost-progress');assert.equal(reports,1);assert.equal(typeof tick,'function');
+  assert.match(document.querySelector('[role="alert"]').textContent,/CMV pendente/);
+  await act(async()=>tick());assert.equal(reports,1,'identical cache progress does not rerun report math');
+  current.costSync.last_synced_at='2026-10-20T12:01:00Z';current.costSync.updated_at=current.costSync.last_synced_at;
+  await act(async()=>tick());assert.equal(reports,2);assert.equal(document.querySelector('[role="alert"]'),null);
+  assert.match(document.querySelector('tbody').textContent,/Produto consolidado/);
+  assert.equal(calls.some(c=>c.url.includes('/sync')&&c.options.method==='POST'),false);
+  assert.equal(calls.some(c=>c.url.includes('tiny.com.br')),false);
+});
+
+test('Ninho exposes cost freshness and errors, and manual refresh only schedules the server job',async t=>{
+  const {AnalyticsConnections}=require('../src/components/ninho/analytics-connections.tsx');
+  const current={...status(),costSync:{connection_id:'olist1',history:{total:2,completed:2,pending:0,last_synced_at:'2026-10-20T12:00:00Z'},last_synced_at:'2026-10-20T12:00:00Z',next_at:'2099-01-01T00:00:00Z',last_error:'Libere a leitura de Produtos na Olist 1'}};
+  const calls=[];
+  t.mock.method(global,'fetch',async(url,options={})=>{calls.push({url,options});return Response.json(options.method==='POST'?{scheduled:true}:current);});
+  await act(async()=>root.render(React.createElement(AnalyticsConnections,{key:'cost-ninho'})));
+  assert.match(document.body.textContent,/CMV da Olist 1/);assert.match(document.body.textContent,/Libere a leitura de Produtos/);
+  assert.match(document.body.textContent,/20\/10\/2026/);
+  await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Programar atualização do CMV').click());
+  const posted=calls.filter(c=>c.options.method==='POST');assert.equal(posted.length,1);
+  assert.equal(posted[0].url,'/api/analytics/connections');assert.deepEqual(JSON.parse(posted[0].options.body),{action:'refresh-costs'});
+});
+
+test('component analysis exposes historical total cost and applies an explicit purchase versus average basis',async t=>{
+  const calls=[];
+  t.mock.method(global,'fetch',async(url,options={})=>{
+    const body=options.body&&JSON.parse(options.body);calls.push({url,body});
+    if(url.endsWith('/abc'))return Response.json({...result,composition:{version:'v19',revenuePolicy:'cost',
+      costSource:{kind:'olist',policy:'effective_date',basis:body.filters.costBasis,name:'Olist 1'},
+      periodCostCents:'110000',knownCostCents:'110000',costMissingLines:0,mappedEntities:1,pending:[],pendingTotal:0,
+      originalRevenue:result.revenue,unallocatedLines:0,missingCostSkus:[],
+    }});
+    return Response.json(url.endsWith('/coverage')?{sync:{scheduled:0}}:status());
+  });
+  await render('historical-cost-basis');assert.match(document.body.textContent,/1\.100,00/);
+  assert.match(document.body.textContent,/Custos posteriores/);
+  const control=[...document.querySelectorAll('select')].find(select=>select.querySelector('option[value="purchase"]'));
+  assert.equal(control.value,'average');
+  await act(async()=>{control.value='purchase';control.dispatchEvent(new dom.window.Event('change',{bubbles:true}));});
+  await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Analisar vendas').click());
+  assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.costBasis,'purchase');
+  assert.match(document.body.textContent,/Custo de compra vigente/);
+});
+
+test('Ninho lets an administrator resume a retry checkpoint without creating a new historical range',async t=>{
+ const {AnalyticsConnections}=require('../src/components/ninho/analytics-connections.tsx'),calls=[];
+ const current={...status(),jobs:[{id:'blocked',connection_id:'olist2',mode:'backfill',status:'retry',from_date:'2026-08-01',to_date:'2026-10-02',cursor_date:'2026-08-10',pages:10,processed:522,last_error:'Valor decimal inválido ou negativo.',error_code:null}]};
+ t.mock.method(global,'setInterval',()=>1);t.mock.method(global,'clearInterval',()=>{});
+ t.mock.method(global,'fetch',async(url,options={})=>{calls.push({url,options});return Response.json(options.method==='POST'?{queued:true}:current);});
+ await act(async()=>root.render(React.createElement(AnalyticsConnections,{key:'signed-price-retry'})));
+ assert.match(document.body.textContent,/522 pedidos processados/);
+ await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Retomar este checkpoint').click());
+ const requests=calls.filter(c=>c.options.method==='POST');assert.equal(requests.length,1);
+ assert.equal(requests[0].url,'/api/analytics/sync');assert.deepEqual(JSON.parse(requests[0].options.body),{action:'retry',job:'blocked'});
+});

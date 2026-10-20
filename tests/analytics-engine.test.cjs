@@ -125,7 +125,11 @@ test("decimal money is exact, large amounts remain strings, lines round once", (
   assert.equal(lineCents("0.1", "3"), "30");
   assert.equal(lineCents("0.005", "1"), "1");
   assert.equal(lineCents("12.3456", "0.5"), "617");
-  assert.throws(() => lineCents("-1", "1"));
+  assert.equal(lineCents("-1", "1"), "-100");
+  assert.equal(lineCents("-0.005", "1"), "-1");
+  assert.equal(lineCents("-12.3456", "0.5"), "-617");
+  assert.throws(() => lineCents("-1", "-1"));
+  assert.throws(() => decimalUnits("-1"));
   assert.equal(
     exportRow(row("a", "900719925474099399"))[3],
     "9007199254740993.99",

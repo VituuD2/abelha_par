@@ -9,11 +9,10 @@ const rules = buildCompositionRules(
   catalog.version,
   catalog.ignoredComponentSkus,
   {
-    baseProducts: baseCatalog.products.filter(product => product.eligible),
+    baseProducts: baseCatalog.products.filter(product => product.eligible).map(({ sku, name }) => ({ sku, name })),
     pending: Object.fromEntries(classification.pending.map(item => [item.sku, item.reason])),
   },
 );
-rules.costSource = { file: baseCatalog.source.file, sheet: baseCatalog.source.sheet, column: baseCatalog.source.costColumn, sha256: baseCatalog.source.sha256 };
 
 /** This catalog belongs to one operation. Identical SKUs in other workspaces are unrelated. */
 export function hasCompositionCatalog(workspaceId: string) {

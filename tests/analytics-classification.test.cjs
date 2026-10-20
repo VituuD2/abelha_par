@@ -6,7 +6,7 @@ const bases=require('../src/lib/analytics/data/base-products.json');
 const classification=require('../src/lib/analytics/data/composition-classification.json');
 const {buildCompositionRules}=require('../src/lib/analytics/composition.ts');
 const {compositionRulesForWorkspace}=require('../src/lib/analytics/composition-server.ts');
-const rules=compositionRulesForWorkspace(catalog.workspaceIds[0]);
+const {rules}=require('./legacy-composition-rules.cjs');
 
 test('all simple inventory products become canonical stock units, with TESTE retained for review',()=>{
   assert.equal(bases.products.length,120);
