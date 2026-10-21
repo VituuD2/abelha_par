@@ -21,6 +21,13 @@ export class AnalyticsApiError extends Error {
     );
   }
 }
+/** Local quota reservation is a scheduled wait, not an HTTP 429 from Olist. */
+export class AnalyticsQuotaWait extends AnalyticsApiError {
+  constructor(seconds: number) {
+    super(429, seconds);
+    this.message = "Aguardando cota de consultas; retomada automática programada.";
+  }
+}
 export type OlistAttempt = { status: number; kind: "http" | "timeout" | "network"; elapsedMs: number; waitMs: number; retry: boolean };
 type RequestOptions = {
   source?: OlistSource;
@@ -48,7 +55,7 @@ export async function olistRequest(
     const permit = await acquireOlistPermit({ connectionId }, source, attempt > 0, Number.isFinite(deadline) ? deadline : Date.now() + 18000)
       .catch(reason => {
         if (previousFailure && reason instanceof OlistBudgetExceeded) throw previousFailure;
-        if (reason instanceof OlistQuotaWait) throw new AnalyticsApiError(429, reason.retryAfterSeconds);
+        if (reason instanceof OlistQuotaWait) throw new AnalyticsQuotaWait(reason.retryAfterSeconds);
         throw reason;
       });
     waitMs += permit.waitMs;

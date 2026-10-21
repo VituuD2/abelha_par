@@ -233,3 +233,13 @@ test("each changed access token must identify the expected company, including a 
   assert.equal(calls, 3);
   assert.equal(c.verified_tax_id, "36965322000112");
 });
+
+test('a transient legacy lookup failure does not become authorization_required or attempt OAuth',async t=>{
+  const connection={id:'legacy-db-error',workspace_id:'workspace',enabled:true,credential_kind:'legacy',legacy_integration_id:'integration'};
+  t.mock.method(admin,'createAdminClient',()=>({from(table){
+    const chain={select(){return chain;},eq(){return chain;},abortSignal(){return chain;},maybeSingle:async()=>table==='analytics_connections'
+      ?{data:connection,error:null}:{data:null,error:{code:'PGRST000'},status:503}};return chain;
+  }}));
+  t.mock.method(tiny,'getValidTinyToken',()=>{throw Error('must not refresh');});
+  await assert.rejects(analyticsToken('workspace',connection.id),e=>!e.code&&/Verificação do vínculo.*banco: PGRST000/.test(e.message));
+});

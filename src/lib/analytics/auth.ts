@@ -242,7 +242,9 @@ async function getToken(
       );
     const linked = await createAdminClient().from("tiny_integrations")
       .select("id").eq("workspace_id", workspace).eq("id", c.legacy_integration_id).maybeSingle();
-    if (linked.error || !linked.data)
+    if (linked.error)
+      throw analyticsDatabaseError("Verificação do vínculo operacional indisponível.", linked.error, linked.status);
+    if (!linked.data)
       throw new AnalyticsActionError("authorization_required", "O vínculo operacional mudou. Restabeleça o vínculo no Ninho após validar o CNPJ.");
     const result = await getValidTinyToken(workspace);
     if (!result.token) {

@@ -309,7 +309,8 @@ test("Ninho explains a failed OAuth callback and keeps reauthorization available
   oauthState.connections[0].verified_at = "2026-10-02T23:00:00Z";
   await click(document.querySelector('button[aria-label="Atualizar conexões analíticas"]'));
   assert.equal(button("Validar CNPJ na API").disabled, false);
-  assert.ok(document.body.textContent.includes("CNPJ validado"));
+  assert.ok(document.body.textContent.includes("Conectada"));
+  assert.equal(document.querySelector('a[href="/api/analytics/oauth/login?connection=connection-3"]'), null);
 });
 
 test("Ninho exposes a clear lost legacy link repair and keeps OAuth credentials out of that flow", async t => {
@@ -324,6 +325,32 @@ test("Ninho exposes a clear lost legacy link repair and keeps OAuth credentials 
   await click(button("Restabelecer vínculo operacional"));
   assert.deepEqual(calls.find(c=>c.body)?.body,{action:"relink",id:"legacy2"});
   assert.equal(calls.some(c=>c.url.includes("oauth")||c.url.includes("/auth/disconnect")),false);
+});
+
+test('Ninho groups usage under the matching account and offers no reconnect for healthy or temporarily delayed accounts',async t=>{
+  const {AnalyticsConnections}=require('../src/components/ninho/analytics-connections.tsx');
+  // Dispose the previous real poll before replacing timers for this scenario.
+  await act(async()=>root.render(null));
+  dom.window.history.replaceState(null,'','/ninho');
+  const current={companies:[],jobs:[],sources:[],coverage:[],connections:[
+    {id:'first',name:'Olist 1',enabled:true,credential_kind:'oauth',client_id:'app',expires_at:'2000-01-01',refresh_expires_at:'2099-01-01',verified_at:'2026-10-20',last_error:'Limite da API Olist atingido'},
+    {id:'second',name:'Olist 2',enabled:true,credential_kind:'legacy',legacy_integration_id:'linked',verified_at:'2026-10-20',last_error:'Controle de consultas indisponível'},
+    {id:'third',name:'Olist 3',enabled:true,credential_kind:'oauth',client_id:'app3',expires_at:'2000-01-01',refresh_expires_at:'2099-01-01',verified_at:'2026-10-20'},
+  ]};
+  let usageReads=0;
+  const account=(connection_id,provider_remaining)=>({connection_id,name:connection_id,plan:'Teste',plan_limit:120,app_limit:60,effective_limit:60,provider_limit:120,provider_remaining,observed_at:new Date().toISOString(),minutes:[],monitoring_since:new Date().toISOString()});
+  t.mock.method(global,'setInterval',()=>1);t.mock.method(global,'clearInterval',()=>{});
+  t.mock.method(global,'fetch',async url=>{
+    if(url.endsWith('/api-usage')){usageReads++;return Response.json({available:true,generated_at:new Date().toISOString(),accounts:[account('second',50),account('first',100),account('third',110)]});}
+    return Response.json(current);
+  });
+  await act(async()=>root.render(React.createElement(AnalyticsConnections,{key:'healthy-accounts'})));
+  const cards=[...document.querySelectorAll('article')];assert.equal(cards.length,3);
+  assert.equal(usageReads,1);
+  for(const card of cards){assert.match(card.textContent,/Conectada/);assert.equal(card.querySelectorAll('section[aria-label="Consumo da API Olist"]').length,1);assert.doesNotMatch(card.textContent,/Reconectar esta conta|Autorizar esta conta|Restabelecer vínculo operacional/);}
+  assert.match(cards[0].textContent,/20\/120/);assert.doesNotMatch(cards[0].textContent,/70\/120/);
+  assert.match(cards[1].textContent,/70\/120/);assert.match(cards[2].textContent,/10\/120/);
+  assert.equal(document.querySelectorAll('a[href*="oauth/login"]').length,0);
 });
 
 test("quantity analysis discloses missing CMV while product details omit scope and composition notes", async t => {

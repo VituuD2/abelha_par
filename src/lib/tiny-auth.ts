@@ -9,8 +9,8 @@ const FIELDS = "id, access_token, refresh_token, expires_at, refresh_expires_at"
 const REFRESH_MARGIN_MS = 6 * 60 * 60_000;
 const inFlight = new Map<string, Promise<TokenResult>>();
 
-export type TokenStatus = "valid" | "refreshed" | "expired" | "error";
-export interface TokenResult { token: string | null; status: TokenStatus; message?: string }
+export type TokenStatus = "valid" | "refreshed" | "expired" | "missing" | "error";
+export interface TokenResult { token: string | null; status: TokenStatus; message?: string; needsReconnect?: boolean }
 interface Integration {
   id: string;
   access_token: string;
@@ -39,7 +39,7 @@ async function readIntegration(workspaceId: string) {
 async function getToken(workspaceId: string, minimumValidityMs: number): Promise<TokenResult> {
   const { data, error } = await readIntegration(workspaceId);
   if (error) return failure("Não foi possível consultar a conexão Olist no banco. Tente novamente.");
-  if (!data) return expired();
+  if (!data) return { token: null, status: "missing", message: "Nenhuma conta Olist conectada." };
   const integration = data as Integration;
   const now = Date.now();
   const accessRemaining = Date.parse(integration.expires_at) - now;
@@ -48,7 +48,7 @@ async function getToken(workspaceId: string, minimumValidityMs: number): Promise
     const accessToken = decryptToken(integration.access_token);
     // An expired refresh credential does not invalidate a still usable access token.
     if (refreshRemaining <= 0) return accessRemaining > 30_000
-      ? { token: accessToken, status: "valid", message: "A renovação expirou. Reconecte a Olist antes do vencimento do acesso atual." }
+      ? { token: accessToken, status: "valid", needsReconnect: true, message: "A renovação expirou. Reconecte a Olist antes do vencimento do acesso atual." }
       : expired();
     if (accessRemaining >= minimumValidityMs && refreshRemaining > REFRESH_MARGIN_MS) {
       return { token: accessToken, status: "valid" };

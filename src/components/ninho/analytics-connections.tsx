@@ -5,7 +5,9 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, RefreshCw, Database } from "lucide-react";
 import { ConnectionProgress } from "@/components/analytics/connection-progress";
-import { OlistApiMonitor } from "./olist-api-monitor";
+import { OlistApiMonitor, useOlistApiUsage } from "./olist-api-monitor";
+import { connectionHealth, type ConnectionHealth } from "@/lib/connection-status";
+import { ConnectionStatus } from "@/components/ui/connection-status";
 import type { CoverageJob } from "@/lib/analytics/coverage";
 import type { CostSyncStatus } from "@/lib/analytics/types";
 import {
@@ -25,6 +27,8 @@ type Connection = {
   verified_at: string | null;
   client_id: string | null;
   expires_at: string | null;
+  refresh_expires_at?: string | null;
+  health?: ConnectionHealth;
   last_synced_at: string | null;
   last_error: string | null;
 };
@@ -154,12 +158,7 @@ function SourceForm({
           />
         </label>
       </div>
-      <p className="text-xs text-[var(--color-text-secondary)]">
-        A mesma conta canônica permite deduplicar referências de pedidos entre
-        conexões. Preencha somente com identidade externa comprovada. A
-        reconciliação preserva uma origem determinística por venda e seus
-        identificadores de importação.
-      </p>
+
       {account !== (source.external_account || "") && (
         <label className="text-xs flex items-start gap-2">
           <input
@@ -178,6 +177,7 @@ function SourceForm({
   );
 }
 export function AnalyticsConnections() {
+  const usage = useOlistApiUsage();
   const [state, setState] = useState<State | null>(null),
     [error, setError] = useState<string | null>(null),
     [notice, setNotice] = useState<string | null>(null),
@@ -195,6 +195,7 @@ export function AnalyticsConnections() {
     [to, setTo] = useState("");
   const [callbackOrigin, setCallbackOrigin] = useState("");
   const applicationForm = useRef<HTMLDetailsElement>(null);
+  const loadVersion = useRef(0);
   const configureApplication = (connection: Connection) => {
     setCredentialConnection(connection.id);
     setClientId(connection.client_id || "");
@@ -208,10 +209,12 @@ export function AnalyticsConnections() {
     }
   };
   const load = useCallback(async () => {
+    const version = ++loadVersion.current;
     try {
-      setState(await call("/api/analytics/connections"));
+      const next = await call("/api/analytics/connections");
+      if (version === loadVersion.current) setState(next);
     } catch (e) {
-      setError(
+      if (version === loadVersion.current) setError(
         e instanceof Error ? e.message : "Camada analítica indisponível.",
       );
     }
@@ -228,19 +231,15 @@ export function AnalyticsConnections() {
           : analyticsOAuthErrors.configuration,
       );
     if (query.has("analyticsConnected"))
-      setNotice("Conexão da Curva ABC autorizada e CNPJ validado.");
+      setNotice("Conta autorizada e CNPJ validado.");
   }, [load]);
-  const pending = state?.jobs.some((j) =>
-    ["queued", "running", "retry"].includes(j.status),
-  ) || !!(state?.costSync?.connection_id && state.costSync.next_at && state.costSync.next_at <= new Date().toISOString());
   useEffect(() => {
-    if (!pending) return;
     const timer = setInterval(() => {
       if (document.visibilityState === "hidden") return;
       void load();
     }, 15000);
     return () => clearInterval(timer);
-  }, [pending, load]);
+  }, [load]);
   const save = async (body: unknown) => {
     setBusy(true);
     setError(null);
@@ -248,8 +247,8 @@ export function AnalyticsConnections() {
     try {
       const saved = await call("/api/analytics/connections", body);
       setNotice(saved?.scheduled
-        ? "Atualização do CMV programada para a próxima execução da rotina do servidor."
-        : "Configuração analítica salva.");
+        ? "Atualização do CMV agendada."
+        : "Configuração salva.");
       await load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao configurar.");
@@ -257,19 +256,17 @@ export function AnalyticsConnections() {
       setBusy(false);
     }
   };
-  const run = async (action: "import" | "continue") => {
+  const run = async () => {
     setBusy(true);
     setError(null);
     try {
       await call("/api/analytics/sync", {
-        action,
+        action: "import",
         connection: importConnection,
         from,
         to,
       });
-      setNotice(
-        "Importação programada. O progresso será atualizado abaixo; a rotina do servidor continua pelos checkpoints.",
-      );
+      setNotice("Importação agendada.");
       await load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao importar.");
@@ -297,9 +294,6 @@ export function AnalyticsConnections() {
         </div>
         <div className="flex-1">
           <h2 className="text-lg font-semibold">Conexões da Curva ABC</h2>
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            Empresas, contas Olist e histórico de todas as origens.
-          </p>
         </div>
         <button
           aria-label="Atualizar conexões analíticas"
@@ -319,119 +313,50 @@ export function AnalyticsConnections() {
           {notice}
         </p>
       )}
-      <OlistApiMonitor />
-      <div className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2">
-        <h3 className="font-semibold">CMV da Olist 1</h3>
-        <p className="text-xs text-[var(--color-text-secondary)]">
-          Os produtos base usam o histórico de custos da Olist 1, respeitando a vigência no dia da venda. Alterações do catálogo antecipam a atualização do histórico; uma revisão diária recupera correções retroativas.
-          {state?.costSync?.history?.last_synced_at
-            ? ` Históricos sincronizados até: ${new Date(state.costSync.history.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.`
-            : " Aguardando a primeira sincronização dos históricos. Confira a conexão da Olist 1 e a permissão de leitura de Produtos/custos."}
-          {!!state?.costSync?.page_offset && ` Atualização em andamento: ${state.costSync.page_offset} produtos consultados.`}
-        </p>
-        {state?.costSync?.history && <p className="text-xs text-[var(--color-text-secondary)]">Históricos disponíveis: {state.costSync.history.completed}/{state.costSync.history.total} produtos. Atualizações pendentes: {state.costSync.history.pending}.</p>}
-        {state?.costSync?.last_error && <p role="alert" className="text-xs text-red-800">{state.costSync.last_error}</p>}
-        {state?.costSync?.history?.last_error && <p role="alert" className="text-xs text-red-800">{state.costSync.history.last_error}</p>}
-        <button className="btn-ghost" disabled={busy || !state} onClick={() => save({ action: "refresh-costs" })}>Programar atualização do CMV</button>
-      </div>
-      <div className="space-y-3">
+      {!state && !error && <p role="status" className="text-sm">Carregando conexões…</p>}
+      <div className="grid items-start gap-4 xl:grid-cols-2">
         {state?.connections.map((c) => {
-          const configured = c.credential_kind === "legacy" || !!c.client_id;
-          const authorized =
-            c.credential_kind === "legacy" ? !!c.legacy_integration_id : (configured && !!c.expires_at);
+          const health = c.health || connectionHealth(c);
+          const company = state.companies.find(company => company.id === c.company_id);
+          const authorized = !["configure", "authorize", "reconnect", "relink"].includes(health.action || "") && health.code !== "unavailable";
+          const costs = state.costSync?.connection_id === c.id ? state.costSync : null;
           return (
-            <div
-              key={c.id}
-              className="rounded-xl border border-[var(--color-border-light)] p-4 space-y-2"
-            >
-              <div className="flex flex-wrap justify-between gap-2">
-                <h3 className="font-semibold">
-                  {c.name} ·{" "}
-                  {
-                    state.companies.find((company) => company.id === c.company_id)
-                      ?.name
-                  }
-                </h3>
-                <span className="badge">
-                  {c.error_code ? "Reconexão / ação necessária" : c.credential_kind === "legacy" && !c.legacy_integration_id ? "Vínculo operacional perdido" : !configured
-                    ? "Aplicativo pendente"
-                    : !authorized
-                      ? "Autorização pendente"
-                      : !c.enabled
-                        ? "Pausada"
-                        : c.verified_at
-                          ? "CNPJ validado"
-                          : "Validação pendente"}
-                </span>
-              </div>
-              <p className="text-xs text-[var(--color-text-secondary)]">
-                CNPJ:{" "}
-                {c.verified_tax_id ||
-                  state.companies.find((company) => company.id === c.company_id)
-                    ?.tax_id ||
-                  "Informe o CNPJ da empresa"}{" "}
-                ·{" "}
-                {c.last_synced_at
-                  ? `Importado em ${new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}`
-                  : "Histórico pendente"}
-              </p>
-              {c.last_error && (
-                <p className="text-xs text-red-800">{c.last_error}</p>
-              )}
-              <ConnectionProgress connection={c.id} jobs={state.jobs} coverage={state.coverage || []} />
-              {!configured ? (
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  Salve o Client ID e o Client Secret do aplicativo desta empresa.
-                  Depois autorize esta conta para validar o CNPJ.
-                </p>
-              ) : !authorized && c.credential_kind !== "legacy" ? (
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  Aplicativo salvo. Clique em Autorizar esta conta e entre na Olist
-                  desta empresa para concluir a conexão e validar o CNPJ.
-                </p>
-              ) : null}
-              <div className="flex flex-wrap gap-2">
-                {c.credential_kind === "legacy" ? (
-                  <>
-                    <button disabled={busy} className="btn-primary" onClick={() => save({ action: "relink", id: c.id })}>
-                      Restabelecer vínculo operacional
-                    </button>
-                    <p className="text-xs py-2">Valida o CNPJ da conexão que atende a bipagem e retoma o histórico. Se a autorização operacional venceu, reconecte-a nas configurações Olist deste Ninho primeiro.</p>
-                  </>
-                ) : !configured ? (
-                  <button
-                    disabled={busy}
-                    className="btn-primary"
-                    onClick={() => configureApplication(c)}
-                  >
-                    Configurar aplicativo
-                  </button>
-                ) : c.enabled ? (
-                  <a
-                    href={`/api/analytics/oauth/login?connection=${c.id}`}
-                    className="btn-primary"
-                  >
-                    {c.error_code || c.last_error ? "Reconectar esta conta" : "Autorizar esta conta"}
-                  </a>
-                ) : null}
-                <button
-                  disabled={busy || !c.enabled || !authorized}
-                  className="btn-ghost"
-                  onClick={() => save({ action: "verify", id: c.id })}
-                >
-                  Validar CNPJ na API
-                </button>
-                <button
-                  disabled={busy}
-                  className="btn-ghost"
-                  onClick={() =>
-                    save({ action: c.enabled ? "pause" : "resume", id: c.id })
-                  }
-                >
-                  {c.enabled ? "Pausar análise" : "Ativar análise"}
-                </button>
-              </div>
-            </div>
+            <article key={c.id} aria-label={`Conexão ${c.name}`} className="min-w-0 rounded-2xl border border-[var(--color-border-light)] p-4 sm:p-5 space-y-4">
+              <header className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="font-semibold">{c.name}</h3>
+                  {company?.name !== c.name && <p className="text-xs text-[var(--color-text-secondary)]">{company?.name}</p>}
+                  <p className="mt-1 text-xs text-[var(--color-text-secondary)]">CNPJ {c.verified_tax_id || company?.tax_id || "pendente"}{c.verified_at && " · validado"}</p>
+                </div>
+                <ConnectionStatus health={health} />
+              </header>
+              {health.code !== "connected" && health.code !== "paused" && c.last_error && <p className="text-xs text-amber-900" role="status">{c.last_error}</p>}
+              <ConnectionProgress compact enabled={c.enabled} connection={c.id} jobs={state.jobs} coverage={state.coverage || []} onRetry={job => void retry(job)} busy={busy} />
+              <p className="text-xs text-[var(--color-text-secondary)]">Última importação: {c.last_synced_at ? new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "aguardando"}</p>
+              <OlistApiMonitor connectionId={c.id} usage={usage} />
+              {costs && <details className="border-t border-[var(--color-border-light)] pt-3 text-xs">
+                <summary className="cursor-pointer font-medium">CMV · {costs.history ? `${costs.history.completed}/${costs.history.total} produtos` : "aguardando"}{costs.history?.pending ? ` · ${costs.history.pending} pendentes` : ""}</summary>
+                <div className="mt-3 space-y-2">
+                  <p className="text-[var(--color-text-secondary)]">Atualizado: {costs.history?.last_synced_at ? new Date(costs.history.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "aguardando"}</p>
+                  {(costs.last_error || costs.history?.last_error) && <p role="status" className="text-amber-900">{costs.last_error || costs.history?.last_error}</p>}
+                  <button className="btn-ghost" disabled={busy || !c.enabled || !authorized} onClick={() => save({ action: "refresh-costs" })}>Atualizar CMV</button>
+                </div>
+              </details>}
+              <footer className="flex flex-wrap gap-2 border-t border-[var(--color-border-light)] pt-3">
+                {health.action === "configure" && <button disabled={busy} className="btn-primary" onClick={() => configureApplication(c)}>Configurar aplicativo</button>}
+                {health.action === "relink" && <button disabled={busy} className="btn-primary" onClick={() => save({ action: "relink", id: c.id })}>Restabelecer vínculo operacional</button>}
+                {(health.action === "authorize" || health.action === "reconnect") && <a href={c.credential_kind === "legacy" ? "/api/auth/login" : `/api/analytics/oauth/login?connection=${c.id}`} className={`btn-primary ${busy ? "pointer-events-none opacity-50" : ""}`} aria-disabled={busy}>{health.action === "authorize" ? "Autorizar esta conta" : "Reconectar esta conta"}</a>}
+                {health.action === "verify" && <button disabled={busy} className="btn-primary" onClick={() => save({ action: "verify", id: c.id })}>Validar CNPJ na API</button>}
+                <button disabled={busy} className="btn-ghost" onClick={() => save({ action: c.enabled ? "pause" : "resume", id: c.id })}>{c.enabled ? "Pausar análise" : "Ativar análise"}</button>
+                <details className="text-xs">
+                  <summary className="cursor-pointer px-3 py-2 font-medium">Gerenciar</summary>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {health.action !== "verify" && <button disabled={busy || !c.enabled || !authorized} className="btn-ghost" onClick={() => save({ action: "verify", id: c.id })}>Validar CNPJ na API</button>}
+                    {c.credential_kind !== "legacy" && <button disabled={busy} className="btn-ghost" onClick={() => configureApplication(c)}>Alterar aplicativo</button>}
+                  </div>
+                </details>
+              </footer>
+            </article>
           );
         })}
       </div>
@@ -525,9 +450,7 @@ export function AnalyticsConnections() {
           }}
         >
           <p className="text-xs text-[var(--color-text-secondary)]">
-            Crie o aplicativo privado dentro da conta da empresa. Cadastre a URL
-            de retorno abaixo e permita leitura de pedidos, produtos, notas e
-            informações da conta. Depois salve e autorize a conexão.
+            Permissões: pedidos, produtos, notas e informações da conta.
           </p>
           <input
             aria-label="URL de retorno OAuth analítico"
@@ -643,15 +566,15 @@ export function AnalyticsConnections() {
           )}
         </div>
       </details>
-      <div className="border-t border-[var(--color-border-light)] pt-5 space-y-4">
-        <h3 className="font-semibold flex gap-2 items-center">
+      <details className="border-t border-[var(--color-border-light)] pt-5 space-y-4">
+        <summary className="cursor-pointer font-semibold flex gap-2 items-center">
           <Database className="w-4 h-4" />
-          Importação histórica e progresso
-        </h3>
+          Importar outro período
+        </summary>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            void run("import");
+            void run();
           }}
           className="grid gap-3 sm:grid-cols-3"
         >
@@ -694,52 +617,11 @@ export function AnalyticsConnections() {
             />
           </div>
           <div className="sm:col-span-3 flex flex-wrap gap-3">
-            <button className="btn-primary" disabled={busy}>
-              Importar período
-            </button>
-            <button
-              type="button"
-              className="btn-ghost"
-              disabled={busy || !pending}
-              onClick={() => run("continue")}
-            >
-              Processar próximo lote
-            </button>
+            <button className="btn-primary" disabled={busy}>Importar período</button>
           </div>
         </form>
-        <p className="text-xs text-[var(--color-text-secondary)]">
-          Importação retomável; alterações e cancelamentos são atualizados pela
-          rotina incremental. Para continuar com o navegador fechado, configure
-          a rotina analítica do servidor conforme a documentação de implantação.
-        </p>
-        <div className="max-h-80 overflow-auto space-y-3">
-          {state?.jobs.slice(0, 30).map((j) => (
-            <div key={j.id} className="rounded-xl bg-black/[0.025] p-3 text-xs">
-              <p className="font-semibold">
-                {state.connections.find((c) => c.id === j.connection_id)?.name}{" "}
-                · {j.mode === "backfill" ? "Histórico" : "Atualizações"} ·{" "}
-                {j.status}
-              </p>
-              <p className="mt-1">
-                {j.from_date} a {j.to_date} · cursor {j.cursor_date} · {j.pages}{" "}
-                páginas · {j.processed} pedidos processados
-              </p>
-              {j.last_error && (
-                <p className="mt-1 text-red-800">{j.last_error}</p>
-              )}
-              {["failed", "retry"].includes(j.status) && !j.error_code && (
-                <button
-                  className="btn-ghost mt-2"
-                  disabled={busy}
-                  onClick={() => retry(j.id)}
-                >
-                  Retomar este checkpoint
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+
+      </details>
     </section>
   );
 }

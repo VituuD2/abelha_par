@@ -124,13 +124,13 @@ test('cost progress recovers an open component report with no pending sales jobs
 
 test('Ninho exposes cost freshness and errors, and manual refresh only schedules the server job',async t=>{
   const {AnalyticsConnections}=require('../src/components/ninho/analytics-connections.tsx');
-  const current={...status(),costSync:{connection_id:'olist1',history:{total:2,completed:2,pending:0,last_synced_at:'2026-10-20T12:00:00Z'},last_synced_at:'2026-10-20T12:00:00Z',next_at:'2099-01-01T00:00:00Z',last_error:'Libere a leitura de Produtos na Olist 1'}};
+  const current={...status(),connections:[{id:'olist1',name:'Olist 1',enabled:true,credential_kind:'legacy',legacy_integration_id:'operational',verified_at:'2026-10-20'}],costSync:{connection_id:'olist1',history:{total:2,completed:2,pending:0,last_synced_at:'2026-10-20T12:00:00Z'},last_synced_at:'2026-10-20T12:00:00Z',next_at:'2099-01-01T00:00:00Z',last_error:'Libere a leitura de Produtos na Olist 1'}};
   const calls=[];
   t.mock.method(global,'fetch',async(url,options={})=>{calls.push({url,options});return Response.json(options.method==='POST'?{scheduled:true}:current);});
   await act(async()=>root.render(React.createElement(AnalyticsConnections,{key:'cost-ninho'})));
-  assert.match(document.body.textContent,/CMV da Olist 1/);assert.match(document.body.textContent,/Libere a leitura de Produtos/);
+  assert.match(document.body.textContent,/CMV · 2\/2 produtos/);assert.match(document.body.textContent,/Libere a leitura de Produtos/);
   assert.match(document.body.textContent,/20\/10\/2026/);
-  await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Programar atualização do CMV').click());
+  await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Atualizar CMV').click());
   const posted=calls.filter(c=>c.options.method==='POST');assert.equal(posted.length,1);
   assert.equal(posted[0].url,'/api/analytics/connections');assert.deepEqual(JSON.parse(posted[0].options.body),{action:'refresh-costs'});
 });
@@ -160,12 +160,12 @@ test('component analysis exposes historical total cost and applies an explicit p
 
 test('Ninho lets an administrator resume a retry checkpoint without creating a new historical range',async t=>{
  const {AnalyticsConnections}=require('../src/components/ninho/analytics-connections.tsx'),calls=[];
- const current={...status(),jobs:[{id:'blocked',connection_id:'olist2',mode:'backfill',status:'retry',from_date:'2026-08-01',to_date:'2026-10-02',cursor_date:'2026-08-10',pages:10,processed:522,last_error:'Valor decimal inválido ou negativo.',error_code:null}]};
+ const current={...status(),connections:[{id:'olist2',name:'Olist 2',enabled:true,credential_kind:'legacy',legacy_integration_id:'operational',verified_at:'2026-10-20'}],jobs:[{id:'blocked',connection_id:'olist2',mode:'backfill',status:'failed',from_date:'2026-08-01',to_date:'2026-10-02',cursor_date:'2026-08-10',pages:10,processed:522,last_error:'Valor decimal inválido ou negativo.',error_code:null}]};
  t.mock.method(global,'setInterval',()=>1);t.mock.method(global,'clearInterval',()=>{});
  t.mock.method(global,'fetch',async(url,options={})=>{calls.push({url,options});return Response.json(options.method==='POST'?{queued:true}:current);});
  await act(async()=>root.render(React.createElement(AnalyticsConnections,{key:'signed-price-retry'})));
- assert.match(document.body.textContent,/522 pedidos processados/);
- await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Retomar este checkpoint').click());
+ assert.match(document.body.textContent,/522 eventos processados/);
+ await act(async()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Tentar novamente').click());
  const requests=calls.filter(c=>c.options.method==='POST');assert.equal(requests.length,1);
  assert.equal(requests[0].url,'/api/analytics/sync');assert.deepEqual(JSON.parse(requests[0].options.body),{action:'retry',job:'blocked'});
 });

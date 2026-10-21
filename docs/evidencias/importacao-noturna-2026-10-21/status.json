@@ -1,0 +1,59 @@
+{
+  "readOnly": true,
+  "checkedAt": "2026-10-21T14:05:40.246Z",
+  "timezone": "America/Sao_Paulo",
+  "day": "2026-10-21",
+  "start": "2026-10-21T03:00:00Z",
+  "end": "2026-10-21T09:00:00Z",
+  "hours": [
+    {
+      "hour": "00:00",
+      "cronRequests": 60,
+      "apiRequests": 3062,
+      "recordedResponses": 3046,
+      "responses429": 0,
+      "failures": 5
+    },
+    {
+      "hour": "01:00",
+      "cronRequests": 60,
+      "apiRequests": 3021,
+      "recordedResponses": 3015,
+      "responses429": 0,
+      "failures": 3
+    },
+    {
+      "hour": "02:00",
+      "cronRequests": 60,
+      "apiRequests": 2907,
+      "recordedResponses": 2889,
+      "responses429": 0,
+      "failures": 5
+    },
+    {
+      "hour": "03:00",
+      "cronRequests": 60,
+      "apiRequests": 3240,
+      "recordedResponses": 3227,
+      "responses429": 0,
+      "failures": 4
+    },
+    {
+      "hour": "04:00",
+      "cronRequests": 60,
+      "apiRequests": 2899,
+      "recordedResponses": 2884,
+      "responses429": 0,
+      "failures": 7
+    },
+    {
+      "hour": "05:00",
+      "cronRequests": 60,
+      "apiRequests": 3232,
+      "recordedResponses": 3215,
+      "responses429": 0,
+      "failures": 3
+    }
+  ],
+  "limitation": "Cron entries prove dispatch only; API counters prove provider attempts/results. Neither establishes whether users were logged in, nor complete import coverage."
+}

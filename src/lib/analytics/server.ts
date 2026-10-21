@@ -6,6 +6,7 @@ import type { ABCFilters } from "./types";
 import { compositionRulesForWorkspace } from "./composition-server";
 import { costSyncStatus } from "./cost-sync";
 import { ABC_DEFAULTS } from "./config";
+import { connectionHealth } from "@/lib/connection-status";
 
 class HistoricalCostMigrationRequired extends Error {
   readonly code = "ANALYTICS_MIGRATION_REQUIRED";
@@ -86,7 +87,7 @@ export async function analyticsStatus(workspace: string, actor: string) {
     db
       .from("analytics_connections")
       .select(
-        "id,company_id,name,enabled,credential_kind,legacy_integration_id,verified_tax_id,verified_at,expires_at,last_synced_at,last_error,error_code,client_id",
+        "id,company_id,name,enabled,credential_kind,legacy_integration_id,verified_tax_id,verified_at,expires_at,refresh_expires_at,last_synced_at,last_error,error_code,client_id",
       )
       .eq("workspace_id", workspace)
       .order("name"),
@@ -105,9 +106,23 @@ export async function analyticsStatus(workspace: string, actor: string) {
     throw new Error(
       "Curva ABC ainda não disponível no banco. Aplique as migrações v11 e v12.",
     );
+  // Read metadata only. Viewing status must never rotate credentials or spend API quota.
+  const legacy = connections.data?.some(c => c.credential_kind === "legacy")
+    ? await db.from("tiny_integrations").select("id,expires_at,refresh_expires_at").eq("workspace_id", workspace).maybeSingle()
+    : null;
+  const statuses = (connections.data || []).map(c => {
+    if (!c.enabled || c.credential_kind !== "legacy") return { ...c, health: connectionHealth(c) };
+    if (legacy?.error) return { ...c, health: { code: "unavailable", label: "Verificação indisponível", tone: "warning", action: null } };
+    const linked = legacy?.data?.id === c.legacy_integration_id;
+    return { ...c, health: connectionHealth({ ...c,
+      legacy_integration_id: linked ? c.legacy_integration_id : null,
+      expires_at: linked ? legacy?.data?.expires_at : null,
+      refresh_expires_at: linked ? legacy?.data?.refresh_expires_at : null,
+    }) };
+  });
   return {
     companies: companies.data || [],
-    connections: connections.data || [],
+    connections: statuses,
     jobs: jobs.data || [],
     sources: sources.data || [],
     coverage: coverage.data || [],

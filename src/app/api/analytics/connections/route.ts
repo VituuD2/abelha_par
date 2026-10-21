@@ -269,6 +269,8 @@ export async function POST(request: Request) {
         refresh_expires_at: null,
         verified_at: null,
         verified_tax_id: null,
+        last_error: null,
+        error_code: null,
         version: current.data.version + 1,
         oauth_flow: null,
         oauth_expires_at: null,

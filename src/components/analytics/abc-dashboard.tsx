@@ -434,8 +434,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   }, [entity, drillRequest, filters, drillScope]);
   const reliability = status ? reportReliability(status, filters) : null;
   const selectedConnections = reliability?.connections || [];
-  const companies = reliability?.companies || [];
   const incomplete = !reliability?.complete;
+  const pendingHistory = status?.jobs.some(job => job.status !== "completed" &&
+    selectedConnections.some(connection => connection.id === job.connection_id) &&
+    job.from_date <= filters.to && job.to_date >= filters.from);
   const select = (dimension: Dimension, values: string[]) =>
     setDraft((f) => ({
       ...f,
@@ -870,6 +872,15 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
         </div>}
       </form>
+      {reliability && (incomplete || pendingHistory) && <details className="card px-5 py-3 text-xs border-amber-200">
+        <summary className="cursor-pointer font-medium text-amber-900">{incomplete ? "Escopo parcial" : "Importações"}{pendingHistory ? " · atualização pendente" : " · histórico pendente"}</summary>
+        <div className="mt-3 space-y-3">
+          {selectedConnections.map(connection => <div key={connection.id}>
+            <p className="mb-1 font-medium">{connection.name}</p>
+            <ConnectionProgress connection={connection.id} enabled={connection.enabled} jobs={status!.jobs} coverage={status!.coverage || status!.jobs} />
+          </div>)}
+        </div>
+      </details>}
       {(error || schedulingError) && (
         <div className="card p-5 text-red-800" role="alert">
           {(typeof error === "string" ? error : error?.message) || schedulingError}

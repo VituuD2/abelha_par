@@ -54,6 +54,15 @@ test('unknown or missing rate headers stay unknown rather than displaying zero c
  await control.recordOlistResult({id:'permit',waitMs:0},200,50,'http',new Headers({'x-ratelimit-limit':'not-a-number','x-ratelimit-remaining':'','x-ratelimit-reset':'1800000012'}));
  const args=calls[0].args;assert.equal(args.p_limit,null);assert.equal(args.p_remaining,null);assert.equal(args.p_reset,null);
 });
+test('a local scheduled quota wait is not reported as an HTTP limit reached at Olist',async t=>{
+ const now=clock(t);let requests=0;
+ database(t,()=>({data:{granted:false,wait_ms:60000},error:null}));
+ t.mock.method(global,'fetch',async()=>{requests++;return Response.json({});});
+ await assert.rejects(provider.olistRequest('private','c','/pedidos',{deadlineMs:now()+20000}),e=>
+   e instanceof provider.AnalyticsQuotaWait&&e.retryAfter===60&&/Aguardando cota/.test(e.message)&&!/atingido/.test(e.message));
+ assert.equal(requests,0);
+});
+
 test('missing migration preserves the previous pace and cannot activate accelerated limits',async t=>{
  const now=clock(t);t.mock.method(console,'warn',()=>{});
  database(t,()=>({data:null,error:{code:'PGRST202'}}));

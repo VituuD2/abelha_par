@@ -8,6 +8,8 @@ import Link from "next/link";
 import { Cloud, Loader2, RefreshCw } from "lucide-react";
 import type { OlistOrder, ReconciliationConfig } from "@/types";
 import { isValidDateRange, saoPauloDate } from "@/lib/dates";
+import { operationalHealth, type ConnectionHealth } from "@/lib/connection-status";
+import { ConnectionStatus } from "@/components/ui/connection-status";
 import { useAppAccess } from "@/components/layout/app-shell";
 
 interface ApiFetchCardProps {
@@ -24,6 +26,7 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const [connected, setConnected] = useState(false);
+  const [health, setHealth] = useState<ConnectionHealth | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [count, setCount] = useState<number | null>(null);
@@ -33,8 +36,8 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
       const response = await fetch("/api/auth/status", { cache: "no-store" });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Não foi possível verificar a Olist.");
-      setConnected(data.isConnected); setMessage(data.message || null);
-    } catch (reason) { setConnected(false); setError(reason instanceof Error ? reason.message : "Falha ao verificar a conexão."); }
+      setConnected(data.isConnected); setHealth(data.health || operationalHealth(data)); setMessage(data.message || null);
+    } catch (reason) { setHealth(operationalHealth({ isConnected: false })); setConnected(false); setError(reason instanceof Error ? reason.message : "Falha ao verificar a conexão."); }
     finally { setChecking(false); }
   }, []);
   useEffect(() => {
@@ -65,7 +68,7 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
           await new Promise(resolve => setTimeout(resolve, seconds * 1000)); continue;
         }
         if (!response.ok) {
-          if (data.needsReconnect) { setConnected(false); setMessage(data.error); }
+          if (data.needsReconnect) { setHealth(operationalHealth({ isConnected: false, needsReconnect: true })); setConnected(false); setMessage(data.error); }
           throw new Error(data.error || "Não foi possível buscar os pedidos.");
         }
         if (!Array.isArray(data.orders)) throw new Error("Resposta inválida da Olist.");
@@ -80,7 +83,7 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
   }
 
   return <section className="card p-6 flex flex-col gap-4 h-full">
-    <div className="flex items-center gap-3"><div className="p-3 rounded-xl bg-[var(--color-accent-blue)]/10"><Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" /></div><div><h2 className="text-xl font-semibold">Pedidos Olist</h2><p className="text-sm text-[var(--color-text-secondary)]">Conexão compartilhada da colmeia</p></div><span className={`badge ml-auto ${connected ? "badge-checked" : "badge-pending"}`}>{checking ? "Verificando…" : connected ? "Conectada" : "Indisponível"}</span></div>
+    <div className="flex items-center gap-3"><div className="p-3 rounded-xl bg-[var(--color-accent-blue)]/10"><Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" /></div><div><h2 className="text-xl font-semibold">Pedidos Olist</h2><p className="text-sm text-[var(--color-text-secondary)]">Conexão compartilhada da colmeia</p></div><div className="ml-auto">{checking || !health ? <span className="text-xs">Verificando…</span> : <ConnectionStatus health={health} />}</div></div>
     {checking ? <Loader2 className="w-6 h-6 animate-spin mx-auto my-8" /> : connected ? <>
       <div className="text-sm"><Select label="Critério de busca" className="field mt-1" value={dateMode} onValueChange={event => setDateMode(event as "created" | "updated")} disabled={loading}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></Select></div>
       <div className="grid sm:grid-cols-2 gap-3"><div className="text-sm"><DatePicker label="De" className="field mt-1"  value={dateFrom} max={dateTo} disabled={loading} onValueChange={event => setDateFrom(event)} /></div><div className="text-sm"><DatePicker label="Até" className="field mt-1"  value={dateTo} min={dateFrom} disabled={loading} onValueChange={event => setDateTo(event)} /></div></div>
