@@ -135,7 +135,7 @@ before(() => {
               C: { count: 5, revenue: "500", quantity: "5", percent: 5 },
             },
             top10: 10,
-            pareto: rows.slice(0, 60),
+            pareto: rows,
             generatedAt: "2026-10-01T00:00:00Z",
           };
     return new Response(JSON.stringify(data), {
@@ -159,7 +159,7 @@ test("dashboard renders cards and only the selected page, applies multi-company 
     root.render(React.createElement(ABCDashboard, { isAdmin: true })),
   );
   assert.ok(document.body.textContent.includes("Valor bruto dos itens"));
-  assert.equal(document.querySelectorAll("tbody tr").length, 50);
+  assert.equal(document.querySelectorAll("tbody tr").length, 25);
   assert.equal(document.querySelectorAll('svg[role="img"]').length, 1);
   assert.equal(document.querySelector('[role="alert"]'), null);
   await click(button("Mais filtros"));
@@ -180,11 +180,12 @@ test("dashboard renders cards and only the selected page, applies multi-company 
   assert.equal(sorted.sort, "revenue");
   assert.deepEqual(sorted.filters.selections.companies, ["1", "3"]);
   await click(document.querySelector('button[aria-label="Próxima página"]'));
-  assert.equal(document.querySelectorAll("tbody tr").length, 50);
-  assert.ok(document.body.textContent.includes("Produto 99"));
+  assert.equal(document.querySelectorAll("tbody tr").length, 25);
+  assert.ok(document.querySelector('tbody').textContent.includes("Produto 49"));
+  assert.match(document.body.textContent, /26–50 de 100 registros/);
 });
 test("drilldown traces orders and native dialog closes; client tab changes grouping on server", async () => {
-  await click(button("Produto 50"));
+  await click(button("Produto 25"));
   assert.equal(document.querySelector("dialog").open, true);
   assert.ok(
     document.querySelector("dialog").textContent.includes("Canal real"),
@@ -403,4 +404,120 @@ test("the reviewed workspace opens consolidated products for admin and operator;
   assert.doesNotMatch(document.body.textContent,/Produtos Olist apresenta os cadastros por conta/);
   await click(button('Produtos base'));
   assert.equal(calls.filter(c=>c.url.endsWith('/abc')).at(-1).body.filters.grouping,'composition');
+});
+
+const fullReport = { rows: rows.slice(0,25), total:100, revenue:'10000', quantity:'100', orders:100, classes:{}, pareto:rows, top10:10, generatedAt:'2026-10-21T14:00:00Z' };
+async function renderRedesign(t, key, report = fullReport) {
+  const calls = [];
+  t.mock.method(global, 'fetch', async (url, options = {}) => {
+    const body = options.body && JSON.parse(options.body);
+    calls.push({url,body});
+    if (url.endsWith('/export')) return new Response('arquivo');
+    if (url.endsWith('/drilldown')) return Response.json({total:0,companies:[],channels:[],orders:[]});
+    if (url.endsWith('/abc')) return Response.json({...report, rows: report.pareto.slice(((body.page || 1)-1)*body.size,(body.page || 1)*body.size)});
+    return Response.json(state);
+  });
+  await act(async () => root.render(React.createElement(ABCDashboard, {key, isAdmin:false})));
+  return calls;
+}
+const searchFor = async value => act(async () => {
+  const input = document.getElementById('abc-table-search');
+  Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, value);
+  input.dispatchEvent(new window.Event('input', {bubbles:true}));
+});
+
+test('global search includes the last server page, preserves ranking and chart, and paginates all matches locally', async t => {
+  const calls = await renderRedesign(t, 'global-search');
+  const chart = document.querySelector('svg[role="img"]');
+  const before = calls.filter(call => call.url.endsWith('/abc')).length;
+  await searchFor('SKU-99');
+  const table = document.querySelector('section[aria-label="Ranking ABC"] table');
+  assert.equal(table.querySelectorAll('tbody tr').length,1);
+  assert.match(table.textContent,/Produto 99/);
+  assert.equal(table.querySelector('tbody td').textContent,'100');
+  assert.match(table.textContent,/Classe C/);
+  assert.equal(document.querySelector('svg[role="img"]'),chart);
+  assert.equal(calls.filter(call => call.url.endsWith('/abc')).length,before);
+  await searchFor('Produto');
+  await click(document.querySelector('[aria-label="Próxima página"]'));
+  assert.match(table.querySelector('tbody').textContent,/Produto 25/);
+  assert.equal(calls.filter(call => call.url.endsWith('/abc')).length,before);
+  await searchFor('registro inexistente');
+  assert.match(document.body.textContent,/Nenhum resultado para esta busca/);
+  await click(document.querySelector('[aria-label="Limpar busca"]'));
+  assert.equal(table.querySelectorAll('tbody tr').length,25);
+});
+
+test('incomplete legacy ranking disables search instead of silently searching only loaded records', async t => {
+  await renderRedesign(t, 'incomplete-ranking', {...fullReport,pareto:rows.slice(0,60)});
+  assert.equal(document.getElementById('abc-table-search').disabled,true);
+  assert.match(document.body.textContent,/servidor retornou um ranking incompleto/);
+});
+
+test('mode tabs support keyboard and customer view hides SKU without removing product columns', async t => {
+  const calls = await renderRedesign(t, 'keyboard-tabs');
+  await act(async () => document.getElementById('abc-tab-product').dispatchEvent(new window.KeyboardEvent('keydown',{key:'End',bubbles:true})));
+  assert.equal(document.activeElement.id,'abc-tab-customer');
+  assert.equal(document.querySelector('[role="tab"][aria-selected="true"]').textContent,'Clientes');
+  assert.equal(calls.filter(call => call.url.endsWith('/abc')).at(-1).body.filters.grouping,'customer');
+  assert.doesNotMatch(document.querySelector('section[aria-label="Ranking ABC"] thead').textContent,/SKU/);
+  await click(button('Produtos Olist'));
+  assert.match(document.querySelector('section[aria-label="Ranking ABC"] thead').textContent,/SKU/);
+});
+
+test('export respects applied filters while drafts and table search stay independent; success is announced', async t => {
+  const calls = await renderRedesign(t, 'export-applied');
+  const applied = calls.find(call => call.url.endsWith('/abc')).body.filters;
+  await click(button('Últimos 7 dias'));
+  assert.match(document.body.textContent,/Alterações não aplicadas/);
+  await searchFor('SKU-99');
+  t.mock.method(URL, 'createObjectURL', () => 'blob:abc');
+  t.mock.method(URL, 'revokeObjectURL', () => {});
+  t.mock.method(window.HTMLAnchorElement.prototype, 'click', () => {});
+  document.querySelector('details:has([aria-label="Exportar relatório completo"])').open = true;
+  await click(button('CSV completo'));
+  assert.deepEqual(calls.find(call => call.url.endsWith('/export')).body,{filters:applied,format:'csv'});
+  assert.match(document.body.textContent,/CSV pronto. Download iniciado/);
+  await click(button('Excel'));
+  assert.match(document.body.textContent,/Excel pronto. Download iniciado/);
+  await click(button('Analisar vendas'));
+  assert.doesNotMatch(document.body.textContent,/Alterações não aplicadas/);
+  assert.notEqual(calls.filter(call => call.url.endsWith('/abc')).at(-1).body.filters.from,applied.from);
+});
+
+test('clearing selections preserves unapplied dates and restores the default order statuses', async t => {
+  const calls = await renderRedesign(t, 'clear-selections');
+  await click(button('Mais filtros'));
+  const company = [...document.querySelectorAll('label')].find(label => label.textContent === 'Empresa 1');
+  await click(company.querySelector('input'));
+  await click(button('Analisar vendas'));
+  const applied = calls.filter(call => call.url.endsWith('/abc')).at(-1).body.filters;
+  assert.deepEqual(applied.selections.companies,['1']);
+  await click(button('Últimos 7 dias'));
+  await click(button('Limpar seleções'));
+  const cleared = calls.filter(call => call.url.endsWith('/abc')).at(-1).body.filters;
+  assert.equal(cleared.from,applied.from);
+  assert.equal(cleared.selections.companies,undefined);
+  assert.deepEqual(cleared.selections.statuses,['1','5','6']);
+  assert.match(document.body.textContent,/Alterações não aplicadas/);
+});
+
+test('export disables both formats while pending and exposes a retry after failure without hiding report errors', async t => {
+  await renderRedesign(t, 'pending-export');
+  let complete;
+  t.mock.method(global,'fetch',async url=>url.endsWith('/export')
+    ? new Promise(resolve=>{complete=resolve;})
+    : Response.json({error:'Falha de atualização'},{status:503}));
+  document.querySelector('details:has([aria-label="Exportar relatório completo"])').open=true;
+  await click(button('CSV completo'));
+  assert.equal(button('Excel').disabled,true);
+  assert.equal(button('CSV completo').disabled,true);
+  assert.match(document.body.textContent,/Preparando arquivo/);
+  await act(async()=>complete(Response.json({error:'Falha de exportação'},{status:503})));
+  assert.equal(button('Excel').disabled,false);
+  assert.match(document.querySelector('[role="alert"]').textContent,/Falha de exportação/);
+  await click(button('Atualizar'));
+  const alerts=[...document.querySelectorAll('[role="alert"]')].map(element=>element.textContent).join(' ');
+  assert.match(alerts,/Falha de exportação/);
+  assert.match(alerts,/Falha de atualização/);
 });

@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { getAccessContext } from "@/lib/access";
-import { Header } from "@/components/layout/header";
 import { ABCDashboard } from "@/components/analytics/abc-dashboard";
 import { can } from "@/lib/permissions";
 import { hasCompositionCatalog } from "@/lib/analytics/composition-server";
@@ -9,10 +8,6 @@ export default async function ABCPage() {
   if (!access) redirect("/login");
   return (
     <>
-      <Header
-        title="Curva ABC"
-        breadcrumbs={["Abelha Par", "Curva ABC"]}
-      />
       <ABCDashboard
         isAdmin={can(access.role, "ninho:access")}
         initialGrouping={hasCompositionCatalog(access.workspaceId) ? "composition" : "product"}

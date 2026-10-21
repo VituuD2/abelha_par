@@ -97,7 +97,9 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
     <AppAccessContext.Provider value={{ can: permission => can(access.role, permission) }}><div className="min-h-screen w-full">
       <Sidebar role={access.role} />
       <main className="w-full lg:!pl-[260px] pb-24 lg:pb-0 min-h-screen flex flex-col">
-        <div className="w-full max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-14">{children}</div>
+        <div className={pathname === "/analytics/abc"
+          ? "w-full min-w-0 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10"
+          : "w-full max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-14"}>{children}</div>
       </main>
     </div></AppAccessContext.Provider>
   );

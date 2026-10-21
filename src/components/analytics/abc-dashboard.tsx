@@ -1,17 +1,18 @@
 "use client";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Select } from "@/components/ui/select";
+import { Header } from "@/components/layout/header";
 
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Download,
   Filter,
   LoaderCircle,
   RefreshCw,
+  Search,
   X,
 } from "lucide-react";
 import {
@@ -22,10 +23,12 @@ import {
 import { type CoverageJob } from "@/lib/analytics/coverage";
 import { reportReliability } from "@/lib/analytics/reliability";
 import { ConnectionProgress } from "./connection-progress";
+import { ABCExportActions, ABCModeTabs } from "./abc-controls";
 import { ParetoChart } from "./pareto-chart";
 import { money, number, pct } from "@/lib/analytics/format";
 import { paretoHighlighted, type ParetoHighlight } from "@/lib/analytics/pareto";
 import { progressVersion } from "@/lib/analytics/progress";
+import { searchTableRows } from "@/lib/analytics/table-view";
 import type {
   ABCFilters,
   ABCResult,
@@ -261,11 +264,36 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     [advanced, setAdvanced] = useState(false),
     [filtersExpanded, setFiltersExpanded] = useState(false),
     [page, setPage] = useState(1),
-    [size, setSize] = useState(50),
+    [size, setSize] = useState(25),
     [sort, setSort] = useState("rank"),
     [direction, setDirection] = useState("asc"),
     [refresh, setRefresh] = useState(0),
     [dataRefresh, setDataRefresh] = useState(0);
+  const [search, setSearch] = useState("");
+  const [searchPage, setSearchPage] = useState(1);
+  const [exportNotice, setExportNotice] = useState("");
+  const [exportError, setExportError] = useState<string | null>(null);
+  const searchQuery = useDeferredValue(search);
+  const completeRanking = !!result && result.pareto.length === result.total;
+  const searching = !!searchQuery.trim() && completeRanking;
+  const matches = useMemo(() => searching && result
+    ? searchTableRows(result.pareto, searchQuery, sort, direction, filters.grouping === "customer") : [],
+  [searching, result, searchQuery, sort, direction, filters.grouping]);
+  const tableTotal = searching ? matches.length : result?.total || 0;
+  const tablePages = Math.max(1, Math.ceil(tableTotal / size));
+  const tablePage = searching ? Math.min(searchPage, tablePages) : page;
+  const tableRows = searching ? matches.slice((tablePage - 1) * size, tablePage * size) : result?.rows || [];
+  const filtersChanged = JSON.stringify(draft) !== JSON.stringify(filters);
+  const appliedSelections = (Object.keys(DIMENSIONS) as Dimension[]).filter(dim => filters.selections[dim]?.length);
+  const activeFilterCount = appliedSelections.reduce((count, dim) => count + (filters.selections[dim]?.length || 0), 0);
+  const switchGrouping = (grouping: ABCFilters["grouping"]) => {
+    setDraft(f => ({ ...f, grouping }));
+    setFilters(f => ({ ...f, grouping }));
+    setSearch("");
+    setSearchPage(1);
+    setHighlight(null);
+    setPage(1);
+  };
   const [columns, setColumns] = useState<Column[]>(
       Object.keys(labels) as Column[],
     ),
@@ -275,6 +303,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     [drillLoading, setDrillLoading] = useState(false),
     [drillError, setDrillError] = useState<string | null>(null);
   const drillScope = entity ? JSON.stringify({ filters, entity: entity.entityId }) : "";
+  const visibleColumns = columns.filter(column => filters.grouping !== "customer" || column !== "sku");
+  const columnLabel = (column: Column) => column === "name" ? (filters.grouping === "customer" ? "Cliente" : "Produto")
+    : column === "revenue" && result?.composition ? "Valor atribuído" : labels[column];
   const currentDrill = drillResult?.scope === drillScope ? drillResult : null;
   const drill = currentDrill?.data;
   const drillPage = currentDrill?.page || 1;
@@ -447,7 +478,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const download = useCallback(
     async (format: "csv" | "xlsx") => {
       setExporting(true);
-      setError(null);
+      setExportNotice("");
+      setExportError(null);
       try {
         const response = await fetch("/api/analytics/export", {
           method: "POST",
@@ -460,9 +492,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         a.href = url;
         a.download = `curva-abc-${filters.from}-${filters.to}.${format}`;
         a.click();
+        setExportNotice(`${format === "csv" ? "CSV" : "Excel"} pronto. Download iniciado.`);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Falha ao exportar.");
+        setExportError(e instanceof Error ? e.message : "Falha ao exportar.");
       } finally {
         setExporting(false);
       }
@@ -486,7 +519,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       <span
         className={`px-2.5 py-1 rounded-full font-semibold ${row.class === "A" ? "bg-amber-100 text-amber-900" : row.class === "B" ? "bg-yellow-100 text-yellow-900" : "bg-stone-100 text-stone-600"}`}
       >
-        {row.class}
+        Classe {row.class}
       </span>
     ) : column === "name" ? (
       <button
@@ -499,75 +532,40 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       row[column]
     );
   return (
-    <div className="space-y-6 max-w-[1240px] mx-auto pb-6">
-      <section className="card p-5 sm:p-6 bg-gradient-to-r from-amber-100/60 to-white space-y-4">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Análises">
-          <button
-            role="tab"
-            aria-selected={draft.grouping === "product" || draft.grouping === "parent"}
-            className={
-              draft.grouping === "product" || draft.grouping === "parent" ? "btn-primary" : "btn-ghost"
-            }
-            onClick={() => {
-              setDraft((f) => ({ ...f, grouping: "product" }));
-              setFilters((f) => ({ ...f, grouping: "product" }));
-              setPage(1);
-            }}
-          >
-            Produtos Olist
+    <div className="w-full min-w-0 space-y-6 pb-6">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 [&>header]:mb-0">
+        <Header title="Curva ABC" breadcrumbs={["Abelha Par", "Curva ABC"]} />
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto">
+          <div className="w-full text-xs text-[var(--color-text-secondary)] sm:mr-2 sm:w-auto">
+            {result ? <>Atualizado <time dateTime={result.generatedAt}>{new Date(result.generatedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</time></> : "Aguardando dados"}
+          </div>
+          <button className="btn-ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}>
+            <RefreshCw aria-hidden="true" className={`w-4 h-4 ${loading ? "motion-safe:animate-spin" : ""}`} />Atualizar
           </button>
-          <button
-            role="tab"
-            aria-selected={draft.grouping === "composition"}
-            className={draft.grouping === "composition" ? "btn-primary" : "btn-ghost"}
-            onClick={() => {
-              setDraft(f => ({ ...f, grouping: "composition" }));
-              setFilters(f => ({ ...f, grouping: "composition" }));
-              setHighlight(null);
-              setPage(1);
-            }}
-          >Produtos base</button>
-          <button
-            role="tab"
-            aria-selected={draft.grouping === "customer"}
-            className={
-              draft.grouping === "customer" ? "btn-primary" : "btn-ghost"
-            }
-            onClick={() => {
-              setDraft((f) => ({ ...f, grouping: "customer" }));
-              setFilters((f) => ({ ...f, grouping: "customer" }));
-              setPage(1);
-            }}
-          >
-            Clientes
-          </button>
+          <ABCExportActions busy={exporting} disabled={!result?.total || loading} onDownload={download} />
         </div>
-          <button
-            className="btn-ghost"
-            onClick={() => setRefresh((v) => v + 1)}
-            disabled={loading}
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Atualizar
-          </button>
+      </div>
+      {exportNotice && <p role="status" className="text-sm text-emerald-800">{exportNotice}</p>}
+      {exportError && <p role="alert" className="card p-4 text-sm text-red-800">{exportError}</p>}
+      <ABCModeTabs grouping={filters.grouping} onChange={switchGrouping} />
           {loading && (
             <div role="status" className="pointer-events-none fixed bottom-4 right-4 z-40 rounded-full border border-[var(--color-border-light)] bg-[var(--color-bg-primary)] p-3 text-amber-700 shadow-sm">
               <LoaderCircle aria-hidden="true" className="h-5 w-5 motion-safe:animate-spin" />
               <span className="sr-only">Atualizando a Curva ABC…</span>
             </div>
           )}
-        </div>
-      </section>
+      <div id="abc-analysis-panel" role="tabpanel" aria-labelledby={`abc-tab-${filters.grouping === "parent" ? "product" : filters.grouping}`} className="min-w-0 space-y-6">
       <form
         className="card p-5 sm:p-6 space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
           setPage(1);
+          setSearchPage(1);
           setFilters({ ...draft });
         }}
       >
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-wrap items-end gap-4">
+        <div className="grid w-full gap-4 sm:w-auto sm:flex-1 sm:grid-cols-2 lg:max-w-xl">
           <div className="text-sm font-medium">
             <DatePicker
               label="De"
@@ -608,6 +606,18 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             <Filter className="w-4 h-4" />
             {filtersExpanded ? "Recolher filtros" : "Mais filtros"}
           </button>
+        </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 border-t border-[var(--color-border-light)] pt-3 text-xs text-[var(--color-text-secondary)]" aria-label="Filtros aplicados">
+          <span>{filters.from.split("-").reverse().join("/")} — {filters.to.split("-").reverse().join("/")}</span>
+          <span className="rounded-full bg-[var(--color-bg-tertiary)] px-2 py-1">{activeFilterCount} seleções aplicadas</span>
+          <span>{filters.metric === "quantity" ? "Quantidade" : "Valor bruto"} · {filters.basis === "orders" ? "Data da venda" : "Emissão da NF"}</span>
+          {appliedSelections.filter(dim => dim !== "statuses").map(dim => <span key={dim} className="rounded-full border border-[var(--color-border-light)] px-2 py-1">{DIMENSIONS[dim]}: {filters.selections[dim]!.length}</span>)}
+          {filtersChanged && <span role="status" className="text-amber-800">Alterações não aplicadas</span>}
+          <button type="button" className="btn-ghost text-xs sm:ml-auto" onClick={() => {
+            const cleared = { ...filters, selections: { statuses: ABC_DEFAULTS.statuses.map(String) } };
+            setDraft(current => ({ ...current, selections: cleared.selections })); setFilters(cleared); setPage(1); setSearchPage(1);
+          }}>Limpar seleções</button>
         </div>
         {filtersExpanded && <div id="abc-extra-filters" className="space-y-4 border-t border-[var(--color-border-light)] pt-4">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -900,9 +910,13 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           )}
         </div>
       )}
+      {loading && !result && <div aria-hidden="true" className="space-y-6 motion-safe:animate-pulse">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{[1, 2, 3, 4].map(item => <div key={item} className="card h-32 p-5"><div className="h-4 w-2/3 rounded bg-[var(--color-bg-tertiary)]" /><div className="mt-4 h-8 w-1/2 rounded bg-[var(--color-bg-tertiary)]" /></div>)}</div>
+        <div className="card h-48 bg-[var(--color-bg-secondary)]" />
+      </div>}
       {result && (
         <>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores do período">
             {[
               [result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", money(result.revenue)],
               ["Quantidade vendida", number(result.quantity)],
@@ -912,22 +926,20 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               ],
               ["Concentração dos 10 primeiros", pct(result.top10)],
             ].map(([label, value]) => (
-              <div key={label} className="card p-5">
+              <div key={label} className="card min-w-0 p-5 flex flex-col justify-between gap-2" title={label === "Pedidos / entidades" ? "Pedidos distintos / produtos ou clientes no relatório." : label === "Concentração dos 10 primeiros" ? "Participação dos dez primeiros na métrica aplicada." : undefined}>
                 <p className="text-sm text-[var(--color-text-secondary)]">
                   {label}
                 </p>
-                <p className="text-2xl font-semibold mt-2">{value}</p>
+                <p className="text-2xl font-semibold mt-2 tabular-nums break-words">{value}</p>
               </div>
             ))}
           </div>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-3" aria-label="Resumo das classes ABC">
             {(["A", "B", "C"] as const).map((cls) => {
               const c = result.classes?.[cls];
               return (
-                <div className="card p-5" key={cls}>
-                  <p className="font-semibold">
-                    Classe {cls} · {number(c?.count || 0)} entidades
-                  </p>
+                <div className="card min-w-0 p-5" key={cls}>
+                  <div className="flex flex-wrap items-center justify-between gap-2"><span className={`badge ${cls === "A" ? "bg-amber-100 text-amber-900" : cls === "B" ? "bg-yellow-100 text-yellow-900" : "bg-stone-100 text-stone-600"}`}>Classe {cls}</span><span className="text-xs text-[var(--color-text-secondary)]">{number(c?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</span></div>
                   <p className="text-sm mt-2">
                     {money(c?.revenue || "0")} · {pct(c?.percent || 0)} da
                     métrica
@@ -971,37 +983,27 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             onOpen={openEntity}
             entityLabel={filters.grouping === "customer" ? "cliente" : "produto"}
           />
-          <section className="card overflow-hidden">
+          <section className="card min-w-0 overflow-hidden" aria-label="Ranking ABC" aria-busy={loading || search !== searchQuery}>
             <div className="p-5 space-y-3">
               <div className="flex flex-wrap justify-between items-center gap-3">
                 <h2 className="font-semibold">
                   {filters.grouping === "customer" ? "Clientes" : "Produtos"} ·{" "}
                   {number(result.total)} entidades
                 </h2>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    disabled={exporting || !result.total}
-                    className="btn-ghost"
-                    onClick={() => download("csv")}
-                  >
-                    <Download className="w-4 h-4" />
-                    CSV completo
-                  </button>
-                  <button
-                    disabled={exporting || !result.total}
-                    className="btn-ghost"
-                    onClick={() => download("xlsx")}
-                  >
-                    Excel
-                  </button>
+                <div className="relative w-full sm:w-80">
+                  <label htmlFor="abc-table-search" className="sr-only">{filters.grouping === "customer" ? "Buscar clientes" : "Buscar produtos ou SKU"}</label>
+                  <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-[var(--color-text-tertiary)]" />
+                  <input id="abc-table-search" type="search" value={search} disabled={!completeRanking} aria-describedby="abc-search-scope" className="field !pl-10 !pr-10" placeholder={filters.grouping === "customer" ? "Buscar clientes…" : "Buscar produto ou SKU…"} onChange={event => { setSearch(event.target.value); setSearchPage(1); }} />
+                  {search && <button aria-label="Limpar busca" className="absolute right-2 top-2 rounded-lg p-1.5 hover:bg-amber-50 focus-visible:outline-2 focus-visible:outline-amber-700" onClick={() => { setSearch(""); setSearchPage(1); }}><X aria-hidden="true" className="h-4 w-4" /></button>}
                 </div>
               </div>
+              <p id="abc-search-scope" className="text-xs text-[var(--color-text-secondary)]">{!completeRanking ? "Busca indisponível: o servidor retornou um ranking incompleto." : searching ? `${number(tableTotal)} de ${number(result.total)} registros · posição e classe originais preservadas.` : "Busca em todo o ranking. Exportações incluem todos os registros dos filtros aplicados."}</p>
               <details>
                 <summary className="text-sm cursor-pointer">
                   Colunas da tabela
                 </summary>
                 <div className="flex flex-wrap gap-4 mt-3">
-                  {(Object.keys(labels) as Column[]).map((c) => (
+                  {(Object.keys(labels) as Column[]).filter(c => filters.grouping !== "customer" || c !== "sku").map((c) => (
                     <label key={c} className="text-xs flex gap-2">
                       <input
                         type="checkbox"
@@ -1015,20 +1017,22 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                           )
                         }
                       />
-                      {c === "revenue" && result.composition ? "Valor atribuído" : labels[c]}
+                      {columnLabel(c)}
                     </label>
                   ))}
                 </div>
               </details>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-amber-50/70">
+            <div className="max-h-[720px] overflow-auto overscroll-x-contain" tabIndex={0} role="region" aria-label="Tabela do ranking ABC">
+              <table className="w-full min-w-[960px] text-sm text-left">
+                <caption className="sr-only">Ranking completo do período, com paginação. Valores e classes calculados pelo servidor.</caption>
+                <thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)]">
                   <tr>
-                    {columns.map((c) => (
+                    {visibleColumns.map((c) => (
                       <th
                         key={c}
-                        className="px-4 py-3 whitespace-nowrap"
+                        scope="col"
+                        className={`px-4 py-3 whitespace-nowrap ${["name", "sku", "class"].includes(c) ? "text-left" : "text-right"}`}
                         aria-sort={
                           sort === c
                             ? direction === "asc"
@@ -1038,7 +1042,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                         }
                       >
                         <button
-                          disabled={c === "class"}
+                          disabled={c === "class" || loading}
+                          className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700"
                           onClick={() => {
                             setSort(c);
                             setDirection(
@@ -1047,9 +1052,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                                 : "asc",
                             );
                             setPage(1);
+                            setSearchPage(1);
                           }}
                         >
-                          {c === "revenue" && result.composition ? "Valor atribuído" : labels[c]}
+                          {columnLabel(c)}
                           {sort === c
                             ? direction === "asc"
                               ? " ↑"
@@ -1061,7 +1067,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   </tr>
                 </thead>
                 <tbody>
-                  {result.rows.map((row) => (
+                  {tableRows.map((row) => (
                     <tr
                       key={row.entityId}
                       data-abc-entity={row.entityId}
@@ -1080,10 +1086,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                       onFocus={() => updateHighlight({ entityId: row.entityId, cumulative: false, origin: "table" })}
                       onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null) && highlight?.origin === "table") updateHighlight(null); }}
                     >
-                      {columns.map((c) => (
+                      {visibleColumns.map((c) => (
                         <td
                           key={c}
-                          className={`px-4 py-4 ${c === "name" ? "min-w-48" : "whitespace-nowrap tabular-nums"}`}
+                          className={`px-4 py-4 ${c === "name" ? "min-w-64 max-w-md break-words" : ["sku", "class"].includes(c) ? "whitespace-nowrap" : "whitespace-nowrap tabular-nums text-right"}`}
                         >
                           {cell(row, c)}
                         </td>
@@ -1092,6 +1098,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   ))}
                 </tbody>
               </table>
+              {searching && !tableTotal && <div className="p-10 text-center" role="status"><h3 className="font-semibold">Nenhum resultado para esta busca</h3><p className="mt-2 text-sm text-[var(--color-text-secondary)]">Tente outro nome{filters.grouping === "customer" ? "." : " ou SKU."}</p><button className="btn-ghost mt-3" onClick={() => setSearch("")}>Limpar busca</button></div>}
               {!result.total && (
                 <div className="p-10 text-center">
                   <h3 className="font-semibold">
@@ -1111,6 +1118,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   onValueChange={(e) => {
                     setSize(Number(e));
                     setPage(1);
+                    setSearchPage(1);
                   }}
                 >
                   {[25, 50, 100].map((n) => (
@@ -1118,23 +1126,24 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   ))}
                 </Select>
               </div>
+              <p className="text-xs text-[var(--color-text-secondary)]" aria-live="polite">{tableTotal ? number((tablePage - 1) * size + 1) : "0"}–{number(Math.min(tablePage * size, tableTotal))} de {number(tableTotal)} registros</p>
               <div className="flex items-center gap-3">
                 <button
                   aria-label="Página anterior"
                   className="btn-ghost"
-                  disabled={page === 1}
-                  onClick={() => setPage((v) => v - 1)}
+                  disabled={loading || tablePage === 1}
+                  onClick={() => searching ? setSearchPage(tablePage - 1) : setPage(v => v - 1)}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <span className="text-sm">
-                  {page} / {Math.max(1, Math.ceil(result.total / size))}
+                  {tablePage} / {tablePages}
                 </span>
                 <button
                   aria-label="Próxima página"
                   className="btn-ghost"
-                  disabled={page * size >= result.total}
-                  onClick={() => setPage((v) => v + 1)}
+                  disabled={loading || tablePage >= tablePages}
+                  onClick={() => searching ? setSearchPage(tablePage + 1) : setPage(v => v + 1)}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -1143,6 +1152,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </section>
         </>
       )}
+      </div>
       <dialog
         ref={dialog}
         onClose={() => {
@@ -1151,11 +1161,12 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           setDrillError(null);
           setDrillLoading(false);
         }}
-        className="m-auto rounded-3xl bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] p-0 w-[min(960px,94vw)] max-h-[88vh] backdrop:bg-black/40"
+        aria-labelledby="abc-detail-title"
+        className="m-0 ml-auto h-dvh max-h-dvh w-full max-w-[960px] border-l border-[var(--color-border-light)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] p-0 backdrop:bg-black/40"
       >
         <div className="p-5 sm:p-7 space-y-5">
           <div className="flex justify-between items-center gap-3">
-            <h2 className="text-lg font-semibold">{entity?.name}</h2>
+            <h2 id="abc-detail-title" className="text-lg font-semibold">{entity?.name}</h2>
             <button
               aria-label="Fechar detalhes"
               className="btn-ghost"

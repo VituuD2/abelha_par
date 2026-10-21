@@ -1,0 +1,10 @@
+{
+  "baseline": "2a0a225c",
+  "sha256": {
+    "src/components/analytics/pareto-chart.tsx": "0519B09DAB8C07175F17483A82919C4D5F0E55E2F65E0F64ECC612C0AA55C68E",
+    "src/app/globals.css": "8B7BF0AF3E6E9B9DBFF7463E85331A2531E03DBE1708E30CDC093408C27B1504",
+    "src/app/layout.tsx": "3B37ED006DD2BA17F24804660C7C5547B67B07BD17D82241D2EC8F09D1C488AE"
+  },
+  "headerUnchanged": true,
+  "chartInvocationUnchanged": true
+}

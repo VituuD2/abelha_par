@@ -206,7 +206,7 @@ test('filters start compact, preserve choices when collapsed and keep additional
  const form=()=>document.querySelector('form');
  const button=text=>[...form().querySelectorAll('button')].find(b=>b.textContent.trim()===text);
  assert.deepEqual([...form().querySelectorAll('.app-control-label')].map(l=>l.textContent.trim()),['De','Até']);
- assert.deepEqual([...form().querySelectorAll('button:not(.app-calendar-trigger)')].map(b=>b.textContent.trim()),['Últimos 7 dias','Últimos 30 dias','Últimos 90 dias','Analisar vendas','Mais filtros']);
+ assert.deepEqual([...form().querySelectorAll('button:not(.app-calendar-trigger)')].map(b=>b.textContent.trim()),['Últimos 7 dias','Últimos 30 dias','Últimos 90 dias','Analisar vendas','Mais filtros','Limpar seleções']);
  const initialReports=calls.filter(c=>c.url.endsWith('/abc')).length;
  await act(async()=>button('Últimos 7 dias').click());
  const dates=[...form().querySelectorAll('.app-date-picker input')].map(input=>input.value);
