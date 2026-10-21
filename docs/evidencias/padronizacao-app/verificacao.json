@@ -1,0 +1,193 @@
+{
+  "scope": "AppShell e componentes reais; APIs/autenticação com fixtures locais, sem acesso externo ou alterações na produção.",
+  "measurements": [
+    {
+      "route": "/",
+      "width": 320,
+      "documentWidth": 320,
+      "contentWidth": 320
+    },
+    {
+      "route": "/orders",
+      "width": 320,
+      "documentWidth": 320,
+      "contentWidth": 320
+    },
+    {
+      "route": "/history",
+      "width": 320,
+      "documentWidth": 320,
+      "contentWidth": 320
+    },
+    {
+      "route": "/scanner",
+      "width": 320,
+      "documentWidth": 320,
+      "contentWidth": 320
+    },
+    {
+      "route": "/ninho",
+      "width": 320,
+      "documentWidth": 320,
+      "contentWidth": 320
+    },
+    {
+      "route": "/analytics/abc",
+      "width": 320,
+      "documentWidth": 320,
+      "contentWidth": 320
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "documentWidth": 390,
+      "contentWidth": 390
+    },
+    {
+      "route": "/orders",
+      "width": 390,
+      "documentWidth": 390,
+      "contentWidth": 390
+    },
+    {
+      "route": "/history",
+      "width": 390,
+      "documentWidth": 390,
+      "contentWidth": 390
+    },
+    {
+      "route": "/scanner",
+      "width": 390,
+      "documentWidth": 390,
+      "contentWidth": 390
+    },
+    {
+      "route": "/ninho",
+      "width": 390,
+      "documentWidth": 390,
+      "contentWidth": 390
+    },
+    {
+      "route": "/analytics/abc",
+      "width": 390,
+      "documentWidth": 390,
+      "contentWidth": 390
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "documentWidth": 768,
+      "contentWidth": 768
+    },
+    {
+      "route": "/orders",
+      "width": 768,
+      "documentWidth": 768,
+      "contentWidth": 768
+    },
+    {
+      "route": "/history",
+      "width": 768,
+      "documentWidth": 768,
+      "contentWidth": 768
+    },
+    {
+      "route": "/scanner",
+      "width": 768,
+      "documentWidth": 768,
+      "contentWidth": 768
+    },
+    {
+      "route": "/ninho",
+      "width": 768,
+      "documentWidth": 768,
+      "contentWidth": 768
+    },
+    {
+      "route": "/analytics/abc",
+      "width": 768,
+      "documentWidth": 768,
+      "contentWidth": 768
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "documentWidth": 1440,
+      "contentWidth": 1180
+    },
+    {
+      "route": "/orders",
+      "width": 1440,
+      "documentWidth": 1440,
+      "contentWidth": 1180
+    },
+    {
+      "route": "/history",
+      "width": 1440,
+      "documentWidth": 1440,
+      "contentWidth": 1180
+    },
+    {
+      "route": "/scanner",
+      "width": 1440,
+      "documentWidth": 1440,
+      "contentWidth": 1180
+    },
+    {
+      "route": "/ninho",
+      "width": 1440,
+      "documentWidth": 1440,
+      "contentWidth": 1180
+    },
+    {
+      "route": "/analytics/abc",
+      "width": 1440,
+      "documentWidth": 1440,
+      "contentWidth": 1180
+    },
+    {
+      "classCardBackgrounds": [
+        "oklch(0.962 0.059 95.617)",
+        "oklch(0.973 0.071 103.193)",
+        "oklch(0.97 0.001 106.424)"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1920,
+      "documentWidth": 1920,
+      "contentWidth": 1600
+    },
+    {
+      "route": "/orders",
+      "width": 1920,
+      "documentWidth": 1920,
+      "contentWidth": 1600
+    },
+    {
+      "route": "/history",
+      "width": 1920,
+      "documentWidth": 1920,
+      "contentWidth": 1600
+    },
+    {
+      "route": "/scanner",
+      "width": 1920,
+      "documentWidth": 1920,
+      "contentWidth": 1600
+    },
+    {
+      "route": "/ninho",
+      "width": 1920,
+      "documentWidth": 1920,
+      "contentWidth": 1600
+    },
+    {
+      "route": "/analytics/abc",
+      "width": 1920,
+      "documentWidth": 1920,
+      "contentWidth": 1600
+    }
+  ],
+  "pageErrors": []
+}

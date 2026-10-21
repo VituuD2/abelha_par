@@ -938,8 +938,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             {(["A", "B", "C"] as const).map((cls) => {
               const c = result.classes?.[cls];
               return (
-                <div className="card min-w-0 p-5" key={cls}>
-                  <div className="flex flex-wrap items-center justify-between gap-2"><span className={`badge ${cls === "A" ? "bg-amber-100 text-amber-900" : cls === "B" ? "bg-yellow-100 text-yellow-900" : "bg-stone-100 text-stone-600"}`}>Classe {cls}</span><span className="text-xs text-[var(--color-text-secondary)]">{number(c?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</span></div>
+                <div className={`card min-w-0 p-5 ${cls === "A" ? "!bg-amber-100" : cls === "B" ? "!bg-yellow-100" : "!bg-stone-100"}`} key={cls}>
+                  <div className="flex flex-wrap items-center justify-between gap-2"><span className={`badge ${cls === "A" ? "text-amber-900" : cls === "B" ? "text-yellow-900" : "text-stone-600"}`}>Classe {cls}</span><span className="text-xs text-[var(--color-text-secondary)]">{number(c?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</span></div>
                   <p className="text-sm mt-2">
                     {money(c?.revenue || "0")} · {pct(c?.percent || 0)} da
                     métrica

@@ -56,3 +56,48 @@ test('Ninho conceals sensitive options by default, keeps sections independent an
   assert.equal(document.querySelector('button button,button a'),null,'header actions are independent controls');
   await act(async()=>root.render(null));
 });
+
+test('users and permissions start collapsed, reveal only the chosen section and preserve edits when collapsed',async t=>{
+  const calls=[];
+  t.mock.method(global,'setInterval',()=>1);
+  t.mock.method(global,'clearInterval',()=>{});
+  const members=[{user_id:'admin',display_name:'Pessoa Administradora',email:'private@example.test',role:'admin',active:true}];
+  t.mock.method(global,'fetch',async(url,options={})=>{
+    calls.push({url,method:options.method||'GET',body:options.body&&JSON.parse(options.body)});
+    if(options.method==='PATCH'){members[0].active=JSON.parse(options.body).active;return Response.json({ok:true});}
+    return Response.json(url==='/api/auth/status'?{isConnected:true,status:'valid'}
+      :url==='/api/ninho/webhook'?{enabled:false,url:null,status:{status:'pending'}}
+      :url==='/api/nuvemshop/connection'?{connected:false}
+      :url==='/api/analytics/connections'?{companies:[],connections:[],jobs:[],sources:[],coverage:[]}
+      :url==='/api/analytics/api-usage'?{available:true,accounts:[]}
+      :{users:members,currentUserId:'another-admin'});
+  });
+  await act(async()=>root.render(React.createElement(NinhoSettings,{key:'users-collapsed'})));
+  await act(async()=>document.getElementById('connections-tab').dispatchEvent(new window.KeyboardEvent('keydown',{key:'End',bubbles:true})));
+  assert.equal(document.activeElement.id,'users-tab');
+  const panel=document.getElementById('ninho-users');
+  assert.equal(panel.hidden,false);
+  const toggle=name=>panel.querySelector(`button[aria-label="${name}"]`);
+  const body=name=>document.getElementById(toggle(name).getAttribute('aria-controls'));
+  for(const name of ['Perfis e permissões','Equipe da colmeia','Adicionar à colmeia'])assert.equal(body(name).hidden,true);
+  const email=[...panel.querySelectorAll('p')].find(p=>p.textContent==='private@example.test');
+  assert.ok(email.closest('[hidden]'));
+  assert.ok(panel.querySelector('input[type="password"]').closest('[hidden]'));
+  await act(async()=>toggle('Equipe da colmeia').click());
+  assert.equal(email.closest('[hidden]'),null);
+  assert.equal(body('Perfis e permissões').hidden,true);
+  const active=body('Equipe da colmeia').querySelector('input[type="checkbox"]');
+  await act(async()=>active.click());
+  await act(async()=>toggle('Equipe da colmeia').click());
+  assert.ok(email.closest('[hidden]'));
+  await act(async()=>toggle('Equipe da colmeia').click());
+  assert.equal(active.checked,false);
+  assert.equal(calls.filter(c=>c.method!=='GET').length,0);
+  await act(async()=>[...body('Equipe da colmeia').querySelectorAll('button')].find(b=>b.textContent==='Salvar').click());
+  assert.deepEqual(calls.find(c=>c.method==='PATCH').body,{userId:'admin',role:'admin',active:false});
+  await act(async()=>document.getElementById('users-tab').dispatchEvent(new window.KeyboardEvent('keydown',{key:'Home',bubbles:true})));
+  assert.equal(panel.hidden,true);
+  await act(async()=>document.getElementById('users-tab').click());
+  assert.equal(body('Adicionar à colmeia').hidden,true);
+  await act(async()=>root.render(null));
+});

@@ -13,7 +13,7 @@ export function NinhoSection({ title, icon: Icon, iconClassName = "bg-amber-100 
 }) {
   const [expanded, setExpanded] = useState(false);
   const id = useId();
-  return <section className="card overflow-hidden" aria-label={title}>
+  return <section className="card min-w-0 overflow-hidden" aria-label={title}>
     <header className="flex flex-wrap items-center gap-3 p-5 sm:px-6">
       <h2 className="min-w-0 flex-1 basis-56">
         <button id={`${id}-toggle`} type="button" aria-label={title} aria-expanded={expanded} aria-controls={`${id}-panel`}
@@ -30,7 +30,7 @@ export function NinhoSection({ title, icon: Icon, iconClassName = "bg-amber-100 
       {actions && <div className="ml-auto flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
     </header>
     <div id={`${id}-panel`} role="region" aria-labelledby={`${id}-toggle`} hidden={!expanded}
-      className="space-y-5 border-t border-[var(--color-border-light)] p-5 sm:p-6">
+      className="space-y-4 border-t border-[var(--color-border-light)] p-5 sm:p-6">
       {children}
     </div>
   </section>;

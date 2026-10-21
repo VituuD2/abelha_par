@@ -82,8 +82,8 @@ export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardPr
     finally { if (!abort.signal.aborted) setLoading(false); }
   }
 
-  return <section className="card p-6 flex flex-col gap-4 h-full">
-    <div className="flex items-center gap-3"><div className="p-3 rounded-xl bg-[var(--color-accent-blue)]/10"><Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" /></div><div><h2 className="text-xl font-semibold">Pedidos Olist</h2><p className="text-sm text-[var(--color-text-secondary)]">Conexão compartilhada da colmeia</p></div><div className="ml-auto">{checking || !health ? <span className="text-xs">Verificando…</span> : <ConnectionStatus health={health} />}</div></div>
+  return <section className="card min-w-0 p-5 sm:p-6 flex flex-col gap-4 h-full">
+    <div className="flex flex-wrap items-center gap-3"><div className="p-3 rounded-xl bg-[var(--color-accent-blue)]/10"><Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" /></div><div><h2 className="text-xl font-semibold">Pedidos Olist</h2><p className="text-sm text-[var(--color-text-secondary)]">Conexão compartilhada da colmeia</p></div><div className="ml-auto">{checking || !health ? <span className="text-xs">Verificando…</span> : <ConnectionStatus health={health} />}</div></div>
     {checking ? <Loader2 className="w-6 h-6 animate-spin mx-auto my-8" /> : connected ? <>
       <div className="text-sm"><Select label="Critério de busca" className="field mt-1" value={dateMode} onValueChange={event => setDateMode(event as "created" | "updated")} disabled={loading}><option value="updated">Data de atualização</option><option value="created">Data de criação</option></Select></div>
       <div className="grid sm:grid-cols-2 gap-3"><div className="text-sm"><DatePicker label="De" className="field mt-1"  value={dateFrom} max={dateTo} disabled={loading} onValueChange={event => setDateFrom(event)} /></div><div className="text-sm"><DatePicker label="Até" className="field mt-1"  value={dateTo} min={dateFrom} disabled={loading} onValueChange={event => setDateTo(event)} /></div></div>

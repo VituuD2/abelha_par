@@ -87,7 +87,7 @@ export default function ScannerPage() {
     <>
       <Header
         title="Bipagem"
-        breadcrumbs={["Scanner Checkout", "Scanner", "Bipagem"]}
+        breadcrumbs={["Abelha Par", "Bipagem"]}
       />
 
       {/* Hidden Input for Scanner */}

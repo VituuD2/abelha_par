@@ -207,7 +207,7 @@ export function BatchTable({ batches, searching = false }: BatchTableProps) {
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4 border-t border-[var(--color-border-light)]">
-                    <div className="pt-4 flex items-center justify-between gap-3">
+                    <div className="pt-4 flex flex-wrap items-center justify-between gap-3">
                       <p className="text-[12px] text-[var(--color-text-secondary)]">
                         {searching ? `${orders.length} pedidos encontrados neste lote` : `${batch.qtd_pedidos} pedidos conferidos`} · <span className="font-semibold text-[var(--color-text-primary)]">{batch.responsavel}</span>.
                       </p>

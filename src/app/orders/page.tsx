@@ -115,7 +115,7 @@ export default function OrdersPage() {
       <p className="mt-3 text-xs text-[var(--color-text-secondary)]">A data de atualização inclui pagamentos confirmados depois da criação. Amplie o período para selecionar pedidos antigos preparados hoje.</p>
       {error && <p role="alert" className="mt-3 text-sm text-[var(--color-accent-red)]">{error} A seleção precisa de uma consulta completa para ser confirmada.</p>}
     </section>
-    <section className="card overflow-hidden">
+    <section className="card min-w-0 overflow-hidden">
       <div className="p-5 space-y-4 border-b border-[var(--color-border-light)]">
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold text-lg">Sua seleção do dia</h2><p className="text-sm text-[var(--color-text-secondary)]">{orders.length} carregados · {filtered.length} no filtro · {selectedIds.length} selecionados</p></div><span className="badge badge-pending">Shift + clique para selecionar um intervalo</span></div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -131,14 +131,14 @@ export default function OrdersPage() {
         </div>
         {hiddenCount > 0 && <p className="text-xs text-[var(--color-accent-orange)]">{hiddenCount} pedido(s) selecionado(s) estão fora do filtro atual e continuam no lote.</p>}
       </div>
-      <div className="overflow-x-auto"><table className="w-full text-sm"><thead className="bg-[var(--color-bg-primary)] text-left text-[var(--color-text-secondary)]"><tr><th className="p-3 w-10"><span className="sr-only">Seleção</span></th><th className="p-3">Pedido / cliente</th><th className="p-3">Criação</th><th className="p-3">Pagamento</th><th className="p-3">Envio</th><th className="p-3 text-right">Valor</th></tr></thead><tbody>
+      <div className="max-h-[720px] overflow-auto" tabIndex={0} role="region" aria-label="Lista de pedidos Nuvemshop"><table className="w-full min-w-[800px] text-sm"><thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)] text-left text-[var(--color-text-secondary)]"><tr><th className="p-3 w-10"><span className="sr-only">Seleção</span></th><th className="p-3">Pedido / cliente</th><th className="p-3">Criação</th><th className="p-3">Pagamento</th><th className="p-3">Envio</th><th className="p-3 text-right">Valor</th></tr></thead><tbody>
         {visible.map(order => <tr key={order.id} onClick={event => toggle(order, event.shiftKey)} className={`border-t border-[var(--color-border-light)] select-none ${eligible(order) && !busy ? "cursor-pointer hover:bg-[var(--color-accent-yellow)]/10" : "cursor-not-allowed opacity-60"} ${selected.has(order.id) ? "bg-[var(--color-accent-yellow)]/15" : ""}`}>
           <td className="p-3"><input aria-label={`Selecionar pedido ${order.number}`} type="checkbox" checked={selected.has(order.id)} disabled={busy || !eligible(order)} onChange={() => {}} onClick={event => { event.stopPropagation(); toggle(order, event.shiftKey); }} /></td>
           <td className="p-3"><p className="font-semibold">#{order.number} <span className="font-normal text-[var(--color-text-secondary)]">{order.clientName || "Cliente não informado"}</span></p><p className="text-xs text-[var(--color-text-tertiary)]">ID {order.id}{order.status === "cancelled" ? " · Cancelado" : ""}</p></td>
           <td className="p-3 whitespace-nowrap">{new Date(order.createdAt).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>
           <td className="p-3"><span className={`badge ${order.paymentStatus === "paid" ? "badge-checked" : "badge-pending"}`}>{paymentLabels[order.paymentStatus] || order.paymentStatus}</span></td>
           <td className="p-3 whitespace-nowrap">{shippingLabels[order.shippingStatus] || order.shippingStatus || "—"}</td>
-          <td className="p-3 text-right whitespace-nowrap">{order.currency} {Number(order.total).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td className="p-3 text-right whitespace-nowrap tabular-nums">{order.currency} {Number(order.total).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         </tr>)}
         {!visible.length && <tr><td colSpan={6} className="p-12 text-center text-[var(--color-text-secondary)]">{orders.length ? "Nenhum pedido corresponde aos filtros." : "Busque os pedidos da Nuvemshop para montar sua seleção."}</td></tr>}
       </tbody></table></div>

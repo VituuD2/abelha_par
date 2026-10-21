@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export function Header({ title, breadcrumbs }: HeaderProps) {
   return (
-    <header className="mb-8 sm:mb-10">
+    <header className="mb-6">
       {breadcrumbs && breadcrumbs.length > 0 && (
         <div className="flex items-center gap-2 mb-3 text-[13px] text-[var(--color-text-tertiary)]">
           {breadcrumbs.map((crumb, index) => (

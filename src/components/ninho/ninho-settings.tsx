@@ -63,10 +63,23 @@ export function NinhoSettings() {
   const health = olist ? olist.health || operationalHealth(olist) : null;
   return <div className="space-y-6">
 
-    <div className="flex flex-wrap gap-2" role="tablist" aria-label="Configurações do Ninho"><button role="tab" aria-selected={tab === "connections"} aria-controls="ninho-connections" id="connections-tab" className={tab === "connections" ? "btn-primary" : "btn-ghost"} onClick={() => setTab("connections")}><Link2 className="w-4 h-4" />Conexões</button><button role="tab" aria-selected={tab === "users"} aria-controls="ninho-users" id="users-tab" className={tab === "users" ? "btn-primary" : "btn-ghost"} onClick={() => setTab("users")}><Users className="w-4 h-4" />Usuários e permissões</button></div>
+    <div className="flex w-full max-w-full gap-1 rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-bg-tertiary)] p-1 sm:inline-flex sm:w-auto" role="tablist" aria-label="Configurações do Ninho"
+      onKeyDown={event => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === "Home" ? "connections" : event.key === "End" ? "users" : tab === "connections" ? "users" : "connections";
+        setTab(next); document.getElementById(`${next}-tab`)?.focus();
+      }}>
+      <button role="tab" tabIndex={tab === "connections" ? 0 : -1} aria-selected={tab === "connections"} aria-controls="ninho-connections" id="connections-tab"
+        className={`btn-ghost min-w-0 flex-1 !rounded-xl !px-3 sm:flex-none sm:!px-5 ${tab === "connections" ? "!bg-[var(--color-bg-elevated)] !text-amber-900 !shadow-sm" : "!text-[var(--color-text-secondary)]"}`}
+        onClick={() => setTab("connections")}><Link2 aria-hidden="true" className="w-4 h-4 shrink-0" />Conexões</button>
+      <button role="tab" tabIndex={tab === "users" ? 0 : -1} aria-selected={tab === "users"} aria-controls="ninho-users" id="users-tab"
+        className={`btn-ghost min-w-0 flex-1 !rounded-xl !px-3 sm:flex-none sm:!px-5 ${tab === "users" ? "!bg-[var(--color-bg-elevated)] !text-amber-900 !shadow-sm" : "!text-[var(--color-text-secondary)]"}`}
+        onClick={() => setTab("users")}><Users aria-hidden="true" className="w-4 h-4 shrink-0" />Usuários e permissões</button>
+    </div>
     {error && <p role="alert" className="card p-4 text-[var(--color-accent-red)]">{error}</p>}
     {notice && <p role="status" className="card p-4 text-[var(--color-accent-green)]">{notice}</p>}
-    <div role="tabpanel" id="ninho-connections" aria-labelledby="connections-tab" hidden={tab !== "connections"} className="space-y-6">
+    <div role="tabpanel" id="ninho-connections" aria-labelledby="connections-tab" hidden={tab !== "connections"} className="space-y-4">
       <NinhoSection title="Olist ERP" icon={Cloud}
         status={health ? <ConnectionStatus health={health} /> : <span className="badge">Verificando…</span>}
         actions={(health?.action === "authorize" || health?.action === "reconnect") && <a className={`btn-primary ${busy ? "pointer-events-none opacity-50" : ""}`} href="/api/auth/login">{health.action === "reconnect" ? "Reconectar Olist" : "Conectar Olist"}</a>}>

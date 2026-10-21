@@ -99,7 +99,7 @@ export default function DashboardPage() {
     <Header title="Preparar conferência" breadcrumbs={["Abelha Par", "Preparação"]} />
     <ActiveSessions />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-      <section className="card p-6 flex flex-col gap-4">
+      <section className="card min-w-0 p-5 sm:p-6 flex flex-col gap-4">
         <h2 className="text-xl font-semibold">Pedidos do dia · Nuvemshop</h2>
         <p className="text-[var(--color-text-secondary)]">Marque os pedidos preparados pela equipe. A confirmação define exatamente quais pedidos entram neste lote.</p>
         <strong className="text-3xl">{prep.confirmedAt ? prep.confirmedIds.length : 0} <span className="text-base font-normal">pedidos confirmados</span></strong>
@@ -111,12 +111,12 @@ export default function DashboardPage() {
     {busy && <p role="status" className="card p-5 mb-5">{status}</p>}
     {error && <p role="alert" className="card p-5 mb-5 text-[var(--color-accent-red)]">{error}</p>}
     {!result && !busy && <p className="card p-6">{!prep.confirmedAt ? "Confirme a seleção dos pedidos na aba Pedidos do dia." : !prep.olistFetchedAt ? "Seleção confirmada. Busque os pedidos na Olist para liberar a bipagem." : "O vínculo entre a Nuvemshop e a Olist precisa ser revisado pelo administrador no Ninho."}</p>}
-    {result && !busy && <section className="card p-6 space-y-5">
+    {result && !busy && <section className="card min-w-0 p-5 sm:p-6 space-y-4">
       <h2 className="text-xl font-semibold">Conferência entre plataformas</h2>
       <p>{result.orders.length} de {selected.length} pedidos encontrados · {result.ignored} pedidos da Olist fora da seleção</p>
       {result.issues.length > 0 && <div role="alert" className="rounded-lg p-4 bg-[var(--color-accent-red)]/10"><p className="font-semibold mb-2">Resolva as pendências para iniciar a bipagem:</p><ul className="list-disc pl-5 space-y-1">{result.issues.map((issue, i) => <li key={i}>Nuvemshop #{issue.orderNumber}: {issue.message}</li>)}</ul><p className="mt-3 text-sm">Aguarde a importação na Olist e busque novamente. Amplie o período para incluir pedidos criados em outros dias.</p></div>}
       {result.orders.some(order => !order.trackingCode.trim()) && <p className="text-[var(--color-accent-orange)]">Há pedidos sem rastreio. Eles entrarão na conferência e aguardarão o código da Olist para serem bipados.</p>}
-      <div className="overflow-auto max-h-96"><table className="w-full text-sm text-left"><thead><tr><th className="p-3">Pedido</th><th className="p-3">Olist</th><th className="p-3">Cliente</th><th className="p-3">Rastreio</th></tr></thead><tbody>{result.orders.map(order => <tr key={order.id} className="border-t border-[var(--color-border-light)]"><td className="p-3">{orderReference(order)}</td><td className="p-3">#{order.numeroPedido}</td><td className="p-3">{order.clientName}</td><td className="p-3">{order.trackingCode || "Aguardando rastreio"}</td></tr>)}</tbody></table></div>
+      <div className="overflow-auto max-h-96"><table className="w-full min-w-[560px] text-sm text-left"><thead className="sticky top-0 bg-[var(--color-bg-tertiary)]"><tr><th className="p-3">Pedido</th><th className="p-3">Olist</th><th className="p-3">Cliente</th><th className="p-3">Rastreio</th></tr></thead><tbody>{result.orders.map(order => <tr key={order.id} className="border-t border-[var(--color-border-light)]"><td className="p-3">{orderReference(order)}</td><td className="p-3">#{order.numeroPedido}</td><td className="p-3">{order.clientName}</td><td className="p-3">{order.trackingCode || "Aguardando rastreio"}</td></tr>)}</tbody></table></div>
       <label className="block">Responsável pela conferência<input className="field mt-2 max-w-md block" maxLength={100} value={responsible} onChange={event => setResponsible(event.target.value)} placeholder="Nome do responsável" disabled={starting} /></label>
       <button className="btn-success" disabled={!ready || starting || !normalizeResponsible(responsible)} onClick={startScanning}>{starting ? "Validando e iniciando…" : "Iniciar bipagem"}</button>
     </section>}

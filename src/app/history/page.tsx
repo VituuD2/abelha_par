@@ -73,7 +73,7 @@ export default function HistoryPage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card p-4 sm:p-5 flex items-center justify-between mb-5"
+        className="card p-5 sm:p-6 flex flex-wrap items-center justify-between gap-3 mb-6"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-blue)]/10 flex items-center justify-center">
@@ -99,7 +99,7 @@ export default function HistoryPage() {
         </button>
       </motion.div>
 
-      <form className="card p-4 sm:p-5 mb-5 space-y-2" role="search" onSubmit={event => {
+      <form className="card p-5 sm:p-6 mb-6 space-y-3" role="search" onSubmit={event => {
         event.preventDefault();
         setBatches([]);
         setIsLoading(true);
