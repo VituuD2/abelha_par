@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Download,
   Filter,
+  LoaderCircle,
   RefreshCw,
   X,
 } from "lucide-react";
@@ -550,6 +551,12 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             Atualizar
           </button>
+          {loading && (
+            <div role="status" className="pointer-events-none fixed bottom-4 right-4 z-40 rounded-full border border-[var(--color-border-light)] bg-[var(--color-bg-primary)] p-3 text-amber-700 shadow-sm">
+              <LoaderCircle aria-hidden="true" className="h-5 w-5 motion-safe:animate-spin" />
+              <span className="sr-only">Atualizando a Curva ABC…</span>
+            </div>
+          )}
         </div>
       </section>
       <form
@@ -892,11 +899,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             </p>
           )}
         </div>
-      )}
-      {loading && (
-        <p role="status" className="text-sm py-4">
-          Calculando a Curva ABC…
-        </p>
       )}
       {result && (
         <>
