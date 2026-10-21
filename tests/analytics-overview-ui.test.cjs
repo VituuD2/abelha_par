@@ -29,13 +29,24 @@ const click = element => act(async () => element.click());
 const render = key => act(async () => root.render(React.createElement(ABCDashboard, { key, isAdmin: false })));
 const panel = () => document.querySelector('section[aria-label="Indicadores do período"]');
 const deferred = () => { let resolve, reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; };
+function captureAnimations(t) {
+  const prototype = dom.window.HTMLElement.prototype;
+  const original = Object.getOwnPropertyDescriptor(prototype, 'animate');
+  const animations = [];
+  Object.defineProperty(prototype, 'animate', { configurable: true, value(frames, options) {
+    animations.push({ text: this.textContent, frames, options });
+    return { cancel() {} };
+  } });
+  t.after(() => { if (original) Object.defineProperty(prototype, 'animate', original); else delete prototype.animate; });
+  return animations;
+}
 function mockRequests(t, options = {}) {
   const calls = [], currentStatus = options.status || status();
   t.mock.method(global, 'fetch', async (url, init = {}) => {
     const body = init.body && JSON.parse(init.body); calls.push({ url, body, signal: init.signal });
     if (url.endsWith('/comparison')) return options.comparison ? options.comparison(body, init) : Response.json({ period: previousPeriod(body.filters), previous });
     if (url.endsWith('/coverage')) return Response.json({ sync: { scheduled: 0 } });
-    if (url.endsWith('/abc')) return Response.json({ ...result, rows: rows.slice(((body.page || 1) - 1) * body.size, (body.page || 1) * body.size) });
+    if (url.endsWith('/abc')) return options.report ? options.report(body, init) : Response.json({ ...result, rows: rows.slice(((body.page || 1) - 1) * body.size, (body.page || 1) * body.size) });
     return options.statusResponse ? options.statusResponse() : Response.json(currentStatus);
   });
   return calls;
@@ -56,8 +67,13 @@ test('integrated panels preserve KPI and class values, real variations, independ
   assert.match(badges[0].textContent, /\+50%/); assert.match(badges[1].textContent, /−20%/);
   assert.match(badges[2].textContent, /Pedidos \+25%/); assert.match(badges[3].textContent, /Entidades \+100%/);
   assert.match(badges[4].title, /não indica.*melhora ou piora/);
-  assert.equal([...kpis.querySelectorAll('p')].filter(el => el.textContent === 'vs. período anterior').length, 4);
-  assert.equal(kpis.querySelectorAll('svg[aria-hidden="true"]').length, 9);
+  assert.doesNotMatch(kpis.textContent, /vs\. período anterior/);
+  const period = previousPeriod(calls.find(call => call.url.endsWith('/comparison')).body.filters);
+  const range = `${period.from.split('-').reverse().join('/')} a ${period.to.split('-').reverse().join('/')}`;
+  const info = kpis.querySelectorAll('button[aria-label^="Período comparado:"]');
+  assert.equal(info.length, 4);
+  for (const button of info) assert.equal(button.title, range);
+  assert.equal(kpis.querySelectorAll('svg[aria-hidden="true"]').length, 13);
   const classes = document.querySelector('section[aria-label="Resumo das classes ABC"]');
   assert.equal(classes.querySelectorAll('h3').length, 3);
   assert.equal(classes.querySelectorAll('.card').length, 0);
@@ -119,8 +135,7 @@ test('pending comparisons leave current values visible; obsolete success and err
   const old = deferred(), next = deferred(); let queries = 0;
   const calls = mockRequests(t, { comparison: () => ++queries === 1 ? old.promise : next.promise });
   await render('race');
-  assert.match(panel().textContent, /Calculando variação/);
-  assert.match(panel().querySelector('[role="status"]').title, /Consultando os indicadores anteriores/);
+  assert.doesNotMatch(panel().textContent, /Calculando variação/);
   assert.equal(panel().querySelector('[data-trend-direction]'), null);
   await click(button('Clientes'));
   assert.equal(calls.filter(call => call.url.endsWith('/comparison'))[0].signal.aborted, true);
@@ -147,6 +162,59 @@ test('comparison errors are isolated from the report and recover on refresh', as
   assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
 });
 
+test('applied-filter requests retain the displayed values and trends until both responses finish, then animate the actual change', async t => {
+  mockRequests(t); await render('animated-values');
+  const values = () => [...panel().querySelectorAll('[data-kpi-value]')].map(el => el.textContent);
+  const trends = () => [...panel().querySelectorAll('[data-trend-direction]')].map(el => el.textContent);
+  const beforeValues = values(), beforeTrends = trends();
+  const oldRange = panel().querySelector('button[aria-label^="Período comparado:"]').title;
+  const animations = captureAnimations(t);
+  const currentRequest = deferred(), comparisonRequest = deferred();
+  let period;
+  mockRequests(t, { report: () => currentRequest.promise, comparison: body => { period = previousPeriod(body.filters); return comparisonRequest.promise; } });
+  await click(button('Últimos 7 dias')); await click(button('Analisar vendas'));
+  assert.deepEqual(values(), beforeValues); assert.deepEqual(trends(), beforeTrends);
+  assert.doesNotMatch(panel().textContent, /Calculando variação/);
+  assert.equal(panel().querySelector('button[aria-label^="Período comparado:"]').title, oldRange);
+  const updated = { ...result, revenue: '20000', quantity: '50', orders: 120, top10: 5 };
+  await act(async () => currentRequest.resolve(Response.json(updated)));
+  assert.deepEqual(values(), beforeValues); assert.deepEqual(trends(), beforeTrends);
+  assert.equal(animations.length, 0);
+  await act(async () => comparisonRequest.resolve(Response.json({ period, previous })));
+  assert.deepEqual(values(), ['R$ 200,00', '50', '120 / 100', '5%']);
+  assert.match(panel().querySelector('[data-trend-direction]').textContent, /\+100%/);
+  assert.equal(animations.find(item => item.text === 'R$ 200,00').frames[0].transform, 'translateY(7px)');
+  assert.equal(animations.find(item => item.text === '50').frames[0].transform, 'translateY(-7px)');
+  assert.equal(animations.find(item => item.text === '5%').frames[0].transform, 'translateY(-7px)');
+  assert.equal(animations.find(item => item.text === '+100%').frames[0].transform, 'translateY(7px)');
+  assert.ok(animations.every(item => item.options.duration === 220));
+  assert.notEqual(panel().querySelector('button[aria-label^="Período comparado:"]').title, oldRange);
+  animations.length = 0;
+  mockRequests(t, { report: () => Response.json(updated) }); await click(button('Atualizar'));
+  assert.equal(animations.length, 0, 'unchanged numbers do not animate');
+  const laterCurrent = deferred(), updatedPrevious = { ...previous, revenue: '5000' };
+  mockRequests(t, { report: () => laterCurrent.promise, comparison: body => Response.json({ period: previousPeriod(body.filters), previous: updatedPrevious }) });
+  await click(button('Atualizar'));
+  assert.deepEqual(values(), ['R$ 200,00', '50', '120 / 100', '5%']);
+  assert.match(panel().querySelector('[data-trend-direction]').textContent, /\+100%/);
+  assert.equal(animations.length, 0, 'an early comparison response does not replace the visible pair');
+  await act(async () => laterCurrent.resolve(Response.json(updated)));
+  assert.match(panel().querySelector('[data-trend-direction]').textContent, /\+300%/);
+});
+
+test('period info exposes only the exact date range and number transitions respect reduced motion', async t => {
+  const animations = captureAnimations(t);
+  t.mock.method(dom.window, 'matchMedia', query => ({ matches: query === '(prefers-reduced-motion: reduce)', media: query, addEventListener() {}, removeEventListener() {} }));
+  const filters = { from: '2026-10-15', to: '2026-10-21', metric: 'revenue', grouping: 'product', mode: 'TINY_LEGACY', basis: 'orders', thresholdA: 80, thresholdB: 95, selections: {} };
+  const comparison = { data: { period: previousPeriod(filters), previous }, loading: false, message: null };
+  const overview = current => act(async () => root.render(React.createElement(ABCOverview, { key: 'reduced-motion', result: current, filters, comparison, loading: false })));
+  await overview(result);
+  assert.equal(panel().querySelector('button[aria-label^="Período comparado:"]').title, '08/10/2026 a 14/10/2026');
+  await overview({ ...result, revenue: '20000' });
+  assert.match(panel().querySelector('[data-kpi-value]').textContent, /200,00/);
+  assert.equal(animations.length, 0);
+});
+
 test('zero or missing classes, zero baselines, incomplete allocation and negative participation remain explicit', async () => {
   const filters = { from: '2026-10-01', to: '2026-10-21', metric: 'quantity', grouping: 'composition', mode: 'TINY_LEGACY', basis: 'orders', thresholdA: 80, thresholdB: 95, selections: {} };
   const renderOverview = (current, old = previous, extra = {}) => act(async () => root.render(React.createElement(ABCOverview, { result: current, filters, comparison: { data: { period: previousPeriod(filters), previous: old }, loading: false, message: null }, loading: false, ...extra })));
@@ -169,7 +237,7 @@ test('zero or missing classes, zero baselines, incomplete allocation and negativ
   assert.match(panel().querySelector('[data-trend-direction="flat"]').textContent, /0%/);
   await renderOverview(result, previous, { loading: true });
   assert.equal(panel().getAttribute('aria-busy'), 'true');
-  assert.equal(panel().querySelector('[data-trend-direction]'), null);
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
   await renderOverview({ ...result, revenue: '0', quantity: '0', orders: 0, total: 0, top10: 0, classes: null });
   assert.equal(panel().querySelectorAll('[data-trend-direction="down"]').length, 5);
   assert.match(panel().querySelector('[data-trend-direction]').textContent, /−100%/);

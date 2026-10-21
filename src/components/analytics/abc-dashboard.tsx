@@ -24,7 +24,8 @@ import { type CoverageJob } from "@/lib/analytics/coverage";
 import { reportReliability } from "@/lib/analytics/reliability";
 import { ConnectionProgress } from "./connection-progress";
 import { ABCExportActions, ABCModeTabs } from "./abc-controls";
-import { ABCOverview, ABCOverviewSkeleton } from "./abc-overview";
+import { ABCOverview, ABCOverviewSkeleton, type ABCOverviewResult } from "./abc-overview";
+import { kpiSnapshot } from "@/lib/analytics/comparison";
 import { useABCComparison } from "./use-abc-comparison";
 import { ParetoChart } from "./pareto-chart";
 import { money, number, pct } from "@/lib/analytics/format";
@@ -260,6 +261,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const [filters, setFilters] = useState(draft),
     [status, setStatus] = useState<Status | null>(null),
     [result, setResult] = useState<ABCResult | null>(null);
+  const [overviewResult, setOverviewResult] = useState<ABCOverviewResult | null>(null);
   const [highlight, setHighlight] = useState<ParetoHighlight | null>(null);
   const highlightRow = result?.pareto.find(row => row.entityId === highlight?.entityId) || result?.rows.find(row => row.entityId === highlight?.entityId) || null;
   const updateHighlight = (next: ParetoHighlight | null) => setHighlight(current =>
@@ -397,6 +399,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       .then((data) => {
         if (!abort.signal.aborted) {
           setResult(data);
+          setOverviewResult({ ...kpiSnapshot(data), classes: data.classes, composition: data.composition });
           if (data.sync?.error) setError(data.sync.error);
         }
       })
@@ -918,10 +921,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           )}
         </div>
       )}
-      {loading && !result && <ABCOverviewSkeleton />}
+      {loading && !overviewResult && <ABCOverviewSkeleton />}
+      {overviewResult && <ABCOverview result={overviewResult} filters={filters} comparison={comparison} loading={loading || !result} />}
       {result && (
         <>
-          <ABCOverview result={result} filters={filters} comparison={comparison} loading={loading} />
           {isAdmin && result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação"><details>
             <summary className="cursor-pointer font-medium text-emerald-900">Regras da consolidação
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>

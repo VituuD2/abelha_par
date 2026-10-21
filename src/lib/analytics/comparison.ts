@@ -20,7 +20,7 @@ export function previousPeriod(filters: Pick<ABCFilters, "from" | "to">) {
   return { from, to };
 }
 
-export function kpiSnapshot(result: ABCResult): KPISnapshot {
+export function kpiSnapshot(result: KPISnapshot): KPISnapshot {
   return {
     revenue: result.revenue, quantity: result.quantity, orders: result.orders,
     total: result.total, top10: result.top10,

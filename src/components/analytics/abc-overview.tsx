@@ -1,11 +1,14 @@
 "use client";
 
-import { ArrowDownRight, ArrowUpRight, BarChart3, Donut, Minus, Package, ShoppingCart } from "lucide-react";
-import { kpiSnapshot, percentageChange, type Change, type KPIComparison } from "@/lib/analytics/comparison";
+import { useEffect, useRef, useState } from "react";
+import { ArrowDownRight, ArrowUpRight, BarChart3, Donut, Info, Minus, Package, ShoppingCart } from "lucide-react";
+import { kpiSnapshot, percentageChange, previousPeriod, type Change, type KPIComparison } from "@/lib/analytics/comparison";
+import { signedDecimalUnits } from "@/lib/analytics/engine";
 import { money, number, pct } from "@/lib/analytics/format";
 import type { ABCFilters, ABCResult } from "@/lib/analytics/types";
 
 type Comparison = { data?: KPIComparison; loading: boolean; message: string | null };
+export type ABCOverviewResult = Pick<ABCResult, "revenue" | "quantity" | "orders" | "total" | "top10" | "classes" | "composition">;
 const panel = "min-w-0 rounded-[var(--radius-lg)] border border-[var(--color-border-light)] bg-[var(--color-bg-elevated)] shadow-[var(--shadow-sm)]";
 const secondary = "text-[var(--color-text-secondary)]";
 const colors = {
@@ -13,6 +16,35 @@ const colors = {
   B: { icon: "bg-amber-50 text-amber-700", bar: "bg-amber-400", text: "text-amber-700" },
   C: { icon: "bg-stone-100 text-stone-600", bar: "bg-stone-400", text: "text-stone-600" },
 } as const;
+
+function AnimatedNumber({ value, raw }: { value: string; raw: string | number }) {
+  const element = useRef<HTMLSpanElement>(null);
+  const previous = useRef({ value, raw });
+  useEffect(() => {
+    const before = previous.current;
+    previous.current = { value, raw };
+    if (before.value === value || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    let offset = 0;
+    try {
+      const now = signedDecimalUnits(raw), old = signedDecimalUnits(before.raw);
+      offset = now > old ? 7 : now < old ? -7 : 0;
+    } catch { /* Keep the fade if the value cannot be compared numerically. */ }
+    const animation = element.current?.animate?.([
+      { transform: `translateY(${offset}px)`, opacity: 0.4 },
+      { transform: "translateY(0)", opacity: 1 },
+    ], { duration: 220, easing: "ease-out" });
+    return () => animation?.cancel();
+  }, [value, raw]);
+  return <span ref={element} className="inline-block max-w-full align-bottom [overflow-wrap:anywhere]">{value}</span>;
+}
+
+function comparisonRange(filters: ABCFilters) {
+  try {
+    const period = previousPeriod(filters);
+    const date = (value: string) => value.split("-").reverse().join("/");
+    return `${date(period.from)} a ${date(period.to)}`;
+  } catch { return "Período indisponível"; }
+}
 
 function TrendBadge({ change, label, neutral = false }: { change: Change; label?: string; neutral?: boolean }) {
   if (change.kind !== "change") return (
@@ -33,26 +65,35 @@ function TrendBadge({ change, label, neutral = false }: { change: Change; label?
       className={`inline-flex max-w-full items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium tabular-nums ${tone === "up" ? "bg-emerald-50 text-emerald-800" : tone === "down" ? "bg-red-50 text-red-800" : "bg-stone-100 text-stone-600"}`}>
       <Icon aria-hidden="true" className="h-3 w-3 shrink-0" />
       <span className="sr-only">{direction === "up" ? "Aumento" : direction === "down" ? "Queda" : "Sem alteração"}: </span>
-      <span className="[overflow-wrap:anywhere]">{label && `${label} `}{sign}{formatted}</span>
+      <span className="[overflow-wrap:anywhere]">{label && `${label} `}<AnimatedNumber value={sign + formatted} raw={percent} /></span>
     </span>
   );
 }
 
-export function ABCOverview({ result, filters, comparison, loading }: {
-  result: ABCResult; filters: ABCFilters; comparison: Comparison; loading: boolean;
+export function ABCOverview(props: {
+  result: ABCOverviewResult; filters: ABCFilters; comparison: Comparison; loading: boolean;
 }) {
+  // Commit the current values and previous-period response together. Keep the
+  // visible snapshot during refreshes, including changes to applied filters.
+  const [display, setDisplay] = useState(props);
+  if (!props.loading && !props.comparison.loading &&
+    (display.result !== props.result || display.filters !== props.filters ||
+      display.comparison.data !== props.comparison.data || display.comparison.message !== props.comparison.message)) {
+    setDisplay(props);
+  }
+  const { result, filters, comparison } = display;
   const current = kpiSnapshot(result), previous = comparison.data?.previous;
-  const message = loading ? "Atualizando os indicadores do período selecionado."
-    : comparison.message;
+  const message = comparison.message;
   const ready = !message && !comparison.loading && !!previous;
+  const range = comparisonRange(filters);
   const indicators = [
-    { label: result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", value: money(result.revenue),
+    { label: result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", values: [{ value: money(result.revenue), raw: result.revenue }],
       Icon: BarChart3, color: "bg-orange-50 text-orange-600", changes: [{ change: percentageChange(current.revenue, previous?.revenue ?? NaN) }] },
-    { label: "Quantidade vendida", value: number(result.quantity), Icon: Package, color: "bg-emerald-50 text-emerald-700",
+    { label: "Quantidade vendida", values: [{ value: number(result.quantity), raw: result.quantity }], Icon: Package, color: "bg-emerald-50 text-emerald-700",
       changes: [{ change: percentageChange(current.quantity, previous?.quantity ?? NaN) }] },
-    { label: "Pedidos / entidades", value: `${number(result.orders)} / ${number(result.total)}`, Icon: ShoppingCart, color: "bg-blue-50 text-blue-600",
+    { label: "Pedidos / entidades", values: [{ value: number(result.orders), raw: result.orders }, { value: number(result.total), raw: result.total }], Icon: ShoppingCart, color: "bg-blue-50 text-blue-600",
       changes: [{ label: "Pedidos", change: percentageChange(current.orders, previous?.orders ?? NaN) }, { label: "Entidades", change: percentageChange(current.total, previous?.total ?? NaN) }] },
-    { label: "Concentração dos 10 primeiros", value: pct(result.top10), Icon: Donut, color: "bg-violet-50 text-violet-600", neutral: true,
+    { label: "Concentração dos 10 primeiros", values: [{ value: pct(result.top10), raw: result.top10 }], Icon: Donut, color: "bg-violet-50 text-violet-600", neutral: true,
       changes: [{ change: percentageChange(current.top10, previous?.top10 ?? NaN) }] },
   ];
   const classKeys = ["A", "B", "C"] as const;
@@ -63,28 +104,28 @@ export function ABCOverview({ result, filters, comparison, loading }: {
 
   return (
     <>
-      <section className={panel} aria-label="Indicadores do período" aria-busy={loading}>
+      <section className={panel} aria-label="Indicadores do período" aria-busy={props.loading || props.comparison.loading}>
         <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-          {indicators.map(({ label, value, Icon, color, changes, neutral }, index) => (
-            <div key={label} className={`flex min-w-0 flex-col gap-4 border-[var(--color-border-light)] px-5 py-6 sm:px-6 ${index ? "border-t xl:border-t-0 xl:border-l" : ""} ${index === 1 ? "sm:border-t-0" : ""} ${index % 2 ? "sm:border-l" : ""}`}>
+          {indicators.map(({ label, values, Icon, color, changes, neutral }, index) => (
+            <div key={index} className={`flex min-w-0 flex-col gap-4 border-[var(--color-border-light)] px-5 py-6 sm:px-6 ${index ? "border-t xl:border-t-0 xl:border-l" : ""} ${index === 1 ? "sm:border-t-0" : ""} ${index % 2 ? "sm:border-l" : ""}`}>
               <div className="flex min-w-0 items-center gap-3">
                 <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${color}`}><Icon aria-hidden="true" className="h-[19px] w-[19px]" strokeWidth={1.7} /></span>
                 <h2 className={`text-[13px] font-medium leading-5 ${secondary}`} title={index === 2 ? "Pedidos distintos / produtos ou clientes no relatório." : index === 3 ? "Participação dos dez primeiros na métrica aplicada." : undefined}>{label}</h2>
               </div>
-              <p className="text-[clamp(1.375rem,2vw,1.875rem)] font-semibold leading-tight tracking-tight tabular-nums [overflow-wrap:anywhere]">{value}</p>
+              <p data-kpi-value className="text-[clamp(1.375rem,2vw,1.875rem)] font-semibold leading-tight tracking-tight tabular-nums [overflow-wrap:anywhere]">{values.map((value, i) => <span key={i}>{i > 0 && " / "}<AnimatedNumber {...value} /></span>)}</p>
               <div className="mt-auto space-y-2">
                 <div className="flex min-h-6 flex-wrap items-center gap-1.5">
+                  <button type="button" title={range} aria-label={`Período comparado: ${range}`} className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${secondary} hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700`}><Info aria-hidden="true" className="h-3.5 w-3.5" /></button>
                   {ready ? changes.map((entry, i) => <TrendBadge key={i} {...entry} neutral={neutral} />)
-                    : <span role={index === 0 ? "status" : undefined} title={message || (comparison.loading ? "Consultando os indicadores anteriores…" : undefined)} className={`inline-flex items-center gap-1.5 text-xs ${secondary}`}><Minus aria-hidden="true" className="h-3 w-3" />{loading || comparison.loading ? "Calculando variação…" : "Comparação indisponível"}</span>}
+                    : <span role={index === 0 ? "status" : undefined} title={message || undefined} className={`inline-flex items-center gap-1.5 text-xs ${secondary}`}><Minus aria-hidden="true" className="h-3 w-3" />{comparison.loading ? "—" : "Comparação indisponível"}</span>}
                 </div>
-                <p className={`text-[11px] ${secondary}`}>vs. período anterior</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      <section className={panel} aria-label="Resumo das classes ABC" aria-busy={loading}>
+      <section className={panel} aria-label="Resumo das classes ABC" aria-busy={props.loading || props.comparison.loading}>
         <div className="px-5 pt-5 sm:px-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-sm font-semibold">Distribuição ABC</h2>
