@@ -5,7 +5,7 @@ import { analyticsToken, ensureAnalyticsIdentity } from "./auth";
 import { compositionRulesForWorkspace, hasCompositionCatalog } from "./composition-server";
 import { signedDecimalUnits, unitsDecimal } from "./engine";
 import { object, string } from "./normalize";
-import { AnalyticsApiError, olistRequest } from "./olist-client";
+import { AnalyticsApiError, AnalyticsQuotaWait, olistRequest } from "./olist-client";
 
 export const costCents = (value: unknown) =>
   (typeof value === "string" || typeof value === "number") && /^-?\d+(?:\.\d{1,6})?$/.test(String(value))
@@ -79,6 +79,13 @@ export async function processCostHistorySync(): Promise<{ claimed: boolean; proc
     }
     return { claimed: true, processed, pending: true };
   } catch (reason) {
+    if (reason instanceof AnalyticsQuotaWait) {
+      const deferred = await db.rpc("analytics_defer_cost", { ...scope, p_kind: "history", p_seconds: reason.retryAfter,
+        p_external: current?.external_id || null });
+      if (!deferred.error) return { claimed: true, processed, pending: true };
+      if (!["PGRST202", "42883"].includes(deferred.error.code))
+        return { claimed: true, processed, pending: true, error: "Não foi possível persistir a espera do histórico de CMV." };
+    }
     const permission = reason instanceof AnalyticsApiError && reason.status === 403;
     const message = permission ? "Libere a consulta de histórico de custos/Produtos na Olist 1 e reconecte essa conta no Ninho."
       : reason instanceof Error ? reason.message : "Falha na importação do histórico de CMV.";

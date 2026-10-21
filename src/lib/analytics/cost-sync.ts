@@ -2,7 +2,7 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { analyticsToken, ensureAnalyticsIdentity } from "./auth";
 import { id, object, string } from "./normalize";
-import { AnalyticsApiError, olistRequest } from "./olist-client";
+import { AnalyticsApiError, AnalyticsQuotaWait, olistRequest } from "./olist-client";
 import { createHash } from "crypto";
 import { costCents, queueCostHistory } from "./cost-history-sync";
 
@@ -66,6 +66,15 @@ export async function processCostSync(): Promise<{ processed: number; pending?: 
     await queueCostHistory(job.workspace_id);
     return { processed: page.products.length, pending: !page.done };
   } catch (reason) {
+    if (reason instanceof AnalyticsQuotaWait) {
+      const deferred = await db.rpc("analytics_defer_cost", {
+        p_workspace: job.workspace_id, p_connection: job.connection_id, p_lease: job.lease, p_version: job.connection_version,
+        p_kind: "catalog", p_seconds: reason.retryAfter,
+      });
+      if (!deferred.error) return { processed: 0, pending: true };
+      if (!["PGRST202", "42883"].includes(deferred.error.code))
+        return { processed: 0, pending: true, error: "Não foi possível persistir a espera do catálogo de CMV." };
+    }
     const permission = reason instanceof AnalyticsApiError && reason.status === 403;
     const message = permission
       ? "Libere a leitura de Produtos no aplicativo da Olist 1 e reconecte essa conta no Ninho para atualizar o CMV."

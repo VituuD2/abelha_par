@@ -4,6 +4,7 @@ const sync = require("../src/lib/analytics/sync.ts"), auth = require("../src/lib
 const cron = require("../src/app/api/internal/analytics-sync/route.ts");
 const costSync = require("../src/lib/analytics/cost-sync.ts");
 const costHistory = require("../src/lib/analytics/cost-history-sync.ts");
+require('node:test').beforeEach(t => t.mock.method(Date, 'now', () => 1_800_000_000_000));
 
 test("analytical cron rejects missing/mismatched authorization before any work", async t => {
   const previous = process.env.CRON_SECRET;
@@ -67,4 +68,28 @@ test('thrown renewal and scheduling failures still run the existing durable sale
   assert.equal(body.scheduling.ok, false);
   assert.deepEqual(calls, ['renewal', 'schedule', 'sales']);
   assert.equal(JSON.stringify(body).includes('private database details'), false);
+});
+
+test('scheduled quota waits return HTTP 200 while genuine batch failures retain HTTP 503',async t=>{
+  const previous=process.env.CRON_SECRET;process.env.CRON_SECRET='wait-test';
+  t.after(()=>{if(previous===undefined)delete process.env.CRON_SECRET;else process.env.CRON_SECRET=previous;});
+  t.mock.method(auth,'refreshDueAnalyticsTokens',async()=>({checked:0,reconnect:0,failed:0}));
+  t.mock.method(sync,'enqueueIncremental',async()=>{});t.mock.method(costHistory,'processCostHistorySync',async()=>({claimed:false,processed:0}));
+  t.mock.method(costSync,'processCostSync',async()=>({processed:0}));
+  for(const realFailure of [false,true]){
+    t.mock.method(sync,'processAnalyticsBatches',async()=>({processed:5,pending:true,...(realFailure?{error:'Falha real.'}:{outcomes:[{outcome:'quota_wait'}]})}));
+    const response=await cron.POST(new Request('http://localhost/api/internal/analytics-sync',{method:'POST',headers:{authorization:'Bearer wait-test'}}));
+    assert.equal(response.status,realFailure?503:200);assert.equal((await response.json()).processed,5);
+  }
+});
+
+test('two of three cron cycles leave the CMV account available for sales',async t=>{
+  const previous=process.env.CRON_SECRET;process.env.CRON_SECRET='fairness-test';
+  t.after(()=>{if(previous===undefined)delete process.env.CRON_SECRET;else process.env.CRON_SECRET=previous;});
+  t.mock.method(Date,'now',()=>1_800_000_060_000);
+  t.mock.method(auth,'refreshDueAnalyticsTokens',async()=>({checked:0,reconnect:0,failed:0}));t.mock.method(sync,'enqueueIncremental',async()=>{});
+  t.mock.method(costHistory,'processCostHistorySync',async()=>{throw Error('Cost worker should not acquire this cycle');});
+  t.mock.method(sync,'processAnalyticsBatches',async()=>({processed:4,pending:true}));
+  const response=await cron.POST(new Request('http://localhost/api/internal/analytics-sync',{method:'POST',headers:{authorization:'Bearer fairness-test'}}));
+  assert.equal(response.status,200);assert.equal((await response.json()).processed,4);
 });

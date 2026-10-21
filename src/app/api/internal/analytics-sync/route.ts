@@ -22,7 +22,9 @@ export async function POST(request: Request) {
     // Existing durable jobs can progress even if scheduling or proactive renewal is unavailable.
     const scheduling = await enqueueIncremental().then(() => ({ ok: true, error: null }))
       .catch(() => ({ ok: false, error: "Agendamento incremental indisponível; nova tentativa no próximo ciclo." }));
-    const costs = Date.now() - started < 15000
+    // Reserve two out of three cycles for sales on the cost-provider account.
+    const costTurn = Math.floor(started / 60000) % 3 === 0;
+    const costs = costTurn && Date.now() - started < 15000
       ? await (async () => {
           const history = await processCostHistorySync();
           return history.claimed ? history : processCostSync();

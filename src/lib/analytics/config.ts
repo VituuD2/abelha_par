@@ -25,6 +25,7 @@ export const ORDER_STATUSES: Record<number, string> = {
   7: "Pronto",
   8: "Incompleto",
   9: "Não entregue",
+  10: "Em devolução",
 };
 export const DIMENSIONS = {
   companies: "Empresas",

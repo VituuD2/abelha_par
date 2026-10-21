@@ -471,3 +471,142 @@ test('database diagnostics preserve safe status and codes without exposing datab
   assert.match(analyticsDatabaseError('Conexão indisponível.', {code: 'PGRST000', message: 'private details'}, 503).message, /PGRST000; HTTP 503/);
   assert.equal(analyticsDatabaseError('Falha.', {code: 'private token content'}).message, 'Falha. [banco: unavailable]');
 });
+
+function resumableFixture(t, patch = {}, context = {}) {
+  const f = fixture();
+  Object.assign(f.job, { import_state: {}, query_phase: 'sales', covers_sales: true }, patch);
+  const rpc = f.db.rpc;
+  f.db.rpc = async (name, args) => {
+    if (name === 'analytics_import_context') return { data: { historyFrom: '2026-08-25', creationThrough: f.job.to_date, connectionVersion: 1, ...context }, error: null };
+    if (name === 'analytics_finish_import') {
+      Object.assign(f.job, {status:'completed',pending_ids:[],pending_index:0,lease_token:null,lease_until:null,import_state:{...f.job.import_state,order:null}});
+      return {data:null,error:null};
+    }
+    return rpc(name,args);
+  };
+  t.mock.method(admin,'createAdminClient',()=>f.db);
+  t.mock.method(auth,'analyticsToken',async()=> 'private-token');
+  t.mock.method(auth,'ensureAnalyticsIdentity',async()=>{});
+  return f;
+}
+
+test('local quota wait preserves attempts, checkpoint and retry time without turning the batch into a failure', async t => {
+  const f=fixture(),logs=[]; f.job.pending_ids=['9'];f.job.attempts=7;
+  t.mock.method(admin,'createAdminClient',()=>f.db);
+  t.mock.method(auth,'analyticsToken',async()=> 'token');t.mock.method(auth,'ensureAnalyticsIdentity',async()=>{});
+  t.mock.method(provider,'olistRequest',async()=>{throw new provider.AnalyticsQuotaWait(42);});
+  t.mock.method(console,'info',v=>logs.push(JSON.parse(v)));
+  const before=Date.now(), result=await processAnalyticsBatch();
+  assert.equal(result.error,null);assert.equal(result.outcome,'quota_wait');
+  assert.equal(f.job.status,'queued');assert.equal(f.job.attempts,7);assert.equal(f.job.last_error,null);
+  assert.deepEqual(f.job.pending_ids,['9']);assert.equal(f.job.pending_index,0);
+  assert.ok(Date.parse(f.job.next_at)>=before+42000);assert.equal(logs[0].failed,false);
+});
+
+test('an expected quota wait becomes a real failure if its checkpoint cannot be persisted',async t=>{
+  const f=fixture(),logs=[];f.job.pending_ids=['9'];
+  const from=f.db.from;
+  f.db.from=table=>{const chain=from(table);if(table==='analytics_sync_jobs')chain.then=resolve=>Promise.resolve({data:null,error:{code:'XX000'}}).then(resolve);return chain;};
+  t.mock.method(admin,'createAdminClient',()=>f.db);t.mock.method(auth,'analyticsToken',async()=> 'token');
+  t.mock.method(auth,'ensureAnalyticsIdentity',async()=>{});t.mock.method(console,'info',v=>logs.push(JSON.parse(v)));
+  t.mock.method(provider,'olistRequest',async()=>{throw new provider.AnalyticsQuotaWait(10);});
+  await assert.rejects(processAnalyticsBatch(),/reserva.*mudou/);
+  assert.equal(logs[0].failed,true);assert.equal(logs[0].outcome,'persistence_error');
+});
+
+test('valid inline markers, including an empty array, eliminate the extra GET; malformed markers use fallback',async t=>{
+  for(const markers of [[],[{descricao:'Etiqueta'}],[{invalid:'shape'}],null]){
+    const f=fixture(),paths=[];
+    t.mock.method(admin,'createAdminClient',()=>f.db);t.mock.method(auth,'analyticsToken',async()=> 'token');t.mock.method(auth,'ensureAnalyticsIdentity',async()=>{});
+    t.mock.method(provider,'olistRequest',async(_t,_c,path)=>{
+      paths.push(path);if(path.startsWith('/pedidos?'))return {itens:[{id:1}],paginacao:{total:1}};
+      if(path.startsWith('/produtos'))return{id:10};if(path.endsWith('/marcadores'))return{itens:[{descricao:'Fallback'}]};
+      return{...raw(1,101),marcadores:markers};
+    });
+    await processAnalyticsBatch();
+    const valid=Array.isArray(markers)&&markers.every(m=>typeof m.descricao==='string');
+    assert.equal(paths.some(p=>p.endsWith('/marcadores')),!valid);
+    assert.deepEqual(f.ingested[0].p_order.tags,valid?markers.map(m=>m.descricao):['Fallback']);
+  }
+});
+
+test('a new lease resumes after invoice without refetching detail or invoice and publishes only the complete sale',async t=>{
+  const f=resumableFixture(t),paths=[];let markerCalls=0;
+  t.mock.method(provider,'olistRequest',async(_t,_c,path)=>{
+    paths.push(path);
+    if(path.startsWith('/pedidos?'))return{itens:[{id:1}],paginacao:{total:1}};
+    if(path.startsWith('/produtos'))return{id:10,descricao:'Produto'};
+    if(path.startsWith('/notas'))return{id:42,situacao:6,tipo:'S',finalidade:1,dataEmissao:'2026-09-01'};
+    if(path.endsWith('/marcadores')){if(++markerCalls===1)throw new provider.AnalyticsQuotaWait(1);return{itens:[]};}
+    return{...raw(1,101),idNotaFiscal:42,access_token:'MUST-NOT-PERSIST',enderecoEntrega:{uf:'SP',logradouro:'PRIVATE-ADDRESS'}};
+  });
+  const first=await processAnalyticsBatch();
+  assert.equal(first.outcome,'quota_wait');assert.equal(f.ingested.length,0);
+  assert.equal(f.job.import_state.order.invoiceChecked,true);
+  assert.ok(!JSON.stringify(f.job.import_state).includes('MUST-NOT-PERSIST'));
+  assert.ok(!JSON.stringify(f.job.import_state).includes('PRIVATE-ADDRESS'));
+  Object.assign(f.job,{lease_token:'lease',lease_until:'2099-01-01T00:00:00Z',status:'running'});
+  f.tables.analytics_connections[0].sync_lock='lease';
+  assert.equal((await processAnalyticsBatch()).pending,false);
+  assert.equal(paths.filter(p=>p==='/pedidos/1').length,1);
+  assert.equal(paths.filter(p=>p==='/notas/42').length,1);
+  assert.equal(f.ingested.length,1);assert.equal(f.ingested[0].p_order.invoice_eligible,true);
+  assert.equal(f.job.import_state.order,null);
+});
+
+test('incremental sales are scanned once, followed by disjoint bounded creation windows with one update watermark',async t=>{
+  const f=resumableFixture(t,{mode:'incremental',from_date:'2026-10-01',to_date:'2026-10-03',cursor_date:'2026-10-01'},
+    {historyFrom:'2026-09-17',creationThrough:'2026-10-04'}),paths=[];
+  t.mock.method(provider,'olistRequest',async(_t,_c,path)=>{paths.push(new URL('https://test'+path).searchParams);return{itens:[],paginacao:{total:0}};});
+  await processAnalyticsBatch();
+  const sales=paths.filter(p=>!p.has('dataAtualizacao')),updates=paths.filter(p=>p.has('dataAtualizacao'));
+  assert.equal(sales.length,3);assert.equal(updates.length,3);
+  assert.deepEqual(updates.map(p=>[p.get('dataAtualizacao'),p.get('dataInicial'),p.get('dataFinal')]),[
+    ['2026-10-01','2026-09-17','2026-09-23'],['2026-10-01','2026-09-24','2026-09-30'],['2026-10-01','2026-10-01','2026-10-04']]);
+  assert.equal(f.job.status,'completed');
+});
+
+test('a pending legacy final page is drained before upgrading, then updates still scan older creation dates',async t=>{
+  const f=resumableFixture(t,{mode:'incremental',from_date:'2026-09-01',to_date:'2026-09-01',query_phase:'updates',
+    pending_ids:['99'],pending_index:0,page_done:true}),paths=[];
+  t.mock.method(provider,'olistRequest',async(_t,_c,path)=>{
+    paths.push(path);if(path.startsWith('/pedidos?'))return{itens:[],paginacao:{total:0}};
+    if(path.startsWith('/produtos'))return{id:10};return{...raw(99,101),marcadores:[]};
+  });
+  await processAnalyticsBatch();assert.equal(paths[0],'/pedidos/99');assert.equal(f.ingested.length,1);
+  assert.ok(paths.some(p=>p.includes('dataInicial=2026-08-25')&&p.includes('dataAtualizacao=2026-09-01')));
+  assert.equal(f.job.status,'completed');
+});
+
+test('an update-listing timeout shrinks the creation partition without advancing its floor or hiding the failure',async t=>{
+  const scan={version:2,since:'2026-09-01',floor:'2026-08-25',ceiling:'2026-09-01',from:'2026-08-25',to:'2026-08-31',days:7};
+  const f=resumableFixture(t,{mode:'incremental',query_phase:'updates',import_state:{scan}});
+  t.mock.method(provider,'olistRequest',async()=>{throw new provider.AnalyticsApiError(503,30,'timeout');});
+  const result=await processAnalyticsBatch();assert.ok(result.error);
+  assert.equal(f.job.import_state.scan.from,'2026-08-25');assert.equal(f.job.import_state.scan.to,'2026-08-25');
+  assert.equal(f.job.import_state.scan.days,1);assert.equal(f.job.page_offset,0);assert.equal(f.job.status,'retry');
+});
+
+test('recent creation scans start today and traverse yesterday, without marking two days covered after the first',async t=>{
+  const f=resumableFixture(t,{lane:'recent',from_date:'2026-09-01',to_date:'2026-09-02',cursor_date:'2026-09-02'}),paths=[];
+  t.mock.method(provider,'olistRequest',async(_t,_c,path)=>{paths.push(path);return{itens:[],paginacao:{total:0}};});
+  await processAnalyticsBatch();assert.equal(f.job.status,'completed');assert.equal(paths.length,2);
+  assert.match(paths[0],/dataInicial=2026-09-02/);assert.match(paths[1],/dataInicial=2026-09-01/);
+  assert.ok(paths.every(p=>p.includes('orderBy=desc')));
+});
+
+test('stages expire, reject future timestamps and are invalidated by a changed connection version',()=>{
+  const {reusableStage,listingPage}=require('../src/lib/analytics/import-plan.ts');
+  const now=Date.now(),s={externalId:'1',fetchedAt:new Date(now-1000).toISOString(),connectionVersion:1,raw:{id:1}};
+  assert.equal(reusableStage(s,'1',1,now),true);assert.equal(reusableStage(s,'1',2,now),false);
+  assert.equal(reusableStage(s,'2',1,now),false);assert.equal(reusableStage(s,'1',1,now+600000),false);
+  assert.equal(reusableStage({...s,fetchedAt:new Date(now+1000).toISOString()},'1',1,now),false);
+  assert.throws(()=>listingPage({itens:[],paginacao:{total:10}},0),/vazia/);
+  assert.throws(()=>listingPage({itens:[{id:1}],paginacao:{total:0}},0),/Paginação/);
+});
+
+test('status 10 is preserved as a return in progress, without accepting undocumented statuses',()=>{
+  const {normalizeOrder}=require('../src/lib/analytics/normalize.ts');
+  assert.equal(normalizeOrder({...raw(1,101),situacao:10},'c','s',new Date().toISOString()).order.status,10);
+  assert.throws(()=>normalizeOrder({...raw(1,101),situacao:11},'c','s',new Date().toISOString()),/Situação/);
+});

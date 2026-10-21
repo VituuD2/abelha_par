@@ -126,6 +126,8 @@ export interface SyncJob {
   lease_token: string;
   query_phase?: "sales" | "updates";
   covers_sales?: boolean;
+  lane?: "history" | "recent";
+  import_state?: import("./import-plan").ImportState;
 }
 export interface Option {
   value: string;

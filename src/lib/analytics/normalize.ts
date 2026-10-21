@@ -121,7 +121,7 @@ export function normalizeOrder(
     string(raw.situacao) === "" ||
     !Number.isInteger(status) ||
     status < 0 ||
-    status > 9
+    status > 10
   )
     throw new Error("Situação Olist desconhecida.");
   const invoiceStatus = invoice ? Number(invoice.situacao) : null;

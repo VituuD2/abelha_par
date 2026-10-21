@@ -6,6 +6,11 @@ export class OlistBudgetExceeded extends Error {}
 export class OlistQuotaWait extends Error {
   constructor(public retryAfterSeconds: number) { super("Cota de consultas Olist reservada; retomada programada."); }
 }
+export class OlistControlError extends Error {
+  constructor(public code: string) {
+    super("Controle de consultas Olist indisponível; chamada adiada para preservar a cota.");
+  }
+}
 export type OlistScope = { connectionId?: string; workspaceId?: string };
 export type OlistSource = "orders" | "costs" | "operational" | "identity";
 type Permit = { id: string | null; waitMs: number };
@@ -39,7 +44,7 @@ export async function acquireOlistPermit(scope: OlistScope, source: OlistSource,
         console.warn("[olist-api] v23 ausente; mantendo o ritmo conservador e sem métricas persistidas.");
         return fallback(scope, deadline, timeout);
       }
-      throw new Error("Controle de consultas Olist indisponível; chamada adiada para preservar a cota.");
+      throw new OlistControlError(/^[A-Za-z0-9_]{1,64}$/.test(result.error.code || "") ? result.error.code : "unavailable");
     }
     const gate = result.data;
     if (gate?.granted === true) return { id, waitMs: Date.now() - started };
@@ -59,6 +64,7 @@ const headerInteger = (headers: Headers | undefined, name: string, max = 10000) 
 export async function recordOlistResult(permit: Permit, status: number, durationMs: number,
   kind: "http" | "timeout" | "network", headers?: Headers, retryAfter?: number) {
   if (!permit.id) return;
+  let failureCode = "unavailable";
   try {
     const result = await createAdminClient().rpc("olist_api_record", {
       p_request: permit.id, p_status: status, p_duration: Math.max(0, Math.round(durationMs)), p_kind: kind,
@@ -68,10 +74,15 @@ export async function recordOlistResult(permit: Permit, status: number, duration
       p_reset: headerInteger(headers, "x-ratelimit-reset", 3600),
       p_retry_after: retryAfter ?? null,
     }).abortSignal(AbortSignal.timeout(2000));
-    if (result.error) throw new Error("record failed");
-  } catch {
+    if (result.error) {
+      failureCode = /^[A-Za-z0-9_]{1,64}$/.test(result.error.code || "") ? result.error.code : "unavailable";
+      throw new Error("record failed");
+    }
+  } catch (reason) {
     // A successful provider read must not be repeated because its telemetry failed.
-    console.warn("[olist-api] Resultado não confirmado no monitor; tentativa permanece contabilizada.");
+    console.warn(JSON.stringify({ event: "olist_api_record_failure", code: failureCode,
+      kind: reason instanceof Error && ["AbortError", "TimeoutError"].includes(reason.name) ? "timeout" : "rpc",
+      recorded: false }));
   }
 }
 
