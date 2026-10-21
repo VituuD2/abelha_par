@@ -24,6 +24,8 @@ import { type CoverageJob } from "@/lib/analytics/coverage";
 import { reportReliability } from "@/lib/analytics/reliability";
 import { ConnectionProgress } from "./connection-progress";
 import { ABCExportActions, ABCModeTabs } from "./abc-controls";
+import { ABCOverview, ABCOverviewSkeleton } from "./abc-overview";
+import { useABCComparison } from "./use-abc-comparison";
 import { ParetoChart } from "./pareto-chart";
 import { money, number, pct } from "@/lib/analytics/format";
 import { paretoHighlighted, type ParetoHighlight } from "@/lib/analytics/pareto";
@@ -465,6 +467,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     return () => abort.abort();
   }, [entity, drillRequest, filters, drillScope]);
   const reliability = status ? reportReliability(status, filters) : null;
+  const comparison = useABCComparison(filters, status, refresh, dataRefresh);
   const selectedConnections = reliability?.connections || [];
   const incomplete = !reliability?.complete;
   const pendingHistory = status?.jobs.some(job => job.status !== "completed" &&
@@ -910,47 +913,10 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           )}
         </div>
       )}
-      {loading && !result && <div aria-hidden="true" className="space-y-6 motion-safe:animate-pulse">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{[1, 2, 3, 4].map(item => <div key={item} className="card h-32 p-5"><div className="h-4 w-2/3 rounded bg-[var(--color-bg-tertiary)]" /><div className="mt-4 h-8 w-1/2 rounded bg-[var(--color-bg-tertiary)]" /></div>)}</div>
-        <div className="card h-48 bg-[var(--color-bg-secondary)]" />
-      </div>}
+      {loading && !result && <ABCOverviewSkeleton />}
       {result && (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores do período">
-            {[
-              [result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", money(result.revenue)],
-              ["Quantidade vendida", number(result.quantity)],
-              [
-                "Pedidos / entidades",
-                `${number(result.orders)} / ${number(result.total)}`,
-              ],
-              ["Concentração dos 10 primeiros", pct(result.top10)],
-            ].map(([label, value]) => (
-              <div key={label} className="card min-w-0 p-5 flex flex-col justify-between gap-2" title={label === "Pedidos / entidades" ? "Pedidos distintos / produtos ou clientes no relatório." : label === "Concentração dos 10 primeiros" ? "Participação dos dez primeiros na métrica aplicada." : undefined}>
-                <p className="text-sm text-[var(--color-text-secondary)]">
-                  {label}
-                </p>
-                <p className="text-2xl font-semibold mt-2 tabular-nums break-words">{value}</p>
-              </div>
-            ))}
-          </div>
-          <div className="grid gap-4 sm:grid-cols-3" aria-label="Resumo das classes ABC">
-            {(["A", "B", "C"] as const).map((cls) => {
-              const c = result.classes?.[cls];
-              return (
-                <div className={`card min-w-0 p-5 ${cls === "A" ? "!bg-amber-100" : cls === "B" ? "!bg-yellow-100" : "!bg-stone-100"}`} key={cls}>
-                  <div className="flex flex-wrap items-center justify-between gap-2"><span className={`badge ${cls === "A" ? "text-amber-900" : cls === "B" ? "text-yellow-900" : "text-stone-600"}`}>Classe {cls}</span><span className="text-xs text-[var(--color-text-secondary)]">{number(c?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</span></div>
-                  <p className="text-sm mt-2">
-                    {money(c?.revenue || "0")} · {pct(c?.percent || 0)} da
-                    métrica
-                  </p>
-                  <p className="text-xs mt-1 text-[var(--color-text-secondary)]">
-                    {number(c?.quantity || "0")} unidades
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+          <ABCOverview result={result} filters={filters} comparison={comparison} loading={loading} />
           {isAdmin && result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação"><details>
             <summary className="cursor-pointer font-medium text-emerald-900">Regras da consolidação
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
