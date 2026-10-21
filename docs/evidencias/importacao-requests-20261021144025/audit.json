@@ -1,0 +1,42 @@
+{
+  "startedAt": "2026-10-21T14:40:25.881Z",
+  "readOnly": true,
+  "from": "2026-10-01",
+  "to": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "requests": [
+        {
+          "category": "identity",
+          "status": 200,
+          "milliseconds": 267,
+          "remaining": 99
+        },
+        {
+          "category": "updates-overlap",
+          "status": 200,
+          "milliseconds": 553,
+          "remaining": 96
+        },
+        {
+          "category": "updates-overlap",
+          "status": 400,
+          "milliseconds": 15310,
+          "remaining": 94
+        }
+      ],
+      "creationPages": [],
+      "missingActiveIds": [],
+      "providerError": {
+        "status": 400,
+        "category": "updates-overlap",
+        "message": "Sua consulta levou muito tempo. Por favor, ajuste seus filtros ou tente novamente mais tarde.",
+        "fields": []
+      },
+      "error": "Olist HTTP 400; account audit stopped",
+      "finishedAt": "2026-10-21T14:40:51.695Z"
+    }
+  ],
+  "finishedAt": "2026-10-21T14:40:51.696Z"
+}

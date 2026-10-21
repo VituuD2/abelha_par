@@ -4,6 +4,10 @@ As importações continuam à noite e com o navegador fechado. O Supabase Cron c
 
 A produção foi consultada somente em leitura. As alterações descritas aqui são locais: nenhuma migração, publicação, renovação OAuth, alteração de fila ou importação foi executada manualmente nesta revisão.
 
+**Complemento com o CSV da Vercel:** a [análise de requisições e gargalos](importacoes-requisicoes-gargalos-2026-10-21.md#complemento-erros-da-vercel-e-csv-recebido) separa os HTTP 503 do cron dos erros de consulta à Olist. No recorte de 10h37–11h35, todas as 53 execuções HTTP 503 tiveram progresso e somaram 705 processamentos. O worker ainda pode classificar espera local de cota como falha do lote; o ajuste anterior do monitor não resolve essa classificação HTTP. Esse complemento é diagnóstico, sem mudança no processamento.
+
+**Conferência do Supabase às 11h57:** não foi identificada migração ausente nos contratos usados pelo app; o consumo respondeu e os dois relatórios retornaram o Pareto completo. A [revisão de SQL e manutenção](supabase-migracoes-importacoes-2026-10-21.md) registra as verificações, os limites do acesso REST e a consulta opcional de catálogo/agendamentos. O rollback da v23 é uma reversão, não uma atualização de manutenção.
+
 ## Evidência da madrugada
 
 Janela de **00h00 a 06h00 de 21/10**, horário de São Paulo, UTC 03h00–09h00. [Dados completos](evidencias/importacao-noturna-2026-10-21/status.json).

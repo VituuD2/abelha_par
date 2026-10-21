@@ -1,0 +1,214 @@
+{
+  "startedAt": "2026-10-21T15:24:01.093Z",
+  "readOnly": true,
+  "migrations": {
+    "v13": {
+      "missingFunctions": []
+    },
+    "v18": {
+      "missingFunctions": []
+    },
+    "v19": {
+      "missingFunctions": []
+    },
+    "v21": {
+      "missingFunctions": []
+    },
+    "v23": {
+      "missingFunctions": []
+    },
+    "v24": {
+      "missingFunctions": []
+    },
+    "cron": {
+      "missingFunctions": []
+    }
+  },
+  "checks": {
+    "columns": {
+      "analytics_sync_jobs": {
+        "ok": true,
+        "code": null
+      },
+      "analytics_connections": {
+        "ok": true,
+        "code": null
+      },
+      "tiny_integrations": {
+        "ok": true,
+        "code": null
+      },
+      "analytics_product_costs": {
+        "ok": true,
+        "code": null
+      },
+      "analytics_cost_history_sync": {
+        "ok": true,
+        "code": null
+      },
+      "analytics_cost_events": {
+        "ok": true,
+        "code": null
+      },
+      "analytics_cost_event_staging": {
+        "ok": true,
+        "code": null
+      },
+      "olist_api_policies": {
+        "ok": true,
+        "code": null
+      },
+      "olist_api_state": {
+        "ok": true,
+        "code": null
+      },
+      "olist_api_minutes": {
+        "ok": true,
+        "code": null
+      },
+      "olist_api_samples": {
+        "ok": true,
+        "code": null
+      },
+      "olist_api_permits": {
+        "ok": true,
+        "code": null
+      }
+    },
+    "v24Checkpoint": {
+      "ok": true,
+      "code": null
+    },
+    "reports": [
+      {
+        "function": "analytics_abc",
+        "ok": true,
+        "errorCode": null,
+        "durationMs": 2286,
+        "total": 582,
+        "tableRows": 1,
+        "chartRows": 582,
+        "fullParetoObserved": true
+      },
+      {
+        "function": "analytics_abc_components_v21",
+        "ok": true,
+        "errorCode": null,
+        "durationMs": 1315,
+        "total": 582,
+        "tableRows": 1,
+        "chartRows": 582,
+        "fullParetoObserved": true
+      }
+    ],
+    "costHistory": {
+      "ok": true,
+      "errorCode": null,
+      "status": {
+        "total": 119,
+        "pending": 2,
+        "completed": 119,
+        "last_error": null,
+        "updated_at": "2026-10-21T15:24:05.433492+00:00",
+        "last_synced_at": "2026-10-20T15:23:06.508843+00:00"
+      }
+    },
+    "apiUsage": {
+      "ok": true,
+      "errorCode": null,
+      "retentionHours": 48,
+      "accounts": [
+        {
+          "name": "Olist 1",
+          "plan": "Domine",
+          "planLimit": 120,
+          "appLimit": 60,
+          "effectiveLimit": 60,
+          "observedAt": "2026-10-21T15:24:05.277294+00:00"
+        },
+        {
+          "name": "Olist 2",
+          "plan": "Impulsione",
+          "planLimit": 60,
+          "appLimit": 36,
+          "effectiveLimit": 36,
+          "observedAt": "2026-10-21T15:24:10.842294+00:00"
+        },
+        {
+          "name": "Olist 3",
+          "plan": "Impulsione",
+          "planLimit": 60,
+          "appLimit": 36,
+          "effectiveLimit": 36,
+          "observedAt": "2026-10-21T15:24:11.057896+00:00"
+        }
+      ]
+    },
+    "retention": {
+      "analytics_cron_runs": {
+        "cutoff": "2026-10-19T15:24:07.050Z",
+        "cutoffHours": 48,
+        "olderRows": 0,
+        "oldest": "2026-10-19T15:25:00.022082+00:00",
+        "errorCode": null
+      },
+      "olist_api_minutes": {
+        "cutoff": "2026-10-19T15:24:07.206Z",
+        "cutoffHours": 48,
+        "olderRows": 0,
+        "oldest": "2026-10-20T20:31:00+00:00",
+        "errorCode": null
+      },
+      "olist_api_samples": {
+        "cutoff": "2026-10-19T15:24:07.390Z",
+        "cutoffHours": 48,
+        "olderRows": 0,
+        "oldest": "2026-10-20T20:31:00+00:00",
+        "errorCode": null
+      },
+      "olist_api_permits": {
+        "cutoff": "2026-10-21T14:24:07.520Z",
+        "cutoffHours": 1,
+        "olderRows": 0,
+        "oldest": "2026-10-21T15:07:11.860482+00:00",
+        "errorCode": null
+      }
+    },
+    "cron": {
+      "cron": {
+        "accessibleThroughRest": false,
+        "code": "PGRST106"
+      },
+      "net": {
+        "accessibleThroughRest": false,
+        "code": "PGRST106"
+      }
+    },
+    "migrationLedger": {
+      "accessibleThroughRest": false,
+      "code": "PGRST106"
+    }
+  },
+  "reportScope": {
+    "filters": {
+      "from": "2026-08-01",
+      "to": "2026-10-21",
+      "metric": "quantity",
+      "mode": "TINY_LEGACY",
+      "grouping": "product",
+      "basis": "orders",
+      "thresholdA": 80,
+      "thresholdB": 95,
+      "costBasis": "average",
+      "selections": {
+        "statuses": [
+          "1",
+          "5",
+          "6"
+        ]
+      }
+    },
+    "compositionRules": "Empty mapping, diagnostic only; not a reconciliation of real composition rules."
+  },
+  "finishedAt": "2026-10-21T15:24:07.980Z"
+}

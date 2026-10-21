@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-21T15:42:34.911Z",
+  "commit": "68528739bbb928b135a18e8b8f0e118132ef7dde",
+  "migrationSha256": "1b8ac000a4828909e90adeab11bf381d0750a3d8578283d253bafb4b3b6a6c46",
+  "migrationConfirmedAt": "2026-10-21T15:24:07.980Z",
+  "fullTests": {
+    "passed": 335,
+    "failed": 0
+  },
+  "databaseTests": {
+    "passed": 10,
+    "failed": 0
+  },
+  "typescript": "passed",
+  "eslint": "passed",
+  "productionBuild": "passed in an isolated checkout of the release commit",
+  "gitPush": "completed",
+  "productionRollout": "Active: Vercel deployment completed and recent jobs/stage snapshots observed on all three accounts",
+  "deployment": {
+    "at": "2026-10-21T15:46:15.477Z",
+    "commit": "68528739bbb928b135a18e8b8f0e118132ef7dde",
+    "state": "success",
+    "statuses": [
+      {
+        "context": "Vercel",
+        "state": "success",
+        "description": "Deployment has completed",
+        "targetUrl": "https://vercel.com/vituud2s-projects/abelha-par/6mB5tdB6wx69VgwChPrSx8riGoKu",
+        "updatedAt": "2026-10-21T15:45:10Z"
+      }
+    ]
+  },
+  "observation": {
+    "startedAt": "2026-10-21T15:46:30.974Z",
+    "finishedAt": "2026-10-21T15:49:31.282Z",
+    "eventsProcessed": 75,
+    "perConnection": [
+      {
+        "name": "Olist 1",
+        "processedDelta": 25,
+        "errorCode": null
+      },
+      {
+        "name": "Olist 2",
+        "processedDelta": 25,
+        "errorCode": null
+      },
+      {
+        "name": "Olist 3",
+        "processedDelta": 25,
+        "errorCode": null
+      }
+    ]
+  },
+  "limitations": [
+    "Historical import remains in progress",
+    "Legacy pages must drain before their partitioned scan starts",
+    "Initial telemetry window is not an availability SLA or a full order reconciliation"
+  ]
+}

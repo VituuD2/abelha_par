@@ -1,0 +1,360 @@
+{
+  "startedAt": "2026-10-21T14:39:23.158Z",
+  "readOnly": true,
+  "from": "2026-10-01",
+  "to": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "requests": [
+        {
+          "category": "identity",
+          "status": 200,
+          "milliseconds": 244,
+          "remaining": 98
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 442,
+          "remaining": 94
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 744,
+          "remaining": 93
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 463,
+          "remaining": 92
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 471,
+          "remaining": 91
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 441,
+          "remaining": 90
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 380,
+          "remaining": 89
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 679,
+          "remaining": 119
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 469,
+          "remaining": 118
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 442,
+          "remaining": 117
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 400,
+          "remaining": 112
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 480,
+          "remaining": 108
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 445,
+          "remaining": 103
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 445,
+          "remaining": 97
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 498,
+          "remaining": 95
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 421,
+          "remaining": 93
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 422,
+          "remaining": 92
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 1242,
+          "remaining": 91
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 426,
+          "remaining": 90
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 426,
+          "remaining": 119
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 498,
+          "remaining": 115
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 500,
+          "remaining": 110
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 487,
+          "remaining": 104
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 513,
+          "remaining": 99
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 440,
+          "remaining": 94
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 448,
+          "remaining": 89
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 443,
+          "remaining": 88
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 414,
+          "remaining": 87
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 681,
+          "remaining": 86
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 439,
+          "remaining": 85
+        }
+      ],
+      "creationPages": [
+        {
+          "offset": 0,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 100,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 200,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 300,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 400,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 500,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 600,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 700,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 800,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 900,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1000,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1100,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1200,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1300,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1400,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1500,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1600,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1700,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1800,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 1900,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2000,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2100,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2200,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2300,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2400,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2500,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2600,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2700,
+          "total": 2811,
+          "count": 100
+        },
+        {
+          "offset": 2800,
+          "total": 2811,
+          "count": 11
+        }
+      ],
+      "missingActiveIds": [
+        "397698980",
+        "397705534",
+        "397706893",
+        "397710134",
+        "397710907",
+        "397712741"
+      ],
+      "creationComplete": true,
+      "initialSourceTotal": 2811,
+      "sourceUnique": 2811,
+      "sourceActive": 2674,
+      "sourceCancelled": 137,
+      "matchedActive": 2668,
+      "missingActive": 6,
+      "statusDifferences": 93,
+      "missingCancelled": 122,
+      "sourceTotalsChanged": false,
+      "finishedAt": "2026-10-21T14:41:51.532Z"
+    }
+  ],
+  "finishedAt": "2026-10-21T14:41:51.533Z"
+}

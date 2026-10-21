@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-21T15:30:14.722Z",
+  "providerReadsOnly": true,
+  "quotaTelemetryRecorded": true,
+  "accounts": [
+    {
+      "name": "Olist 2",
+      "checks": [
+        {
+          "from": "2026-07-23",
+          "to": "2026-07-29",
+          "since": "2026-10-01",
+          "sampleSize": 0,
+          "total": 0,
+          "withinCreationBounds": true,
+          "millisecondsIncludingPermit": 2438
+        },
+        {
+          "from": "2026-10-01",
+          "to": "2026-10-07",
+          "since": "2026-10-01",
+          "sampleSize": 100,
+          "total": 375,
+          "withinCreationBounds": true,
+          "millisecondsIncludingPermit": 1721
+        }
+      ]
+    },
+    {
+      "name": "Olist 1",
+      "checks": [
+        {
+          "from": "2026-07-23",
+          "to": "2026-07-29",
+          "since": "2026-10-01",
+          "sampleSize": 1,
+          "total": 1,
+          "withinCreationBounds": true,
+          "millisecondsIncludingPermit": 1151
+        },
+        {
+          "from": "2026-10-01",
+          "to": "2026-10-07",
+          "since": "2026-10-01",
+          "sampleSize": 100,
+          "total": 922,
+          "withinCreationBounds": true,
+          "millisecondsIncludingPermit": 3552
+        }
+      ]
+    },
+    {
+      "name": "Olist 3",
+      "checks": [],
+      "error": "Controle de consultas Olist indisponível; chamada adiada para preservar a cota."
+    }
+  ]
+}

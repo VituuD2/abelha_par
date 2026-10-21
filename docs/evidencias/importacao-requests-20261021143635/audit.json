@@ -1,0 +1,441 @@
+{
+  "startedAt": "2026-10-21T14:36:35.846Z",
+  "readOnly": true,
+  "from": "2026-10-01",
+  "to": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "requests": [
+        {
+          "category": "identity",
+          "status": 200,
+          "milliseconds": 292,
+          "remaining": 95
+        },
+        {
+          "category": "updates-overlap",
+          "status": 200,
+          "milliseconds": 1489,
+          "remaining": 94
+        },
+        {
+          "category": "updates-overlap",
+          "status": 400,
+          "milliseconds": 15297,
+          "remaining": 93
+        }
+      ],
+      "creationPages": [],
+      "missingActiveIds": [],
+      "error": "Olist HTTP 400; account audit stopped",
+      "finishedAt": "2026-10-21T14:37:01.371Z"
+    },
+    {
+      "name": "Olist 2",
+      "requests": [
+        {
+          "category": "identity",
+          "status": 200,
+          "milliseconds": 274,
+          "remaining": 44
+        },
+        {
+          "category": "updates-overlap",
+          "status": 200,
+          "milliseconds": 11842,
+          "remaining": 43
+        },
+        {
+          "category": "updates-overlap",
+          "status": 200,
+          "milliseconds": 7149,
+          "remaining": 42
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 610,
+          "remaining": 58
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 390,
+          "remaining": 54
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 384,
+          "remaining": 50
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 393,
+          "remaining": 47
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 1351,
+          "remaining": 43
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 605,
+          "remaining": 39
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 436,
+          "remaining": 37
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 593,
+          "remaining": 36
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 449,
+          "remaining": 35
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 397,
+          "remaining": 34
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 360,
+          "remaining": 33
+        }
+      ],
+      "creationPages": [
+        {
+          "offset": 0,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 100,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 200,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 300,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 400,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 500,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 600,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 700,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 800,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 900,
+          "total": 1085,
+          "count": 100
+        },
+        {
+          "offset": 1000,
+          "total": 1085,
+          "count": 85
+        }
+      ],
+      "missingActiveIds": [
+        "397710299",
+        "397712447"
+      ],
+      "overlap": {
+        "dates": [
+          "2026-10-10",
+          "2026-10-11"
+        ],
+        "totals": [
+          840,
+          796
+        ],
+        "sampleSizes": [
+          100,
+          100
+        ],
+        "commonIds": 100,
+        "sampleCreationDates": [
+          "2026-10-20",
+          "2026-10-21"
+        ]
+      },
+      "creationComplete": true,
+      "initialSourceTotal": 1085,
+      "sourceUnique": 1085,
+      "sourceActive": 998,
+      "sourceCancelled": 87,
+      "matchedActive": 996,
+      "missingActive": 2,
+      "statusDifferences": 5,
+      "missingCancelled": 82,
+      "sourceTotalsChanged": false,
+      "finishedAt": "2026-10-21T14:37:51.591Z"
+    },
+    {
+      "name": "Olist 3",
+      "requests": [
+        {
+          "category": "identity",
+          "status": 200,
+          "milliseconds": 331,
+          "remaining": 43
+        },
+        {
+          "category": "updates-overlap",
+          "status": 200,
+          "milliseconds": 7720,
+          "remaining": 42
+        },
+        {
+          "category": "updates-overlap",
+          "status": 200,
+          "milliseconds": 349,
+          "remaining": 41
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 926,
+          "remaining": 40
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 1115,
+          "remaining": 58
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 421,
+          "remaining": 54
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 406,
+          "remaining": 51
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 386,
+          "remaining": 47
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 413,
+          "remaining": 43
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 472,
+          "remaining": 39
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 334,
+          "remaining": 36
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 734,
+          "remaining": 35
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 379,
+          "remaining": 34
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 431,
+          "remaining": 33
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 463,
+          "remaining": 32
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 388,
+          "remaining": 31
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 471,
+          "remaining": 58
+        },
+        {
+          "category": "creation-list",
+          "status": 200,
+          "milliseconds": 417,
+          "remaining": 55
+        }
+      ],
+      "creationPages": [
+        {
+          "offset": 0,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 100,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 200,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 300,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 400,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 500,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 600,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 700,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 800,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 900,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 1000,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 1100,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 1200,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 1300,
+          "total": 1422,
+          "count": 100
+        },
+        {
+          "offset": 1400,
+          "total": 1422,
+          "count": 22
+        }
+      ],
+      "missingActiveIds": [
+        "397700538",
+        "397702870"
+      ],
+      "overlap": {
+        "dates": [
+          "2026-10-09",
+          "2026-10-10"
+        ],
+        "totals": [
+          1315,
+          1235
+        ],
+        "sampleSizes": [
+          100,
+          100
+        ],
+        "commonIds": 100,
+        "sampleCreationDates": [
+          "2026-10-19",
+          "2026-10-20",
+          "2026-10-21"
+        ]
+      },
+      "creationComplete": true,
+      "initialSourceTotal": 1422,
+      "sourceUnique": 1422,
+      "sourceActive": 1299,
+      "sourceCancelled": 123,
+      "matchedActive": 1297,
+      "missingActive": 2,
+      "statusDifferences": 28,
+      "missingCancelled": 107,
+      "sourceTotalsChanged": false,
+      "finishedAt": "2026-10-21T14:38:05.623Z"
+    }
+  ],
+  "finishedAt": "2026-10-21T14:38:05.623Z"
+}

@@ -7,7 +7,7 @@ DO $$ BEGIN
  IF to_regprocedure('public.olist_api_usage(uuid,uuid,integer)') IS NULL
   OR to_regprocedure('public.analytics_claim_jobs(uuid,integer)') IS NULL
   OR to_regprocedure('public.analytics_cost_history_status(uuid)') IS NULL
- THEN RAISE EXCEPTION 'APPLY_ANALYTICS_V13_V19_AND_V23_FIRST'; END IF;
+ THEN RAISE EXCEPTION 'APPLY_ANALYTICS_V13_V19_AND_V23_FIRST'; END IF;  
 END $$;
 ALTER TABLE public.analytics_sync_jobs
  ADD COLUMN IF NOT EXISTS lane text NOT NULL DEFAULT 'history' CHECK(lane IN ('history','recent')),

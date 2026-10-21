@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-21T15:31:33.281Z",
+  "name": "Olist 3",
+  "checks": [
+    {
+      "from": "2026-07-23",
+      "to": "2026-07-29",
+      "since": "2026-10-01",
+      "sampleSize": 0,
+      "total": 0,
+      "withinCreationBounds": true,
+      "millisecondsIncludingPermit": 2941
+    },
+    {
+      "from": "2026-10-01",
+      "to": "2026-10-07",
+      "since": "2026-10-01",
+      "sampleSize": 100,
+      "total": 473,
+      "withinCreationBounds": true,
+      "millisecondsIncludingPermit": 858
+    }
+  ],
+  "providerReadsOnly": true,
+  "quotaTelemetryRecorded": true
+}

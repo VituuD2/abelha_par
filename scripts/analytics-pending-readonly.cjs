@@ -7,6 +7,7 @@ const {decryptToken} = require('../src/lib/token-crypto.ts');
 const {normalizeOrder} = require('../src/lib/analytics/normalize.ts');
 const workspace = require('../src/lib/analytics/data/composition-catalog.json').workspaceIds[0];
 const connectionId = process.argv.find(a => a.startsWith('--connection='))?.split('=')[1];
+const inspectRequests = process.argv.includes('--inspect-requests');
 const directory = `docs/evidencias/importacao-pendencias-${new Date().toISOString().replace(/\D/g, '').slice(0,14)}`;
 const out = {at: new Date().toISOString(), readOnly: true, orders: []};
 const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
@@ -25,13 +26,16 @@ async function main() {
     .select('access_token,expires_at').eq('workspace_id', workspace).eq('id', c.legacy_integration_id).single()) : c;
   if (!stored.access_token || !(Date.parse(stored.expires_at || '') > Date.now())) throw Error('Stored token expired; no refresh attempted.');
   const token = decryptToken(stored.access_token);
+  out.requests = [];
   let previous = 0;
   async function get(path) {
     await new Promise(r => setTimeout(r, Math.max(0, previous + 3000 - Date.now())));
     previous = Date.now();
+    const sentAt = Date.now();
     const response = await fetch('https://api.tiny.com.br/public-api/v3' + path, {
       headers: {Authorization: 'Bearer ' + token}, signal: AbortSignal.timeout(10000),
     });
+    out.requests.push({ endpoint: path.replace(/\d+/g, ':id'), status: response.status, milliseconds: Date.now() - sentAt });
     if (!response.ok) throw Error(`Olist HTTP ${response.status}`);
     return response.json();
   }
@@ -59,6 +63,21 @@ async function main() {
       cachedProducts: cached.length, freshProducts: cached.filter(p => Math.max(Date.parse(p.enriched_at || '') || 0,
         Date.parse(p.enrichment_checked_at || '') || 0) > Date.now() - 7*86400000).length,
       batchedCacheReadMs: Date.now() - cacheStart, hasInvoice: !!raw.idNotaFiscal && String(raw.idNotaFiscal) !== '0', normalization});
+    if (inspectRequests) {
+      const entry = out.orders.at(-1);
+      entry.inlineTagsPresent = Array.isArray(raw.marcadores);
+      entry.inlineTagCount = Array.isArray(raw.marcadores) ? raw.marcadores.length : null;
+      entry.inlineInvoiceFields = raw.notaFiscal && typeof raw.notaFiscal === 'object' ? Object.keys(raw.notaFiscal) : [];
+      const markers = await get('/pedidos/' + pending + '/marcadores');
+      const tags = Array.isArray(markers) ? markers : markers.itens || markers.marcadores;
+      entry.separateTagsCount = Array.isArray(tags) ? tags.length : null;
+      const names = values => JSON.stringify((values || []).map(v => String(v.descricao || '')).sort());
+      entry.inlineTagsMatchSeparate = entry.inlineTagsPresent && Array.isArray(tags) ? names(raw.marcadores) === names(tags) : null;
+      if (entry.hasInvoice) {
+        const invoice = await get('/notas/' + raw.idNotaFiscal);
+        entry.separateInvoiceFieldsForEligibility = ['situacao','tipo','finalidade','dataEmissao'].filter(field => invoice[field] != null);
+      }
+    }
   }
 }
 main().catch(e => {out.error = e.message; process.exitCode = 1;}).finally(() => {

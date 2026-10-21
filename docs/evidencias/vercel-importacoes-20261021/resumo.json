@@ -1,0 +1,834 @@
+{
+  "source": {
+    "file": "abelha-par-log-export-2026-10-21T14-36-24.csv",
+    "sha256": "d1b9d22c510ea06b4a7cda8b309fd7c936ca3720c07190d6d4760b394a5d2278",
+    "bytes": 136628,
+    "rows": 216,
+    "firstLogUtc": "2026-10-21 13:37:00",
+    "lastLogUtc": "2026-10-21 14:35:33",
+    "timezoneForPresentation": "America/Sao_Paulo (UTC-03:00)"
+  },
+  "method": {
+    "requestKey": "requestId",
+    "batchEvent": "analytics_import_batch",
+    "durationRule": "One nonempty durationMs per request; validated",
+    "p95Rule": "nearest rank",
+    "scope": "Only supplied CSV, not the entire six-hour screenshot. processed counts processing events, not unique order IDs. Pacing includes permit acquisition and retry backoff. Parallel batch times must not be added as wall-clock duration."
+  },
+  "requests": {
+    "count": 59,
+    "byStatus": {
+      "503": 53,
+      "200": 6
+    },
+    "durationMs": {
+      "count": 59,
+      "min": 32721,
+      "median": 33654,
+      "mean": 34069.356,
+      "p95_nearest_rank": 39738,
+      "max": 40462
+    },
+    "userAgents": {
+      "pg_net/0.20.4": 59
+    },
+    "byStatusProgress": {
+      "200": {
+        "requests": 6,
+        "withProgress": 5,
+        "processedEvents": 46,
+        "withFailedBatches": 0,
+        "withoutBatches": 1
+      },
+      "503": {
+        "requests": 53,
+        "withProgress": 53,
+        "processedEvents": 705,
+        "withFailedBatches": 53,
+        "withoutBatches": 0
+      }
+    }
+  },
+  "totals": {
+    "processed": 751,
+    "elapsedMs": 4034950,
+    "apiRequests": 2285,
+    "apiMs": 516893,
+    "pacingMs": 2246583,
+    "retries": 2,
+    "transientFailures": 8,
+    "timeouts": 8,
+    "networkFailures": 0,
+    "sourceCacheHits": 522,
+    "batches": 152,
+    "failedBatches": 99,
+    "failedWithoutTransient": 93,
+    "failedWithZeroApiRequests": 7,
+    "failedWithZeroProcessed": 14,
+    "failedWithProgress": 85,
+    "modes": {
+      "incremental": 136,
+      "backfill": 16
+    },
+    "batchDurationMs": {
+      "count": 152,
+      "min": 3249,
+      "median": 29496.5,
+      "mean": 26545.724,
+      "p95_nearest_rank": 31950,
+      "max": 38758
+    },
+    "pacingShare": 0.556781,
+    "apiShare": 0.128104
+  },
+  "connections": {
+    "Olist 1": {
+      "processed": 270,
+      "elapsedMs": 1123582,
+      "apiRequests": 830,
+      "apiMs": 211989,
+      "pacingMs": 517563,
+      "retries": 2,
+      "transientFailures": 6,
+      "timeouts": 6,
+      "networkFailures": 0,
+      "sourceCacheHits": 203,
+      "batches": 41,
+      "failedBatches": 25,
+      "failedWithoutTransient": 21,
+      "failedWithZeroApiRequests": 1,
+      "failedWithZeroProcessed": 4,
+      "failedWithProgress": 21,
+      "modes": {
+        "incremental": 36,
+        "backfill": 5
+      },
+      "batchDurationMs": {
+        "count": 41,
+        "min": 3249,
+        "median": 30372,
+        "mean": 27404.439,
+        "p95_nearest_rank": 32142,
+        "max": 35949
+      },
+      "pacingShare": 0.460637,
+      "apiShare": 0.188672
+    },
+    "Olist 2": {
+      "processed": 248,
+      "elapsedMs": 1446442,
+      "apiRequests": 718,
+      "apiMs": 161264,
+      "pacingMs": 833400,
+      "retries": 0,
+      "transientFailures": 1,
+      "timeouts": 1,
+      "networkFailures": 0,
+      "sourceCacheHits": 142,
+      "batches": 56,
+      "failedBatches": 35,
+      "failedWithoutTransient": 34,
+      "failedWithZeroApiRequests": 4,
+      "failedWithZeroProcessed": 6,
+      "failedWithProgress": 29,
+      "modes": {
+        "incremental": 49,
+        "backfill": 7
+      },
+      "batchDurationMs": {
+        "count": 56,
+        "min": 3745,
+        "median": 28882.5,
+        "mean": 25829.321,
+        "p95_nearest_rank": 31503,
+        "max": 38758
+      },
+      "pacingShare": 0.576172,
+      "apiShare": 0.11149
+    },
+    "Olist 3": {
+      "processed": 233,
+      "elapsedMs": 1464926,
+      "apiRequests": 737,
+      "apiMs": 143640,
+      "pacingMs": 895620,
+      "retries": 0,
+      "transientFailures": 1,
+      "timeouts": 1,
+      "networkFailures": 0,
+      "sourceCacheHits": 177,
+      "batches": 55,
+      "failedBatches": 39,
+      "failedWithoutTransient": 38,
+      "failedWithZeroApiRequests": 2,
+      "failedWithZeroProcessed": 4,
+      "failedWithProgress": 35,
+      "modes": {
+        "incremental": 51,
+        "backfill": 4
+      },
+      "batchDurationMs": {
+        "count": 55,
+        "min": 3942,
+        "median": 29199,
+        "mean": 26635.018,
+        "p95_nearest_rank": 31815,
+        "max": 37831
+      },
+      "pacingShare": 0.611376,
+      "apiShare": 0.098053
+    }
+  },
+  "telemetryWarnings": 5,
+  "requestsChronological": [
+    {
+      "startedUtc": "2026-10-21 13:37:00",
+      "status": 503,
+      "durationMs": 32889,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 8,
+      "apiRequests": 24,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:38:00",
+      "status": 503,
+      "durationMs": 33732,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 9,
+      "apiRequests": 27,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:39:00",
+      "status": 503,
+      "durationMs": 33738,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 6,
+      "apiRequests": 20,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:40:00",
+      "status": 503,
+      "durationMs": 36487,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 1,
+      "apiRequests": 5,
+      "timeouts": 1,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:41:00",
+      "status": 200,
+      "durationMs": 33693,
+      "batches": 1,
+      "failedBatches": 0,
+      "processedEvents": 6,
+      "apiRequests": 16,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:42:00",
+      "status": 200,
+      "durationMs": 33880,
+      "batches": 2,
+      "failedBatches": 0,
+      "processedEvents": 10,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:43:00",
+      "status": 503,
+      "durationMs": 33259,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 11,
+      "apiRequests": 32,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:44:00",
+      "status": 503,
+      "durationMs": 33807,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 10,
+      "apiRequests": 29,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:45:00",
+      "status": 503,
+      "durationMs": 33652,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 10,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 3
+    },
+    {
+      "startedUtc": "2026-10-21 13:46:00",
+      "status": 503,
+      "durationMs": 33484,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 19,
+      "apiRequests": 58,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:47:00",
+      "status": 503,
+      "durationMs": 33658,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 20,
+      "apiRequests": 60,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:48:00",
+      "status": 503,
+      "durationMs": 39738,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 57,
+      "timeouts": 0,
+      "telemetryWarnings": 1
+    },
+    {
+      "startedUtc": "2026-10-21 13:49:00",
+      "status": 503,
+      "durationMs": 33654,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 14,
+      "apiRequests": 44,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:50:00",
+      "status": 503,
+      "durationMs": 33830,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 9,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:51:00",
+      "status": 503,
+      "durationMs": 33379,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 17,
+      "apiRequests": 56,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:52:00",
+      "status": 503,
+      "durationMs": 33831,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 19,
+      "apiRequests": 55,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:53:00",
+      "status": 503,
+      "durationMs": 33397,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 21,
+      "apiRequests": 57,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:54:00",
+      "status": 503,
+      "durationMs": 33872,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 18,
+      "apiRequests": 54,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:55:00",
+      "status": 503,
+      "durationMs": 33432,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 5,
+      "apiRequests": 14,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:56:00",
+      "status": 503,
+      "durationMs": 34106,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 18,
+      "apiRequests": 58,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:57:00",
+      "status": 503,
+      "durationMs": 33975,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 16,
+      "apiRequests": 45,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:58:00",
+      "status": 503,
+      "durationMs": 33570,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 58,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 13:59:00",
+      "status": 503,
+      "durationMs": 35284,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 15,
+      "apiRequests": 43,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:00:00",
+      "status": 200,
+      "durationMs": 32721,
+      "batches": 0,
+      "failedBatches": 0,
+      "processedEvents": 0,
+      "apiRequests": 0,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:01:00",
+      "status": 503,
+      "durationMs": 33379,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 4,
+      "apiRequests": 13,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:02:00",
+      "status": 503,
+      "durationMs": 33600,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 12,
+      "apiRequests": 32,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:03:00",
+      "status": 503,
+      "durationMs": 40462,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 19,
+      "apiRequests": 59,
+      "timeouts": 1,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:04:00",
+      "status": 503,
+      "durationMs": 40207,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 17,
+      "apiRequests": 52,
+      "timeouts": 1,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:05:00",
+      "status": 503,
+      "durationMs": 33151,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 5,
+      "apiRequests": 16,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:06:00",
+      "status": 503,
+      "durationMs": 33369,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 5,
+      "apiRequests": 17,
+      "timeouts": 2,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:07:00",
+      "status": 503,
+      "durationMs": 33353,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 19,
+      "apiRequests": 56,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:08:00",
+      "status": 503,
+      "durationMs": 33891,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 56,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:09:00",
+      "status": 503,
+      "durationMs": 33270,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 20,
+      "apiRequests": 61,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:10:00",
+      "status": 503,
+      "durationMs": 33840,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 3,
+      "apiRequests": 12,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:11:00",
+      "status": 503,
+      "durationMs": 32765,
+      "batches": 1,
+      "failedBatches": 1,
+      "processedEvents": 6,
+      "apiRequests": 16,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:12:00",
+      "status": 503,
+      "durationMs": 33536,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 59,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:13:00",
+      "status": 503,
+      "durationMs": 34025,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 20,
+      "apiRequests": 61,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:14:00",
+      "status": 503,
+      "durationMs": 33609,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 56,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:15:04",
+      "status": 503,
+      "durationMs": 32868,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 3,
+      "apiRequests": 11,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:16:00",
+      "status": 200,
+      "durationMs": 34038,
+      "batches": 2,
+      "failedBatches": 0,
+      "processedEvents": 10,
+      "apiRequests": 31,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:17:00",
+      "status": 503,
+      "durationMs": 33259,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 10,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:18:00",
+      "status": 200,
+      "durationMs": 33758,
+      "batches": 2,
+      "failedBatches": 0,
+      "processedEvents": 10,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:19:00",
+      "status": 503,
+      "durationMs": 33888,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 9,
+      "apiRequests": 25,
+      "timeouts": 1,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:20:00",
+      "status": 503,
+      "durationMs": 34084,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 4,
+      "apiRequests": 14,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:21:00",
+      "status": 503,
+      "durationMs": 33138,
+      "batches": 2,
+      "failedBatches": 2,
+      "processedEvents": 10,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:22:00",
+      "status": 200,
+      "durationMs": 33647,
+      "batches": 2,
+      "failedBatches": 0,
+      "processedEvents": 10,
+      "apiRequests": 30,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:23:00",
+      "status": 503,
+      "durationMs": 33645,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 56,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:24:00",
+      "status": 503,
+      "durationMs": 33534,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 20,
+      "apiRequests": 57,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:25:01",
+      "status": 503,
+      "durationMs": 33849,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 14,
+      "apiRequests": 43,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:26:00",
+      "status": 503,
+      "durationMs": 33432,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 53,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:27:00",
+      "status": 503,
+      "durationMs": 33751,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 19,
+      "apiRequests": 57,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:28:00",
+      "status": 503,
+      "durationMs": 33248,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 20,
+      "apiRequests": 57,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:29:00",
+      "status": 503,
+      "durationMs": 37706,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 13,
+      "apiRequests": 41,
+      "timeouts": 2,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:30:00",
+      "status": 503,
+      "durationMs": 34406,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 2,
+      "apiRequests": 5,
+      "timeouts": 0,
+      "telemetryWarnings": 1
+    },
+    {
+      "startedUtc": "2026-10-21 14:31:00",
+      "status": 503,
+      "durationMs": 34066,
+      "batches": 2,
+      "failedBatches": 1,
+      "processedEvents": 11,
+      "apiRequests": 36,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:32:00",
+      "status": 503,
+      "durationMs": 33935,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 18,
+      "apiRequests": 55,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:33:00",
+      "status": 503,
+      "durationMs": 33373,
+      "batches": 3,
+      "failedBatches": 2,
+      "processedEvents": 18,
+      "apiRequests": 58,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:34:00",
+      "status": 503,
+      "durationMs": 33507,
+      "batches": 3,
+      "failedBatches": 1,
+      "processedEvents": 20,
+      "apiRequests": 60,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    },
+    {
+      "startedUtc": "2026-10-21 14:35:00",
+      "status": 503,
+      "durationMs": 33435,
+      "batches": 3,
+      "failedBatches": 3,
+      "processedEvents": 12,
+      "apiRequests": 38,
+      "timeouts": 0,
+      "telemetryWarnings": 0
+    }
+  ]
+}

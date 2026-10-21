@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-21T14:38:39.393Z",
+  "readOnly": true,
+  "orders": [
+    {
+      "jobId": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+      "mode": "incremental",
+      "status": "queued",
+      "cursor": "2026-10-03",
+      "pendingIndex": 66,
+      "processed": 8974,
+      "checkpointUpdatedAt": "2026-10-21T14:38:33.698+00:00",
+      "orderId": "395884306",
+      "detailAndPacingMs": 3019,
+      "items": 1,
+      "distinctProducts": 1,
+      "productsChecked": 1,
+      "cachedProducts": 1,
+      "freshProducts": 1,
+      "batchedCacheReadMs": 56,
+      "hasInvoice": true,
+      "normalization": {
+        "ok": true
+      },
+      "inlineTagsPresent": true,
+      "inlineTagCount": 3,
+      "inlineInvoiceFields": [
+        "id",
+        "numero",
+        "serie",
+        "chaveAcesso",
+        "dataEmissao",
+        "valor",
+        "situacao"
+      ],
+      "separateTagsCount": 3,
+      "inlineTagsMatchSeparate": true,
+      "separateInvoiceFieldsForEligibility": [
+        "situacao",
+        "tipo",
+        "finalidade",
+        "dataEmissao"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "endpoint": "/info",
+      "status": 200,
+      "milliseconds": 238
+    },
+    {
+      "endpoint": "/pedidos/:id",
+      "status": 200,
+      "milliseconds": 300
+    },
+    {
+      "endpoint": "/pedidos/:id/marcadores",
+      "status": 200,
+      "milliseconds": 256
+    },
+    {
+      "endpoint": "/notas/:id",
+      "status": 200,
+      "milliseconds": 330
+    }
+  ],
+  "connection": "Olist 1"
+}

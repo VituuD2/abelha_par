@@ -1,0 +1,73 @@
+{
+  "startedAt": "2026-10-21T14:42:23.971Z",
+  "readOnly": true,
+  "from": "2026-10-01",
+  "to": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "requests": [
+        {
+          "category": "identity",
+          "status": 200,
+          "milliseconds": 261,
+          "remaining": 97
+        },
+        {
+          "category": "bounded-updates",
+          "status": 200,
+          "milliseconds": 451,
+          "remaining": 93
+        },
+        {
+          "category": "bounded-updates",
+          "status": 200,
+          "milliseconds": 397,
+          "remaining": 92
+        },
+        {
+          "category": "bounded-updates",
+          "status": 200,
+          "milliseconds": 358,
+          "remaining": 91
+        }
+      ],
+      "creationPages": [],
+      "missingActiveIds": [],
+      "boundedUpdates": [
+        {
+          "updatedSince": "2026-10-04",
+          "from": "2026-10-01",
+          "to": "2026-10-07",
+          "total": 882,
+          "sampleSize": 100,
+          "firstCreation": "2026-10-07",
+          "lastCreation": "2026-10-07",
+          "allWithinWindow": true
+        },
+        {
+          "updatedSince": "2026-10-04",
+          "from": "2026-10-08",
+          "to": "2026-10-14",
+          "total": 1045,
+          "sampleSize": 100,
+          "firstCreation": "2026-10-14",
+          "lastCreation": "2026-10-14",
+          "allWithinWindow": true
+        },
+        {
+          "updatedSince": "2026-10-04",
+          "from": "2026-10-15",
+          "to": "2026-10-21",
+          "total": 844,
+          "sampleSize": 100,
+          "firstCreation": "2026-10-20",
+          "lastCreation": "2026-10-21",
+          "allWithinWindow": true
+        }
+      ],
+      "finishedAt": "2026-10-21T14:42:39.562Z"
+    }
+  ],
+  "finishedAt": "2026-10-21T14:42:39.563Z"
+}

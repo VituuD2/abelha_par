@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-21T15:48:18.045Z",
+  "scope": "Only previously missing October IDs; no new ERP reconciliation",
+  "accounts": [
+    {
+      "name": "Olist 2",
+      "previouslyMissing": 2,
+      "presentNow": 2,
+      "notPresentNow": 0,
+      "storedOrders": 4136
+    },
+    {
+      "name": "Olist 1",
+      "previouslyMissing": 6,
+      "presentNow": 2,
+      "notPresentNow": 4,
+      "storedOrders": 9540
+    },
+    {
+      "name": "Olist 3",
+      "previouslyMissing": 2,
+      "presentNow": 2,
+      "notPresentNow": 0,
+      "storedOrders": 4587
+    }
+  ],
+  "legacyPages": [
+    {
+      "name": "Olist 1",
+      "pendingOnPage": 45,
+      "scanVersion": null
+    },
+    {
+      "name": "Olist 3",
+      "pendingOnPage": 59,
+      "scanVersion": null
+    },
+    {
+      "name": "Olist 2",
+      "pendingOnPage": 57,
+      "scanVersion": null
+    }
+  ]
+}

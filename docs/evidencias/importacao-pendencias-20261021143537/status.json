@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-21T14:35:37.384Z",
+  "readOnly": true,
+  "orders": [
+    {
+      "jobId": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+      "mode": "incremental",
+      "status": "retry",
+      "cursor": "2026-10-03",
+      "pendingIndex": 41,
+      "processed": 8949,
+      "checkpointUpdatedAt": "2026-10-21T14:35:33.065+00:00",
+      "orderId": "395871217",
+      "detailAndPacingMs": 2887,
+      "items": 1,
+      "distinctProducts": 1,
+      "productsChecked": 1,
+      "cachedProducts": 1,
+      "freshProducts": 1,
+      "batchedCacheReadMs": 112,
+      "hasInvoice": true,
+      "normalization": {
+        "ok": true
+      }
+    }
+  ],
+  "connection": "Olist 1"
+}
