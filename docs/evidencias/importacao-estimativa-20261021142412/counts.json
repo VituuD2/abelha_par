@@ -1,0 +1,81 @@
+{
+  "startedAt": "2026-10-21T14:24:12.687Z",
+  "readOnly": true,
+  "today": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "connectionId": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "queries": [
+        {
+          "kind": "updates",
+          "from": "2026-10-03",
+          "to": null,
+          "total": 3200,
+          "observedAt": "2026-10-21T14:24:24.918Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-12",
+          "to": null,
+          "total": 2044,
+          "observedAt": "2026-10-21T14:24:25.404Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-19",
+          "to": null,
+          "total": 756,
+          "observedAt": "2026-10-21T14:24:30.454Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-21",
+          "to": null,
+          "total": 148,
+          "observedAt": "2026-10-21T14:24:35.414Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-04",
+          "to": "2026-10-19",
+          "total": 2283,
+          "observedAt": "2026-10-21T14:24:43.148Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-18",
+          "to": "2026-10-21",
+          "total": 423,
+          "observedAt": "2026-10-21T14:24:45.382Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-21",
+          "to": "2026-10-21",
+          "total": 32,
+          "observedAt": "2026-10-21T14:24:50.323Z"
+        }
+      ],
+      "job": {
+        "id": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "incremental",
+        "status": "running",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-03",
+        "query_phase": "updates",
+        "page_offset": 1800,
+        "pending_index": 63,
+        "processed": 8871,
+        "updated_at": "2026-10-21T14:24:17.415+00:00"
+      },
+      "sampled": true,
+      "followUpFrom": "2026-10-18",
+      "complete": false,
+      "sampleComplete": true
+    }
+  ],
+  "finishedAt": "2026-10-21T14:24:50.324Z"
+}

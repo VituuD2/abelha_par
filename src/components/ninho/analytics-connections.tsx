@@ -8,6 +8,7 @@ import { ConnectionProgress } from "@/components/analytics/connection-progress";
 import { OlistApiMonitor, useOlistApiUsage } from "./olist-api-monitor";
 import { connectionHealth, type ConnectionHealth } from "@/lib/connection-status";
 import { ConnectionStatus } from "@/components/ui/connection-status";
+import { NinhoSection } from "./ninho-section";
 import type { CoverageJob } from "@/lib/analytics/coverage";
 import type { CostSyncStatus } from "@/lib/analytics/types";
 import {
@@ -286,15 +287,13 @@ export function AnalyticsConnections() {
       setBusy(false);
     }
   };
+  const attention = state?.connections.filter(c => !["connected", "paused"].includes((c.health || connectionHealth(c)).code)).length || 0;
   return (
-    <section className="card p-5 sm:p-7 space-y-5">
-      <div className="flex items-center gap-3">
-        <div className="rounded-xl bg-amber-100 p-3">
-          <Building2 className="w-6 h-6 text-amber-700" />
-        </div>
-        <div className="flex-1">
-          <h2 className="text-lg font-semibold">Conexões da Curva ABC</h2>
-        </div>
+    <NinhoSection title="Conexões da Curva ABC" icon={Building2}
+      status={<span className={`badge ${error || attention ? "badge-pending" : ""}`}>
+        {error ? "Verificar" : !state ? "Verificando…" : attention ? `${attention} ${attention === 1 ? "pendência" : "pendências"}` : `${state.connections.length} contas`}
+      </span>}
+      actions={
         <button
           aria-label="Atualizar conexões analíticas"
           className="btn-ghost"
@@ -302,7 +301,7 @@ export function AnalyticsConnections() {
         >
           <RefreshCw className="w-4 h-4" />
         </button>
-      </div>
+      }>
       {error && (
         <p role="alert" className="text-sm text-red-800">
           {error}
@@ -622,6 +621,6 @@ export function AnalyticsConnections() {
         </form>
 
       </details>
-    </section>
+    </NinhoSection>
   );
 }

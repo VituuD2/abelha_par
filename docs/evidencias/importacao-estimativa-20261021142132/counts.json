@@ -1,0 +1,296 @@
+{
+  "startedAt": "2026-10-21T14:21:32.679Z",
+  "readOnly": true,
+  "today": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "connectionId": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "queries": [],
+      "job": {
+        "id": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "incremental",
+        "status": "retry",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-03",
+        "query_phase": "updates",
+        "page_offset": 1800,
+        "pending_index": 51,
+        "processed": 8859,
+        "updated_at": "2026-10-21T14:14:34.018+00:00"
+      },
+      "error": "Source timeout; no further calls for this account"
+    },
+    {
+      "name": "Olist 2",
+      "connectionId": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "queries": [
+        {
+          "kind": "updates",
+          "from": "2026-10-09",
+          "to": null,
+          "total": 908,
+          "observedAt": "2026-10-21T14:21:50.167Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-10",
+          "to": null,
+          "total": 838,
+          "observedAt": "2026-10-21T14:21:50.594Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-11",
+          "to": null,
+          "total": 794,
+          "observedAt": "2026-10-21T14:21:55.638Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-12",
+          "to": null,
+          "total": 765,
+          "observedAt": "2026-10-21T14:22:08.038Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-13",
+          "to": null,
+          "total": 732,
+          "observedAt": "2026-10-21T14:22:11.811Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-14",
+          "to": null,
+          "total": 668,
+          "observedAt": "2026-10-21T14:22:13.493Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-15",
+          "to": null,
+          "total": 599,
+          "observedAt": "2026-10-21T14:22:18.471Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-16",
+          "to": null,
+          "total": 532,
+          "observedAt": "2026-10-21T14:22:23.515Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-17",
+          "to": null,
+          "total": 431,
+          "observedAt": "2026-10-21T14:22:28.485Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-18",
+          "to": null,
+          "total": 390,
+          "observedAt": "2026-10-21T14:22:33.542Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-19",
+          "to": null,
+          "total": 373,
+          "observedAt": "2026-10-21T14:22:38.534Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-20",
+          "to": null,
+          "total": 225,
+          "observedAt": "2026-10-21T14:22:43.542Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-21",
+          "to": null,
+          "total": 98,
+          "observedAt": "2026-10-21T14:22:48.548Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-10",
+          "to": "2026-10-19",
+          "total": 515,
+          "observedAt": "2026-10-21T14:22:53.503Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-18",
+          "to": "2026-10-21",
+          "total": 211,
+          "observedAt": "2026-10-21T14:22:58.593Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-21",
+          "to": "2026-10-21",
+          "total": 35,
+          "observedAt": "2026-10-21T14:23:03.503Z"
+        }
+      ],
+      "job": {
+        "id": "2c88fc37-6cb3-4cb9-b20d-bd24f389a632",
+        "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+        "mode": "incremental",
+        "status": "retry",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-09",
+        "query_phase": "updates",
+        "page_offset": 800,
+        "pending_index": 69,
+        "processed": 9876,
+        "updated_at": "2026-10-21T14:21:32.827+00:00"
+      },
+      "followUpFrom": "2026-10-18",
+      "complete": true
+    },
+    {
+      "name": "Olist 3",
+      "connectionId": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "queries": [
+        {
+          "kind": "updates",
+          "from": "2026-10-09",
+          "to": null,
+          "total": 1313,
+          "observedAt": "2026-10-21T14:21:38.508Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-10",
+          "to": null,
+          "total": 1233,
+          "observedAt": "2026-10-21T14:21:43.536Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-11",
+          "to": null,
+          "total": 1140,
+          "observedAt": "2026-10-21T14:21:49.633Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-12",
+          "to": null,
+          "total": 1082,
+          "observedAt": "2026-10-21T14:21:53.531Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-13",
+          "to": null,
+          "total": 1032,
+          "observedAt": "2026-10-21T14:21:58.602Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-14",
+          "to": null,
+          "total": 908,
+          "observedAt": "2026-10-21T14:22:03.507Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-15",
+          "to": null,
+          "total": 817,
+          "observedAt": "2026-10-21T14:22:08.517Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-16",
+          "to": null,
+          "total": 712,
+          "observedAt": "2026-10-21T14:22:13.615Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-17",
+          "to": null,
+          "total": 596,
+          "observedAt": "2026-10-21T14:22:18.521Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-18",
+          "to": null,
+          "total": 481,
+          "observedAt": "2026-10-21T14:22:23.530Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-19",
+          "to": null,
+          "total": 422,
+          "observedAt": "2026-10-21T14:22:28.536Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-20",
+          "to": null,
+          "total": 263,
+          "observedAt": "2026-10-21T14:22:33.592Z"
+        },
+        {
+          "kind": "updates",
+          "from": "2026-10-21",
+          "to": null,
+          "total": 91,
+          "observedAt": "2026-10-21T14:22:38.597Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-10",
+          "to": "2026-10-19",
+          "total": 735,
+          "observedAt": "2026-10-21T14:22:43.562Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-18",
+          "to": "2026-10-21",
+          "total": 226,
+          "observedAt": "2026-10-21T14:22:48.526Z"
+        },
+        {
+          "kind": "sales",
+          "from": "2026-10-21",
+          "to": "2026-10-21",
+          "total": 20,
+          "observedAt": "2026-10-21T14:22:53.570Z"
+        }
+      ],
+      "job": {
+        "id": "c85c83f7-97bf-4713-b703-e826709efc7c",
+        "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+        "mode": "incremental",
+        "status": "retry",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-09",
+        "query_phase": "updates",
+        "page_offset": 200,
+        "pending_index": 7,
+        "processed": 13154,
+        "updated_at": "2026-10-21T14:21:32.471+00:00"
+      },
+      "followUpFrom": "2026-10-18",
+      "complete": true
+    }
+  ],
+  "finishedAt": "2026-10-21T14:23:03.504Z"
+}

@@ -1,0 +1,36 @@
+{
+  "startedAt": "2026-10-21T14:22:21.259Z",
+  "readOnly": true,
+  "today": "2026-10-21",
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "connectionId": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "queries": [
+        {
+          "kind": "updates",
+          "from": "2026-10-03",
+          "to": null,
+          "total": 3200,
+          "observedAt": "2026-10-21T14:22:29.365Z"
+        }
+      ],
+      "job": {
+        "id": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+        "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+        "mode": "incremental",
+        "status": "retry",
+        "from_date": "2026-10-01",
+        "to_date": "2026-10-19",
+        "cursor_date": "2026-10-03",
+        "query_phase": "updates",
+        "page_offset": 1800,
+        "pending_index": 51,
+        "processed": 8859,
+        "updated_at": "2026-10-21T14:14:34.018+00:00"
+      },
+      "error": "Source timeout; no further calls for this account"
+    }
+  ],
+  "finishedAt": "2026-10-21T14:22:46.702Z"
+}

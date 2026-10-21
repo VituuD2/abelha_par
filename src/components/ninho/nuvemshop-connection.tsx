@@ -6,6 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import { Cloud } from "lucide-react";
 import { usePreparationStore } from "@/stores/preparation-store";
 import type { ReconciliationConfig } from "@/types";
+import { NinhoSection } from "./ninho-section";
+import { ConnectionStatus } from "@/components/ui/connection-status";
+import { operationalHealth } from "@/lib/connection-status";
 
 export function NuvemshopConnection() {
   const [connected, setConnected] = useState(false);
@@ -36,8 +39,9 @@ export function NuvemshopConnection() {
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao configurar a Nuvemshop."); }
     finally { setBusy(false); }
   }
-  return <section className="card p-6 sm:p-7 space-y-5">
-    <div className="flex items-center gap-3"><div className="rounded-xl p-3 bg-[var(--color-accent-blue)]/10"><Cloud className="w-6 h-6 text-[var(--color-accent-blue)]" /></div><div className="flex-1"><h2 className="text-lg font-semibold">Nuvemshop</h2><p className="text-sm text-[var(--color-text-secondary)]">{checking ? "Verificando conexão…" : connected ? `Loja ${storeId} · compartilhada com a equipe` : "Conecte a loja para consultar pedidos."}</p></div><span className={`badge ${connected ? "badge-checked" : "badge-pending"}`}>{connected ? "Conectada" : "Desconectada"}</span></div>
+  return <NinhoSection title="Nuvemshop" icon={Cloud} iconClassName="bg-[var(--color-accent-blue)]/10 text-[var(--color-accent-blue)]"
+    status={checking ? <span className="badge">Verificando…</span> : <ConnectionStatus health={operationalHealth({ isConnected: connected, status: error && !connected ? "error" : connected ? "valid" : "missing" })} />}>
+    {connected && <p className="text-sm text-[var(--color-text-secondary)]">Loja {storeId}</p>}
     <details open={!checking && !connected}><summary className="cursor-pointer text-sm font-semibold text-[var(--color-accent-blue)]">{connected ? "Alterar conexão" : "Conectar loja"}</summary><form className="grid sm:grid-cols-2 gap-4 mt-4" onSubmit={event => { event.preventDefault(); void save("POST"); }}>
       <label className="text-sm">ID da loja<input required className="field mt-1" inputMode="numeric" pattern="[0-9]+" maxLength={20} value={storeId} disabled={busy} onChange={event => setStoreId(event.target.value)} /></label>
       <label className="text-sm">Token de acesso<input required className="field mt-1" type="password" autoComplete="off" maxLength={4096} value={token} disabled={busy} onChange={event => setToken(event.target.value)} /></label>
@@ -52,5 +56,5 @@ export function NuvemshopConnection() {
     </form>}
     {error && <p role="alert" className="text-sm text-[var(--color-accent-red)]">{error}</p>}
     {notice && <p role="status" className="text-sm text-[var(--color-accent-green)]">{notice}</p>}
-  </section>;
+  </NinhoSection>;
 }

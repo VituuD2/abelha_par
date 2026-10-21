@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-21T14:25:00Z",
+  "timezone": "America/Sao_Paulo",
+  "assumptions": [
+    "Counts frozen at Oct21; new orders and changes increase the work",
+    "Events include repeated processing, not unique missing orders",
+    "Accounts run in parallel",
+    "Olist1 daily totals linearly interpolated from four observations; low confidence",
+    "No queue changes, imports or token refreshes were triggered"
+  ],
+  "accounts": [
+    {
+      "account": "Olist 1",
+      "sampledNotFullyCounted": true,
+      "activeEventsInterpolated": 35796.0,
+      "followupEventsInterpolated": 2719.0,
+      "frozenWorkloadInterpolated": 38515.0,
+      "rateLast32Minutes": 3.428353955004689,
+      "rateLast18Hours": 4.855141793499056,
+      "frozenHoursAtRecentRate": 187.23757088430173,
+      "frozenHoursAt18HourRate": 132.21378364812765
+    },
+    {
+      "account": "Olist 2",
+      "activeEventsAtCount": 6676,
+      "nextCycleEventsThroughOct21": 1297,
+      "frozenWorkload": 7973,
+      "rateLast32Minutes": 3.271090012114566,
+      "rateLast18Hours": 2.7743667391423177,
+      "frozenHoursAtRecentRate": 40.6235636565171,
+      "frozenHoursAt18HourRate": 47.89681604041058
+    },
+    {
+      "account": "Olist 3",
+      "activeEventsAtCount": 10264,
+      "nextCycleEventsThroughOct21": 1483,
+      "frozenWorkload": 11747,
+      "rateLast32Minutes": 3.428353955004689,
+      "rateLast18Hours": 4.761049898276206,
+      "frozenHoursAtRecentRate": 57.10709451325179,
+      "frozenHoursAt18HourRate": 41.12188225631052
+    }
+  ]
+}
