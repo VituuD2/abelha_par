@@ -119,6 +119,7 @@ export function ABCOverview(props: {
                   {ready ? changes.map((entry, i) => <TrendBadge key={i} {...entry} neutral={neutral} />)
                     : <span role={index === 0 ? "status" : undefined} title={message || undefined} className={`inline-flex items-center gap-1.5 text-xs ${secondary}`}><Minus aria-hidden="true" className="h-3 w-3" />{comparison.loading ? "—" : "Comparação indisponível"}</span>}
                 </div>
+                <p className={`text-[11px] ${secondary}`}>vs. período anterior</p>
               </div>
             </div>
           ))}
