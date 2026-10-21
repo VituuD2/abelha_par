@@ -22,7 +22,7 @@ after(async () => { await act(async () => root.unmount()); dom.window.close(); }
 
 const rows = Array.from({ length: 100 }, (_, i) => ({ entityId: 'product-' + i, name: 'Produto ' + i, sku: '000' + i, revenue: '150', quantity: '1', orders: 1, rank: i + 1, class: i < 80 ? 'A' : i < 95 ? 'B' : 'C', percent: 1, cumulativeBefore: i, cumulative: i + 1 }));
 const result = { rows, total: 100, revenue: '15000', quantity: '100', orders: 100, top10: 10, pareto: rows, generatedAt: '2026-10-21T12:00:00Z', classes: { A: { count: 80, revenue: '12000', quantity: '80', percent: 80 }, B: { count: 15, revenue: '2250', quantity: '15', percent: 15 }, C: { count: 5, revenue: '750', quantity: '5', percent: 5 } } };
-const previous = { revenue: '10000', quantity: '125', orders: 80, total: 50, top10: 20, costIncomplete: false };
+const previous = { revenue: '10000', quantity: '125', orders: 80, total: 50, top10: 20 };
 const status = () => ({ companies: [{ id: 'co', name: 'Empresa' }], connections: [{ id: 'c', company_id: 'co', name: 'Olist', enabled: true, verified_at: '2026-01-01' }], sources: [], coverage: [{ connection_id: 'c', mode: 'backfill', status: 'completed', from_date: '2020-01-01', to_date: '2100-01-01' }], jobs: [], options: {} });
 const button = text => [...document.querySelectorAll('button')].find(el => el.textContent === text);
 const click = element => act(async () => element.click());
@@ -36,7 +36,7 @@ function mockRequests(t, options = {}) {
     if (url.endsWith('/comparison')) return options.comparison ? options.comparison(body, init) : Response.json({ period: previousPeriod(body.filters), previous });
     if (url.endsWith('/coverage')) return Response.json({ sync: { scheduled: 0 } });
     if (url.endsWith('/abc')) return Response.json({ ...result, rows: rows.slice(((body.page || 1) - 1) * body.size, (body.page || 1) * body.size) });
-    return Response.json(currentStatus);
+    return options.statusResponse ? options.statusResponse() : Response.json(currentStatus);
   });
   return calls;
 }
@@ -46,6 +46,7 @@ test('integrated panels preserve KPI and class values, real variations, independ
   await render('overview');
   assert.equal(calls.filter(call => call.url.endsWith('/comparison')).length, 1);
   const kpis = panel();
+  assert.doesNotMatch(kpis.textContent, /Período anterior:|mesma duração|Mesmos filtros e critérios/);
   assert.equal(kpis.querySelectorAll('h2').length, 4);
   assert.match(kpis.textContent, /R\$\s*150,00/);
   const badges = [...kpis.querySelectorAll('[data-trend-direction]')];
@@ -82,27 +83,44 @@ test('sorting, paging and local search reuse the previous summary; refreshing an
   assert.equal(last.body.page, undefined);
 });
 
-test('a partial previous period causes no comparison query and cannot display fabricated percentages', async t => {
+test('partial coverage and unfinished or failed syncs still compare available data and preserve scope notices', async t => {
   const to = new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Sao_Paulo' }).format(new Date());
   const from = new Date(Date.parse(to + 'T12:00:00Z') - 29 * 86400000).toISOString().slice(0, 10);
   const partial = status(); partial.coverage[0].from_date = from;
   const calls = mockRequests(t, { status: partial }); await render('partial');
-  assert.equal(calls.filter(call => call.url.endsWith('/comparison')).length, 0);
-  assert.equal(panel().querySelector('[data-trend-direction]'), null);
-  assert.match(panel().textContent, /cobertura do período anterior parcial/);
+  assert.equal(calls.filter(call => call.url.endsWith('/comparison')).length, 1);
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
   assert.equal(document.querySelectorAll('tbody tr').length, 25);
   const missingCurrent = status(); missingCurrent.coverage = [];
+  missingCurrent.connections[0].last_error = 'Sincronização pendente';
+  missingCurrent.jobs = [{ connection_id: 'c', mode: 'backfill', status: 'running', from_date: '2020-01-01', to_date: '2100-01-01' }];
+  missingCurrent.costSync = { connection_id: 'c', page_offset: 100, last_synced_at: null, last_error: 'CMV pendente', history: { pending: 2 } };
   const currentCalls = mockRequests(t, { status: missingCurrent }); await render('missing-current');
-  assert.equal(currentCalls.filter(call => call.url.endsWith('/comparison')).length, 0);
+  assert.equal(currentCalls.filter(call => call.url.endsWith('/comparison')).length, 1);
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
   assert.match(document.body.textContent, /Escopo parcial/);
-  assert.match(panel().textContent, /cobertura do período atual parcial/);
+  await click(button('Produtos base'));
+  assert.equal(currentCalls.filter(call => call.url.endsWith('/comparison')).length, 2);
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
+});
+
+test('comparison reads do not wait for coverage or synchronization status to load', async t => {
+  const pendingStatus = deferred();
+  const calls = mockRequests(t, { statusResponse: async () => { await pendingStatus.promise; return Response.json(status()); } });
+  await render('status-loading');
+  assert.equal(calls.filter(call => call.url.endsWith('/comparison')).length, 1);
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
+  assert.equal(document.querySelectorAll('tbody tr').length, 25);
+  await act(async () => pendingStatus.resolve());
+  assert.equal(calls.filter(call => call.url.endsWith('/comparison')).length, 1);
 });
 
 test('pending comparisons leave current values visible; obsolete success and errors are ignored after filters change', async t => {
   const old = deferred(), next = deferred(); let queries = 0;
   const calls = mockRequests(t, { comparison: () => ++queries === 1 ? old.promise : next.promise });
   await render('race');
-  assert.match(panel().textContent, /Consultando os indicadores anteriores/);
+  assert.match(panel().textContent, /Calculando variação/);
+  assert.match(panel().querySelector('[role="status"]').title, /Consultando os indicadores anteriores/);
   assert.equal(panel().querySelector('[data-trend-direction]'), null);
   await click(button('Clientes'));
   assert.equal(calls.filter(call => call.url.endsWith('/comparison'))[0].signal.aborted, true);
@@ -121,7 +139,7 @@ test('pending comparisons leave current values visible; obsolete success and err
 test('comparison errors are isolated from the report and recover on refresh', async t => {
   let attempt = 0;
   mockRequests(t, { comparison: body => ++attempt === 1 ? Response.json({ error: 'Histórico indisponível' }, { status: 503 }) : Response.json({ period: previousPeriod(body.filters), previous }) });
-  await render('retry'); assert.match(panel().textContent, /Histórico indisponível/);
+  await render('retry'); assert.match(panel().querySelector('[role="status"]').title, /Histórico indisponível/);
   assert.equal(panel().querySelector('[data-trend-direction]'), null);
   assert.match(panel().textContent, /R\$\s*150,00/);
   assert.equal(document.querySelector('[role="alert"]'), null);
@@ -136,8 +154,13 @@ test('zero or missing classes, zero baselines, incomplete allocation and negativ
   assert.equal(document.querySelector('[data-trend-direction]'), null);
   assert.match(panel().textContent, /Sem base anterior/);
   assert.equal(document.querySelector('[aria-label="Sem distribuição proporcional disponível"]').children.length, 0);
-  await renderOverview({ ...result, composition: { unallocatedLines: 1 } });
-  assert.equal(panel().querySelector('[data-trend-direction]'), null); assert.match(panel().textContent, /sem rateio/);
+  await renderOverview({ ...result, composition: { unallocatedLines: 1, costMissingLines: 1 } }, { ...previous, costIncomplete: true });
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
+  assert.match(panel().querySelector('[data-trend-direction]').textContent, /\+50%/);
+  assert.doesNotMatch(panel().textContent, /sem rateio|Período anterior:/);
+  await renderOverview(result, { ...previous, revenue: null });
+  assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 4);
+  assert.match(panel().textContent, /Indisponível/);
   await renderOverview({ ...result, classes: { A: { ...result.classes.A, percent: 105 }, B: { ...result.classes.B, percent: -5 } } });
   assert.match(document.body.textContent, /não representa participações negativas/);
   assert.equal(document.querySelector('[aria-label="Sem distribuição proporcional disponível"]').children.length, 0);

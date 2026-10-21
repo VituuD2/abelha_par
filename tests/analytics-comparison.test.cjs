@@ -1,10 +1,9 @@
 require('./setup.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { previousPeriod, percentageChange, comparisonBlocker, kpiSnapshot } = require('../src/lib/analytics/comparison.ts');
+const { previousPeriod, percentageChange, kpiSnapshot } = require('../src/lib/analytics/comparison.ts');
 
 const filters = { from: '2026-10-01', to: '2026-10-21', metric: 'revenue', grouping: 'product', mode: 'TINY_LEGACY', basis: 'orders', costBasis: 'purchase', thresholdA: 80, thresholdB: 95, selections: { companies: ['co'], connections: ['c'], sources: ['s'], statuses: ['1', '6'], skus: ['001'] } };
-const status = () => ({ companies: [{ id: 'co', name: 'Selecionada' }], connections: [{ id: 'c', company_id: 'co', name: 'Olist', enabled: true, verified_at: '2026-01-01' }], sources: [{ id: 's', connection_id: 'c' }], jobs: [], coverage: [{ connection_id: 'c', mode: 'backfill', status: 'completed', from_date: '2026-09-01', to_date: '2026-10-21' }] });
 
 test('previous period uses the same inclusive duration across months, leap years, year changes and daylight saving', () => {
   for (const [from, to, expected] of [
@@ -43,33 +42,19 @@ test('variations use the actual formula, decimal precision and correct rounding 
   for (const value of ['bad', NaN, Infinity, undefined]) assert.equal(percentageChange(value, 10).kind, 'unavailable');
 });
 
-test('coverage checks both periods and only selected companies/connections/sources without scheduling anything', () => {
-  assert.match(comparisonBlocker(null, filters), /Verificando/);
-  const full = status(); assert.equal(comparisonBlocker(full, filters), null);
-  const previousGap = status(); previousGap.coverage[0].from_date = filters.from;
-  assert.match(comparisonBlocker(previousGap, filters), /anterior parcial/);
-  const currentGap = status(); currentGap.coverage[0].to_date = '2026-10-20';
-  assert.match(comparisonBlocker(currentGap, filters), /atual parcial/);
-  for (const jobStatus of ['queued', 'running', 'retry', 'failed']) {
-    const pending = status(); pending.jobs.push({ connection_id: 'c', from_date: '2026-09-10', to_date: '2026-09-30', status: jobStatus });
-    assert.match(comparisonBlocker(pending, filters), /pendente|parcial/);
+test('snapshot compares the reported aggregates even with incomplete allocation or historical costs', () => {
+  const reported = { revenue: '12345', quantity: '2.125', orders: 4, total: 3, top10: 95.5 };
+  for (const composition of [undefined, { unallocatedLines: 1 }, { costMissingLines: 1 }, { unallocatedLines: 5, costMissingLines: 3 }]) {
+    assert.deepEqual(kpiSnapshot({ ...reported, composition }), reported);
   }
-  const other = status(); other.jobs.push({ connection_id: 'foreign', from_date: '2026-09-01', to_date: '2026-10-21', status: 'running' });
-  other.connections.push({ id: 'foreign', company_id: 'other', last_error: 'Erro', enabled: false });
-  assert.equal(comparisonBlocker(other, filters), null);
-  other.jobs.push({ connection_id: 'c', from_date: '2025-01-01', to_date: '2025-01-02', status: 'running' });
-  assert.equal(comparisonBlocker(other, filters), null);
 });
 
-test('composition comparison treats pending or incomplete costs as unavailable, while completed costs allow comparison', () => {
-  for (const costSync of [{ connection_id: 'c' }, { last_error: 'Falha' }, { last_synced_at: '2026-10-21', page_offset: 100 }, { history: { pending: 2 } }]) {
-    assert.match(comparisonBlocker({ ...status(), costSync }, { ...filters, grouping: 'composition' }), /CMV/);
-    assert.equal(comparisonBlocker({ ...status(), costSync }, filters), null);
-  }
-  assert.equal(comparisonBlocker({ ...status(), costSync: { connection_id: 'c', last_synced_at: '2026-10-21', history: { pending: 0 } } }, { ...filters, grouping: 'composition' }), null);
-  assert.equal(kpiSnapshot({ composition: { unallocatedLines: 1 } }).costIncomplete, true);
-  assert.equal(kpiSnapshot({ composition: { costMissingLines: 1 } }).costIncomplete, true);
-  assert.equal(kpiSnapshot({}).costIncomplete, false);
+test('missing aggregates are not replaced with zeros or used to disable other available metrics', () => {
+  const snapshot = kpiSnapshot({ quantity: '12', orders: 0, total: 0, top10: 0 });
+  assert.equal(snapshot.revenue, undefined);
+  assert.equal(percentageChange(snapshot.revenue, '10').kind, 'unavailable');
+  assert.equal(percentageChange(snapshot.quantity, '6').percent, '100.0');
+  assert.equal(percentageChange(snapshot.orders, 0).kind, 'zero-base');
 });
 
 const access = require('../src/lib/access.ts');
@@ -83,7 +68,7 @@ test('comparison API derives dates on the server, preserves all applied filters 
   t.mock.method(access, 'authorize', async permission => { assert.equal(permission, 'analytics:read'); return { access: trusted }; });
   t.mock.method(server, 'report', async (...args) => {
     calls.push(args);
-    return { revenue: '12345', quantity: '2.125', orders: 4, total: 3, top10: 95.5, rows: [{ secret: 'ranking' }], pareto: [{ secret: 'pareto' }], composition: { unallocatedLines: 0 } };
+    return { revenue: '12345', quantity: '2.125', orders: 4, total: 3, top10: 95.5, rows: [{ secret: 'ranking' }], pareto: [{ secret: 'pareto' }], composition: { unallocatedLines: 2, costMissingLines: 3 } };
   });
   const response = await api.POST(request({ filters, workspaceId: 'forged', userId: 'forged', period: { from: '2000-01-01', to: '2000-01-02' } }));
   assert.equal(response.status, 200); assert.equal(response.headers.get('cache-control'), 'no-store');
@@ -92,7 +77,7 @@ test('comparison API derives dates on the server, preserves all applied filters 
   assert.deepEqual(calls[0].slice(2), [0, 0]);
   const data = await response.json();
   assert.deepEqual(data.period, { from: '2026-09-10', to: '2026-09-30' });
-  assert.deepEqual(data.previous, { revenue: '12345', quantity: '2.125', orders: 4, total: 3, top10: 95.5, costIncomplete: false });
+  assert.deepEqual(data.previous, { revenue: '12345', quantity: '2.125', orders: 4, total: 3, top10: 95.5 });
   assert.equal(data.rows, undefined); assert.equal(data.pareto, undefined);
 });
 

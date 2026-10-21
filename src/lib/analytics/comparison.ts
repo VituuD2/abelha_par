@@ -1,10 +1,8 @@
 import { signedDecimalUnits, unitsDecimal } from "./engine";
-import { reportReliability, type CoverageStatus } from "./reliability";
-import type { ABCFilters, ABCResult, CostSyncStatus } from "./types";
+import type { ABCFilters, ABCResult } from "./types";
 
-export type KPISnapshot = Pick<ABCResult, "revenue" | "quantity" | "orders" | "total" | "top10"> & { costIncomplete: boolean };
+export type KPISnapshot = Pick<ABCResult, "revenue" | "quantity" | "orders" | "total" | "top10">;
 export type KPIComparison = { period: { from: string; to: string }; previous: KPISnapshot };
-export type ComparisonStatus = CoverageStatus & { costSync?: CostSyncStatus | null };
 export type Change =
   | { kind: "change"; direction: "up" | "down" | "flat"; percent: string; tiny: boolean; negativeBase: boolean }
   | { kind: "zero-base" | "unavailable" };
@@ -26,30 +24,7 @@ export function kpiSnapshot(result: ABCResult): KPISnapshot {
   return {
     revenue: result.revenue, quantity: result.quantity, orders: result.orders,
     total: result.total, top10: result.top10,
-    costIncomplete: !!result.composition && !!(result.composition.unallocatedLines || result.composition.costMissingLines),
   };
-}
-
-/** Read existing coverage only; comparison must never schedule imports or call the ERP. */
-export function comparisonBlocker(status: ComparisonStatus | null, filters: ABCFilters): string | null {
-  if (!status) return "Verificando a cobertura dos dois períodos.";
-  let period;
-  try { period = previousPeriod(filters); }
-  catch { return "Período anterior fora do intervalo de datas suportado."; }
-  const current = reportReliability(status, filters);
-  const previous = reportReliability(status, { ...filters, ...period });
-  if (!current.complete) return "Comparação indisponível: cobertura do período atual parcial ou não confirmada.";
-  if (!previous.complete) return "Comparação indisponível: cobertura do período anterior parcial ou não confirmada.";
-  const pending = status.jobs.some(job => job.status !== "completed" &&
-    current.connections.some(connection => connection.id === job.connection_id) &&
-    job.from_date <= filters.to && job.to_date >= period.from);
-  if (pending) return "Comparação pendente: há sincronizações em andamento ou não concluídas nos períodos comparados.";
-  const cost = status.costSync;
-  if (filters.grouping === "composition" && cost &&
-    (cost.last_error || cost.history?.last_error || (cost.history?.pending || 0) > 0 ||
-      (cost.page_offset || 0) > 0 || (cost.connection_id && !cost.last_synced_at)))
-    return "Comparação pendente: a referência de CMV ainda está sendo sincronizada ou está incompleta.";
-  return null;
 }
 
 function decimalText(value: string | number) {

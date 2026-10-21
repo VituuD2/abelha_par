@@ -467,7 +467,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     return () => abort.abort();
   }, [entity, drillRequest, filters, drillScope]);
   const reliability = status ? reportReliability(status, filters) : null;
-  const comparison = useABCComparison(filters, status, refresh, dataRefresh);
+  const comparison = useABCComparison(filters, refresh, dataRefresh);
   const selectedConnections = reliability?.connections || [];
   const incomplete = !reliability?.complete;
   const pendingHistory = status?.jobs.some(job => job.status !== "completed" &&

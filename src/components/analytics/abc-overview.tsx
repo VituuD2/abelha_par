@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDownRight, ArrowUpRight, BarChart3, Donut, Minus, Package, ShoppingCart } from "lucide-react";
-import { kpiSnapshot, percentageChange, previousPeriod, type Change, type KPIComparison } from "@/lib/analytics/comparison";
+import { kpiSnapshot, percentageChange, type Change, type KPIComparison } from "@/lib/analytics/comparison";
 import { money, number, pct } from "@/lib/analytics/format";
 import type { ABCFilters, ABCResult } from "@/lib/analytics/types";
 
@@ -38,31 +38,22 @@ function TrendBadge({ change, label, neutral = false }: { change: Change; label?
   );
 }
 
-function periodLabel(filters: ABCFilters) {
-  try {
-    const period = previousPeriod(filters);
-    const format = (value: string) => value.split("-").reverse().join("/");
-    return `${format(period.from)} a ${format(period.to)}`;
-  } catch { return "não disponível"; }
-}
-
 export function ABCOverview({ result, filters, comparison, loading }: {
   result: ABCResult; filters: ABCFilters; comparison: Comparison; loading: boolean;
 }) {
   const current = kpiSnapshot(result), previous = comparison.data?.previous;
-  const costIncomplete = current.costIncomplete || previous?.costIncomplete;
   const message = loading ? "Atualizando os indicadores do período selecionado."
-    : comparison.message || (costIncomplete ? "Comparação indisponível: há valores sem rateio ou sem CMV histórico em um dos períodos." : null);
+    : comparison.message;
   const ready = !message && !comparison.loading && !!previous;
   const indicators = [
     { label: result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", value: money(result.revenue),
-      Icon: BarChart3, color: "bg-orange-50 text-orange-600", changes: [{ change: percentageChange(current.revenue, previous?.revenue ?? "0") }] },
+      Icon: BarChart3, color: "bg-orange-50 text-orange-600", changes: [{ change: percentageChange(current.revenue, previous?.revenue ?? NaN) }] },
     { label: "Quantidade vendida", value: number(result.quantity), Icon: Package, color: "bg-emerald-50 text-emerald-700",
-      changes: [{ change: percentageChange(current.quantity, previous?.quantity ?? "0") }] },
+      changes: [{ change: percentageChange(current.quantity, previous?.quantity ?? NaN) }] },
     { label: "Pedidos / entidades", value: `${number(result.orders)} / ${number(result.total)}`, Icon: ShoppingCart, color: "bg-blue-50 text-blue-600",
-      changes: [{ label: "Pedidos", change: percentageChange(current.orders, previous?.orders ?? 0) }, { label: "Entidades", change: percentageChange(current.total, previous?.total ?? 0) }] },
+      changes: [{ label: "Pedidos", change: percentageChange(current.orders, previous?.orders ?? NaN) }, { label: "Entidades", change: percentageChange(current.total, previous?.total ?? NaN) }] },
     { label: "Concentração dos 10 primeiros", value: pct(result.top10), Icon: Donut, color: "bg-violet-50 text-violet-600", neutral: true,
-      changes: [{ change: percentageChange(current.top10, previous?.top10 ?? 0) }] },
+      changes: [{ change: percentageChange(current.top10, previous?.top10 ?? NaN) }] },
   ];
   const classKeys = ["A", "B", "C"] as const;
   const distribution = classKeys.map(key => ({ key, ...result.classes?.[key], percent: result.classes?.[key]?.percent ?? 0 }));
@@ -84,16 +75,12 @@ export function ABCOverview({ result, filters, comparison, loading }: {
               <div className="mt-auto space-y-2">
                 <div className="flex min-h-6 flex-wrap items-center gap-1.5">
                   {ready ? changes.map((entry, i) => <TrendBadge key={i} {...entry} neutral={neutral} />)
-                    : <span className={`inline-flex items-center gap-1.5 text-xs ${secondary}`}><Minus aria-hidden="true" className="h-3 w-3" />{loading || comparison.loading ? "Calculando variação…" : "Comparação indisponível"}</span>}
+                    : <span role={index === 0 ? "status" : undefined} title={message || (comparison.loading ? "Consultando os indicadores anteriores…" : undefined)} className={`inline-flex items-center gap-1.5 text-xs ${secondary}`}><Minus aria-hidden="true" className="h-3 w-3" />{loading || comparison.loading ? "Calculando variação…" : "Comparação indisponível"}</span>}
                 </div>
                 <p className={`text-[11px] ${secondary}`}>vs. período anterior</p>
               </div>
             </div>
           ))}
-        </div>
-        <div className={`flex flex-wrap items-center justify-between gap-x-5 gap-y-1 border-t border-[var(--color-border-light)] px-5 py-3 text-[11px] sm:px-6 ${secondary}`}>
-          <span>Período anterior: {periodLabel(filters)} · mesma duração</span>
-          <span role="status">{message || (comparison.loading ? "Consultando os indicadores anteriores…" : "Mesmos filtros e critérios nos dois períodos.")}</span>
         </div>
       </section>
 

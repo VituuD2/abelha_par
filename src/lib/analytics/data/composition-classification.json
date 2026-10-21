@@ -5,6 +5,13 @@
   "decision": "Inferencias de negocio avaliadas em 19/10/2026 a partir de cadastro simples, nome da variacao, quantidade e referencia visual. Sem heuristica global por sufixo.",
   "aliases": [
     {
+      "sku": "SBGF000-K000",
+      "name": "Garrafa De Cobre Puro Indiano Água Ayurveda 900ml Soulbm Grafias - Grafias",
+      "components": [
+        { "sku": "SBGF00G-K001", "name": "Garrafa SoulBM Grafias", "quantity": "1" }
+      ]
+    },
+    {
       "sku": "GOUT00M-K001S",
       "name": "Kit Garrafa Outlet - Grafia out 1un",
       "components": [

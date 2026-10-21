@@ -1,15 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { comparisonBlocker, type ComparisonStatus, type KPIComparison } from "@/lib/analytics/comparison";
+import type { KPIComparison } from "@/lib/analytics/comparison";
 import type { ABCFilters } from "@/lib/analytics/types";
 
-export function useABCComparison(filters: ABCFilters, status: ComparisonStatus | null, refresh: number, dataRefresh: number) {
-  const blocker = useMemo(() => comparisonBlocker(status, filters), [status, filters]);
+export function useABCComparison(filters: ABCFilters, refresh: number, dataRefresh: number) {
   const key = useMemo(() => JSON.stringify({ filters, refresh, dataRefresh }), [filters, refresh, dataRefresh]);
   const [state, setState] = useState<{ key: string; data?: KPIComparison; error?: string } | null>(null);
   useEffect(() => {
-    if (blocker) return;
     const { filters: requestFilters } = JSON.parse(key) as { filters: ABCFilters };
     const abort = new AbortController();
     setState(null);
@@ -26,11 +24,11 @@ export function useABCComparison(filters: ABCFilters, status: ComparisonStatus |
     });
     return () => abort.abort();
     // key includes applied filters and explicit/progress refreshes, never table pagination or sort.
-  }, [key, blocker]);
+  }, [key]);
   const current = state?.key === key ? state : null;
   return {
-    data: blocker ? undefined : current?.data,
-    loading: !blocker && !current,
-    message: blocker || (current?.error ? `Comparação indisponível: ${current.error}` : null),
+    data: current?.data,
+    loading: !current,
+    message: current?.error ? `Comparação indisponível: ${current.error}` : null,
   };
 }
