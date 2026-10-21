@@ -84,7 +84,7 @@ export function Sidebar({ role }: { role: Role | null }) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-1 flex-col gap-1 pb-6">
             {items.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
@@ -94,6 +94,7 @@ export function Sidebar({ role }: { role: Role | null }) {
                   href={item.href}
                   className={cn(
                     "relative flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] text-[15px] font-semibold transition-all duration-200",
+                    item.href === "/ninho" && "mt-auto",
                     isActive
                       ? "text-[var(--color-accent-blue)]"
                       : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-black/[0.03]"
