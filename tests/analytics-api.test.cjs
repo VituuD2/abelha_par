@@ -31,7 +31,7 @@ test("composition report and drilldown use the server catalog and ignore forged 
   assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].target,"HBCOMAX-K001");
   assert.equal(calls[0].args.p_rules.rules["HBCOMAX-K001S"].factor,"1");
   assert.equal(calls[0].args.p_rules.unlinkedRules["HBCOMAX-K001S"],undefined);
-  assert.deepEqual(Object.keys(calls[0].args.p_rules.unlinkedRules).sort(),["2165","CMNV150-K002"]);
+  assert.deepEqual(Object.keys(calls[0].args.p_rules.unlinkedRules).sort(),["2165","ACBF000-K050E","CMNV150-K002","CMNV150-K003"]);
   assert.equal(calls[0].args.p_actor,"trusted-user");
   assert.equal(calls[0].args.p_workspace,compositionCatalog.workspaceIds[0]);
   assert.equal(calls[0].args.p_filters.costBasis,"purchase");

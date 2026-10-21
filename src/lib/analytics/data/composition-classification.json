@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-19.6",
+  "version": "2026-10-21.1",
   "baseSource": "produtos_2026-10-19-14-00-16.xls",
   "baseSourceSha256": "64d7283d0d7e1ddcddeed097659ecbacc12a46752851cb5f8fbf19c71782b74c",
   "decision": "Inferencias de negocio avaliadas em 19/10/2026 a partir de cadastro simples, nome da variacao, quantidade e referencia visual. Sem heuristica global por sufixo.",
@@ -27,6 +27,16 @@
       "allowUnlinked": true,
       "classification": "confirmado_pelo_responsavel",
       "evidence": "Responsável confirmou duas unidades de CMNV150-K001 para este SKU, inclusive nas vendas sem vínculo de catálogo. Identidade original do item preservada para rastreabilidade."
+    },
+    {
+      "sku": "CMNV150-K003",
+      "name": "Kit Nivea Creme 150ml/145g Lata Azul Importada Kit Hidratante Facial - 03 UN. Nivea Creme",
+      "components": [
+        { "sku": "CMNV150-K001", "name": "Nivea Creme 150ml", "quantity": "3" }
+      ],
+      "allowUnlinked": true,
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Responsável confirmou em 21/10/2026: uma unidade deste kit contém três unidades de CMNV150-K001, inclusive nas vendas sem vínculo de catálogo. Valor original e identidade do item preservados para rastreabilidade."
     },
     {
       "sku": "2165",
@@ -65,8 +75,9 @@
       "auxiliaryComponents": [
         "EBBF001-001"
       ],
-      "classification": "inferencia_revisada",
-      "evidence": "50 fitas equivalem a 1 unidade do produto base de 50 fitas; embalagem desconsiderada conforme decisao do responsavel.",
+      "allowUnlinked": true,
+      "classification": "confirmado_pelo_responsavel",
+      "evidence": "Responsável confirmou em 21/10/2026: uma unidade de ACBF000-K050 (pacote de 50 fitas) mais uma embalagem BelezaFIX EBBF001-001, inclusive nas vendas sem vínculo de catálogo. A embalagem permanece desconsiderada na Curva ABC conforme a política existente; valor original e identidade do item preservados para rastreabilidade.",
       "baseSourceRow": 51
     },
     {

@@ -279,7 +279,7 @@ test('CMV weights include component quantities rather than only comparing unit c
 });
 
 test('only explicitly approved unlinked SKUs consolidate, preserving values, filters and source traceability',async()=>{
-  assert.deepEqual(Object.keys(rules.unlinkedRules).sort(),['2165','CMNV150-K002']);
+  assert.deepEqual(Object.keys(rules.unlinkedRules).sort(),['2165','ACBF000-K050E','CMNV150-K002','CMNV150-K003']);
   assert.equal(rules.unlinkedRules['CMNV150-K001'],undefined);
   assert.equal(rules.unlinkedRules['HBCOMAX-K001S'],undefined);
   await fixture([
@@ -308,6 +308,50 @@ test('only explicitly approved unlinked SKUs consolidate, preserving values, fil
     assert.equal(safe.rows.filter(row=>row.entityId.includes(':order:')).length,3);
     assert.equal(safe.revenue,r.revenue);
   });
+});
+
+test('confirmed unlinked Nivea three-pack and packaged tape preserve sale values, base units and traceability in v21',async()=>{
+  // Migrations contain COMMIT; use a separate database so legacy fixtures stay isolated.
+  const confirmationDb=await isolatedDatabase();
+  try{
+    for(const file of ['migration_v14_v15_analytics_complete.sql','migration_v16_analytics_confirmed_unlinked.sql','migration_v18_analytics_olist_costs.sql','migration_v19_analytics_cost_effective_dates.sql','migration_v20_analytics_signed_item_amounts.sql','migration_v21_analytics_zero_signed_costs.sql'])
+      await confirmationDb.exec(readFileSync(`supabase/${file}`,'utf8'));
+    const connection=connections[2];
+    const order=(await confirmationDb.query(`INSERT INTO analytics_orders(workspace_id,company_id,connection_id,source_id,canonical_key,external_id,customer_key,customer_name,sale_date,status,total_cents,fetched_at)
+      VALUES($1,$2,$2,$2,'confirmed-kits','confirmed-kits','customer','Cliente','2026-09-10',1,17849,now()) RETURNING id`,[ws,connection])).rows[0].id;
+    for(const [position,sku,cents]of [[0,'CMNV150-K003',14600],[1,'ACBF000-K050E',3249]]){
+      const product=`order:confirmed-kits:item:${position}`;
+      await confirmationDb.query('INSERT INTO analytics_products(workspace_id,connection_id,external_id,sku,name) VALUES($1,$2,$3,$4,$4)',[ws,connection,product,sku]);
+      await confirmationDb.query('INSERT INTO analytics_items(workspace_id,order_id,position,connection_id,product_id,quantity,unit_price,gross_cents) VALUES($1,$2,$3,$4,$5,1,1,$6)',[ws,order,position,connection,product,cents]);
+    }
+    const approved=compositionRulesForWorkspace(catalog.workspaceIds[0]);
+    const currentReport=async f=>(await confirmationDb.query('SELECT analytics_abc_components_v21($1,$2,$3,$4) result',[ws,ws,JSON.stringify(f),JSON.stringify(approved)])).rows[0].result;
+    const result=await currentReport(companyThree);
+    assert.equal(result.total,2);assert.equal(result.orders,1);
+    assert.equal(result.revenue,'17849');assert.equal(result.composition.originalRevenue,'17849');
+    assert.equal(Number(result.quantity),4);assert.equal(result.composition.unallocatedLines,0);
+    assert.equal(result.composition.pendingTotal,0);
+    assert.ok(result.rows.every(row=>row.entityId==='composition:'+row.sku));
+    const raw=await query(confirmationDb,{...companyThree,grouping:'product'});
+    assert.equal(raw.revenue,result.revenue);
+    assert.deepEqual(raw.rows.map(row=>row.sku).sort(),['ACBF000-K050E','CMNV150-K003']);
+    assert.ok(raw.rows.every(row=>row.entityId.includes(':order:')));
+    for(const [source,target,quantity,revenue]of [
+      ['CMNV150-K003','CMNV150-K001',3,'14600'],
+      ['ACBF000-K050E','ACBF000-K050',1,'3249'],
+    ]){
+      const row=result.rows.find(item=>item.sku===target);
+      assert.equal(Number(row.quantity),quantity);assert.equal(row.revenue,revenue);
+      const selected=await currentReport({...companyThree,selections:{...companyThree.selections,skus:[source]}});
+      assert.equal(selected.total,1);assert.equal(Number(selected.quantity),quantity);assert.equal(selected.revenue,revenue);
+      const detail=(await confirmationDb.query('SELECT analytics_drilldown_components_v21($1,$2,$3,$4,$5) result',[ws,ws,JSON.stringify(companyThree),JSON.stringify(approved),row.entityId])).rows[0].result;
+      assert.equal(detail.sources.length,1);assert.equal(detail.sources[0].sku,source);
+      assert.equal(Number(detail.sources[0].quantity),1);assert.equal(Number(detail.sources[0].baseQuantity),quantity);
+      assert.equal(detail.sources[0].factor,String(quantity));assert.equal(detail.sources[0].revenue,revenue);
+      if(source==='ACBF000-K050E')assert.deepEqual(detail.sources[0].ignoredComponents,['EBBF001-001']);
+    }
+    assert.equal(result.rows.some(row=>row.sku==='EBBF001-001'),false);
+  }finally{await confirmationDb.close();}
 });
 
 test('missing or invalid CMV blocks value classification and preserves quantity analysis with explicit unallocated amounts',async()=>{

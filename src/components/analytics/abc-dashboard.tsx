@@ -96,6 +96,11 @@ const labels = {
   class: "Classe",
 };
 type Column = keyof typeof labels;
+function EntityName({ name }: { name: string }) {
+  return <>{name.split(/(sem v[ií]nculo d[eo] cat[aá]logo)/i).map((part, index) =>
+    index % 2 ? <strong key={index} className="font-bold text-[var(--color-accent-red)]">{part}</strong> : part,
+  )}</>;
+}
 function today() {
   return new Intl.DateTimeFormat("sv-SE", {
     timeZone: "America/Sao_Paulo",
@@ -529,7 +534,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         className="font-medium text-left hover:underline underline-offset-4"
         onClick={event => { event.stopPropagation(); openEntity(row); }}
       >
-        {row.name}
+        <EntityName name={row.name} />
       </button>
     ) : (
       row[column]
@@ -935,7 +940,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             {!!result.composition.ignoredComponentSkus?.length && <p className="text-xs text-stone-600">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
             {!!result.composition.pendingTotal && <details>
               <summary className="cursor-pointer text-sm font-medium text-amber-900">{result.composition.pendingTotal} SKUs sem vínculo confirmado permanecem separados · revisar composição</summary>
-              <ul className="mt-3 space-y-2 text-sm text-stone-600">{result.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-xs font-semibold">{item.sku}</span> · {item.name}<span className="block text-xs text-amber-800">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
+              <ul className="mt-3 space-y-2 text-sm text-stone-600">{result.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-xs font-semibold">{item.sku}</span> · <EntityName name={item.name} /><span className="block text-xs text-amber-800">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
               {result.composition.pendingTotal > result.composition.pending.length && <p className="mt-2 text-xs">Primeiros {result.composition.pending.length} SKUs pendentes; a exportação mantém todos os registros no ranking.</p>}
             </details>}
             </details>
@@ -1132,7 +1137,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       >
         <div className="p-5 sm:p-7 space-y-5">
           <div className="flex justify-between items-center gap-3">
-            <h2 id="abc-detail-title" className="text-lg font-semibold">{entity?.name}</h2>
+            <h2 id="abc-detail-title" className="text-lg font-semibold">{entity && <EntityName name={entity.name} />}</h2>
             <button
               aria-label="Fechar detalhes"
               className="btn-ghost"

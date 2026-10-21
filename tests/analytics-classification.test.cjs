@@ -44,9 +44,23 @@ test('new packaged tape link follows the approved policy and becomes pending if 
   assert.equal(rules.rules['ACBF000-K050E'].target,'ACBF000-K050');
   assert.equal(rules.rules['ACBF000-K050E'].factor,'1');
   assert.deepEqual(rules.rules['ACBF000-K050E'].ignoredComponents,['EBBF001-001']);
+  assert.deepEqual(rules.unlinkedRules['ACBF000-K050E'],rules.rules['ACBF000-K050E']);
   const noExclusion=buildCompositionRules(classification.aliases,catalog.version,[]);
   assert.equal(noExclusion.rules['ACBF000-K050E'],undefined);
   assert.match(noExclusion.pending['ACBF000-K050E'],/auxiliar/);
+  assert.equal(noExclusion.unlinkedRules['ACBF000-K050E'],undefined);
+});
+
+test('owner confirmation maps exactly the Nivea three-pack even for unlinked sales, without authorizing related SKUs',()=>{
+  const approved=compositionRulesForWorkspace(catalog.workspaceIds[0]);
+  assert.equal(classification.version,catalog.version);
+  assert.equal(approved.rules['CMNV150-K003'].target,'CMNV150-K001');
+  assert.equal(approved.rules['CMNV150-K003'].factor,'3');
+  assert.deepEqual(approved.unlinkedRules['CMNV150-K003'],approved.rules['CMNV150-K003']);
+  for(const sku of ['CMNV150-K001','CMNV150-K003S','ACBF000-K050','ACBF000-K050ES'])
+    assert.equal(approved.unlinkedRules[sku],undefined);
+  assert.equal(approved.pending['CMNV150-K003'],undefined);
+  assert.equal(approved.pending['ACBF000-K050E'],undefined);
 });
 
 test('confirmed Corega stock units are tubes; bottle kits use SoulBM bottles and premium scraper',()=>{
