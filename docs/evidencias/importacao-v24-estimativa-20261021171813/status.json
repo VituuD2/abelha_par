@@ -1,0 +1,1472 @@
+{
+  "startedAt": "2026-10-21T17:18:13.366Z",
+  "importDataReadOnly": true,
+  "providerGets": true,
+  "quotaTelemetryRecorded": true,
+  "today": "2026-10-21",
+  "accounts": [
+    {
+      "id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "name": "Olist 1",
+      "enabled": true,
+      "verified_at": "2026-10-21T15:55:08.904+00:00",
+      "last_synced_at": "2026-10-21T17:17:34.114+00:00",
+      "last_processed_at": "2026-10-21T17:18:03.28507+00:00",
+      "last_error": null,
+      "error_code": null,
+      "incremental_through": null,
+      "orders": 9548,
+      "jobs": [
+        {
+          "id": "737e7bf5-3a10-4447-90fa-b989810aa1b7",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-08-01",
+          "to_date": "2026-10-02",
+          "cursor_date": "2026-10-02",
+          "query_phase": "updates",
+          "page_offset": 100,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 6888,
+          "pages": 105,
+          "attempts": 0,
+          "next_at": "2026-10-20T22:38:34.532+00:00",
+          "created_at": "2026-10-03T00:20:29.778008+00:00",
+          "updated_at": "2026-10-20T22:41:11.13+00:00",
+          "last_claimed_at": "2026-10-20T22:41:03.280202+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": false,
+          "scan": null
+        },
+        {
+          "id": "b565c900-e4ad-476e-9347-5ad3e358cf67",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-03",
+          "to_date": "2026-10-06",
+          "cursor_date": "2026-10-06",
+          "query_phase": "sales",
+          "page_offset": 100,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 482,
+          "pages": 7,
+          "attempts": 0,
+          "next_at": "2026-10-19T13:56:04.483+00:00",
+          "created_at": "2026-10-06T16:21:46.653869+00:00",
+          "updated_at": "2026-10-19T13:58:21.175+00:00",
+          "last_claimed_at": "2026-10-19T13:58:02.286619+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "d49d0440-ecd6-47a8-9a53-5c7fcac9c82e",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-07",
+          "to_date": "2026-10-07",
+          "cursor_date": "2026-10-07",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 82,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-07T17:48:35.192+00:00",
+          "created_at": "2026-10-07T17:17:18.60582+00:00",
+          "updated_at": "2026-10-07T17:49:20.269+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "795e4e26-f925-47b4-bcdd-90998370f8ef",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-08",
+          "to_date": "2026-10-08",
+          "cursor_date": "2026-10-08",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 54,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-08T15:49:35.8+00:00",
+          "created_at": "2026-10-08T15:29:48.35399+00:00",
+          "updated_at": "2026-10-08T15:50:04.974+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "33e2af3e-1fd4-4435-86cc-7e371229563c",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "incremental",
+          "status": "queued",
+          "from_date": "2026-10-01",
+          "to_date": "2026-10-19",
+          "cursor_date": "2026-10-05",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": false,
+          "pending_index": 62,
+          "processed": 9364,
+          "pages": 97,
+          "attempts": 0,
+          "next_at": "2026-10-21T17:17:34.937+00:00",
+          "created_at": "2026-10-19T13:57:03.359091+00:00",
+          "updated_at": "2026-10-21T17:17:33.937+00:00",
+          "last_claimed_at": "2026-10-21T17:17:01.573844+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": {
+            "to": "2026-07-29",
+            "days": 7,
+            "from": "2026-07-23",
+            "floor": "2026-07-23",
+            "since": "2026-10-01",
+            "ceiling": "2026-10-21",
+            "version": 2
+          }
+        },
+        {
+          "id": "a4604e6b-14f8-4419-a31e-3bd558877ce5",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-20",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 31,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-20T14:25:35.94+00:00",
+          "created_at": "2026-10-20T14:12:16.379485+00:00",
+          "updated_at": "2026-10-20T14:28:36.135+00:00",
+          "last_claimed_at": "2026-10-20T14:28:02.98524+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "ee9f6b3f-e116-4857-a9c1-467f473977e3",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-07-23",
+          "to_date": "2026-07-31",
+          "cursor_date": "2026-07-31",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 735,
+          "pages": 10,
+          "attempts": 0,
+          "next_at": "2026-10-21T00:00:34.125+00:00",
+          "created_at": "2026-10-20T17:29:20.935683+00:00",
+          "updated_at": "2026-10-21T00:02:16.363+00:00",
+          "last_claimed_at": "2026-10-21T00:02:04.388157+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "132067a7-2ca5-41d3-83c6-8abf1e349932",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-21",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-21",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 29,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-21T13:57:34.815+00:00",
+          "created_at": "2026-10-21T13:50:45.094512+00:00",
+          "updated_at": "2026-10-21T13:59:17.302+00:00",
+          "last_claimed_at": "2026-10-21T13:59:03.280578+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "e9353d26-3175-4143-9f35-06477f7ecba1",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 100,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 173,
+          "pages": 3,
+          "attempts": 0,
+          "next_at": "2026-10-21T16:46:36.235+00:00",
+          "created_at": "2026-10-21T15:46:01.467422+00:00",
+          "updated_at": "2026-10-21T16:49:25.300851+00:00",
+          "last_claimed_at": "2026-10-21T16:49:01.358749+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "ac9f856a-77d0-4f6f-8429-1cbfb5db3643",
+          "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "retry",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-21",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 28,
+          "processed": 28,
+          "pages": 1,
+          "attempts": 1,
+          "next_at": "2026-10-21T17:16:40.913+00:00",
+          "created_at": "2026-10-21T17:00:05.351326+00:00",
+          "updated_at": "2026-10-21T17:16:10.914+00:00",
+          "last_claimed_at": "2026-10-21T17:16:03.958128+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": "A reserva da importação mudou; retomada necessária. [banco: unavailable]",
+          "covers_sales": true,
+          "scan": null
+        }
+      ],
+      "sourceQueries": [],
+      "usage": {
+        "plan": "Domine",
+        "limit": 60,
+        "providerRemaining": 117,
+        "observedAt": "2026-10-21T17:18:08.522946+00:00",
+        "totals": {
+          "requests": 611,
+          "responses": 607,
+          "throttled": 0,
+          "server_errors": 0,
+          "timeouts": 2,
+          "network_errors": 0,
+          "retries": 0,
+          "duration_ms": 184311
+        },
+        "bySource": {
+          "orders": {
+            "requests": 572,
+            "responses": 568,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 2,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 173748
+          },
+          "costs": {
+            "requests": 36,
+            "responses": 36,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 0,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 9639
+          },
+          "identity": {
+            "requests": 3,
+            "responses": 3,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 0,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 924
+          },
+          "operational": {}
+        }
+      },
+      "identityConfirmed": true,
+      "recent": {
+        "at": "2026-10-21T17:18:20.696Z",
+        "creationDate": "2026-10-21",
+        "sourceTotal": 50,
+        "sourceUnique": 50,
+        "complete": true,
+        "nonCancelled": 50,
+        "matchedNonCancelled": 48,
+        "missingNonCancelled": 2,
+        "statusMismatches": 0
+      }
+    },
+    {
+      "id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "name": "Olist 2",
+      "enabled": true,
+      "verified_at": "2026-10-21T17:15:12.558+00:00",
+      "last_synced_at": "2026-10-21T17:17:33.52+00:00",
+      "last_processed_at": "2026-10-21T17:18:09.006998+00:00",
+      "last_error": null,
+      "error_code": null,
+      "incremental_through": null,
+      "orders": 4139,
+      "jobs": [
+        {
+          "id": "1af1f19a-24cf-427e-b4bb-3fb317c051c0",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-08-01",
+          "to_date": "2026-10-02",
+          "cursor_date": "2026-10-02",
+          "query_phase": "updates",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 2834,
+          "pages": 63,
+          "attempts": 0,
+          "next_at": "2026-10-21T09:36:34.247+00:00",
+          "created_at": "2026-10-03T00:20:45.994088+00:00",
+          "updated_at": "2026-10-21T09:38:25.996+00:00",
+          "last_claimed_at": "2026-10-21T09:38:02.172852+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": false,
+          "scan": null
+        },
+        {
+          "id": "3712abb0-f700-4f54-8a9e-f3e6330d5353",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-03",
+          "to_date": "2026-10-06",
+          "cursor_date": "2026-10-06",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 200,
+          "pages": 4,
+          "attempts": 0,
+          "next_at": "2026-10-19T14:49:35.585+00:00",
+          "created_at": "2026-10-06T16:21:46.653869+00:00",
+          "updated_at": "2026-10-19T14:51:19.959+00:00",
+          "last_claimed_at": "2026-10-19T14:51:01.121167+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "a31b6966-09a4-407a-9d1e-038ae0dc0e60",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-07",
+          "to_date": "2026-10-07",
+          "cursor_date": "2026-10-07",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 35,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-07T17:35:34.194+00:00",
+          "created_at": "2026-10-07T17:17:18.60582+00:00",
+          "updated_at": "2026-10-07T17:41:10.258+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "c6357f47-c1aa-4604-a23d-50373ee23692",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-08",
+          "to_date": "2026-10-08",
+          "cursor_date": "2026-10-08",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 16,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-08T15:39:35.169+00:00",
+          "created_at": "2026-10-08T15:29:48.35399+00:00",
+          "updated_at": "2026-10-08T15:42:08.34+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "2c88fc37-6cb3-4cb9-b20d-bd24f389a632",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "incremental",
+          "status": "running",
+          "from_date": "2026-10-01",
+          "to_date": "2026-10-19",
+          "cursor_date": "2026-10-14",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 4,
+          "processed": 10437,
+          "pages": 117,
+          "attempts": 0,
+          "next_at": "2026-10-21T17:14:34.539+00:00",
+          "created_at": "2026-10-19T13:57:02.181868+00:00",
+          "updated_at": "2026-10-21T17:18:18.631+00:00",
+          "last_claimed_at": "2026-10-21T17:18:09.006998+00:00",
+          "lease_until": "2026-10-21T17:19:39.006998+00:00",
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": {
+            "to": "2026-07-29",
+            "days": 7,
+            "from": "2026-07-23",
+            "floor": "2026-07-23",
+            "since": "2026-10-01",
+            "ceiling": "2026-10-21",
+            "version": 2
+          }
+        },
+        {
+          "id": "4d2d9919-c2fe-42b0-b482-5ea19230e61d",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-20",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 25,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-20T14:19:35.686+00:00",
+          "created_at": "2026-10-20T14:12:16.379485+00:00",
+          "updated_at": "2026-10-20T14:21:17.756+00:00",
+          "last_claimed_at": "2026-10-20T14:21:02.384739+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "82cf1dca-cc51-42af-99e0-4fbc315a5b32",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-07-23",
+          "to_date": "2026-07-31",
+          "cursor_date": "2026-07-31",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 612,
+          "pages": 9,
+          "attempts": 0,
+          "next_at": "2026-10-21T00:09:34.221+00:00",
+          "created_at": "2026-10-20T17:29:20.935683+00:00",
+          "updated_at": "2026-10-21T00:12:32.903+00:00",
+          "last_claimed_at": "2026-10-21T00:12:05.189046+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "d56ee7f0-0d88-4a58-9713-717d4b58105f",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-21",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-21",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 32,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-21T14:02:34.473+00:00",
+          "created_at": "2026-10-21T13:50:45.094512+00:00",
+          "updated_at": "2026-10-21T14:04:32.674+00:00",
+          "last_claimed_at": "2026-10-21T14:04:04.446703+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "13151fd9-7712-4d17-9644-3fc49d9efc85",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 116,
+          "pages": 2,
+          "attempts": 0,
+          "next_at": "2026-10-21T16:27:34.012+00:00",
+          "created_at": "2026-10-21T15:46:01.467422+00:00",
+          "updated_at": "2026-10-21T16:29:22.521756+00:00",
+          "last_claimed_at": "2026-10-21T16:29:02.322681+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "e956ff8b-fc9a-481a-9d7c-fc5071cef3c4",
+          "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "queued",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 53,
+          "processed": 102,
+          "pages": 2,
+          "attempts": 0,
+          "next_at": "2026-10-21T17:17:34.333+00:00",
+          "created_at": "2026-10-21T16:40:07.250385+00:00",
+          "updated_at": "2026-10-21T17:17:33.333+00:00",
+          "last_claimed_at": "2026-10-21T17:17:01.573844+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        }
+      ],
+      "sourceQueries": [],
+      "usage": {
+        "plan": "Impulsione",
+        "limit": 36,
+        "providerRemaining": 55,
+        "observedAt": "2026-10-21T17:18:18.561385+00:00",
+        "totals": {
+          "requests": 603,
+          "responses": 595,
+          "throttled": 0,
+          "server_errors": 0,
+          "timeouts": 1,
+          "network_errors": 0,
+          "retries": 0,
+          "duration_ms": 179406
+        },
+        "bySource": {
+          "orders": {
+            "requests": 578,
+            "responses": 571,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 1,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 162008
+          },
+          "costs": {},
+          "identity": {
+            "requests": 4,
+            "responses": 4,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 0,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 923
+          },
+          "operational": {
+            "requests": 21,
+            "responses": 20,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 0,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 16475
+          }
+        }
+      },
+      "identityConfirmed": true,
+      "recent": {
+        "at": "2026-10-21T17:18:22.388Z",
+        "creationDate": "2026-10-21",
+        "sourceTotal": 51,
+        "sourceUnique": 51,
+        "complete": true,
+        "nonCancelled": 46,
+        "matchedNonCancelled": 44,
+        "missingNonCancelled": 2,
+        "statusMismatches": 0
+      }
+    },
+    {
+      "id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "name": "Olist 3",
+      "enabled": true,
+      "verified_at": "2026-10-21T17:15:32.364+00:00",
+      "last_synced_at": "2026-10-21T17:17:32.877+00:00",
+      "last_processed_at": "2026-10-21T17:18:09.006998+00:00",
+      "last_error": null,
+      "error_code": null,
+      "incremental_through": null,
+      "orders": 4596,
+      "jobs": [
+        {
+          "id": "81e609bc-7c08-4bcb-bbdd-c82520a006d4",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-08-01",
+          "to_date": "2026-10-02",
+          "cursor_date": "2026-10-02",
+          "query_phase": "updates",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 3528,
+          "pages": 64,
+          "attempts": 0,
+          "next_at": "2026-10-07T16:25:35.268+00:00",
+          "created_at": "2026-10-03T00:21:07.076102+00:00",
+          "updated_at": "2026-10-07T16:26:24.419+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": false,
+          "scan": null
+        },
+        {
+          "id": "6799cacd-ef03-43e4-afa1-fc93988c0dde",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-03",
+          "to_date": "2026-10-06",
+          "cursor_date": "2026-10-06",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 242,
+          "pages": 4,
+          "attempts": 0,
+          "next_at": "2026-10-19T15:20:35.241+00:00",
+          "created_at": "2026-10-06T16:21:46.653869+00:00",
+          "updated_at": "2026-10-19T15:22:28.96+00:00",
+          "last_claimed_at": "2026-10-19T15:22:02.401335+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "5b654bbe-0cc0-4ad3-8a7f-3b67254eba61",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-07",
+          "to_date": "2026-10-07",
+          "cursor_date": "2026-10-07",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 40,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-07T17:37:36.056+00:00",
+          "created_at": "2026-10-07T17:17:18.60582+00:00",
+          "updated_at": "2026-10-07T17:40:21.2+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "6c64e3fb-8d7e-472d-be65-d72280d13692",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-08",
+          "to_date": "2026-10-08",
+          "cursor_date": "2026-10-08",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 19,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-08T15:38:34.996+00:00",
+          "created_at": "2026-10-08T15:29:48.35399+00:00",
+          "updated_at": "2026-10-08T15:41:05.395+00:00",
+          "last_claimed_at": null,
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "c85c83f7-97bf-4713-b703-e826709efc7c",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "incremental",
+          "status": "running",
+          "from_date": "2026-10-01",
+          "to_date": "2026-10-19",
+          "cursor_date": "2026-10-12",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 33,
+          "processed": 13745,
+          "pages": 146,
+          "attempts": 0,
+          "next_at": "2026-10-21T17:16:34.405+00:00",
+          "created_at": "2026-10-19T13:57:04.379476+00:00",
+          "updated_at": "2026-10-21T17:18:19.19+00:00",
+          "last_claimed_at": "2026-10-21T17:18:09.006998+00:00",
+          "lease_until": "2026-10-21T17:19:39.006998+00:00",
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": {
+            "to": "2026-07-29",
+            "days": 7,
+            "from": "2026-07-23",
+            "floor": "2026-07-23",
+            "since": "2026-10-01",
+            "ceiling": "2026-10-21",
+            "version": 2
+          }
+        },
+        {
+          "id": "55eaa76b-aeab-4a39-b121-725d62659e2b",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-20",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 14,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-20T14:15:34.904+00:00",
+          "created_at": "2026-10-20T14:12:16.379485+00:00",
+          "updated_at": "2026-10-20T14:17:24.153+00:00",
+          "last_claimed_at": "2026-10-20T14:17:01.67232+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "907b0bd9-54ba-4646-a252-d8a58d051be3",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-07-23",
+          "to_date": "2026-07-31",
+          "cursor_date": "2026-07-31",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 229,
+          "pages": 9,
+          "attempts": 0,
+          "next_at": "2026-10-20T19:10:34.234+00:00",
+          "created_at": "2026-10-20T17:29:20.935683+00:00",
+          "updated_at": "2026-10-20T19:12:10.591+00:00",
+          "last_claimed_at": "2026-10-20T19:12:04.764611+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "f43be7e3-167c-4e45-8ff2-e2541c638e85",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "history",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-21",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-21",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 18,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-21T13:55:34.33+00:00",
+          "created_at": "2026-10-21T13:50:45.094512+00:00",
+          "updated_at": "2026-10-21T13:57:10.913+00:00",
+          "last_claimed_at": "2026-10-21T13:57:03.529516+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "2285cbb2-91b0-4284-8194-8b338b80a42d",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 90,
+          "pages": 2,
+          "attempts": 0,
+          "next_at": "2026-10-21T16:20:35.328+00:00",
+          "created_at": "2026-10-21T15:46:01.467422+00:00",
+          "updated_at": "2026-10-21T16:22:09.674333+00:00",
+          "last_claimed_at": "2026-10-21T16:22:05.928731+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "51632f7a-0784-4566-94d8-7f5f544bf264",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "completed",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-20",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 0,
+          "processed": 90,
+          "pages": 2,
+          "attempts": 1,
+          "next_at": "2026-10-21T17:05:48.293+00:00",
+          "created_at": "2026-10-21T16:33:01.352088+00:00",
+          "updated_at": "2026-10-21T17:06:10.509387+00:00",
+          "last_claimed_at": "2026-10-21T17:06:09.551725+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        },
+        {
+          "id": "6b6cfae3-1ac0-4ad0-8e6f-e46b416b9b06",
+          "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+          "lane": "recent",
+          "mode": "backfill",
+          "status": "queued",
+          "from_date": "2026-10-20",
+          "to_date": "2026-10-21",
+          "cursor_date": "2026-10-21",
+          "query_phase": "sales",
+          "page_offset": 0,
+          "page_done": true,
+          "pending_index": 9,
+          "processed": 9,
+          "pages": 1,
+          "attempts": 0,
+          "next_at": "2026-10-21T17:17:33.666+00:00",
+          "created_at": "2026-10-21T17:17:00.501148+00:00",
+          "updated_at": "2026-10-21T17:17:32.666+00:00",
+          "last_claimed_at": "2026-10-21T17:17:01.573844+00:00",
+          "lease_until": null,
+          "error_code": null,
+          "last_error": null,
+          "covers_sales": true,
+          "scan": null
+        }
+      ],
+      "sourceQueries": [],
+      "usage": {
+        "plan": "Impulsione",
+        "limit": 36,
+        "providerRemaining": 54,
+        "observedAt": "2026-10-21T17:18:19.122694+00:00",
+        "totals": {
+          "requests": 565,
+          "responses": 559,
+          "throttled": 0,
+          "server_errors": 0,
+          "timeouts": 0,
+          "network_errors": 0,
+          "retries": 0,
+          "duration_ms": 128886
+        },
+        "bySource": {
+          "orders": {
+            "requests": 562,
+            "responses": 556,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 0,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 127972
+          },
+          "costs": {},
+          "identity": {
+            "requests": 3,
+            "responses": 3,
+            "throttled": 0,
+            "server_errors": 0,
+            "timeouts": 0,
+            "network_errors": 0,
+            "retries": 0,
+            "duration_ms": 914
+          },
+          "operational": {}
+        }
+      },
+      "identityConfirmed": true,
+      "recent": {
+        "at": "2026-10-21T17:18:21.557Z",
+        "creationDate": "2026-10-21",
+        "sourceTotal": 37,
+        "sourceUnique": 37,
+        "complete": true,
+        "nonCancelled": 37,
+        "matchedNonCancelled": 36,
+        "missingNonCancelled": 1,
+        "statusMismatches": 0
+      }
+    }
+  ],
+  "snapshotAt": "2026-10-21T17:18:13.970Z",
+  "cron": [
+    {
+      "requested_at": "2026-10-21T17:18:00.247033+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:17:00.017505+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:16:00.241404+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:15:00.027232+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:14:00.178703+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:13:00.034505+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:12:00.30606+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:11:00.029893+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:10:00.196058+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:09:00.014778+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:08:00.1437+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:07:00.127261+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:06:00.378252+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:05:00.196394+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:04:00.161016+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:03:00.191818+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:02:00.113929+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:01:00.112024+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T17:00:00.199417+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:59:00.145189+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:58:00.341259+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:57:00.190434+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:56:00.267316+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:55:00.52142+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:54:00.334004+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:53:00.098207+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:52:00.287746+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:51:00.033094+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:50:00.199627+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:49:00.091424+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:48:00.278145+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:47:00.122627+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:46:00.233737+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:45:00.091684+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:44:00.238651+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:43:00.564619+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:42:00.195676+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:41:00.089516+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:40:00.152877+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:39:00.154363+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:38:00.235732+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:37:00.051125+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:36:00.208079+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:35:00.108831+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:34:00.208555+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:33:00.237591+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:32:00.047302+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:31:00.015289+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:30:00.345741+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:29:00.015206+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:28:00.179235+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:27:00.042898+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:26:00.268966+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:25:00.017354+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:24:00.639859+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:23:00.016271+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:22:00.215149+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:21:00.014628+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:20:00.143438+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:19:00.014674+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:18:00.186943+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:17:00.014751+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:16:00.227988+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:15:00.035463+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:14:00.115471+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:13:00.204242+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:12:00.019246+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:11:00.016052+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:10:00.05692+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:09:00.016691+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:08:00.040643+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:07:00.055218+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:06:00.051194+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:05:00.016944+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:04:00.096836+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:03:00.022222+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:02:00.239843+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:01:00.132445+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T16:00:00.126532+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:59:00.037742+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:58:00.079827+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:57:00.030948+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:56:00.103909+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:55:00.106441+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:54:00.117227+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:53:00.097257+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:52:00.132155+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:51:00.015413+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:50:00.166722+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:49:00.077185+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:48:00.169678+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:47:00.049182+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:46:00.041131+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:45:00.014743+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:44:00.098704+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:43:00.251247+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:42:00.02325+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:41:00.016087+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:40:00.039004+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:39:00.015289+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:38:00.074386+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:37:00.021805+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:36:00.044376+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:35:00.172336+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:34:00.057353+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:33:00.041484+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:32:00.046966+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:31:00.015316+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:30:00.066074+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:29:00.016173+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:28:00.05158+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:27:00.030154+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:26:00.149117+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:25:00.034309+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:24:00.120954+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:23:00.019946+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:22:00.608269+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:21:00.035358+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:20:00.085158+00:00"
+    },
+    {
+      "requested_at": "2026-10-21T15:19:00.028039+00:00"
+    }
+  ],
+  "coverage": [
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-13",
+      "from_date": "2026-07-23",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-21",
+      "from_date": "2026-10-20",
+      "covers_sales": true,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-21",
+      "from_date": "2026-10-20",
+      "covers_sales": true,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-11",
+      "from_date": "2026-07-23",
+      "covers_sales": true,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-21",
+      "from_date": "2026-10-20",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    },
+    {
+      "mode": "backfill",
+      "status": "completed",
+      "to_date": "2026-10-08",
+      "from_date": "2026-07-23",
+      "covers_sales": true,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44"
+    }
+  ],
+  "finishedAt": "2026-10-21T17:18:22.388Z"
+}

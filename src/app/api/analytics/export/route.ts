@@ -41,23 +41,10 @@ export async function POST(request: Request) {
         throw new Error(
           "Este relatório excede 50 mil entidades. Use CSV para exportar todas.",
         );
-      const XLSX = await import("xlsx"),
-        book = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(
-        book,
-        XLSX.utils.aoa_to_sheet([
-          columns,
-          ...result.rows.map(exportRow),
-        ]),
-        "Curva ABC",
-      );
-      XLSX.utils.book_append_sheet(
-        book,
-        XLSX.utils.aoa_to_sheet(metadata),
-        "Escopo",
-      );
+      const { createABCWorkbook } = await import("@/lib/analytics/export-workbook");
+      const book = createABCWorkbook(filters, result, metadata, columns);
       return new Response(
-        XLSX.write(book, { type: "buffer", bookType: "xlsx" }),
+        new Uint8Array(await book.xlsx.writeBuffer()),
         {
           headers: {
             "Content-Type":

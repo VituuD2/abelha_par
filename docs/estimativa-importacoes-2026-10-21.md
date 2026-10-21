@@ -1,5 +1,7 @@
 # Estimativa de conclusão — 21/10/2026, aproximadamente 11h25 de São Paulo
 
+> Atualização após a implantação: esta projeção do algoritmo anterior foi substituída pela [análise pós-v24, às 14h18](estimativa-importacoes-pos-v24-2026-10-21.md), com novas contagens e conferência por ID. Manter os números abaixo apenas como histórico.
+
 **Atualização às 11h43:** a [auditoria de requisições e IDs](importacoes-requisicoes-gargalos-2026-10-21.md) confirmou forte sobreposição das varreduras. Na janela de criação de 01–21/10, foram encontrados dez pedidos não cancelados ausentes nas três contas, além de divergências de status. Os números abaixo continuam sendo uma projeção do trabalho do algoritmo atual, incluindo suas releituras; não são uma meta de pedidos únicos faltantes. Uma implementação que elimine o desperdício exige nova medição de prazo.
 
 A previsão de planejamento é **6–10 dias para as três contas**, condicionada à recuperação das pausas da Olist 1 e à manutenção do ritmo médio. Olist 2 e 3 têm cenário de **2–3 dias**. A projeção da Olist 1 tem baixa confiança: sua contagem é amostral e houve timeouts e pouco avanço na medição curta. Não é um prazo garantido, nem uma previsão de sincronismo em tempo real.

@@ -1,0 +1,120 @@
+{
+  "baselineAt": "2026-10-21T15:46:31.114Z",
+  "throughAt": "2026-10-21T17:18:13.970Z",
+  "minutes": 91.71426666666666,
+  "assumptions": [
+    "Contagens da fonte congeladas no momento de cada consulta; sem novos pedidos futuros.",
+    "Proje??o usa vaz?o efetiva da fila hist?rica, j? compartilhando execu??o com recentes.",
+    "Faixas de planejamento t?m margem operacional e n?o s?o intervalos estat?sticos ou prazos garantidos."
+  ],
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "storedOrders": 9548,
+      "historyPerMinute": 2.322430388874432,
+      "totalPerMinute": 4.394081909466649,
+      "remainingCurrentJob": 5586,
+      "nextCycleSales": 440,
+      "nextCycleUpdates": 881,
+      "workToCatchUpFrozen": 6907,
+      "currentJobHours": 40.08731561815336,
+      "catchUpHoursFrozen": 49.56732706311946,
+      "planningHours": [
+        48,
+        72
+      ],
+      "historyCursor": "2026-10-05",
+      "todayReconciliation": {
+        "at": "2026-10-21T17:18:20.696Z",
+        "creationDate": "2026-10-21",
+        "sourceTotal": 50,
+        "sourceUnique": 50,
+        "complete": true,
+        "nonCancelled": 50,
+        "matchedNonCancelled": 48,
+        "missingNonCancelled": 2,
+        "statusMismatches": 0
+      },
+      "closedOctober": {
+        "at": "2026-10-21T17:17:00.435Z",
+        "complete": true,
+        "nonCancelled": 2633,
+        "matched": 2633,
+        "missing": 0,
+        "statusMismatches": 75
+      }
+    },
+    {
+      "name": "Olist 2",
+      "storedOrders": 4139,
+      "historyPerMinute": 2.540498969989402,
+      "totalPerMinute": 4.830219071696589,
+      "remainingCurrentJob": 1642,
+      "nextCycleSales": 225,
+      "nextCycleUpdates": 411,
+      "workToCatchUpFrozen": 2278,
+      "currentJobHours": 10.772162079160704,
+      "catchUpHoursFrozen": 14.944570777300905,
+      "planningHours": [
+        18,
+        24
+      ],
+      "historyCursor": "2026-10-14",
+      "todayReconciliation": {
+        "at": "2026-10-21T17:18:22.388Z",
+        "creationDate": "2026-10-21",
+        "sourceTotal": 51,
+        "sourceUnique": 51,
+        "complete": true,
+        "nonCancelled": 46,
+        "matchedNonCancelled": 44,
+        "missingNonCancelled": 2,
+        "statusMismatches": 0
+      },
+      "closedOctober": {
+        "at": "2026-10-21T17:15:28.529Z",
+        "complete": true,
+        "nonCancelled": 965,
+        "matched": 965,
+        "missing": 0,
+        "statusMismatches": 20
+      }
+    },
+    {
+      "name": "Olist 3",
+      "storedOrders": 4596,
+      "historyPerMinute": 2.8894086997733543,
+      "totalPerMinute": 4.862929358863834,
+      "remainingCurrentJob": 2388,
+      "nextCycleSales": 243,
+      "nextCycleUpdates": 515,
+      "workToCatchUpFrozen": 3146,
+      "currentJobHours": 13.77444457861635,
+      "catchUpHoursFrozen": 18.14673477568134,
+      "planningHours": [
+        24,
+        36
+      ],
+      "historyCursor": "2026-10-12",
+      "todayReconciliation": {
+        "at": "2026-10-21T17:18:21.557Z",
+        "creationDate": "2026-10-21",
+        "sourceTotal": 37,
+        "sourceUnique": 37,
+        "complete": true,
+        "nonCancelled": 37,
+        "matchedNonCancelled": 36,
+        "missingNonCancelled": 1,
+        "statusMismatches": 0
+      },
+      "closedOctober": {
+        "at": "2026-10-21T17:15:49.530Z",
+        "complete": true,
+        "nonCancelled": 1274,
+        "matched": 1274,
+        "missing": 0,
+        "statusMismatches": 44
+      }
+    }
+  ]
+}

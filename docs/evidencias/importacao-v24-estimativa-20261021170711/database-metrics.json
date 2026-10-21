@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-21T17:10:27.411Z",
+  "readOnly": true,
+  "milliseconds": 611,
+  "metrics": [
+    {
+      "name": "pgbouncer_pools_server_active_connections",
+      "value": 0
+    },
+    {
+      "name": "pgbouncer_pools_server_active_connections",
+      "value": 0
+    },
+    {
+      "name": "pgbouncer_pools_server_active_connections",
+      "value": 0
+    },
+    {
+      "name": "node_load5",
+      "value": 0.07
+    },
+    {
+      "name": "node_memory_MemTotal_bytes",
+      "value": 456818688
+    },
+    {
+      "name": "node_memory_MemAvailable_bytes",
+      "value": 138305536
+    },
+    {
+      "name": "pgbouncer_pools_client_waiting_connections",
+      "value": 0
+    },
+    {
+      "name": "pgbouncer_pools_client_waiting_connections",
+      "value": 0
+    },
+    {
+      "name": "pgbouncer_pools_client_waiting_connections",
+      "value": 0
+    },
+    {
+      "name": "node_load1",
+      "value": 0.09
+    },
+    {
+      "name": "max_connections_connection_count",
+      "value": 60
+    },
+    {
+      "name": "pg_stat_database_num_backends",
+      "value": 12
+    }
+  ]
+}

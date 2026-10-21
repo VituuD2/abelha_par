@@ -1,0 +1,376 @@
+{
+  "startedAt": "2026-10-21T17:14:31.641Z",
+  "from": "2026-10-01",
+  "to": "2026-10-20",
+  "importDataReadOnly": true,
+  "quotaTelemetryRecorded": true,
+  "accounts": [
+    {
+      "name": "Olist 1",
+      "connectionId": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "pages": [
+        {
+          "offset": 0,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:14:38.473Z"
+        },
+        {
+          "offset": 100,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:14:42.489Z"
+        },
+        {
+          "offset": 200,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:14:47.666Z"
+        },
+        {
+          "offset": 300,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:14:53.302Z"
+        },
+        {
+          "offset": 400,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:14:58.378Z"
+        },
+        {
+          "offset": 500,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:02.603Z"
+        },
+        {
+          "offset": 600,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:07.896Z"
+        },
+        {
+          "offset": 700,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:12.779Z"
+        },
+        {
+          "offset": 800,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:21.955Z"
+        },
+        {
+          "offset": 900,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:24.087Z"
+        },
+        {
+          "offset": 1000,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:28.213Z"
+        },
+        {
+          "offset": 1100,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:32.587Z"
+        },
+        {
+          "offset": 1200,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:38.736Z"
+        },
+        {
+          "offset": 1300,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:42.712Z"
+        },
+        {
+          "offset": 1400,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:47.673Z"
+        },
+        {
+          "offset": 1500,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:15:52.810Z"
+        },
+        {
+          "offset": 1600,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:00.128Z"
+        },
+        {
+          "offset": 1700,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:02.887Z"
+        },
+        {
+          "offset": 1800,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:08.092Z"
+        },
+        {
+          "offset": 1900,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:12.957Z"
+        },
+        {
+          "offset": 2000,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:17.985Z"
+        },
+        {
+          "offset": 2100,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:22.690Z"
+        },
+        {
+          "offset": 2200,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:27.667Z"
+        },
+        {
+          "offset": 2300,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:33.433Z"
+        },
+        {
+          "offset": 2400,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:37.735Z"
+        },
+        {
+          "offset": 2500,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:42.911Z"
+        },
+        {
+          "offset": 2600,
+          "count": 100,
+          "total": 2776,
+          "at": "2026-10-21T17:16:47.822Z"
+        },
+        {
+          "offset": 2700,
+          "count": 76,
+          "total": 2776,
+          "at": "2026-10-21T17:16:53.596Z"
+        }
+      ],
+      "complete": true,
+      "sourceTotal": 2776,
+      "sourceNonCancelled": 2633,
+      "matchedNonCancelled": 2633,
+      "missingNonCancelled": 0,
+      "statusMismatches": 75,
+      "missingCancelled": 122,
+      "finishedAt": "2026-10-21T17:17:00.435Z"
+    },
+    {
+      "name": "Olist 2",
+      "connectionId": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "pages": [
+        {
+          "offset": 0,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:14:38.085Z"
+        },
+        {
+          "offset": 100,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:14:42.894Z"
+        },
+        {
+          "offset": 200,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:14:48.346Z"
+        },
+        {
+          "offset": 300,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:14:52.578Z"
+        },
+        {
+          "offset": 400,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:14:57.634Z"
+        },
+        {
+          "offset": 500,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:15:02.763Z"
+        },
+        {
+          "offset": 600,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:15:08.898Z"
+        },
+        {
+          "offset": 700,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:15:12.762Z"
+        },
+        {
+          "offset": 800,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:15:19.372Z"
+        },
+        {
+          "offset": 900,
+          "count": 100,
+          "total": 1048,
+          "at": "2026-10-21T17:15:22.674Z"
+        },
+        {
+          "offset": 1000,
+          "count": 48,
+          "total": 1048,
+          "at": "2026-10-21T17:15:27.670Z"
+        }
+      ],
+      "complete": true,
+      "sourceTotal": 1048,
+      "sourceNonCancelled": 965,
+      "matchedNonCancelled": 965,
+      "missingNonCancelled": 0,
+      "statusMismatches": 20,
+      "missingCancelled": 80,
+      "finishedAt": "2026-10-21T17:15:28.529Z"
+    },
+    {
+      "name": "Olist 3",
+      "connectionId": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "pages": [
+        {
+          "offset": 0,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:14:38.904Z"
+        },
+        {
+          "offset": 100,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:14:42.941Z"
+        },
+        {
+          "offset": 200,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:14:47.490Z"
+        },
+        {
+          "offset": 300,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:14:52.941Z"
+        },
+        {
+          "offset": 400,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:14:59.900Z"
+        },
+        {
+          "offset": 500,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:02.558Z"
+        },
+        {
+          "offset": 600,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:11.610Z"
+        },
+        {
+          "offset": 700,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:12.608Z"
+        },
+        {
+          "offset": 800,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:17.590Z"
+        },
+        {
+          "offset": 900,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:24.134Z"
+        },
+        {
+          "offset": 1000,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:29.835Z"
+        },
+        {
+          "offset": 1100,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:33.523Z"
+        },
+        {
+          "offset": 1200,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:37.915Z"
+        },
+        {
+          "offset": 1300,
+          "count": 100,
+          "total": 1402,
+          "at": "2026-10-21T17:15:42.819Z"
+        },
+        {
+          "offset": 1400,
+          "count": 2,
+          "total": 1402,
+          "at": "2026-10-21T17:15:47.619Z"
+        }
+      ],
+      "complete": true,
+      "sourceTotal": 1402,
+      "sourceNonCancelled": 1274,
+      "matchedNonCancelled": 1274,
+      "missingNonCancelled": 0,
+      "statusMismatches": 44,
+      "missingCancelled": 107,
+      "finishedAt": "2026-10-21T17:15:49.530Z"
+    }
+  ],
+  "finishedAt": "2026-10-21T17:17:00.435Z"
+}

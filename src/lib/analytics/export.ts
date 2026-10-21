@@ -14,15 +14,17 @@ export const EXPORT_COLUMNS = [
   "Classe",
   "Identidade",
 ];
-export function exportRow(row: ABCRow): (string | number)[] {
-  const cents = BigInt(row.revenue),
+export function exportMoney(revenue: string): string {
+  const cents = BigInt(revenue),
     absolute = cents < BigInt(0) ? -cents : cents;
-  const money = `${cents < BigInt(0) ? "-" : ""}${absolute / BigInt(100)}.${(absolute % BigInt(100)).toString().padStart(2, "0")}`;
+  return `${cents < BigInt(0) ? "-" : ""}${absolute / BigInt(100)}.${(absolute % BigInt(100)).toString().padStart(2, "0")}`;
+}
+export function exportRow(row: ABCRow): (string | number)[] {
   return [
     row.rank,
     row.name,
     row.sku,
-    money,
+    exportMoney(row.revenue),
     row.quantity,
     row.orders,
     row.percent,
