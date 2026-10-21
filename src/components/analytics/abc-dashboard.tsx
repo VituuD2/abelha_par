@@ -28,7 +28,7 @@ import { ParetoChart } from "./pareto-chart";
 import { money, number, pct } from "@/lib/analytics/format";
 import { paretoHighlighted, type ParetoHighlight } from "@/lib/analytics/pareto";
 import { progressVersion } from "@/lib/analytics/progress";
-import { searchTableRows } from "@/lib/analytics/table-view";
+import { revenueDescending, searchTableRows } from "@/lib/analytics/table-view";
 import type {
   ABCFilters,
   ABCResult,
@@ -1190,7 +1190,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 ].map(([title, values]) => (
                   <div className="card p-4" key={String(title)}>
                     <h3 className="font-semibold mb-3">{String(title)}</h3>
-                    {(values as Drill["companies"]).map((v, i) => (
+                    {revenueDescending(values as Drill["companies"]).map((v, i) => (
                       <div
                         key={i}
                         className="flex justify-between gap-3 text-sm py-2 border-t border-[var(--color-border-light)]"

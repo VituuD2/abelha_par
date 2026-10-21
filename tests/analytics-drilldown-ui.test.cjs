@@ -141,3 +141,32 @@ test('closing a pending page aborts its request and a different product never di
   assert.equal(currentPage(), '1');
   await close();
 });
+
+test('only detail summaries order companies and integrations by descending revenue for products and customers', async t => {
+  const summary = {
+    ...data('A', 1),
+    companies: [
+      { name: 'Olist 2', revenue: '9007199254740992', quantity: '1', orders: 1 },
+      { name: 'Olist 1', revenue: '9007199254740993', quantity: '1', orders: 1 },
+      { name: 'Olist 3', revenue: '100', quantity: '1', orders: 1 },
+    ],
+    channels: [
+      { name: 'Canal menor', revenue: '900', quantity: '1', orders: 1 },
+      { name: 'Canal maior', revenue: '10000', quantity: '1', orders: 1 },
+      { name: 'Canal negativo', revenue: '-100', quantity: '1', orders: 1 },
+    ],
+  };
+  mockAPI(t, () => Response.json(summary));
+  await render('revenue-summaries');
+  for (const customer of [false, true]) {
+    if (customer) await click(document.getElementById('abc-tab-customer'));
+    await openProduct('A');
+    const cards = [...modal().querySelectorAll('h3')].map(heading => heading.parentElement);
+    const names = card => [...card.querySelectorAll('div > span:first-child')].map(span => span.textContent);
+    assert.deepEqual(names(cards[0]), ['Olist 1', 'Olist 2', 'Olist 3']);
+    assert.deepEqual(names(cards[1]), ['Canal maior', 'Canal menor', 'Canal negativo']);
+    assert.deepEqual([...modal().querySelectorAll('tbody tr td:first-child')].map(td => td.textContent), summary.orders.map(order => order.number));
+    await close();
+    assert.deepEqual([...document.querySelectorAll('tr[data-abc-entity]')].map(row => row.dataset.abcEntity), ['A', 'B']);
+  }
+});

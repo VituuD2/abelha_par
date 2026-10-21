@@ -11,6 +11,10 @@ function decimalCompare(a: string, b: string) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+export function revenueDescending<T extends { revenue: string }>(rows: readonly T[]): T[] {
+  return [...rows].sort((a, b) => decimalCompare(b.revenue, a.revenue));
+}
+
 export function searchTableRows(rows: readonly ABCRow[], query: string, sort: string, direction: string, customer = false): ABCRow[] {
   const terms = searchable(query.trim()).split(/\s+/).filter(Boolean);
   return rows.filter(row => {
