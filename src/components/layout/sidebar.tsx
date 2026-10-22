@@ -74,7 +74,7 @@ export function Sidebar({ role }: { role: Role | null }) {
                 Abelha Par
               </p>
               <p className="text-[12px] text-[var(--color-text-tertiary)] font-medium">
-                Operação conectada
+                bzzzzzzzzzzzzzzzzzzzz
               </p>
             </div>
           </div>

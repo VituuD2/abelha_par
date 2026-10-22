@@ -1200,7 +1200,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             <X className="w-5 h-5" />
           </button>
         </header>
-        <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto overscroll-contain p-5 sm:p-7">
+        <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto overscroll-contain px-5 pt-5 pb-2 sm:px-7 sm:pt-7">
           {drillError && (
             <p role="alert" className="mb-5 text-red-800">
               {drillError}
