@@ -1187,50 +1187,53 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           setDrillLoading(false);
         }}
         aria-labelledby="abc-detail-title"
-        className="m-0 ml-auto h-dvh max-h-dvh w-full max-w-[960px] border-l border-[var(--color-border-light)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] p-0 backdrop:bg-black/40"
+        className="fixed inset-y-0 right-0 m-0 ml-auto h-dvh max-h-none w-full max-w-none flex-col overflow-hidden border-l border-[var(--color-border-light)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] p-0 open:flex md:w-1/2 backdrop:bg-black/40"
       >
-        <div className="p-5 sm:p-7 space-y-5">
-          <div className="flex justify-between items-center gap-3">
-            <h2 id="abc-detail-title" className="text-lg font-semibold">{entity && <EntityName name={entity.name} />}</h2>
-            <button
-              aria-label="Fechar detalhes"
-              className="btn-ghost"
-              onClick={() => dialog.current?.close()}
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+        <style>{`html:has(dialog[aria-labelledby="abc-detail-title"]:modal), body:has(dialog[aria-labelledby="abc-detail-title"]:modal) { overflow: hidden; overscroll-behavior: none; }`}</style>
+        <header className="flex shrink-0 justify-between items-start gap-3 border-b border-[var(--color-border-light)] px-5 py-4 sm:px-7">
+          <h2 id="abc-detail-title" className="min-w-0 break-words text-lg font-semibold">{entity && <EntityName name={entity.name} />}</h2>
+          <button
+            aria-label="Fechar detalhes"
+            className="btn-ghost shrink-0"
+            onClick={() => dialog.current?.close()}
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </header>
+        <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto overscroll-contain p-5 sm:p-7">
           {drillError && (
-            <p role="alert" className="text-red-800">
+            <p role="alert" className="mb-5 text-red-800">
               {drillError}
             </p>
           )}
-          <LoadingRegion label="Detalhamento dos pedidos" loading={drillLoading} className="min-h-[480px]" skeleton={<RowsSkeleton rows={7} />}>
+          <LoadingRegion label="Detalhamento dos pedidos" loading={drillLoading} preserveHeight={false} className="!overflow-visible [&>[data-loading-placeholder]]:!static [&>[data-loading-content][aria-hidden=true]]:hidden" contentClassName="space-y-5" skeleton={<RowsSkeleton rows={7} />}>
           {drill && (
             <>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid items-start gap-4 sm:grid-cols-2">
                 {[
                   ["Por empresa", drill.companies],
                   ["Por integração / canal", drill.channels],
                 ].map(([title, values]) => (
-                  <div className="card p-4" key={String(title)}>
+                  <div className="card min-w-0 p-4" key={String(title)}>
                     <h3 className="font-semibold mb-3">{String(title)}</h3>
+                    <div className={title === "Por integração / canal" ? "max-h-60 overflow-y-auto overscroll-contain" : undefined}>
                     {revenueDescending(values as Drill["companies"]).map((v, i) => (
                       <div
                         key={i}
                         className="flex justify-between gap-3 text-sm py-2 border-t border-[var(--color-border-light)]"
                       >
-                        <span>{v.name}</span>
+                        <span className="min-w-0 break-words">{v.name}</span>
                         <span className="whitespace-nowrap">
                           {money(v.revenue)}
                         </span>
                       </div>
                     ))}
+                    </div>
                   </div>
                 ))}
               </div>
-              <div className="overflow-x-auto" aria-busy={drillLoading}>
-                <table className="text-sm w-full">
+              <div aria-busy={drillLoading}>
+                <table className="text-sm w-full min-w-[560px]">
                   <thead>
                     <tr>
                       {[
