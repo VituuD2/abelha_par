@@ -31,7 +31,20 @@ export default async function RootLayout({
     } catch { /* The client performs a fresh check if server bootstrap fails. */ }
   }
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(() => {
+          let theme = "system";
+          try {
+            const saved = localStorage.getItem("theme");
+            if (saved === "light" || saved === "dark") theme = saved;
+          } catch { /* Use the system preference when storage is unavailable. */ }
+          document.documentElement.dataset.themePreference = theme;
+          document.documentElement.dataset.theme = theme === "system"
+            ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : theme;
+        })();` }} />
+      </head>
       <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`}>
         <AppShell userId={user?.id || null} initialAccess={initialAccess}>{children}</AppShell>
       </body>

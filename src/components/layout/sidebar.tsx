@@ -11,6 +11,7 @@ import { NectarIcon } from "@/components/layout/nectar-icon";
 import { NECTAR_MODULE } from "@/lib/analytics/config";
 import { can, type Role } from "@/lib/permissions";
 import { APP_VERSION_LABEL } from "@/lib/app-version";
+import { ThemeToggle } from "./theme-toggle";
 
 function BeehiveIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -106,7 +107,8 @@ export function Sidebar({ role }: { role: Role | null }) {
 
           {/* Footer */}
           <div className="mt-auto px-3 pt-4 border-t border-[var(--color-border-light)]">
-            <p className="text-[11px] text-[var(--color-text-tertiary)]">
+            <ThemeToggle />
+            <p className="mt-4 text-[11px] text-[var(--color-text-tertiary)]">
               Abelha Par Logística
             </p>
             <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">
@@ -142,6 +144,9 @@ export function Sidebar({ role }: { role: Role | null }) {
               </Link>
             );
           })}
+        </div>
+        <div className="mx-auto max-w-lg px-3 pb-2">
+          <ThemeToggle />
         </div>
       </nav>
     </>
