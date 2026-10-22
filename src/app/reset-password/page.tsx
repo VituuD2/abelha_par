@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { KeyRound } from "lucide-react";
+import { AuthLayout } from "@/components/layout/auth-layout";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -67,17 +68,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--color-bg-primary)] p-5 sm:p-6">
-      <div className="pointer-events-none absolute -right-56 -top-52 h-[32rem] w-[32rem] rounded-full bg-[var(--color-accent-yellow)]/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-48 h-[24rem] w-[24rem] rounded-full bg-[var(--color-accent-blue)]/10 blur-3xl" />
-      <div className="relative card-elevated w-full max-w-md space-y-5 p-6 sm:p-9">
-        <div className="text-center">
-          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-[var(--color-accent-yellow)] to-[var(--color-accent-blue)] shadow-md">
-            <KeyRound className="h-6 w-6 text-white" />
-          </div>
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.13em] text-[var(--color-accent-blue)]">Abelha Par</p>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Crie uma nova senha</h1>
-        </div>
+    <AuthLayout title="Crie uma nova senha" description="Defina sua nova senha para voltar à colmeia." icon={KeyRound}>
 
         {isLoading ? (
           <p className="text-center text-sm text-[var(--color-text-secondary)]">Validando link de redefinição...</p>
@@ -124,7 +115,6 @@ export default function ResetPasswordPage() {
             </button>
           </form>
         )}
-      </div>
-    </div>
+    </AuthLayout>
   );
 }

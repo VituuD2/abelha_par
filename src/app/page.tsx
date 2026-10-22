@@ -99,15 +99,24 @@ export default function DashboardPage() {
 
   const ready = result && !result.issues.length && result.orders.length === selected.length && selected.length > 0;
   return <>
-    <Header title="Preparar conferência" breadcrumbs={["Abelha Par", "Preparação"]} />
+    <Header title="Preparar conferência" breadcrumbs={["Abelha Par", "Colmeia"]} description="Organize a seleção, cruze os pedidos e libere a bipagem do lote." />
     <ActiveSessions />
+    <ol className="workflow-steps" aria-label="Etapas da conferência">
+      {[
+        { title: "Selecionar pedidos", detail: prep.confirmedAt ? `${prep.confirmedIds.length} pedidos confirmados` : "Defina a seleção na Nuvemshop" },
+        { title: "Conferir na Olist", detail: prep.olistFetchedAt ? "Pedidos carregados para cruzamento" : "Busque os pedidos do mesmo período" },
+        { title: "Iniciar bipagem", detail: ready ? "Informe o responsável para começar" : "Resolva as pendências do cruzamento" },
+      ].map((step, index) => <li key={step.title} className="workflow-step" aria-current={index === (!prep.confirmedAt ? 0 : ready ? 2 : 1) ? "step" : undefined}>
+        <span className="workflow-step-number" aria-hidden="true">{index + 1}</span><div><p className="text-sm font-semibold">{step.title}</p><p className="mt-1 text-xs leading-relaxed text-[var(--color-text-secondary)]">{step.detail}</p></div>
+      </li>)}
+    </ol>
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <section className="card min-w-0 p-5 sm:p-6 flex flex-col gap-4">
         <h2 className="text-xl font-semibold">Pedidos do dia · Nuvemshop</h2>
         <p className="text-[var(--color-text-secondary)]">Marque os pedidos preparados pela equipe. A confirmação define exatamente quais pedidos entram neste lote.</p>
         <strong className="text-3xl">{prep.confirmedAt ? prep.confirmedIds.length : 0} <span className="text-base font-normal">pedidos confirmados</span></strong>
         <p className="text-sm">{prep.confirmedAt ? `Seleção confirmada em ${new Date(prep.confirmedAt).toLocaleString("pt-BR")}.` : "Aguardando seleção e confirmação na aba Pedidos do dia."}</p>
-        <Link href="/orders" className="btn-primary self-start">{prep.confirmedAt ? "Revisar seleção" : "Selecionar pedidos"}</Link>
+        <Link href="/orders" className={`${prep.confirmedAt ? "btn-ghost" : "btn-primary"} self-start`}>{prep.confirmedAt ? "Revisar seleção" : "Selecionar pedidos"}</Link>
       </section>
       <ApiFetchCard onFetch={onFetch} onFetchStart={onFetchStart} onLoadingChange={setFetchingOrders} disabled={busy || starting} />
     </div>

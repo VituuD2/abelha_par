@@ -18,7 +18,7 @@ export function ABCModeTabs({ grouping, onChange }: {
       <div
         role="tablist"
         aria-label="Análises"
-        className="flex w-full max-w-full gap-1 rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-bg-tertiary)] p-1 sm:inline-flex sm:w-auto"
+        className="app-tabs"
       >
         {modes.map((tab, index) => {
           const selected = grouping === tab.value || (tab.value === "product" && grouping === "parent");
@@ -31,7 +31,7 @@ export function ABCModeTabs({ grouping, onChange }: {
               aria-selected={selected}
               aria-controls="abc-analysis-panel"
               tabIndex={selected ? 0 : -1}
-              className={`btn-ghost min-w-0 flex-1 !rounded-xl !px-2 sm:flex-none sm:!px-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700 ${selected ? "!bg-[var(--color-bg-elevated)] !text-amber-900 !shadow-sm" : "!text-[var(--color-text-secondary)]"}`}
+              className="app-tab flex-1 sm:flex-none"
               onClick={() => onChange(tab.value)}
               onKeyDown={event => {
                 if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;

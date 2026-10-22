@@ -43,13 +43,17 @@ export function LoadingRegion({ children, loading, skeleton, error, label, class
   const region = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const placeholder = useRef<HTMLDivElement>(null);
+  const hasSettled = useRef(!loading);
   const [height, setHeight] = useState<number | null>(null);
   const [display, setDisplay] = useState(children);
   if (!loading && display !== children) setDisplay(children);
   const displayedChildren = loading ? display : children;
   const blocked = loading || !!error;
   useLayoutEffect(() => {
-    if (!preserveHeight || !loading || height !== null) return;
+    // The first pending render may contain only an empty hint. Let the first
+    // result establish its real size before locking subsequent refreshes.
+    if (!loading) { hasSettled.current = true; return; }
+    if (!hasSettled.current || !preserveHeight || height !== null) return;
     const measured = region.current?.getBoundingClientRect().height || 0;
     if (measured > 0) setHeight(Math.ceil(measured));
   }, [loading, preserveHeight, height]);

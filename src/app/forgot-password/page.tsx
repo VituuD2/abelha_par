@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { Mail } from "lucide-react";
+import { AuthLayout } from "@/components/layout/auth-layout";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
@@ -30,17 +31,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--color-bg-primary)] p-5 sm:p-6">
-      <div className="pointer-events-none absolute -right-56 -top-52 h-[32rem] w-[32rem] rounded-full bg-[var(--color-accent-yellow)]/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-48 h-[24rem] w-[24rem] rounded-full bg-[var(--color-accent-blue)]/10 blur-3xl" />
-      <div className="relative card-elevated w-full max-w-md space-y-5 p-6 sm:p-9">
-        <div className="text-center">
-          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-[var(--color-accent-yellow)] to-[var(--color-accent-blue)] shadow-md">
-            <Mail className="h-6 w-6 text-white" />
-          </div>
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.13em] text-[var(--color-accent-blue)]">Abelha Par</p>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Redefinir senha</h1>
-        </div>
+    <AuthLayout title="Redefinir senha" description="Receba um link para recuperar o acesso à sua conta." icon={Mail}>
 
         {isSent ? (
           <div className="space-y-5 text-center">
@@ -71,7 +62,6 @@ export default function ForgotPasswordPage() {
             </p>
           </form>
         )}
-      </div>
-    </div>
+    </AuthLayout>
   );
 }

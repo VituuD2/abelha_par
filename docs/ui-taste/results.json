@@ -1,0 +1,356 @@
+[
+  {
+    "passed": true,
+    "route": "/analytics/abc",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "expand/collapse analysis filters",
+      "open/close order detail"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/orders",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "select order"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/history",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "expand history batch"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/scanner",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/ninho",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "connection disclosure",
+      "users tab"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/login",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/forgot-password",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/reset-password",
+    "width": 1536,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/analytics/abc",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "expand/collapse analysis filters",
+      "open/close order detail"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/orders",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "select order"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/history",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "expand history batch"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/scanner",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/ninho",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "connection disclosure",
+      "users tab"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/login",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/forgot-password",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/reset-password",
+    "width": 768,
+    "height": 1024,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/analytics/abc",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "expand/collapse analysis filters",
+      "open/close order detail"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/orders",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "select order"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/history",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "expand history batch"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/scanner",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/ninho",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [
+      "connection disclosure",
+      "users tab"
+    ],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/login",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/forgot-password",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  },
+  {
+    "passed": true,
+    "route": "/reset-password",
+    "width": 390,
+    "height": 844,
+    "horizontalOverflow": false,
+    "mainHeadings": 1,
+    "mutedTextOnPanelContrast": 5.22,
+    "runtimeErrors": [],
+    "controls": [],
+    "font": "Inter from project build"
+  }
+]

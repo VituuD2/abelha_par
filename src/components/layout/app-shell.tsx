@@ -92,13 +92,14 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
   }, [userId]);
   if (isAuthPage) return <main className="min-h-screen">{children}</main>;
   if (accessError) return <main className="min-h-screen flex items-center justify-center p-6"><section className="card p-8 max-w-lg space-y-4"><h1 className="text-xl font-semibold">Acesso à colmeia</h1><p role="alert">{accessError}</p><div className="flex flex-wrap gap-3"><button className="btn-primary" disabled={access.loading} onClick={() => { void monitor.current?.refresh(currentScope.current, { force: true }); }}>{access.loading ? "Verificando…" : "Tentar novamente"}</button><button className="btn-ghost" onClick={async () => { await createClient().auth.signOut(); window.location.assign("/login"); }}>Voltar ao login</button></div></section></main>;
-  if (access.loading || !userId || readyFor !== userId || !allowedPage) return <main className="p-10 text-center">Preparando sua sessão…</main>;
+  if (access.loading || !userId || readyFor !== userId || !allowedPage) return <main className="min-h-screen flex items-center justify-center p-6"><div role="status" className="w-full max-w-sm space-y-5"><div className="h-10 w-10 rounded-xl bg-[var(--color-bg-tertiary)]" /><p className="font-medium">Preparando sua sessão…</p><div aria-hidden="true" className="space-y-3"><div className="skeleton h-3 w-full" /><div className="skeleton h-3 w-2/3" /></div></div></main>;
 
   return (
     <AppAccessContext.Provider value={{ can: permission => can(access.role, permission) }}><div className="min-h-screen w-full">
+      <a href="#app-main" className="skip-link">Ir para o conteúdo</a>
       <Sidebar role={access.role} />
-      <main className="w-full lg:!pl-[260px] pb-24 lg:pb-0 min-h-screen flex flex-col">
-        <div className="w-full min-w-0 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">{children}</div>
+      <main id="app-main" tabIndex={-1} className="app-main w-full min-h-screen flex flex-col">
+        <div className="app-content">{children}</div>
       </main>
     </div></AppAccessContext.Provider>
   );

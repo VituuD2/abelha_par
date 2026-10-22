@@ -67,8 +67,8 @@ export default function ScannerPage() {
     return (
       <>
         <Header
-          title="Scanner"
-          breadcrumbs={["Scanner Checkout", "Scanner"]}
+          title="Inspeção"
+          breadcrumbs={["Abelha Par", "Inspeção"]}
         />
         <div className="flex items-center justify-center h-[50vh]">
           <div className="text-center">
@@ -88,6 +88,7 @@ export default function ScannerPage() {
       <Header
         title="Bipagem"
         breadcrumbs={["Abelha Par", "Bipagem"]}
+        description="Confira os códigos de rastreio para concluir o lote com segurança."
       />
 
       {/* Hidden Input for Scanner */}
@@ -111,7 +112,7 @@ export default function ScannerPage() {
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--color-accent-blue)] to-[var(--color-accent-green)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-accent-blue)] flex items-center justify-center">
               <ScanBarcode className="w-5 h-5 text-white" />
             </div>
             <div>

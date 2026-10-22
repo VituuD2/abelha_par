@@ -147,7 +147,9 @@ async function verify(){
 verify().then(result=>document.body.append(document.createComment('LAYOUT_RESULT:'+JSON.stringify(result)))).catch(error=>document.body.append(document.createComment('LAYOUT_RESULT:'+JSON.stringify({passed:false,error:error.stack}))));
 `;
 
-(async () => {
+module.exports = { launchBrowser };
+
+if (require.main === module) (async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'abelha-loading-layout-'));
   const chrome = process.env.CHROME_PATH || [
     'C:/Program Files/Google/Chrome/Application/chrome.exe',

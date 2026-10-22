@@ -63,7 +63,7 @@ export function NinhoSettings() {
   const health = olist ? olist.health || operationalHealth(olist) : null;
   return <div className="space-y-6">
 
-    <div className="flex w-full max-w-full gap-1 rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-bg-tertiary)] p-1 sm:inline-flex sm:w-auto" role="tablist" aria-label="Configurações do Ninho"
+    <div className="app-tabs" role="tablist" aria-label="Configurações do Ninho"
       onKeyDown={event => {
         if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
         event.preventDefault();
@@ -71,10 +71,10 @@ export function NinhoSettings() {
         setTab(next); document.getElementById(`${next}-tab`)?.focus();
       }}>
       <button role="tab" tabIndex={tab === "connections" ? 0 : -1} aria-selected={tab === "connections"} aria-controls="ninho-connections" id="connections-tab"
-        className={`btn-ghost min-w-0 flex-1 !rounded-xl !px-3 sm:flex-none sm:!px-5 ${tab === "connections" ? "!bg-[var(--color-bg-elevated)] !text-amber-900 !shadow-sm" : "!text-[var(--color-text-secondary)]"}`}
+        className="app-tab flex-1 sm:flex-none"
         onClick={() => setTab("connections")}><Link2 aria-hidden="true" className="w-4 h-4 shrink-0" />Conexões</button>
       <button role="tab" tabIndex={tab === "users" ? 0 : -1} aria-selected={tab === "users"} aria-controls="ninho-users" id="users-tab"
-        className={`btn-ghost min-w-0 flex-1 !rounded-xl !px-3 sm:flex-none sm:!px-5 ${tab === "users" ? "!bg-[var(--color-bg-elevated)] !text-amber-900 !shadow-sm" : "!text-[var(--color-text-secondary)]"}`}
+        className="app-tab flex-1 sm:flex-none"
         onClick={() => setTab("users")}><Users aria-hidden="true" className="w-4 h-4 shrink-0" />Usuários e permissões</button>
     </div>
     {error && <p role="alert" className="card p-4 text-[var(--color-accent-red)]">{error}</p>}

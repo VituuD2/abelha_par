@@ -177,7 +177,7 @@ export function BatchTable({ batches, searching = false }: BatchTableProps) {
                   </p>
                   <span className="badge badge-checked">Completo ✓</span>
                 </div>
-                <div className="flex items-center gap-3 mt-0.5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">
                   <span className="flex items-center gap-1 text-[12px] text-[var(--color-text-tertiary)]">
                     <Calendar className="w-3 h-3" />
                     {formattedDate}
@@ -232,10 +232,10 @@ export function BatchTable({ batches, searching = false }: BatchTableProps) {
                             </span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[13px] font-medium text-[var(--color-text-primary)] truncate">
+                            <p className="text-[13px] font-medium text-[var(--color-text-primary)] break-words">
                               {order.clientName}
                             </p>
-                            <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono">
+                            <p className="text-[11px] text-[var(--color-text-tertiary)] font-mono break-all">
                               {displayTrackingCode(order.trackingCode)}
                             </p>
                             {formatOrderDate(order.dataCriacao) && (

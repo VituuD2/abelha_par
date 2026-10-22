@@ -104,7 +104,7 @@ export default function OrdersPage() {
     finally { if (!controller.signal.aborted) setBusy(false); }
   };
   return <>
-    <Header title="Pedidos Nuvemshop" breadcrumbs={["Abelha Par", "Pedidos Nuvemshop"]} />
+    <Header title="Pedidos Nuvemshop" breadcrumbs={["Abelha Par", "Pedidos do dia"]} description="Selecione os pedidos preparados pela equipe e confirme o próximo lote." />
     {!checkingConnection && !connected && <section className="card p-5 mb-5"><p>A conexão Nuvemshop precisa estar disponível para buscar os pedidos.</p>{can("ninho:access") ? <Link href="/ninho" className="btn-ghost mt-2">Configurar no Ninho</Link> : <p className="text-sm mt-2 text-[var(--color-text-secondary)]">Peça ao administrador para revisar a conexão no Ninho.</p>}</section>}
     <section className="card p-5 sm:p-6 mb-5">
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
@@ -145,7 +145,7 @@ export default function OrdersPage() {
       </tbody></table></div>
       <div className="p-4 flex items-center justify-between border-t border-[var(--color-border-light)] text-sm"><button className="btn-ghost" disabled={currentPage === 1} onClick={() => { setPage(currentPage - 1); anchor.current = null; }}>Anterior</button><span>Página {currentPage} de {pages}</span><button className="btn-ghost" disabled={currentPage === pages} onClick={() => { setPage(currentPage + 1); anchor.current = null; }}>Próxima</button></div>
     </LoadingRegion>
-    <div className="sticky bottom-20 lg:bottom-4 z-20 card-elevated mt-5 p-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="sticky bottom-[calc(88px+env(safe-area-inset-bottom,0px))] lg:bottom-4 z-20 card-elevated mt-5 p-4 flex flex-wrap items-center justify-between gap-3">
       <div><p className="font-semibold">{selectedIds.length} pedidos para conferir</p><p className="text-xs text-[var(--color-text-secondary)]">{confirmedAt ? "Seleção confirmada. Você pode continuar para o cruzamento." : "A confirmação substitui a lista usada pela antiga planilha."}</p></div>
       <button className="btn-success" disabled={!connected || busy || Boolean(error) || !selectedIds.length || selectedIds.length > 1000} onClick={() => { usePreparationStore.getState().confirmSelection(); router.push("/"); }}><Check className="w-4 h-4" />Confirmar seleção<ArrowRight className="w-4 h-4" /></button>
     </div>

@@ -94,7 +94,7 @@ const OrderRow = memo(function OrderRow({ order }: { order: ScanOrder }) {
       <div className="flex-1 min-w-0">
         <p
           className={cn(
-            "text-[14px] font-medium truncate",
+            "text-[14px] font-medium break-words",
             isMissingTracking
               ? "text-[var(--color-accent-red)]"
               : order.status === "checked"
@@ -104,7 +104,7 @@ const OrderRow = memo(function OrderRow({ order }: { order: ScanOrder }) {
         >
           {order.clientName}
         </p>
-        <div className="flex items-center gap-2 mt-0.5">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
           {isMissingTracking && (
             <>
               <p className="text-[11px] font-semibold text-[var(--color-accent-red)]">

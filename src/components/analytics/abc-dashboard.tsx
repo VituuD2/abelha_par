@@ -572,7 +572,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     ) : column === "class" ? (
       <span
         className={`px-2.5 py-1 rounded-full font-semibold ${row.class === "A" ? "bg-amber-100 text-amber-900" : row.class === "B" ? "bg-yellow-100 text-yellow-900" : "bg-stone-100 text-stone-600"}`}
-      >{row.class}
+      ><span className="sr-only">Classe </span>{row.class}
       </span>
     ) : column === "name" ? (
       <button
@@ -586,8 +586,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     );
   return (
     <div className="w-full min-w-0 space-y-6 pb-6">
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 [&>header]:mb-0">
-        <Header title="Curva ABC" breadcrumbs={["Abelha Par", "Curva ABC"]} />
+      <div className="analysis-toolbar flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+        <Header title="Curva ABC" breadcrumbs={["Abelha Par", "Néctar"]} description="Entenda o que concentra suas vendas." />
         <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto">
           <div className="w-full text-xs text-[var(--color-text-secondary)] sm:mr-2 sm:w-auto">
             {result ? <>Atualizado <time dateTime={result.generatedAt}>{new Date(result.generatedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</time></> : "Aguardando dados"}

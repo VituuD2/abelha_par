@@ -60,7 +60,9 @@ test('resizing the viewport permits responsive reflow, and another refresh reser
   t.mock.method(dom.window.HTMLElement.prototype, 'getBoundingClientRect', () => ({ width, height }));
   const render = loading => act(async () => root.render(React.createElement(LoadingRegion, { key: 'responsive', loading, label: 'Responsive result' }, 'Data')));
   await render(true); const region = document.querySelector('[data-loading-region]');
-  assert.equal(region.style.height, '200px');
+  assert.equal(region.style.height, '', 'the initial hint must not constrain the first result');
+  await render(false);
+  await render(true); assert.equal(region.style.height, '200px');
   await render(false);
   width = 390; height = 480;
   await act(async () => window.dispatchEvent(new dom.window.Event('resize')));

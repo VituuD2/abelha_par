@@ -67,6 +67,7 @@ export default function HistoryPage() {
       <Header
         title="Favos de Mel"
         breadcrumbs={["Abelha Par", "Favos de Mel"]}
+        description="Consulte os lotes finalizados e encontre pedidos já conferidos."
       />
 
       {/* Refresh Button */}
@@ -118,6 +119,7 @@ export default function HistoryPage() {
           </div>
           <button type="submit" className="btn-primary">Buscar</button>
         </div>
+        <p id="history-search-hint" className="text-xs text-[var(--color-text-secondary)]">Busque por número do pedido, cliente ou código de rastreio em todos os lotes.</p>
       </form>
 
       {/* Content */}

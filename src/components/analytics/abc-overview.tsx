@@ -89,12 +89,12 @@ export function ABCOverview(props: {
   const range = comparisonRange(filters);
   const indicators = [
     { label: result.composition ? "Valor atribuído aos produtos" : "Valor bruto dos itens", values: [{ value: money(result.revenue), raw: result.revenue }],
-      Icon: BarChart3, color: "bg-orange-50 text-orange-600", changes: [{ change: percentageChange(current.revenue, previous?.revenue ?? NaN) }] },
-    { label: "Quantidade vendida", values: [{ value: number(result.quantity), raw: result.quantity }], Icon: Package, color: "bg-emerald-50 text-emerald-700",
+      Icon: BarChart3, changes: [{ change: percentageChange(current.revenue, previous?.revenue ?? NaN) }] },
+    { label: "Quantidade vendida", values: [{ value: number(result.quantity), raw: result.quantity }], Icon: Package,
       changes: [{ change: percentageChange(current.quantity, previous?.quantity ?? NaN) }] },
-    { label: "Pedidos / entidades", values: [{ value: number(result.orders), raw: result.orders }, { value: number(result.total), raw: result.total }], Icon: ShoppingCart, color: "bg-blue-50 text-blue-600",
+    { label: "Pedidos / entidades", values: [{ value: number(result.orders), raw: result.orders }, { value: number(result.total), raw: result.total }], Icon: ShoppingCart,
       changes: [{ label: "Pedidos", change: percentageChange(current.orders, previous?.orders ?? NaN) }, { label: "Entidades", change: percentageChange(current.total, previous?.total ?? NaN) }] },
-    { label: "Concentração dos 10 primeiros", values: [{ value: pct(result.top10), raw: result.top10 }], Icon: Donut, color: "bg-violet-50 text-violet-600", neutral: true,
+    { label: "Concentração dos 10 primeiros", values: [{ value: pct(result.top10), raw: result.top10 }], Icon: Donut, neutral: true,
       changes: [{ change: percentageChange(current.top10, previous?.top10 ?? NaN) }] },
   ];
   const classKeys = ["A", "B", "C"] as const;
@@ -107,10 +107,10 @@ export function ABCOverview(props: {
     <>
       <LoadingRegion as="section" className={panel} label="Indicadores do período" loading={props.skeleton ?? props.loading} error={props.error} skeleton={<div className="grid h-full grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">{[0, 1, 2, 3].map(index => <div key={index} className="flex min-h-0 flex-col gap-4 px-5 py-6 sm:px-6"><div className="flex items-center gap-3"><Skeleton className="h-10 w-10 shrink-0 rounded-xl" /><Skeleton className="h-4 w-2/3" /></div><Skeleton className="h-7 w-3/4 shrink-0" /><div className="mt-auto space-y-2"><Skeleton className="h-6 w-1/2" /><Skeleton className="h-3 w-1/3" /></div></div>)}</div>}>
         <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-          {indicators.map(({ label, values, Icon, color, changes, neutral }, index) => (
+          {indicators.map(({ label, values, Icon, changes, neutral }, index) => (
             <div key={index} className={`flex min-w-0 flex-col gap-4 border-[var(--color-border-light)] px-5 py-6 sm:px-6 ${index ? "border-t xl:border-t-0 xl:border-l" : ""} ${index === 1 ? "sm:border-t-0" : ""} ${index % 2 ? "sm:border-l" : ""}`}>
               <div className="flex min-w-0 items-center gap-3">
-                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${color}`}><Icon aria-hidden="true" className="h-[19px] w-[19px]" strokeWidth={1.7} /></span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]"><Icon aria-hidden="true" className="h-[19px] w-[19px]" strokeWidth={1.7} /></span>
                 <h2 className={`text-[13px] font-medium leading-5 ${secondary}`} title={index === 2 ? "Pedidos distintos / produtos ou clientes no relatório." : index === 3 ? "Participação dos dez primeiros na métrica aplicada." : undefined}>{label}</h2>
               </div>
               <p data-kpi-value className="text-[clamp(1.375rem,2vw,1.875rem)] font-semibold leading-tight tracking-tight tabular-nums [overflow-wrap:anywhere]">{values.map((value, i) => <span key={i}>{i > 0 && " / "}<AnimatedNumber {...value} /></span>)}</p>
@@ -134,7 +134,7 @@ export function ABCOverview(props: {
             <p className={`text-xs ${secondary}`}>Participação por {metric}</p>
           </div>
           <div role="img" aria-label={validDistribution ? distribution.map(entry => `Classe ${entry.key}: ${pct(entry.percent)}`).join("; ") : "Sem distribuição proporcional disponível"}
-            className="mt-4 flex h-2 w-full overflow-hidden rounded-full bg-[var(--color-bg-tertiary)]">
+            className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-[var(--color-bg-tertiary)]">
             {validDistribution && distribution.map(entry => entry.percent > 0 && <span key={entry.key} className={`h-full ${colors[entry.key].bar}`} style={{ width: `${entry.percent / totalShare * 100}%` }} />)}
           </div>
           {!validDistribution && <p className={`mt-2 text-xs ${secondary}`}>{totalShare === 0 ? "Sem participação nesta métrica." : "A barra não representa participações negativas ou inválidas."}</p>}
@@ -145,7 +145,7 @@ export function ABCOverview(props: {
             return (
               <div key={key} className={`min-w-0 space-y-4 border-[var(--color-border-light)] px-5 py-5 sm:px-6 ${index ? "border-t sm:border-t-0 sm:border-l" : ""}`}>
                 <div className="flex items-center gap-3">
-                  <span aria-hidden="true" className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl font-semibold ${color.icon}`}>{key}</span>
+                  <span aria-hidden="true" className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-base font-semibold ${color.icon}`}>{key}</span>
                   <div className="min-w-0"><h3 className="text-[13px] font-semibold">Classe {key}</h3><p className={`mt-0.5 text-xs tabular-nums [overflow-wrap:anywhere] ${secondary}`}>{number(entry?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</p></div>
                 </div>
                 <p className="text-xl font-semibold leading-tight tracking-tight tabular-nums [overflow-wrap:anywhere]">{money(entry?.revenue || "0")}</p>
