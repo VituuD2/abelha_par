@@ -572,8 +572,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     ) : column === "class" ? (
       <span
         className={`px-2.5 py-1 rounded-full font-semibold ${row.class === "A" ? "bg-amber-100 text-amber-900" : row.class === "B" ? "bg-yellow-100 text-yellow-900" : "bg-stone-100 text-stone-600"}`}
-      >
-        Classe {row.class}
+      >{row.class}
       </span>
     ) : column === "name" ? (
       <button
