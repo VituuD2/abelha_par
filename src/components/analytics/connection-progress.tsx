@@ -21,10 +21,10 @@ export function ConnectionProgress({ connection, jobs, coverage, compact = false
     : job.status === "retry" ? "Retomada programada" : job.status === "queued" ? "Na fila"
     : job.status === "running" ? "Importando" : job.status === "completed" ? "Concluída" : "Aguardando";
   const active = pending.find(j => j.status === "failed") || pending.find(j => j.status === "running") || pending[0];
-  if (compact) return <div className="space-y-2 text-xs" aria-live="polite">
+  if (compact) return <div className="space-y-2 text-[13px]" aria-live="polite">
     <div className="flex items-center justify-between gap-2 rounded-lg bg-[var(--color-bg-secondary)] px-3 py-2">
       <span className="text-[var(--color-text-secondary)]">Importação</span>
-      <span className={`font-medium ${active?.status === "failed" ? "text-amber-900" : ""}`}>{!enabled ? "Pausada" : active ? label(active) : spans.length ? "Sem fila pendente" : "Aguardando"}</span>
+      <span className={`font-medium ${active?.status === "failed" ? "text-[var(--color-abc-range-ink)]" : ""}`}>{!enabled ? "Pausada" : active ? label(active) : spans.length ? "Sem fila pendente" : "Aguardando"}</span>
     </div>
     <details>
       <summary className="cursor-pointer font-medium">Histórico e progresso{gaps ? " · cobertura parcial" : ""}</summary>
@@ -35,14 +35,14 @@ export function ConnectionProgress({ connection, jobs, coverage, compact = false
           <p>{date(job.from_date)} a {date(job.to_date)} · {(job.processed || 0).toLocaleString("pt-BR")} eventos processados</p>
           {job.cursor_date && <p className="text-[var(--color-text-secondary)]">Dia {date(job.cursor_date)}{job.page_offset !== undefined && ` · posição ${job.page_offset + (job.pending_index || 0)}`}</p>}
           {job.status === "retry" && job.next_at && <p>Nova tentativa a partir de {new Date(job.next_at).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" })}</p>}
-          {job.last_error && <p className="text-amber-900">{job.last_error}</p>}
+          {job.last_error && <p className="text-[var(--color-abc-range-ink)]">{job.last_error}</p>}
           {enabled && job.status === "failed" && !job.error_code && job.id && onRetry && <button className="btn-ghost" disabled={busy} onClick={() => onRetry(job.id!)}>Tentar novamente</button>}
         </div>)}
       </div>
     </details>
   </div>;
   return (
-    <div className="text-xs space-y-1" aria-live="polite">
+    <div className="text-[13px] space-y-1" aria-live="polite">
       <p>Cobertura confirmada: {spans.length
         ? spans.map((s) => `${date(s.from_date)} a ${date(s.to_date)}`).join("; ")
         : "nenhum período concluído"}.</p>

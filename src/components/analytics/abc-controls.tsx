@@ -31,7 +31,7 @@ export function ABCModeTabs({ grouping, onChange }: {
               aria-selected={selected}
               aria-controls="abc-analysis-panel"
               tabIndex={selected ? 0 : -1}
-              className="app-tab flex-1 sm:flex-none"
+              className="app-tab !text-[14px] flex-1 sm:flex-none"
               onClick={() => onChange(tab.value)}
               onKeyDown={event => {
                 if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -69,8 +69,8 @@ export function ABCExportActions({ busy, disabled, onDownload }: {
         className="btn-ghost list-none !border-[var(--color-border-medium)] [&::-webkit-details-marker]:hidden"
       >
         {busy
-          ? <LoaderCircle aria-hidden="true" className="w-4 h-4 motion-safe:animate-spin" />
-          : <Download aria-hidden="true" className="w-4 h-4" />}
+          ? <LoaderCircle aria-hidden="true" className="w-[17px] h-[17px] motion-safe:animate-spin" />
+          : <Download aria-hidden="true" className="w-[17px] h-[17px]" />}
         Exportar
       </summary>
       <div
@@ -83,7 +83,7 @@ export function ABCExportActions({ busy, disabled, onDownload }: {
         <button disabled={busy || disabled} className="btn-ghost w-full justify-start" onClick={() => onDownload("xlsx")}>
           Excel
         </button>
-        <p role={busy ? "status" : undefined} className="px-3 py-2 text-xs text-[var(--color-text-secondary)]">
+        <p role={busy ? "status" : undefined} className="px-3 py-2 text-[13px] text-[var(--color-text-secondary)]">
           {busy ? "Preparando arquivo…" : "Todos os registros dos filtros aplicados."}
         </p>
       </div>

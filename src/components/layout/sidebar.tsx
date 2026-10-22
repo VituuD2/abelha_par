@@ -106,14 +106,14 @@ export function Sidebar({ role }: { role: Role | null }) {
           </nav>
 
           {/* Footer */}
-          <div className="mt-auto px-3 pt-4 border-t border-[var(--color-border-light)]">
-            <ThemeToggle />
-            <p className="mt-4 text-[11px] text-[var(--color-text-tertiary)]">
+          <div className="mt-auto flex items-end justify-between gap-2 px-3 pt-4 border-t border-[var(--color-border-light)]">
+            <div><p className="text-[11px] text-[var(--color-text-tertiary)]">
               Abelha Par Logística
             </p>
             <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">
               {APP_VERSION_LABEL}
-            </p>
+            </p></div>
+            <ThemeToggle />
           </div>
         </div>
       </aside>
@@ -145,7 +145,7 @@ export function Sidebar({ role }: { role: Role | null }) {
             );
           })}
         </div>
-        <div className="mx-auto max-w-lg px-3 pb-2">
+        <div className="mx-auto flex max-w-lg justify-end px-3 pb-2">
           <ThemeToggle />
         </div>
       </nav>

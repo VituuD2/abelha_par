@@ -34,15 +34,14 @@ export default async function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(() => {
-          let theme = "system";
+          let theme;
           try {
             const saved = localStorage.getItem("theme");
             if (saved === "light" || saved === "dark") theme = saved;
-          } catch { /* Use the system preference when storage is unavailable. */ }
+          } catch { /* Resolve the device preference once when storage is unavailable. */ }
+          if (!theme) theme = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           document.documentElement.dataset.themePreference = theme;
-          document.documentElement.dataset.theme = theme === "system"
-            ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-            : theme;
+          document.documentElement.dataset.theme = theme;
         })();` }} />
       </head>
       <body className={`${inter.variable} font-sans bg-[var(--color-bg-primary)]`}>

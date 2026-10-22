@@ -13,9 +13,9 @@ export type ABCOverviewResult = Pick<ABCResult, "revenue" | "quantity" | "orders
 const panel = "min-w-0 rounded-[var(--radius-lg)] border border-[var(--color-border-light)] bg-[var(--color-bg-elevated)] shadow-[var(--shadow-sm)]";
 const secondary = "text-[var(--color-text-secondary)]";
 const colors = {
-  A: { icon: "bg-orange-50 text-orange-700", bar: "bg-orange-500", text: "text-orange-700" },
-  B: { icon: "bg-amber-50 text-amber-700", bar: "bg-amber-400", text: "text-amber-700" },
-  C: { icon: "bg-stone-100 text-stone-600", bar: "bg-stone-400", text: "text-stone-600" },
+  A: { icon: "bg-[var(--color-abc-a-soft)] text-[var(--color-abc-a-ink)]", bar: "bg-[var(--color-abc-a)]", text: "text-[var(--color-abc-a-ink)]" },
+  B: { icon: "bg-[var(--color-abc-b-soft)] text-[var(--color-abc-b-ink)]", bar: "bg-[var(--color-abc-b)]", text: "text-[var(--color-abc-b-ink)]" },
+  C: { icon: "bg-[var(--color-abc-c-soft)] text-[var(--color-abc-c-ink)]", bar: "bg-[var(--color-abc-c)]", text: "text-[var(--color-abc-c-ink)]" },
 } as const;
 
 function AnimatedNumber({ value, raw }: { value: string; raw: string | number }) {
@@ -49,9 +49,9 @@ function comparisonRange(filters: ABCFilters) {
 
 function TrendBadge({ change, label, neutral = false }: { change: Change; label?: string; neutral?: boolean }) {
   if (change.kind !== "change") return (
-    <span className="inline-flex items-center gap-1 rounded-md bg-stone-100 px-2 py-1 text-[11px] font-medium text-stone-600"
+    <span className="inline-flex items-center gap-1 rounded-md bg-[var(--color-bg-tertiary)] px-2 py-1 text-[12px] font-medium text-[var(--color-text-secondary)]"
       title={change.kind === "zero-base" ? "A base anterior é zero; a variação percentual não é definida." : "Não há dados válidos para calcular esta variação."}>
-      <Minus aria-hidden="true" className="h-3 w-3 shrink-0" />{label && `${label}: `}{change.kind === "zero-base" ? "Sem base anterior" : "Indisponível"}
+      <Minus aria-hidden="true" className="h-[14px] w-[14px] shrink-0" />{label && `${label}: `}{change.kind === "zero-base" ? "Sem base anterior" : "Indisponível"}
     </span>
   );
   const { direction, negativeBase, tiny, percent } = change;
@@ -63,8 +63,8 @@ function TrendBadge({ change, label, neutral = false }: { change: Change; label?
   return (
     <span data-trend-direction={direction} data-trend-tone={tone}
       title={`${label ? `${label}: ` : ""}${direction === "up" ? "Aumento" : direction === "down" ? "Queda" : "Sem alteração"} em relação ao período anterior.${negativeBase ? " Base anterior negativa: o sinal da fórmula percentual é invertido; interpretação neutra." : neutral ? " Uma mudança na concentração não indica, por si só, melhora ou piora." : " A cor indica a direção da variação, sem avaliar o resultado do negócio."}`}
-      className={`inline-flex max-w-full items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium tabular-nums ${tone === "up" ? "bg-emerald-50 text-emerald-800" : tone === "down" ? "bg-red-50 text-red-800" : "bg-stone-100 text-stone-600"}`}>
-      <Icon aria-hidden="true" className="h-3 w-3 shrink-0" />
+      className={`inline-flex max-w-full items-center gap-1 rounded-md px-2 py-1 text-[12px] font-medium tabular-nums ${tone === "up" ? "bg-[var(--color-abc-up-soft)] text-[var(--color-abc-up)]" : tone === "down" ? "bg-[var(--color-abc-down-soft)] text-[var(--color-abc-down)]" : "bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]"}`}>
+      <Icon aria-hidden="true" className="h-[14px] w-[14px] shrink-0" />
       <span className="sr-only">{direction === "up" ? "Aumento" : direction === "down" ? "Queda" : "Sem alteração"}: </span>
       <span className="[overflow-wrap:anywhere]">{label && `${label} `}<AnimatedNumber value={sign + formatted} raw={percent} /></span>
     </span>
@@ -110,17 +110,17 @@ export function ABCOverview(props: {
           {indicators.map(({ label, values, Icon, changes, neutral }, index) => (
             <div key={index} className={`flex min-w-0 flex-col gap-4 border-[var(--color-border-light)] px-5 py-6 sm:px-6 ${index ? "border-t xl:border-t-0 xl:border-l" : ""} ${index === 1 ? "sm:border-t-0" : ""} ${index % 2 ? "sm:border-l" : ""}`}>
               <div className="flex min-w-0 items-center gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]"><Icon aria-hidden="true" className="h-[19px] w-[19px]" strokeWidth={1.7} /></span>
-                <h2 className={`text-[13px] font-medium leading-5 ${secondary}`} title={index === 2 ? "Pedidos distintos / produtos ou clientes no relatório." : index === 3 ? "Participação dos dez primeiros na métrica aplicada." : undefined}>{label}</h2>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]"><Icon aria-hidden="true" className="h-[21px] w-[21px]" strokeWidth={1.7} /></span>
+                <h2 className={`text-[14px] font-medium leading-5 ${secondary}`} title={index === 2 ? "Pedidos distintos / produtos ou clientes no relatório." : index === 3 ? "Participação dos dez primeiros na métrica aplicada." : undefined}>{label}</h2>
               </div>
               <p data-kpi-value className="text-[clamp(1.375rem,2vw,1.875rem)] font-semibold leading-tight tracking-tight tabular-nums [overflow-wrap:anywhere]">{values.map((value, i) => <span key={i}>{i > 0 && " / "}<AnimatedNumber {...value} /></span>)}</p>
               <div className="mt-auto space-y-2">
                 <div className="flex min-h-6 flex-wrap items-center gap-1.5">
-                  <button type="button" title={range} aria-label={`Período comparado: ${range}`} className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${secondary} hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700`}><Info aria-hidden="true" className="h-3.5 w-3.5" /></button>
+                  <button type="button" title={range} aria-label={`Período comparado: ${range}`} className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${secondary} hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-blue)]`}><Info aria-hidden="true" className="h-[15px] w-[15px]" /></button>
                   {ready ? changes.map((entry, i) => <TrendBadge key={i} {...entry} neutral={neutral} />)
-                    : <span role={index === 0 ? "status" : undefined} title={message || undefined} className={`inline-flex items-center gap-1.5 text-xs ${secondary}`}><Minus aria-hidden="true" className="h-3 w-3" />{comparison.loading ? "—" : "Comparação indisponível"}</span>}
+                    : <span role={index === 0 ? "status" : undefined} title={message || undefined} className={`inline-flex items-center gap-1.5 text-[13px] ${secondary}`}><Minus aria-hidden="true" className="h-[14px] w-[14px]" />{comparison.loading ? "—" : "Comparação indisponível"}</span>}
                 </div>
-                <p className={`text-[11px] ${secondary}`}>vs. período anterior</p>
+                <p className={`text-[12px] ${secondary}`}>vs. período anterior</p>
               </div>
             </div>
           ))}
@@ -130,14 +130,14 @@ export function ABCOverview(props: {
       <LoadingRegion as="section" className={panel} label="Resumo das classes ABC" loading={props.skeleton ?? props.loading} error={props.error} skeleton={<div className="p-5 sm:p-6"><Skeleton className="h-5 w-40" /><Skeleton className="mt-4 h-2 w-full" /><div className="mt-5 grid grid-cols-1 sm:grid-cols-3">{[0, 1, 2].map(index => <div key={index} className="space-y-4 py-5 sm:pr-6"><div className="flex gap-3"><Skeleton className="h-12 w-12 shrink-0 rounded-xl" /><div className="flex-1 space-y-3"><Skeleton className="h-3 w-1/2" /><Skeleton className="h-3 w-2/3" /></div></div><Skeleton className="h-6 w-3/4" /><Skeleton className="h-3 w-2/3" /></div>)}</div></div>}>
         <div className="px-5 pt-5 sm:px-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-sm font-semibold">Distribuição ABC</h2>
-            <p className={`text-xs ${secondary}`}>Participação por {metric}</p>
+            <h2 className="text-[15px] font-semibold">Distribuição ABC</h2>
+            <p className={`text-[13px] ${secondary}`}>Participação por {metric}</p>
           </div>
           <div role="img" aria-label={validDistribution ? distribution.map(entry => `Classe ${entry.key}: ${pct(entry.percent)}`).join("; ") : "Sem distribuição proporcional disponível"}
-            className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-[var(--color-bg-tertiary)]">
+            className="mt-4 flex h-2.5 w-full gap-0.5 overflow-hidden rounded-full bg-[var(--color-bg-elevated)]">
             {validDistribution && distribution.map(entry => entry.percent > 0 && <span key={entry.key} className={`h-full ${colors[entry.key].bar}`} style={{ width: `${entry.percent / totalShare * 100}%` }} />)}
           </div>
-          {!validDistribution && <p className={`mt-2 text-xs ${secondary}`}>{totalShare === 0 ? "Sem participação nesta métrica." : "A barra não representa participações negativas ou inválidas."}</p>}
+          {!validDistribution && <p className={`mt-2 text-[13px] ${secondary}`}>{totalShare === 0 ? "Sem participação nesta métrica." : "A barra não representa participações negativas ou inválidas."}</p>}
         </div>
         <div className="mt-5 grid min-w-0 grid-cols-1 sm:grid-cols-3">
           {classKeys.map((key, index) => {
@@ -146,10 +146,10 @@ export function ABCOverview(props: {
               <div key={key} className={`min-w-0 space-y-4 border-[var(--color-border-light)] px-5 py-5 sm:px-6 ${index ? "border-t sm:border-t-0 sm:border-l" : ""}`}>
                 <div className="flex items-center gap-3">
                   <span aria-hidden="true" className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-base font-semibold ${color.icon}`}>{key}</span>
-                  <div className="min-w-0"><h3 className="text-[13px] font-semibold">Classe {key}</h3><p className={`mt-0.5 text-xs tabular-nums [overflow-wrap:anywhere] ${secondary}`}>{number(entry?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</p></div>
+                  <div className="min-w-0"><h3 className="text-[14px] font-semibold">Classe {key}</h3><p className={`mt-0.5 text-[13px] tabular-nums [overflow-wrap:anywhere] ${secondary}`}>{number(entry?.count || 0)} {filters.grouping === "customer" ? "clientes" : "produtos"}</p></div>
                 </div>
                 <p className="text-xl font-semibold leading-tight tracking-tight tabular-nums [overflow-wrap:anywhere]">{money(entry?.revenue || "0")}</p>
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-xs tabular-nums">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[13px] tabular-nums">
                   <p><span className={`font-semibold ${color.text}`}>{pct(entry?.percent || 0)}</span> <span className={secondary}>da métrica</span></p>
                   <p className={`${secondary} [overflow-wrap:anywhere]`}>{number(entry?.quantity || "0")} unidades</p>
                 </div>

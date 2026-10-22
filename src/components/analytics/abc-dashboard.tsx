@@ -179,8 +179,8 @@ function MultiFilter({
   }, [dimension, search]);
   const choices = remote || options;
   return (
-    <details className="rounded-xl border border-[var(--color-border-light)] p-3 bg-white/70">
-      <summary className="cursor-pointer text-sm font-medium">
+    <details className="rounded-xl border border-[var(--color-border-light)] p-3 bg-[var(--color-bg-secondary)]">
+      <summary className="cursor-pointer text-[15px] font-medium">
         {DIMENSIONS[dimension]}{" "}
         <span className="text-[var(--color-text-secondary)]">
           · {selected.length || "Todos"}
@@ -190,14 +190,14 @@ function MultiFilter({
         <div className="mt-3 space-y-2">
           <input
             aria-label={`Buscar em ${DIMENSIONS[dimension]}`}
-            className="field text-sm"
+            className="field text-[15px]"
             placeholder="Buscar…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <button
             type="button"
-            className="text-xs text-amber-800 underline"
+            className="text-[13px] text-[var(--color-abc-range-ink)] underline"
             onClick={() =>
               onChange(
                 dimension === "statuses" ? options.map((o) => o.value) : [],
@@ -214,10 +214,10 @@ function MultiFilter({
                   .includes(search.toLocaleLowerCase()),
               )
               .map((o) => (
-                <label key={o.value} className="flex items-start gap-2 text-sm">
+                <label key={o.value} className="flex items-start gap-2 text-[15px]">
                   <input
                     type="checkbox"
-                    className="mt-1 accent-amber-600"
+                    className="mt-1 accent-[var(--color-accent-blue)]"
                     checked={selected.includes(o.value)}
                     onChange={(e) =>
                       onChange(
@@ -234,18 +234,18 @@ function MultiFilter({
               ))}
           </div>
           {options.length >= 200 && (
-            <p className="text-xs">
+            <p className="text-[13px]">
               Exibindo até 200 opções. Busque no servidor para encontrar outras.
             </p>
           )}
           {searchError && (
-            <p role="status" className="text-xs text-red-800">
+            <p role="status" className="text-[13px] text-[var(--color-abc-down)]">
               Busca temporariamente indisponível.
             </p>
           )}
         </div>
       ) : (
-        <p className="mt-3 text-xs text-[var(--color-text-secondary)]">
+        <p className="mt-3 text-[13px] text-[var(--color-text-secondary)]">
           Sem valores importados. Este campo depende da resposta da API ou da
           classificação de origem no Ninho.
         </p>
@@ -571,7 +571,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       pct(row[column])
     ) : column === "class" ? (
       <span
-        className={`px-2.5 py-1 rounded-full font-semibold ${row.class === "A" ? "bg-amber-100 text-amber-900" : row.class === "B" ? "bg-yellow-100 text-yellow-900" : "bg-stone-100 text-stone-600"}`}
+        className={`px-2.5 py-1 rounded-full font-semibold ${row.class === "A" ? "bg-[var(--color-abc-a-soft)] text-[var(--color-abc-a-ink)]" : row.class === "B" ? "bg-[var(--color-abc-b-soft)] text-[var(--color-abc-b-ink)]" : "bg-[var(--color-abc-c-soft)] text-[var(--color-abc-c-ink)]"}`}
       ><span className="sr-only">Classe </span>{row.class}
       </span>
     ) : column === "name" ? (
@@ -585,25 +585,25 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       row[column]
     );
   return (
-    <div className="w-full min-w-0 space-y-6 pb-6">
+    <div className="w-full min-w-0 space-y-6 pb-6 [&_.field]:!text-[15px] [&_.app-control-label]:!text-[15px] [&_.app-date-input]:!text-[15px] [&_.btn-ghost]:!text-[15px] [&_.btn-primary]:!text-[15px] [&_th]:!text-[13px] [&_.page-description]:!text-[15px] [&_.analysis-toolbar_nav]:text-[13px]">
       <div className="analysis-toolbar flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <Header title="Curva ABC" breadcrumbs={["Abelha Par", "Néctar"]} description="Entenda o que concentra suas vendas." />
         <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto">
-          <div className="w-full text-xs text-[var(--color-text-secondary)] sm:mr-2 sm:w-auto">
+          <div className="w-full text-[13px] text-[var(--color-text-secondary)] sm:mr-2 sm:w-auto">
             {result ? <>Atualizado <time dateTime={result.generatedAt}>{new Date(result.generatedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</time></> : "Aguardando dados"}
           </div>
           <button className="btn-ghost" onClick={() => { markForeground(); setRefresh(v => v + 1); }} disabled={loading || showSkeletons}>
-            <RefreshCw aria-hidden="true" className={`w-4 h-4 ${loading ? "motion-safe:animate-spin" : ""}`} />Atualizar
+            <RefreshCw aria-hidden="true" className={`w-[17px] h-[17px] ${loading ? "motion-safe:animate-spin" : ""}`} />Atualizar
           </button>
           <ABCExportActions busy={exporting} disabled={!result?.total || loading || showSkeletons || reportFailed} onDownload={download} />
         </div>
       </div>
-      {exportNotice && <p role="status" className="text-sm text-emerald-800">{exportNotice}</p>}
-      {exportError && <p role="alert" className="card p-4 text-sm text-red-800">{exportError}</p>}
+      {exportNotice && <p role="status" className="text-[15px] text-[var(--color-abc-up)]">{exportNotice}</p>}
+      {exportError && <p role="alert" className="card p-4 text-[15px] text-[var(--color-abc-down)]">{exportError}</p>}
       <ABCModeTabs grouping={filters.grouping} onChange={switchGrouping} />
           {(loading || showSkeletons) && (
-            <div role="status" className="pointer-events-none fixed bottom-4 right-4 z-40 rounded-full border border-[var(--color-border-light)] bg-[var(--color-bg-primary)] p-3 text-amber-700 shadow-sm">
-              <LoaderCircle aria-hidden="true" className="h-5 w-5 motion-safe:animate-spin" />
+            <div role="status" className="pointer-events-none fixed bottom-4 right-4 z-40 rounded-full border border-[var(--color-border-light)] bg-[var(--color-bg-primary)] p-3 text-[var(--color-accent-blue)] shadow-sm">
+              <LoaderCircle aria-hidden="true" className="h-[22px] w-[22px] motion-safe:animate-spin" />
               <span className="sr-only">Atualizando a Curva ABC…</span>
             </div>
           )}
@@ -620,8 +620,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         }}
       >
         <div className="flex flex-wrap items-end gap-4">
-        <div className="grid w-full gap-4 sm:w-auto sm:flex-1 sm:grid-cols-2 lg:max-w-xl">
-          <div className="text-sm font-medium">
+        <div className="grid w-full gap-4 sm:w-auto sm:min-w-[360px] sm:flex-1 sm:grid-cols-2 lg:max-w-xl">
+          <div className="text-[15px] font-medium">
             <DatePicker
               label="De"
               required
@@ -632,7 +632,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 setDraft((f) => ({ ...f, from: e }))}
             />
           </div>
-          <div className="text-sm font-medium">
+          <div className="text-[15px] font-medium">
             <DatePicker
               label="Até"
               required
@@ -647,7 +647,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           {[7, 30, 90].map(n => <button
             type="button"
             key={n}
-            className="btn-ghost text-xs"
+            className="btn-ghost text-[13px]"
             onClick={() => setDraft(f => ({ ...f, from: dayBefore(today(), n - 1), to: today() }))}
           >Últimos {n} dias</button>)}
           <button className="btn-primary" type="submit" disabled={loading || showSkeletons}>Analisar vendas</button>
@@ -658,18 +658,18 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             aria-controls="abc-extra-filters"
             onClick={() => { setFiltersExpanded(value => !value); setAdvanced(false); }}
           >
-            <Filter className="w-4 h-4" />
+            <Filter className="w-[17px] h-[17px]" />
             {filtersExpanded ? "Recolher filtros" : "Mais filtros"}
           </button>
         </div>
         </div>
-        <div className="flex h-28 flex-wrap items-center gap-2 overflow-y-auto border-t border-[var(--color-border-light)] pt-3 text-xs text-[var(--color-text-secondary)] sm:h-24 xl:h-16" aria-label="Filtros aplicados">
+        <div className="flex h-28 flex-wrap items-center gap-2 overflow-y-auto border-t border-[var(--color-border-light)] pt-3 text-[13px] text-[var(--color-text-secondary)] sm:h-24 xl:h-16" aria-label="Filtros aplicados">
           <span>{filters.from.split("-").reverse().join("/")} — {filters.to.split("-").reverse().join("/")}</span>
           <span className="rounded-full bg-[var(--color-bg-tertiary)] px-2 py-1">{activeFilterCount} seleções aplicadas</span>
           <span>{filters.metric === "quantity" ? "Quantidade" : "Valor bruto"} · {filters.basis === "orders" ? "Data da venda" : "Emissão da NF"}</span>
           {appliedSelections.filter(dim => dim !== "statuses").map(dim => <span key={dim} className="rounded-full border border-[var(--color-border-light)] px-2 py-1">{DIMENSIONS[dim]}: {filters.selections[dim]!.length}</span>)}
-          {filtersChanged && <span role="status" className="text-amber-800">Alterações não aplicadas</span>}
-          <button type="button" className="btn-ghost text-xs sm:ml-auto" onClick={() => {
+          {filtersChanged && <span role="status" className="text-[var(--color-abc-range-ink)]">Alterações não aplicadas</span>}
+          <button type="button" className="btn-ghost text-[13px] sm:ml-auto" onClick={() => {
             markForeground();
             const cleared = { ...filters, selections: { statuses: ABC_DEFAULTS.statuses.map(String) } };
             setDraft(current => ({ ...current, selections: cleared.selections })); setFilters(cleared); setPage(1); setSearchPage(1);
@@ -677,7 +677,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
         {filtersExpanded && <div id="abc-extra-filters" className="space-y-4 border-t border-[var(--color-border-light)] pt-4">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="text-sm font-medium">
+          <div className="text-[15px] font-medium">
             <Select
               label="Métrica"
               className="field mt-2"
@@ -692,7 +692,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               <option value="quantity">Quantidade vendida</option>
             </Select>
           </div>
-          <div className="text-sm font-medium">
+          <div className="text-[15px] font-medium">
             <Select
               label="Base"
               className="field mt-2"
@@ -709,22 +709,22 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               </option>
             </Select>
           </div>
-          {draft.grouping === "composition" && <div className="text-sm font-medium"><Select label="Base do CMV histórico" className="field mt-2" value={draft.costBasis || ABC_DEFAULTS.costBasis} onValueChange={e => setDraft(f => ({ ...f, costBasis: e as ABCFilters["costBasis"] }))}>
+          {draft.grouping === "composition" && <div className="text-[15px] font-medium"><Select label="Base do CMV histórico" className="field mt-2" value={draft.costBasis || ABC_DEFAULTS.costBasis} onValueChange={e => setDraft(f => ({ ...f, costBasis: e as ABCFilters["costBasis"] }))}>
               <option value="purchase">Custo de compra por vigência</option>
               <option value="average">Custo médio por vigência</option>
             </Select>
-            <span className="mt-1 block text-xs text-neutral-500">A base selecionada usa o histórico na data da venda. Valores zerados ou negativos informados são aceitos, sem trocar a base de custo.</span>
+            <span className="mt-1 block text-[13px] text-[var(--color-text-secondary)]">A base selecionada usa o histórico na data da venda. Valores zerados ou negativos informados são aceitos, sem trocar a base de custo.</span>
           </div>}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className="btn-ghost text-xs"
+            className="btn-ghost text-[13px]"
             onClick={() => setDraft(f => ({ ...f, from: dayBefore(today(), 364), to: today() }))}
           >Últimos 365 dias</button>
           <button
             type="button"
-            className="btn-ghost text-xs"
+            className="btn-ghost text-[13px]"
             onClick={() =>
               setDraft((f) => ({
                 ...f,
@@ -737,7 +737,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </button>
           <button
             type="button"
-            className="btn-ghost text-xs"
+            className="btn-ghost text-[13px]"
             onClick={() =>
               setDraft((f) => ({
                 ...f,
@@ -774,7 +774,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           onClick={() => setAdvanced((v) => !v)}
           aria-expanded={advanced}
         >
-          <Filter className="w-4 h-4" />
+          <Filter className="w-[17px] h-[17px]" />
           Filtros e regras adicionais
         </button>
         {advanced && (
@@ -801,7 +801,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 ))}
             </div>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="text-sm">
+              <div className="text-[15px]">
                 <Select
                   label="Regra ABC"
                   className="field mt-2"
@@ -820,7 +820,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   </option>
                 </Select>
               </div>
-              <label className="text-sm">
+              <label className="text-[15px]">
                 Limite A (%)
                 <input
                   required
@@ -838,7 +838,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   }
                 />
               </label>
-              <label className="text-sm">
+              <label className="text-[15px]">
                 Limite B (%)
                 <input
                   required
@@ -857,7 +857,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 />
               </label>
               {draft.grouping !== "customer" && (
-                <div className="text-sm">
+                <div className="text-[15px]">
                   <Select
                     label="Agrupar produtos"
                     className="field mt-2"
@@ -877,12 +877,12 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 </div>
               )}
             </div>
-            <p className="text-xs text-[var(--color-text-secondary)]">
+            <p className="text-[13px] text-[var(--color-text-secondary)]">
               Sem produto pai na API, o registro permanece individual. Receita
               líquida após devoluções, CMV e margem exigem dados adicionais e
               não são calculados nesta versão.
             </p>
-            <p className="text-xs text-[var(--color-text-secondary)]">
+            <p className="text-[13px] text-[var(--color-text-secondary)]">
               No modo Tiny histórico, a classe usa o acumulado anterior. No estrito,
               usa o acumulado após a linha: um único produto com 100% fica na classe C.
               Igualdade com 80% ou 95% avança para a classe seguinte.
@@ -945,8 +945,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
         </div>}
       </form>
-      <details className="card px-5 py-3 text-xs border-amber-200" aria-busy={!reliability}>
-        <summary className="cursor-pointer font-medium text-amber-900">{!reliability ? "Verificando cobertura" : incomplete ? "Escopo parcial" : pendingHistory ? "Importações" : "Cobertura verificada"}{pendingHistory ? " · atualização pendente" : reliability && incomplete ? " · histórico pendente" : ""}</summary>
+      <details className="card px-5 py-3 text-[13px] border-[var(--color-border-light)]" aria-busy={!reliability}>
+        <summary className="cursor-pointer font-medium text-[var(--color-abc-range-ink)]">{!reliability ? "Verificando cobertura" : incomplete ? "Escopo parcial" : pendingHistory ? "Importações" : "Cobertura verificada"}{pendingHistory ? " · atualização pendente" : reliability && incomplete ? " · histórico pendente" : ""}</summary>
         <div className="mt-3 space-y-3">
           {selectedConnections.map(connection => <div key={connection.id}>
             <p className="mb-1 font-medium">{connection.name}</p>
@@ -955,7 +955,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
       </details>
       {(error || schedulingError) && (
-        <div className="card fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-2xl p-5 text-red-800 shadow-lg lg:bottom-6" role="alert">
+        <div className="card fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-2xl p-5 text-[var(--color-abc-down)] shadow-lg lg:bottom-6" role="alert">
           {(typeof error === "string" ? error : error?.message) || schedulingError}
           {isAdmin && !(error instanceof AnalyticsRequestError && ["HISTORICAL_COST_UNAVAILABLE", "ANALYTICS_MIGRATION_REQUIRED"].includes(error.code || "")) && (
             <p className="mt-2">
@@ -967,26 +967,26 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
       )}
       <ABCOverview result={overviewResult || EMPTY_RESULT} filters={filters} comparison={comparison} loading={loading || !result || reportFailed} skeleton={showSkeletons} error={reportUnavailable} />
-          {isAdmin && displayResult.composition && <LoadingRegion as="section" loading={showSkeletons} error={reportUnavailable} skeleton={<Skeleton className="m-5 h-5 w-56" />} className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" label="Regras da consolidação"><details>
-            <summary className="cursor-pointer font-medium text-emerald-900">Regras da consolidação
+          {isAdmin && displayResult.composition && <LoadingRegion as="section" loading={showSkeletons} error={reportUnavailable} skeleton={<Skeleton className="m-5 h-[22px] w-[22px]6" />} className="card p-5 space-y-3 border-[var(--color-border-light)] bg-[var(--color-abc-up-soft)]" label="Regras da consolidação"><details>
+            <summary className="cursor-pointer font-medium text-[var(--color-abc-up)]">Regras da consolidação
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
             </summary>
-            <p className="text-sm text-stone-600">{displayResult.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. {displayResult.composition.costSource?.allocationPolicy !== "signed_cost_magnitude_zero_quantity" && "O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais."}</p>
-            <p className="text-xs text-stone-600">CMV de referência: {displayResult.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {displayResult.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {displayResult.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(displayResult.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
-            {displayResult.composition.periodCostCents != null && <p className="text-sm text-stone-700">Custo de referência das unidades vendidas: <strong>{money(displayResult.composition.periodCostCents)}</strong>. Soma das quantidades × custo histórico aplicável de cada componente.</p>}
-            {displayResult.composition.costSource?.allocationPolicy === "signed_cost_magnitude_zero_quantity" && <p className="text-xs text-stone-600">O CMV preserva valores zerados e negativos. O rateio da receita usa a magnitude dos custos; quando todos os custos do kit são zero, usa a quantidade de cada componente. Centavos residuais são distribuídos sem alterar o valor original da venda.</p>}
-            {!!displayResult.composition.zeroCostLines && <p className="text-xs text-stone-600">{displayResult.composition.zeroCostLines} itens vendidos incluem componente com custo informado zero.</p>}
-            {!!displayResult.composition.negativeCostLines && <p className="text-xs text-stone-600">{displayResult.composition.negativeCostLines} itens vendidos incluem componente com custo negativo, preservado no CMV.</p>}
-            {!!displayResult.composition.quantityAllocationLines && <p className="text-xs text-stone-600">{displayResult.composition.quantityAllocationLines} kits com todos os custos zerados foram rateados pela quantidade dos componentes.</p>}
-            {!!displayResult.composition.costMissingLines && <p className="text-xs text-amber-800">Custo de referência total incompleto: {displayResult.composition.costMissingLines} itens sem custo histórico válido. Parcela conhecida: {money(displayResult.composition.knownCostCents || "0")}. Valores ausentes não são considerados custo zero.</p>}
-            {displayResult.composition.costSource?.lastError && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">A atualização do CMV está pendente: {displayResult.composition.costSource.lastError} O relatório usa a última referência disponível.</p>}
-            {!!displayResult.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">Rateio incompleto: {money(displayResult.composition.unallocatedRevenue)} de {displayResult.composition.unallocatedLines} itens vendidos aguardam CMV de {displayResult.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(displayResult.composition.originalRevenue)}.</p>}
-            <p className="text-xs text-stone-500">Filtros de SKU, produto e produto pai selecionam os registros originais da venda antes da consolidação. Regra {displayResult.composition.version}.</p>
-            {!!displayResult.composition.ignoredComponentSkus?.length && <p className="text-xs text-stone-600">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
+            <p className="text-[15px] text-[var(--color-text-secondary)]">{displayResult.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. {displayResult.composition.costSource?.allocationPolicy !== "signed_cost_magnitude_zero_quantity" && "O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais."}</p>
+            <p className="text-[13px] text-[var(--color-text-secondary)]">CMV de referência: {displayResult.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {displayResult.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {displayResult.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(displayResult.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
+            {displayResult.composition.periodCostCents != null && <p className="text-[15px] text-[var(--color-text-secondary)]">Custo de referência das unidades vendidas: <strong>{money(displayResult.composition.periodCostCents)}</strong>. Soma das quantidades × custo histórico aplicável de cada componente.</p>}
+            {displayResult.composition.costSource?.allocationPolicy === "signed_cost_magnitude_zero_quantity" && <p className="text-[13px] text-[var(--color-text-secondary)]">O CMV preserva valores zerados e negativos. O rateio da receita usa a magnitude dos custos; quando todos os custos do kit são zero, usa a quantidade de cada componente. Centavos residuais são distribuídos sem alterar o valor original da venda.</p>}
+            {!!displayResult.composition.zeroCostLines && <p className="text-[13px] text-[var(--color-text-secondary)]">{displayResult.composition.zeroCostLines} itens vendidos incluem componente com custo informado zero.</p>}
+            {!!displayResult.composition.negativeCostLines && <p className="text-[13px] text-[var(--color-text-secondary)]">{displayResult.composition.negativeCostLines} itens vendidos incluem componente com custo negativo, preservado no CMV.</p>}
+            {!!displayResult.composition.quantityAllocationLines && <p className="text-[13px] text-[var(--color-text-secondary)]">{displayResult.composition.quantityAllocationLines} kits com todos os custos zerados foram rateados pela quantidade dos componentes.</p>}
+            {!!displayResult.composition.costMissingLines && <p className="text-[13px] text-[var(--color-abc-range-ink)]">Custo de referência total incompleto: {displayResult.composition.costMissingLines} itens sem custo histórico válido. Parcela conhecida: {money(displayResult.composition.knownCostCents || "0")}. Valores ausentes não são considerados custo zero.</p>}
+            {displayResult.composition.costSource?.lastError && <p role="alert" className="rounded-xl border border-[var(--color-abc-range-border)] bg-[var(--color-abc-range-end)] p-3 text-[15px] text-[var(--color-abc-range-ink)]">A atualização do CMV está pendente: {displayResult.composition.costSource.lastError} O relatório usa a última referência disponível.</p>}
+            {!!displayResult.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-[var(--color-abc-range-border)] bg-[var(--color-abc-range-end)] p-3 text-[15px] text-[var(--color-abc-range-ink)]">Rateio incompleto: {money(displayResult.composition.unallocatedRevenue)} de {displayResult.composition.unallocatedLines} itens vendidos aguardam CMV de {displayResult.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(displayResult.composition.originalRevenue)}.</p>}
+            <p className="text-[13px] text-[var(--color-text-secondary)]">Filtros de SKU, produto e produto pai selecionam os registros originais da venda antes da consolidação. Regra {displayResult.composition.version}.</p>
+            {!!displayResult.composition.ignoredComponentSkus?.length && <p className="text-[13px] text-[var(--color-text-secondary)]">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
             {!!displayResult.composition.pendingTotal && <details>
-              <summary className="cursor-pointer text-sm font-medium text-amber-900">{displayResult.composition.pendingTotal} SKUs sem vínculo confirmado permanecem separados · revisar composição</summary>
-              <ul className="mt-3 space-y-2 text-sm text-stone-600">{displayResult.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-xs font-semibold">{item.sku}</span> · <EntityName name={item.name} /><span className="block text-xs text-amber-800">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
-              {displayResult.composition.pendingTotal > displayResult.composition.pending.length && <p className="mt-2 text-xs">Primeiros {displayResult.composition.pending.length} SKUs pendentes; a exportação mantém todos os registros no ranking.</p>}
+              <summary className="cursor-pointer text-[15px] font-medium text-[var(--color-abc-range-ink)]">{displayResult.composition.pendingTotal} SKUs sem vínculo confirmado permanecem separados · revisar composição</summary>
+              <ul className="mt-3 space-y-2 text-[15px] text-[var(--color-text-secondary)]">{displayResult.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-[13px] font-semibold">{item.sku}</span> · <EntityName name={item.name} /><span className="block text-[13px] text-[var(--color-abc-range-ink)]">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
+              {displayResult.composition.pendingTotal > displayResult.composition.pending.length && <p className="mt-2 text-[13px]">Primeiros {displayResult.composition.pending.length} SKUs pendentes; a exportação mantém todos os registros no ranking.</p>}
             </details>}
             </details>
           </LoadingRegion>}
@@ -1010,19 +1010,19 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 </h2>
                 <div className="relative w-full sm:w-80">
                   <label htmlFor="abc-table-search" className="sr-only">{filters.grouping === "customer" ? "Buscar clientes" : "Buscar produtos ou SKU"}</label>
-                  <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-[var(--color-text-tertiary)]" />
+                  <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3.5 h-[17px] w-[17px] text-[var(--color-text-tertiary)]" />
                   <input id="abc-table-search" type="search" value={search} disabled={!completeRanking} aria-describedby="abc-search-scope" className="field !pl-10 !pr-10" placeholder={filters.grouping === "customer" ? "Buscar clientes…" : "Buscar produto ou SKU…"} onChange={event => { setSearch(event.target.value); setSearchPage(1); }} />
-                  {search && <button aria-label="Limpar busca" className="absolute right-2 top-2 rounded-lg p-1.5 hover:bg-amber-50 focus-visible:outline-2 focus-visible:outline-amber-700" onClick={() => { setSearch(""); setSearchPage(1); }}><X aria-hidden="true" className="h-4 w-4" /></button>}
+                  {search && <button aria-label="Limpar busca" className="absolute right-2 top-2 rounded-lg p-1.5 hover:bg-[var(--color-abc-range-end)] focus-visible:outline-2 focus-visible:outline-[var(--color-accent-blue)]" onClick={() => { setSearch(""); setSearchPage(1); }}><X aria-hidden="true" className="h-[17px] w-[17px]" /></button>}
                 </div>
               </div>
-              <p id="abc-search-scope" className="text-xs text-[var(--color-text-secondary)]">{!completeRanking ? "Busca indisponível: o servidor retornou um ranking incompleto." : searching ? `${number(tableTotal)} de ${number(displayResult.total)} registros · posição e classe originais preservadas.` : "Busca em todo o ranking. Exportações incluem todos os registros dos filtros aplicados."}</p>
+              <p id="abc-search-scope" className="text-[13px] text-[var(--color-text-secondary)]">{!completeRanking ? "Busca indisponível: o servidor retornou um ranking incompleto." : searching ? `${number(tableTotal)} de ${number(displayResult.total)} registros · posição e classe originais preservadas.` : "Busca em todo o ranking. Exportações incluem todos os registros dos filtros aplicados."}</p>
               <details>
-                <summary className="text-sm cursor-pointer">
+                <summary className="text-[15px] cursor-pointer">
                   Colunas da tabela
                 </summary>
                 <div className="flex flex-wrap gap-4 mt-3">
                   {(Object.keys(labels) as Column[]).filter(c => filters.grouping !== "customer" || c !== "sku").map((c) => (
-                    <label key={c} className="text-xs flex gap-2">
+                    <label key={c} className="text-[13px] flex gap-2">
                       <input
                         type="checkbox"
                         checked={columns.includes(c)}
@@ -1042,7 +1042,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               </details>
             </div>
             <div className="h-[min(720px,70dvh)] min-h-80 overflow-auto overscroll-x-contain [scrollbar-gutter:stable] [overflow-anchor:none]" tabIndex={0} role="region" aria-label="Tabela do ranking ABC" aria-busy={tableLoading}>
-              <table className="w-full min-w-[960px] table-fixed text-sm text-left">
+              <table className="w-full min-w-[960px] table-fixed text-[15px] text-left">
                 <colgroup>{visibleColumns.map(column => <col key={column} style={{ width: columnWidths[column] }} />)}</colgroup>
                 <caption className="sr-only">Ranking completo do período, com paginação. Valores e classes calculados pelo servidor.</caption>
                 <thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)]">
@@ -1063,7 +1063,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                         <button
                           disabled={c === "class"}
                           aria-disabled={loading || undefined}
-                          className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700"
+                          className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent-blue)]"
                           onClick={() => {
                             if (loading) return;
                             markTableRefresh();
@@ -1095,7 +1095,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                       inert={tableLoading || undefined}
                       data-abc-entity={row.entityId}
                       data-highlighted={paretoHighlighted(row, highlightRow, !!highlight?.cumulative)}
-                      className={`cursor-pointer border-t border-[var(--color-border-light)] transition-colors duration-75 motion-reduce:transition-none ${paretoHighlighted(row, highlightRow, !!highlight?.cumulative) ? "bg-amber-100/75 ring-1 ring-inset ring-amber-300" : "hover:bg-amber-50/50"}`}
+                      className={`cursor-pointer border-t border-[var(--color-border-light)] transition-colors duration-75 motion-reduce:transition-none ${paretoHighlighted(row, highlightRow, !!highlight?.cumulative) ? "bg-[linear-gradient(135deg,var(--color-abc-range-start),var(--color-abc-range-end))] ring-1 ring-inset ring-[var(--color-abc-range-border)]" : "hover:bg-[var(--color-abc-range-end)]"}`}
                       tabIndex={0}
                       aria-label={`Ver pedidos de ${row.name}`}
                       onClick={() => openEntity(row)}
@@ -1123,13 +1123,13 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   ))}
                 </tbody>
               </table>
-              {searching && !tableTotal && <div className="p-10 text-center" role="status"><h3 className="font-semibold">Nenhum resultado para esta busca</h3><p className="mt-2 text-sm text-[var(--color-text-secondary)]">Tente outro nome{filters.grouping === "customer" ? "." : " ou SKU."}</p><button className="btn-ghost mt-3" onClick={() => setSearch("")}>Limpar busca</button></div>}
+              {searching && !tableTotal && <div className="p-10 text-center" role="status"><h3 className="font-semibold">Nenhum resultado para esta busca</h3><p className="mt-2 text-[15px] text-[var(--color-text-secondary)]">Tente outro nome{filters.grouping === "customer" ? "." : " ou SKU."}</p><button className="btn-ghost mt-3" onClick={() => setSearch("")}>Limpar busca</button></div>}
               {!displayResult.total && (
                 <div className="p-10 text-center">
                   <h3 className="font-semibold">
                     {reliability?.emptyTitle || "Cobertura ainda não verificada"}
                   </h3>
-                  <p className="text-sm mt-2 text-[var(--color-text-secondary)]">
+                  <p className="text-[15px] mt-2 text-[var(--color-text-secondary)]">
                     Confira o período, as situações, as empresas e a cobertura
                     de importação.
                   </p>
@@ -1137,7 +1137,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               )}
             </div>
             <div className="p-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border-light)]">
-              <div className="text-xs flex items-center gap-2"><Select label="Por página" inline
+              <div className="text-[13px] flex items-center gap-2"><Select label="Por página" inline
                   className="field w-auto"
                   value={size}
                   onValueChange={(e) => {
@@ -1153,7 +1153,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   ))}
                 </Select>
               </div>
-              <p className="text-xs text-[var(--color-text-secondary)]" aria-live="polite">{tableTotal ? number((tablePage - 1) * size + 1) : "0"}–{number(Math.min(tablePage * size, tableTotal))} de {number(tableTotal)} registros</p>
+              <p className="text-[13px] text-[var(--color-text-secondary)]" aria-live="polite">{tableTotal ? number((tablePage - 1) * size + 1) : "0"}–{number(Math.min(tablePage * size, tableTotal))} de {number(tableTotal)} registros</p>
               <div className="flex items-center gap-3">
                 <button
                   aria-label="Página anterior"
@@ -1161,9 +1161,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   aria-disabled={loading || tablePage === 1}
                   onClick={() => { if (loading || tablePage === 1) return; if (searching) setSearchPage(tablePage - 1); else { markTableRefresh(); setPage(v => v - 1); } }}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-[17px] h-[17px]" />
                 </button>
-                <span className="text-sm">
+                <span className="text-[15px]">
                   {tablePage} / {tablePages}
                 </span>
                 <button
@@ -1172,7 +1172,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   aria-disabled={loading || tablePage >= tablePages}
                   onClick={() => { if (loading || tablePage >= tablePages) return; if (searching) setSearchPage(tablePage + 1); else { markTableRefresh(); setPage(v => v + 1); } }}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-[17px] h-[17px]" />
                 </button>
               </div>
             </div>
@@ -1197,12 +1197,12 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             className="btn-ghost shrink-0"
             onClick={() => dialog.current?.close()}
           >
-            <X className="w-5 h-5" />
+            <X className="w-[22px] h-[22px]" />
           </button>
         </header>
         <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto overscroll-contain px-5 pt-5 pb-2 sm:px-7 sm:pt-7">
           {drillError && (
-            <p role="alert" className="mb-5 text-red-800">
+            <p role="alert" className="mb-5 text-[var(--color-abc-down)]">
               {drillError}
             </p>
           )}
@@ -1220,7 +1220,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                     {revenueDescending(values as Drill["companies"]).map((v, i) => (
                       <div
                         key={i}
-                        className="flex justify-between gap-3 text-sm py-2 border-t border-[var(--color-border-light)]"
+                        className="flex justify-between gap-3 text-[15px] py-2 border-t border-[var(--color-border-light)]"
                       >
                         <span className="min-w-0 break-words">{v.name}</span>
                         <span className="whitespace-nowrap">
@@ -1233,7 +1233,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 ))}
               </div>
               <div aria-busy={drillLoading}>
-                <table className="text-sm w-full min-w-[560px]">
+                <table className="text-[15px] w-full min-w-[560px]">
                   <thead>
                     <tr>
                       {[
@@ -1260,7 +1260,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                         <td className="p-2 whitespace-nowrap">{o.date}</td>
                         <td className="p-2">
                           {o.company}
-                          <span className="block text-xs">{o.connection}</span>
+                          <span className="block text-[13px]">{o.connection}</span>
                         </td>
                         <td className="p-2">{o.source}</td>
                         <td className="p-2">{ORDER_STATUSES[o.status]}</td>
@@ -1284,7 +1284,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 <Select label="Página" inline value={drillPage} disabled={drillLoading || drillTotalPages === 1} popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: Number(value) })}>
                   {Array.from({ length: drillTotalPages }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
                 </Select>
-                <p className="text-sm">
+                <p className="text-[15px]">
                   de {drillTotalPages} ·{" "}
                   {drill.total} pedidos
                 </p>
@@ -1296,7 +1296,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 >
                   Próxima
                 </button>
-                {drillLoading && <span role="status" className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]"><RefreshCw className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />Carregando página {drillRequest.page}…</span>}
+                {drillLoading && <span role="status" className="flex items-center gap-2 text-[13px] text-[var(--color-text-secondary)]"><RefreshCw className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />Carregando página {drillRequest.page}…</span>}
               </div>
             </>
           )}
