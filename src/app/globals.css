@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+html { scrollbar-gutter: stable; }
+.loading-region { position: relative; min-width: 0; overflow: auto; scrollbar-gutter: stable; }
+.loading-region-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; pointer-events: none; background: var(--color-bg-elevated); border-radius: inherit; }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none !important; } }
+
 .field {
   width: 100%;
   min-height: 44px;

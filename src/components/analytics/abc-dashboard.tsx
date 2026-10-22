@@ -25,7 +25,8 @@ import { type CoverageJob } from "@/lib/analytics/coverage";
 import { reportReliability } from "@/lib/analytics/reliability";
 import { ConnectionProgress } from "./connection-progress";
 import { ABCExportActions, ABCModeTabs } from "./abc-controls";
-import { ABCOverview, ABCOverviewSkeleton, type ABCOverviewResult } from "./abc-overview";
+import { ABCOverview, type ABCOverviewResult } from "./abc-overview";
+import { LoadingRegion, ChartSkeleton, RowsSkeleton, TableSkeleton, Skeleton } from "@/components/ui/loading-region";
 import { kpiSnapshot } from "@/lib/analytics/comparison";
 import { useABCComparison } from "./use-abc-comparison";
 import { ParetoChart } from "./pareto-chart";
@@ -98,6 +99,10 @@ const labels = {
   class: "Classe",
 };
 type Column = keyof typeof labels;
+const columnWidths: Record<Column, number> = { rank: 96, sku: 160, name: 320, quantity: 120, revenue: 168, percent: 128, cumulative: 144, orders: 104, class: 88 };
+const emptyClass = { count: 0, revenue: "0", quantity: "0", percent: 0 };
+const EMPTY_RESULT: ABCResult = { rows: [], pareto: [], total: 0, revenue: "0", quantity: "0", orders: 0, top10: 0,
+  classes: { A: emptyClass, B: emptyClass, C: emptyClass }, generatedAt: "" };
 function EntityName({ name }: { name: string }) {
   return <>{name.split(/(sem v[ií]nculo d[eo] cat[aá]logo)/i).map((part, index) =>
     index % 2 ? <strong key={index} className="font-bold text-[var(--color-accent-red)]">{part}</strong> : part,
@@ -266,6 +271,11 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     [status, setStatus] = useState<Status | null>(null),
     [result, setResult] = useState<ABCResult | null>(null);
   const [overviewResult, setOverviewResult] = useState<ABCOverviewResult | null>(null);
+  const [foregroundLoading, setForegroundLoading] = useState(true);
+  const [tableRefresh, setTableRefresh] = useState(false);
+  const reportScope = useRef("");
+  const [reportFailed, setReportFailed] = useState(false);
+  const backgroundRefresh = useRef(false);
   const [highlight, setHighlight] = useState<ParetoHighlight | null>(null);
   const highlightRow = result?.pareto.find(row => row.entityId === highlight?.entityId) || result?.rows.find(row => row.entityId === highlight?.entityId) || null;
   const updateHighlight = (next: ParetoHighlight | null) => setHighlight(current =>
@@ -299,7 +309,20 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const filtersChanged = JSON.stringify(draft) !== JSON.stringify(filters);
   const appliedSelections = (Object.keys(DIMENSIONS) as Dimension[]).filter(dim => filters.selections[dim]?.length);
   const activeFilterCount = appliedSelections.reduce((count, dim) => count + (filters.selections[dim]?.length || 0), 0);
+  const markForeground = () => {
+    backgroundRefresh.current = false;
+    setForegroundLoading(true);
+    setTableRefresh(false);
+    setLoading(true);
+  };
+  const markTableRefresh = () => {
+    backgroundRefresh.current = false;
+    setForegroundLoading(false);
+    setTableRefresh(true);
+    setLoading(true);
+  };
   const switchGrouping = (grouping: ABCFilters["grouping"]) => {
+    markForeground();
     setDraft(f => ({ ...f, grouping }));
     setFilters(f => ({ ...f, grouping }));
     setSearch("");
@@ -324,20 +347,21 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const drillPage = currentDrill?.page || 1;
   const drillTotalPages = Math.max(1, Math.ceil((drill?.total || 0) / 50));
   const dialog = useRef<HTMLDialogElement>(null);
-  const resultScope = useRef("");
   const scheduledFilters = useRef("");
   const statusSequence = useRef(0);
   const lastProgress = useRef("");
   const optionsLoadedAt = useRef(0);
   const reportSequence = useRef(0);
   const reportRunning = useRef(false);
+  const foregroundPending = useRef(false);
   const pendingProgressRefresh = useRef<"all" | "data" | null>(null);
   const refreshFromProgress = useCallback((includeOptions: boolean) => {
-    if (reportRunning.current) {
+    if (reportRunning.current || foregroundPending.current) {
       if (includeOptions || pendingProgressRefresh.current !== "all")
         pendingProgressRefresh.current = includeOptions ? "all" : "data";
       return;
     }
+    backgroundRefresh.current = true;
     if (includeOptions) setRefresh(value => value + 1);
     else setDataRefresh(value => value + 1);
   }, []);
@@ -388,11 +412,15 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     const sequence = ++reportSequence.current;
     reportRunning.current = true;
     pendingProgressRefresh.current = null;
-    const scope = JSON.stringify({ filters, page, size, sort, direction });
-    if (resultScope.current !== scope) {
-      setResult(null);
-      resultScope.current = scope;
-    }
+    // Sorting and pagination only refresh rows. Keeping their controls visible
+    // lets selects restore focus without scrolling back to the analysis above.
+    const scope = JSON.stringify({ filters, refresh, dataRefresh });
+    const tableOnly = reportScope.current === scope && !backgroundRefresh.current;
+    reportScope.current = scope;
+    setForegroundLoading(!tableOnly && !backgroundRefresh.current);
+    setTableRefresh(tableOnly);
+    backgroundRefresh.current = false;
+    setReportFailed(false);
     setLoading(true);
     setError(null);
     jsonRequest(
@@ -410,7 +438,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       .catch((e) => {
         if (!abort.signal.aborted && e.name !== "AbortError") {
           setError(e instanceof AnalyticsRequestError ? e : e.message);
-          setResult(null);
+          setReportFailed(true);
         }
       })
       .finally(() => {
@@ -480,6 +508,17 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   }, [entity, drillRequest, filters, drillScope]);
   const reliability = status ? reportReliability(status, filters) : null;
   const comparison = useABCComparison(filters, refresh, dataRefresh);
+  const showSkeletons = foregroundLoading && !backgroundRefresh.current && (loading || comparison.loading);
+  const tableLoading = tableRefresh && loading;
+  foregroundPending.current = showSkeletons;
+  const displayResult = result || EMPTY_RESULT;
+  const reportUnavailable = reportFailed ? "Não foi possível carregar esta análise. Tente atualizar os dados." : null;
+  useEffect(() => {
+    if (loading || showSkeletons || !pendingProgressRefresh.current) return;
+    const pending = pendingProgressRefresh.current;
+    pendingProgressRefresh.current = null;
+    refreshFromProgress(pending === "all");
+  }, [loading, showSkeletons, refreshFromProgress]);
   const selectedConnections = reliability?.connections || [];
   const incomplete = !reliability?.complete;
   const pendingHistory = status?.jobs.some(job => job.status !== "completed" &&
@@ -554,16 +593,16 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           <div className="w-full text-xs text-[var(--color-text-secondary)] sm:mr-2 sm:w-auto">
             {result ? <>Atualizado <time dateTime={result.generatedAt}>{new Date(result.generatedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</time></> : "Aguardando dados"}
           </div>
-          <button className="btn-ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}>
+          <button className="btn-ghost" onClick={() => { markForeground(); setRefresh(v => v + 1); }} disabled={loading || showSkeletons}>
             <RefreshCw aria-hidden="true" className={`w-4 h-4 ${loading ? "motion-safe:animate-spin" : ""}`} />Atualizar
           </button>
-          <ABCExportActions busy={exporting} disabled={!result?.total || loading} onDownload={download} />
+          <ABCExportActions busy={exporting} disabled={!result?.total || loading || showSkeletons || reportFailed} onDownload={download} />
         </div>
       </div>
       {exportNotice && <p role="status" className="text-sm text-emerald-800">{exportNotice}</p>}
       {exportError && <p role="alert" className="card p-4 text-sm text-red-800">{exportError}</p>}
       <ABCModeTabs grouping={filters.grouping} onChange={switchGrouping} />
-          {loading && (
+          {(loading || showSkeletons) && (
             <div role="status" className="pointer-events-none fixed bottom-4 right-4 z-40 rounded-full border border-[var(--color-border-light)] bg-[var(--color-bg-primary)] p-3 text-amber-700 shadow-sm">
               <LoaderCircle aria-hidden="true" className="h-5 w-5 motion-safe:animate-spin" />
               <span className="sr-only">Atualizando a Curva ABC…</span>
@@ -576,7 +615,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           e.preventDefault();
           setPage(1);
           setSearchPage(1);
+          markForeground();
           setFilters({ ...draft });
+          setRefresh(value => value + 1);
         }}
       >
         <div className="flex flex-wrap items-end gap-4">
@@ -610,7 +651,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             className="btn-ghost text-xs"
             onClick={() => setDraft(f => ({ ...f, from: dayBefore(today(), n - 1), to: today() }))}
           >Últimos {n} dias</button>)}
-          <button className="btn-primary" type="submit" disabled={loading}>Analisar vendas</button>
+          <button className="btn-primary" type="submit" disabled={loading || showSkeletons}>Analisar vendas</button>
           <button
             type="button"
             className="btn-ghost sm:ml-auto"
@@ -623,13 +664,14 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </button>
         </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2 border-t border-[var(--color-border-light)] pt-3 text-xs text-[var(--color-text-secondary)]" aria-label="Filtros aplicados">
+        <div className="flex h-28 flex-wrap items-center gap-2 overflow-y-auto border-t border-[var(--color-border-light)] pt-3 text-xs text-[var(--color-text-secondary)] sm:h-24 xl:h-16" aria-label="Filtros aplicados">
           <span>{filters.from.split("-").reverse().join("/")} — {filters.to.split("-").reverse().join("/")}</span>
           <span className="rounded-full bg-[var(--color-bg-tertiary)] px-2 py-1">{activeFilterCount} seleções aplicadas</span>
           <span>{filters.metric === "quantity" ? "Quantidade" : "Valor bruto"} · {filters.basis === "orders" ? "Data da venda" : "Emissão da NF"}</span>
           {appliedSelections.filter(dim => dim !== "statuses").map(dim => <span key={dim} className="rounded-full border border-[var(--color-border-light)] px-2 py-1">{DIMENSIONS[dim]}: {filters.selections[dim]!.length}</span>)}
           {filtersChanged && <span role="status" className="text-amber-800">Alterações não aplicadas</span>}
           <button type="button" className="btn-ghost text-xs sm:ml-auto" onClick={() => {
+            markForeground();
             const cleared = { ...filters, selections: { statuses: ABC_DEFAULTS.statuses.map(String) } };
             setDraft(current => ({ ...current, selections: cleared.selections })); setFilters(cleared); setPage(1); setSearchPage(1);
           }}>Limpar seleções</button>
@@ -904,17 +946,17 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
         </div>}
       </form>
-      {reliability && (incomplete || pendingHistory) && <details className="card px-5 py-3 text-xs border-amber-200">
-        <summary className="cursor-pointer font-medium text-amber-900">{incomplete ? "Escopo parcial" : "Importações"}{pendingHistory ? " · atualização pendente" : " · histórico pendente"}</summary>
+      <details className="card px-5 py-3 text-xs border-amber-200" aria-busy={!reliability}>
+        <summary className="cursor-pointer font-medium text-amber-900">{!reliability ? "Verificando cobertura" : incomplete ? "Escopo parcial" : pendingHistory ? "Importações" : "Cobertura verificada"}{pendingHistory ? " · atualização pendente" : reliability && incomplete ? " · histórico pendente" : ""}</summary>
         <div className="mt-3 space-y-3">
           {selectedConnections.map(connection => <div key={connection.id}>
             <p className="mb-1 font-medium">{connection.name}</p>
             <ConnectionProgress connection={connection.id} enabled={connection.enabled} jobs={status!.jobs} coverage={status!.coverage || status!.jobs} />
           </div>)}
         </div>
-      </details>}
+      </details>
       {(error || schedulingError) && (
-        <div className="card p-5 text-red-800" role="alert">
+        <div className="card fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-2xl p-5 text-red-800 shadow-lg lg:bottom-6" role="alert">
           {(typeof error === "string" ? error : error?.message) || schedulingError}
           {isAdmin && !(error instanceof AnalyticsRequestError && ["HISTORICAL_COST_UNAVAILABLE", "ANALYTICS_MIGRATION_REQUIRED"].includes(error.code || "")) && (
             <p className="mt-2">
@@ -925,35 +967,33 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           )}
         </div>
       )}
-      {loading && !overviewResult && <ABCOverviewSkeleton />}
-      {overviewResult && <ABCOverview result={overviewResult} filters={filters} comparison={comparison} loading={loading || !result} />}
-      {result && (
-        <>
-          {isAdmin && result.composition && <section className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" aria-label="Regras da consolidação"><details>
+      <ABCOverview result={overviewResult || EMPTY_RESULT} filters={filters} comparison={comparison} loading={loading || !result || reportFailed} skeleton={showSkeletons} error={reportUnavailable} />
+          {isAdmin && displayResult.composition && <LoadingRegion as="section" loading={showSkeletons} error={reportUnavailable} skeleton={<Skeleton className="m-5 h-5 w-56" />} className="card p-5 space-y-3 border-emerald-200 bg-emerald-50/30" label="Regras da consolidação"><details>
             <summary className="cursor-pointer font-medium text-emerald-900">Regras da consolidação
             <h2 className="font-semibold">Produtos base · composições confirmadas</h2>
             </summary>
-            <p className="text-sm text-stone-600">{result.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. {result.composition.costSource?.allocationPolicy !== "signed_cost_magnitude_zero_quantity" && "O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais."}</p>
-            <p className="text-xs text-stone-600">CMV de referência: {result.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {result.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {result.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(result.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
-            {result.composition.periodCostCents != null && <p className="text-sm text-stone-700">Custo de referência das unidades vendidas: <strong>{money(result.composition.periodCostCents)}</strong>. Soma das quantidades × custo histórico aplicável de cada componente.</p>}
-            {result.composition.costSource?.allocationPolicy === "signed_cost_magnitude_zero_quantity" && <p className="text-xs text-stone-600">O CMV preserva valores zerados e negativos. O rateio da receita usa a magnitude dos custos; quando todos os custos do kit são zero, usa a quantidade de cada componente. Centavos residuais são distribuídos sem alterar o valor original da venda.</p>}
-            {!!result.composition.zeroCostLines && <p className="text-xs text-stone-600">{result.composition.zeroCostLines} itens vendidos incluem componente com custo informado zero.</p>}
-            {!!result.composition.negativeCostLines && <p className="text-xs text-stone-600">{result.composition.negativeCostLines} itens vendidos incluem componente com custo negativo, preservado no CMV.</p>}
-            {!!result.composition.quantityAllocationLines && <p className="text-xs text-stone-600">{result.composition.quantityAllocationLines} kits com todos os custos zerados foram rateados pela quantidade dos componentes.</p>}
-            {!!result.composition.costMissingLines && <p className="text-xs text-amber-800">Custo de referência total incompleto: {result.composition.costMissingLines} itens sem custo histórico válido. Parcela conhecida: {money(result.composition.knownCostCents || "0")}. Valores ausentes não são considerados custo zero.</p>}
-            {result.composition.costSource?.lastError && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">A atualização do CMV está pendente: {result.composition.costSource.lastError} O relatório usa a última referência disponível.</p>}
-            {!!result.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">Rateio incompleto: {money(result.composition.unallocatedRevenue)} de {result.composition.unallocatedLines} itens vendidos aguardam CMV de {result.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(result.composition.originalRevenue)}.</p>}
-            <p className="text-xs text-stone-500">Filtros de SKU, produto e produto pai selecionam os registros originais da venda antes da consolidação. Regra {result.composition.version}.</p>
-            {!!result.composition.ignoredComponentSkus?.length && <p className="text-xs text-stone-600">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
-            {!!result.composition.pendingTotal && <details>
-              <summary className="cursor-pointer text-sm font-medium text-amber-900">{result.composition.pendingTotal} SKUs sem vínculo confirmado permanecem separados · revisar composição</summary>
-              <ul className="mt-3 space-y-2 text-sm text-stone-600">{result.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-xs font-semibold">{item.sku}</span> · <EntityName name={item.name} /><span className="block text-xs text-amber-800">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
-              {result.composition.pendingTotal > result.composition.pending.length && <p className="mt-2 text-xs">Primeiros {result.composition.pending.length} SKUs pendentes; a exportação mantém todos os registros no ranking.</p>}
+            <p className="text-sm text-stone-600">{displayResult.composition.mappedEntities} produtos base consolidados. Cada combo contribui para os seus componentes nas respectivas unidades de estoque. {displayResult.composition.costSource?.allocationPolicy !== "signed_cost_magnitude_zero_quantity" && "O valor vendido é dividido proporcionalmente ao CMV de referência × quantidade de cada componente, com ajuste dos centavos residuais."}</p>
+            <p className="text-xs text-stone-600">CMV de referência: {displayResult.composition.costSource?.name || "Olist 1"}, atualizado automaticamente. {displayResult.composition.costSource?.basis === "purchase" ? "Custo de compra" : "Custo médio"} vigente no dia de cada {filters.basis === "invoiced" ? "emissão da NF" : "venda"}; fechamento diário em São Paulo. Custos posteriores não são aplicados às vendas anteriores. {displayResult.composition.costSource?.lastSyncedAt ? `Históricos sincronizados até: ${new Date(displayResult.composition.costSource.lastSyncedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}.` : "Primeira sincronização dos históricos em andamento."}</p>
+            {displayResult.composition.periodCostCents != null && <p className="text-sm text-stone-700">Custo de referência das unidades vendidas: <strong>{money(displayResult.composition.periodCostCents)}</strong>. Soma das quantidades × custo histórico aplicável de cada componente.</p>}
+            {displayResult.composition.costSource?.allocationPolicy === "signed_cost_magnitude_zero_quantity" && <p className="text-xs text-stone-600">O CMV preserva valores zerados e negativos. O rateio da receita usa a magnitude dos custos; quando todos os custos do kit são zero, usa a quantidade de cada componente. Centavos residuais são distribuídos sem alterar o valor original da venda.</p>}
+            {!!displayResult.composition.zeroCostLines && <p className="text-xs text-stone-600">{displayResult.composition.zeroCostLines} itens vendidos incluem componente com custo informado zero.</p>}
+            {!!displayResult.composition.negativeCostLines && <p className="text-xs text-stone-600">{displayResult.composition.negativeCostLines} itens vendidos incluem componente com custo negativo, preservado no CMV.</p>}
+            {!!displayResult.composition.quantityAllocationLines && <p className="text-xs text-stone-600">{displayResult.composition.quantityAllocationLines} kits com todos os custos zerados foram rateados pela quantidade dos componentes.</p>}
+            {!!displayResult.composition.costMissingLines && <p className="text-xs text-amber-800">Custo de referência total incompleto: {displayResult.composition.costMissingLines} itens sem custo histórico válido. Parcela conhecida: {money(displayResult.composition.knownCostCents || "0")}. Valores ausentes não são considerados custo zero.</p>}
+            {displayResult.composition.costSource?.lastError && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">A atualização do CMV está pendente: {displayResult.composition.costSource.lastError} O relatório usa a última referência disponível.</p>}
+            {!!displayResult.composition.unallocatedLines && <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">Rateio incompleto: {money(displayResult.composition.unallocatedRevenue)} de {displayResult.composition.unallocatedLines} itens vendidos aguardam CMV de {displayResult.composition.missingCostSkus.join(", ")}. As quantidades dos componentes estão incluídas; os valores desses combos ainda não foram atribuídos aos produtos. Valor original dos itens: {money(displayResult.composition.originalRevenue)}.</p>}
+            <p className="text-xs text-stone-500">Filtros de SKU, produto e produto pai selecionam os registros originais da venda antes da consolidação. Regra {displayResult.composition.version}.</p>
+            {!!displayResult.composition.ignoredComponentSkus?.length && <p className="text-xs text-stone-600">A Embalagem BelezaFIX é desconsiderada como componente nesta análise. Os SKUs de origem continuam no detalhamento para permitir a separação entre versões com e sem embalagem.</p>}
+            {!!displayResult.composition.pendingTotal && <details>
+              <summary className="cursor-pointer text-sm font-medium text-amber-900">{displayResult.composition.pendingTotal} SKUs sem vínculo confirmado permanecem separados · revisar composição</summary>
+              <ul className="mt-3 space-y-2 text-sm text-stone-600">{displayResult.composition.pending.map(item => <li key={item.sku}><span className="font-mono text-xs font-semibold">{item.sku}</span> · <EntityName name={item.name} /><span className="block text-xs text-amber-800">{item.reason} · {item.orders} pedidos</span></li>)}</ul>
+              {displayResult.composition.pendingTotal > displayResult.composition.pending.length && <p className="mt-2 text-xs">Primeiros {displayResult.composition.pending.length} SKUs pendentes; a exportação mantém todos os registros no ranking.</p>}
             </details>}
             </details>
-          </section>}
+          </LoadingRegion>}
+          <LoadingRegion loading={showSkeletons} error={reportUnavailable} label="Gráfico de concentração das vendas" skeleton={<ChartSkeleton />}>
           <ParetoChart
-            result={result}
+            result={displayResult}
             a={filters.thresholdA}
             b={filters.thresholdB}
             highlight={highlightRow ? highlight : null}
@@ -961,12 +1001,13 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
             onOpen={openEntity}
             entityLabel={filters.grouping === "customer" ? "cliente" : "produto"}
           />
-          <section className="card min-w-0 overflow-hidden" aria-label="Ranking ABC" aria-busy={loading || search !== searchQuery}>
+          </LoadingRegion>
+          <LoadingRegion as="section" className="card min-w-0 [overflow-anchor:none]" label="Ranking ABC" loading={showSkeletons} error={reportUnavailable} skeleton={<TableSkeleton columns={visibleColumns.length} rows={14} />}>
             <div className="p-5 space-y-3">
               <div className="flex flex-wrap justify-between items-center gap-3">
                 <h2 className="font-semibold">
                   {filters.grouping === "customer" ? "Clientes" : "Produtos"} ·{" "}
-                  {number(result.total)} entidades
+                  {number(displayResult.total)} entidades
                 </h2>
                 <div className="relative w-full sm:w-80">
                   <label htmlFor="abc-table-search" className="sr-only">{filters.grouping === "customer" ? "Buscar clientes" : "Buscar produtos ou SKU"}</label>
@@ -975,7 +1016,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   {search && <button aria-label="Limpar busca" className="absolute right-2 top-2 rounded-lg p-1.5 hover:bg-amber-50 focus-visible:outline-2 focus-visible:outline-amber-700" onClick={() => { setSearch(""); setSearchPage(1); }}><X aria-hidden="true" className="h-4 w-4" /></button>}
                 </div>
               </div>
-              <p id="abc-search-scope" className="text-xs text-[var(--color-text-secondary)]">{!completeRanking ? "Busca indisponível: o servidor retornou um ranking incompleto." : searching ? `${number(tableTotal)} de ${number(result.total)} registros · posição e classe originais preservadas.` : "Busca em todo o ranking. Exportações incluem todos os registros dos filtros aplicados."}</p>
+              <p id="abc-search-scope" className="text-xs text-[var(--color-text-secondary)]">{!completeRanking ? "Busca indisponível: o servidor retornou um ranking incompleto." : searching ? `${number(tableTotal)} de ${number(displayResult.total)} registros · posição e classe originais preservadas.` : "Busca em todo o ranking. Exportações incluem todos os registros dos filtros aplicados."}</p>
               <details>
                 <summary className="text-sm cursor-pointer">
                   Colunas da tabela
@@ -1001,8 +1042,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 </div>
               </details>
             </div>
-            <div className="max-h-[720px] overflow-auto overscroll-x-contain" tabIndex={0} role="region" aria-label="Tabela do ranking ABC">
-              <table className="w-full min-w-[960px] text-sm text-left">
+            <div className="h-[min(720px,70dvh)] min-h-80 overflow-auto overscroll-x-contain [scrollbar-gutter:stable] [overflow-anchor:none]" tabIndex={0} role="region" aria-label="Tabela do ranking ABC" aria-busy={tableLoading}>
+              <table className="w-full min-w-[960px] table-fixed text-sm text-left">
+                <colgroup>{visibleColumns.map(column => <col key={column} style={{ width: columnWidths[column] }} />)}</colgroup>
                 <caption className="sr-only">Ranking completo do período, com paginação. Valores e classes calculados pelo servidor.</caption>
                 <thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)]">
                   <tr>
@@ -1020,9 +1062,12 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                         }
                       >
                         <button
-                          disabled={c === "class" || loading}
+                          disabled={c === "class"}
+                          aria-disabled={loading || undefined}
                           className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700"
                           onClick={() => {
+                            if (loading) return;
+                            markTableRefresh();
                             setSort(c);
                             setDirection(
                               sort === c && direction === "asc"
@@ -1044,10 +1089,11 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody aria-hidden={tableLoading || undefined}>
                   {tableRows.map((row) => (
                     <tr
                       key={row.entityId}
+                      inert={tableLoading || undefined}
                       data-abc-entity={row.entityId}
                       data-highlighted={paretoHighlighted(row, highlightRow, !!highlight?.cumulative)}
                       className={`cursor-pointer border-t border-[var(--color-border-light)] transition-colors duration-75 motion-reduce:transition-none ${paretoHighlighted(row, highlightRow, !!highlight?.cumulative) ? "bg-amber-100/75 ring-1 ring-inset ring-amber-300" : "hover:bg-amber-50/50"}`}
@@ -1067,9 +1113,11 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                       {visibleColumns.map((c) => (
                         <td
                           key={c}
-                          className={`px-4 py-4 ${c === "name" ? "min-w-64 max-w-md break-words" : ["sku", "class"].includes(c) ? "whitespace-nowrap" : "whitespace-nowrap tabular-nums text-right"}`}
+                          title={c === "revenue" ? money(row.revenue) : c === "quantity" ? number(row.quantity) : c === "sku" ? row.sku || undefined : undefined}
+                          className={`relative px-4 py-4 ${c === "name" ? "min-w-64 max-w-md break-words" : ["sku", "class"].includes(c) ? "overflow-hidden text-ellipsis whitespace-nowrap" : "overflow-hidden text-ellipsis whitespace-nowrap tabular-nums text-right"}`}
                         >
-                          {cell(row, c)}
+                          <span style={tableLoading ? { visibility: "hidden" } : undefined}>{cell(row, c)}</span>
+                          {tableLoading && <Skeleton className="absolute left-4 right-4 top-1/2 h-3 -translate-y-1/2" />}
                         </td>
                       ))}
                     </tr>
@@ -1077,7 +1125,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 </tbody>
               </table>
               {searching && !tableTotal && <div className="p-10 text-center" role="status"><h3 className="font-semibold">Nenhum resultado para esta busca</h3><p className="mt-2 text-sm text-[var(--color-text-secondary)]">Tente outro nome{filters.grouping === "customer" ? "." : " ou SKU."}</p><button className="btn-ghost mt-3" onClick={() => setSearch("")}>Limpar busca</button></div>}
-              {!result.total && (
+              {!displayResult.total && (
                 <div className="p-10 text-center">
                   <h3 className="font-semibold">
                     {reliability?.emptyTitle || "Cobertura ainda não verificada"}
@@ -1094,6 +1142,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   className="field w-auto"
                   value={size}
                   onValueChange={(e) => {
+                    if (Number(e) === size) return;
+                    markTableRefresh();
                     setSize(Number(e));
                     setPage(1);
                     setSearchPage(1);
@@ -1109,8 +1159,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 <button
                   aria-label="Página anterior"
                   className="btn-ghost"
-                  disabled={loading || tablePage === 1}
-                  onClick={() => searching ? setSearchPage(tablePage - 1) : setPage(v => v - 1)}
+                  aria-disabled={loading || tablePage === 1}
+                  onClick={() => { if (loading || tablePage === 1) return; if (searching) setSearchPage(tablePage - 1); else { markTableRefresh(); setPage(v => v - 1); } }}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -1120,16 +1170,14 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 <button
                   aria-label="Próxima página"
                   className="btn-ghost"
-                  disabled={loading || tablePage >= tablePages}
-                  onClick={() => searching ? setSearchPage(tablePage + 1) : setPage(v => v + 1)}
+                  aria-disabled={loading || tablePage >= tablePages}
+                  onClick={() => { if (loading || tablePage >= tablePages) return; if (searching) setSearchPage(tablePage + 1); else { markTableRefresh(); setPage(v => v + 1); } }}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
-          </section>
-        </>
-      )}
+          </LoadingRegion>
       </div>
       <dialog
         ref={dialog}
@@ -1158,7 +1206,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               {drillError}
             </p>
           )}
-          {!drill && !drillError && <p role="status">Consultando pedidos…</p>}
+          <LoadingRegion label="Detalhamento dos pedidos" loading={drillLoading} className="min-h-[480px]" skeleton={<RowsSkeleton rows={7} />}>
           {drill && (
             <>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -1250,6 +1298,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
               </div>
             </>
           )}
+          </LoadingRegion>
         </div>
       </dialog>
     </div>

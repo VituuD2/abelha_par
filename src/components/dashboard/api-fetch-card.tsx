@@ -15,15 +15,17 @@ import { useAppAccess } from "@/components/layout/app-shell";
 interface ApiFetchCardProps {
   onFetch: (orders: OlistOrder[], dateMode: "created" | "updated", mapping: ReconciliationConfig | null) => void;
   onFetchStart: () => void;
+  onLoadingChange?: (loading: boolean) => void;
   disabled?: boolean;
 }
 
-export function ApiFetchCard({ onFetch, onFetchStart, disabled }: ApiFetchCardProps) {
+export function ApiFetchCard({ onFetch, onFetchStart, onLoadingChange, disabled }: ApiFetchCardProps) {
   const { can } = useAppAccess();
   const [dateFrom, setDateFrom] = useState(() => saoPauloDate());
   const [dateTo, setDateTo] = useState(() => saoPauloDate());
   const [dateMode, setDateMode] = useState<"created" | "updated">("updated");
   const [loading, setLoading] = useState(false);
+  useEffect(() => { onLoadingChange?.(loading); }, [loading, onLoadingChange]);
   const [checking, setChecking] = useState(true);
   const [connected, setConnected] = useState(false);
   const [health, setHealth] = useState<ConnectionHealth | null>(null);

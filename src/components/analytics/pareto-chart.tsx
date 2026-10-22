@@ -22,7 +22,6 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
   const tooltipId = useId();
   const touch = useRef(false);
   const rows = result.pareto, count = rows.length;
-  if (!count) return null;
   const plot = Math.max(780, count * 10), width = left + plot + 32;
   const x = (index: number) => left + ((index + 0.5) * plot) / count;
   const active = rows.find(row => row.entityId === highlight?.entityId) || null;
@@ -36,6 +35,7 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
   };
   const path = (items: ABCRow[]) => items.map((row, index) => `${x(index)},${y(row.cumulative)}`).join(" ");
   const inspectPointer = (event: ReactPointerEvent<SVGSVGElement>) => {
+    if (!count) return;
     touch.current = event.pointerType === "touch";
     const bounds = event.currentTarget.getBoundingClientRect();
     if (!bounds.width || !bounds.height) return;
@@ -60,23 +60,26 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
           <span className="flex items-center gap-1.5"><i className="w-5 h-0.5 bg-emerald-600" />Acumulado</span>
         </div>
       </div>
-      <div className="relative md:min-h-[290px] rounded-2xl border border-stone-200/80 bg-gradient-to-b from-stone-50/60 to-white">
-        <div className="overflow-x-auto rounded-2xl">
+      <div className="relative h-[290px] rounded-2xl border border-stone-200/80 bg-gradient-to-b from-stone-50/60 to-white">
+        {!count && <p role="status" className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-stone-500">Sem vendas para representar neste período.</p>}
+        <div className="h-full overflow-x-auto rounded-2xl" role="region" tabIndex={0} aria-label="Área rolável do gráfico de Pareto">
           <svg
             className="block w-full cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:outline-amber-600 focus-visible:-outline-offset-2"
-            style={{ minWidth: Math.max(540, left + count * 10 + 32) }}
+            style={{ width, minWidth: "100%", height: 270 }}
+            preserveAspectRatio="none"
             viewBox={`0 0 ${width} 270`}
             role="img"
-            tabIndex={0}
+            tabIndex={count ? 0 : -1}
             aria-label={`Gráfico de Pareto: ${result.total} entidades; os dez primeiros concentram ${pct(result.top10)}`}
             aria-describedby={active ? tooltipId : undefined}
             aria-keyshortcuts="ArrowLeft ArrowRight Home End Enter Escape"
             onPointerMove={inspectPointer}
             onPointerDown={inspectPointer}
             onPointerLeave={() => { if (!touch.current) clear(); }}
-            onFocus={() => { if (!active) select(rows[0]); }}
+            onFocus={() => { if (!active && count) select(rows[0]); }}
             onBlur={clear}
             onKeyDown={event => {
+              if (!count) return;
               if (event.key === "Escape") { onHighlight(null); return; }
               if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
                 event.preventDefault();
@@ -122,14 +125,14 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
               <circle cx={x(activeIndex)} cy={y(active.cumulative)} r="4.5" fill="#047857" stroke="white" strokeWidth="2" />
               <text x={x(activeIndex)} y={bottom + 17} textAnchor="middle" fontSize="11" fontWeight="700" fill="#92400e">{active.rank}º</text>
             </g>}
-            {!active && <><text x={left} y={bottom + 20} fontSize="11" fill="#78716c">1º {entityLabel}</text><text x={left + plot} y={bottom + 20} textAnchor="end" fontSize="11" fill="#78716c">{rows[count - 1].rank}º {entityLabel}</text></>}
+            {!active && count > 0 && <><text x={left} y={bottom + 20} fontSize="11" fill="#78716c">1º {entityLabel}</text><text x={left + plot} y={bottom + 20} textAnchor="end" fontSize="11" fill="#78716c">{rows[count - 1].rank}º {entityLabel}</text></>}
           </svg>
         </div>
         {active && <div
           role="tooltip"
           id={tooltipId}
           data-pareto-tooltip
-          className={`pointer-events-auto md:pointer-events-none relative m-3 md:m-0 md:absolute md:top-3 z-10 md:w-72 md:max-w-[calc(100%-1.5rem)] rounded-2xl border border-stone-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm ${activeIndex < count / 2 ? "md:right-3" : "md:left-3"}`}
+          className={`pointer-events-auto md:pointer-events-none absolute top-3 z-10 w-72 max-w-[calc(100%-1.5rem)] max-h-[264px] overflow-auto rounded-2xl border border-stone-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm ${activeIndex < count / 2 ? "right-3" : "left-3"}`}
         >
           <div className="flex items-center justify-between gap-2 text-xs"><span className="font-semibold text-stone-500">{cumulative ? `Acumulado · ${active.rank} ${entityLabel}s` : `${entityLabel === "cliente" ? "Cliente" : "Produto"} · posição ${active.rank}`}</span><span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-900">Classe {active.class}</span></div>
           <p className="mt-2 text-sm font-semibold leading-snug text-stone-900 line-clamp-3">{active.name}</p>
@@ -153,6 +156,7 @@ export function ParetoChart({ result, a, b, highlight, onHighlight, onOpen, enti
         {[10, 20, 30, 50, 80, 95, 100].map(value => <button
           key={value}
           type="button"
+          disabled={!count}
           className="rounded-lg border border-stone-200 bg-white px-2.5 py-1.5 text-xs tabular-nums text-stone-600 hover:border-emerald-400 hover:bg-emerald-50 focus-visible:outline-2 focus-visible:outline-emerald-600"
           aria-label={`Destacar ${entityLabel}s até ${value}% do acumulado`}
           onPointerEnter={() => percent(value)}

@@ -244,7 +244,7 @@ test("missing coverage stays visibly partial and a server error does not leave a
   );
   assert.equal(
     [...document.querySelectorAll("tbody tr")].filter(
-      (row) => !row.closest("dialog"),
+      (row) => !row.closest("dialog") && !row.closest('[aria-hidden="true"]'),
     ).length,
     0,
   );

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { summarizeApiUsage, type ApiUsage } from "@/lib/olist-api-types";
 import { ACCESS_REQUEST_TIMEOUT_MS, requestErrorMessage } from "@/lib/request-timeouts";
+import { LoadingRegion, RowsSkeleton } from "@/components/ui/loading-region";
 
 const time = (value: string | number) => new Date(value).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
 
@@ -11,11 +12,13 @@ export function useOlistApiUsage() {
   const [data, setData] = useState<ApiUsage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [foregroundLoading, setForegroundLoading] = useState(false);
   const pending = useRef(false), controller = useRef<AbortController | null>(null);
-  const load = useCallback(async () => {
+  const load = useCallback(async (foreground = false) => {
     if (pending.current) return;
     pending.current = true;
     setLoading(true);
+    setForegroundLoading(foreground);
     const request = new AbortController(); controller.current = request;
     try {
       const response = await fetch("/api/analytics/api-usage", { cache: "no-store", signal: AbortSignal.any([request.signal, AbortSignal.timeout(ACCESS_REQUEST_TIMEOUT_MS)]) });
@@ -34,11 +37,11 @@ export function useOlistApiUsage() {
     const timer = setInterval(() => { if (document.visibilityState !== "hidden") void load(); }, 15000);
     return () => { clearInterval(timer); controller.current?.abort(); pending.current = false; };
   }, [load]);
-  return { data, error, loading, refresh: load };
+  return { data, error, loading, foregroundLoading, refresh: () => load(true) };
 }
 
 export function OlistApiMonitor({ connectionId, usage }: { connectionId: string; usage: ReturnType<typeof useOlistApiUsage> }) {
-  const { data, error, loading, refresh } = usage;
+  const { data, error, loading, foregroundLoading, refresh } = usage;
   const account = data?.accounts?.find(a => a.connection_id === connectionId);
   const summary = account && data?.generated_at ? summarizeApiUsage(account, data.generated_at) : null;
   const now = Math.max(Date.now(), Date.parse(data?.generated_at || "") || 0);
@@ -50,6 +53,7 @@ export function OlistApiMonitor({ connectionId, usage }: { connectionId: string;
       <button type="button" disabled={loading} aria-label="Atualizar consumo" className="btn-ghost !p-2" onClick={() => void refresh()}><RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} /></button>
     </div>
     {error && <p className="text-xs text-amber-900" role="status">{error} Dados desatualizados.</p>}
+    <LoadingRegion label="Dados de consumo da API" loading={loading && (!data || foregroundLoading)} className="min-h-60" skeleton={<RowsSkeleton rows={3} />}>
     {!data ? <p className="text-xs text-[var(--color-text-secondary)]">Consultando consumo…</p>
       : !data.available ? <p className="text-xs" role="status">{data.error || "Monitor indisponível."}</p>
       : !account || !summary ? <p className="text-xs text-[var(--color-text-secondary)]">Sem medição desta conexão.</p> : <>
@@ -78,5 +82,6 @@ export function OlistApiMonitor({ connectionId, usage }: { connectionId: string;
           </div>
         </details>
       </>}
+    </LoadingRegion>
   </section>;
 }

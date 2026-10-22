@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { ApiFetchCard } from "@/components/dashboard/api-fetch-card";
 import { ActiveSessions } from "@/components/dashboard/active-sessions";
+import { LoadingRegion, RowsSkeleton } from "@/components/ui/loading-region";
 import { usePreparationStore } from "@/stores/preparation-store";
 import { useScanStore } from "@/stores/scan-store";
 import { reconcileOrders } from "@/lib/reconciliation";
@@ -18,6 +19,7 @@ export default function DashboardPage() {
   const sessionId = useScanStore(state => state.sessionId);
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [fetchingOrders, setFetchingOrders] = useState(false);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState("");
@@ -36,6 +38,7 @@ export default function DashboardPage() {
   [prep.mapping, prep.confirmedAt, prep.olistFetchedAt, selected, prep.olistOrders]);
 
   const onFetchStart = useCallback(() => {
+    setFetchingOrders(true);
     controller.current?.abort();
     usePreparationStore.setState({ olistOrders: [], olistFetchedAt: null });
     setError(null);
@@ -106,10 +109,11 @@ export default function DashboardPage() {
         <p className="text-sm">{prep.confirmedAt ? `Seleção confirmada em ${new Date(prep.confirmedAt).toLocaleString("pt-BR")}.` : "Aguardando seleção e confirmação na aba Pedidos do dia."}</p>
         <Link href="/orders" className="btn-primary self-start">{prep.confirmedAt ? "Revisar seleção" : "Selecionar pedidos"}</Link>
       </section>
-      <ApiFetchCard onFetch={onFetch} onFetchStart={onFetchStart} disabled={busy || starting} />
+      <ApiFetchCard onFetch={onFetch} onFetchStart={onFetchStart} onLoadingChange={setFetchingOrders} disabled={busy || starting} />
     </div>
     {busy && <p role="status" className="card p-5 mb-5">{status}</p>}
     {error && <p role="alert" className="card p-5 mb-5 text-[var(--color-accent-red)]">{error}</p>}
+    <LoadingRegion label="Resultado da conferência entre plataformas" loading={busy || fetchingOrders} className="min-h-80" skeleton={<RowsSkeleton rows={5} />}>
     {!result && !busy && <p className="card p-6">{!prep.confirmedAt ? "Confirme a seleção dos pedidos na aba Pedidos do dia." : !prep.olistFetchedAt ? "Seleção confirmada. Busque os pedidos na Olist para liberar a bipagem." : "O vínculo entre a Nuvemshop e a Olist precisa ser revisado pelo administrador no Ninho."}</p>}
     {result && !busy && <section className="card min-w-0 p-5 sm:p-6 space-y-4">
       <h2 className="text-xl font-semibold">Conferência entre plataformas</h2>
@@ -120,5 +124,6 @@ export default function DashboardPage() {
       <label className="block">Responsável pela conferência<input className="field mt-2 max-w-md block" maxLength={100} value={responsible} onChange={event => setResponsible(event.target.value)} placeholder="Nome do responsável" disabled={starting} /></label>
       <button className="btn-success" disabled={!ready || starting || !normalizeResponsible(responsible)} onClick={startScanning}>{starting ? "Validando e iniciando…" : "Iniciar bipagem"}</button>
     </section>}
+    </LoadingRegion>
   </>;
 }

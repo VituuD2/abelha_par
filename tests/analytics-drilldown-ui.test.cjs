@@ -57,7 +57,7 @@ test('direct page selection, previous and next preserve the existing orders and 
   });
   await render('pagination');
   await openProduct('A');
-  assert.match(modal().textContent, /Consultando pedidos/);
+  assert.ok(modal().querySelector('[data-loading-placeholder] .skeleton'));
   await act(async () => first.resolve(Response.json(data('A', 1))));
   const table = modal().querySelector('table');
   assert.equal(currentPage(), '1');
@@ -74,12 +74,12 @@ test('direct page selection, previous and next preserve the existing orders and 
     assert.match(modal().textContent, /Empresa A/);
     assert.match(modal().textContent, /125 pedidos/);
     assert.doesNotMatch(modal().textContent, /Consultando pedidos/);
-    assert.match(modal().querySelector('[role="status"]').textContent, new RegExp(`Carregando página ${page}`));
-    assert.equal(table.parentElement.getAttribute('aria-busy'), 'true');
+    assert.ok(modal().querySelector('[data-loading-placeholder] .skeleton'));
+    assert.equal(modal().querySelector('[data-loading-region]').getAttribute('aria-busy'), 'true');
     assert.equal(currentPage(), String(visiblePage));
-    assert.equal(button('Anterior').disabled, true);
-    assert.equal(button('Próxima').disabled, true);
-    assert.equal(modal().querySelector('.app-select-trigger').disabled, true);
+    assert.equal(button('Anterior').hasAttribute('inert'), true);
+    assert.equal(button('Próxima').hasAttribute('inert'), true);
+    assert.equal(modal().querySelector('.app-select-trigger').hasAttribute('inert'), true);
   };
   checkPending(3, 'A-PED-1', 1);
   await act(async () => pages.at(-1).resolve(Response.json(data('A', 3))));
@@ -135,7 +135,7 @@ test('closing a pending page aborts its request and a different product never di
   assert.equal(modal().querySelector('table'), null);
   await act(async () => old.resolve(Response.json(data('A', 2))));
   assert.doesNotMatch(modal().textContent, /A-PED-|Empresa A/);
-  assert.match(modal().textContent, /Consultando pedidos/);
+  assert.ok(modal().querySelector('[data-loading-placeholder] .skeleton'));
   await act(async () => nextProduct.resolve(Response.json(data('B', 1))));
   assert.match(modal().querySelector('table').textContent, /B-PED-1/);
   assert.equal(currentPage(), '1');

@@ -6,6 +6,7 @@ import { kpiSnapshot, percentageChange, previousPeriod, type Change, type KPICom
 import { signedDecimalUnits } from "@/lib/analytics/engine";
 import { money, number, pct } from "@/lib/analytics/format";
 import type { ABCFilters, ABCResult } from "@/lib/analytics/types";
+import { LoadingRegion, Skeleton } from "@/components/ui/loading-region";
 
 type Comparison = { data?: KPIComparison; loading: boolean; message: string | null };
 export type ABCOverviewResult = Pick<ABCResult, "revenue" | "quantity" | "orders" | "total" | "top10" | "classes" | "composition">;
@@ -71,7 +72,7 @@ function TrendBadge({ change, label, neutral = false }: { change: Change; label?
 }
 
 export function ABCOverview(props: {
-  result: ABCOverviewResult; filters: ABCFilters; comparison: Comparison; loading: boolean;
+  result: ABCOverviewResult; filters: ABCFilters; comparison: Comparison; loading: boolean; skeleton?: boolean; error?: string | null;
 }) {
   // Commit the current values and previous-period response together. Keep the
   // visible snapshot during refreshes, including changes to applied filters.
@@ -104,7 +105,7 @@ export function ABCOverview(props: {
 
   return (
     <>
-      <section className={panel} aria-label="Indicadores do período" aria-busy={props.loading || props.comparison.loading}>
+      <LoadingRegion as="section" className={panel} label="Indicadores do período" loading={props.skeleton ?? props.loading} error={props.error} skeleton={<div className="grid h-full grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">{[0, 1, 2, 3].map(index => <div key={index} className="flex min-h-0 flex-col gap-4 px-5 py-6 sm:px-6"><div className="flex items-center gap-3"><Skeleton className="h-10 w-10 shrink-0 rounded-xl" /><Skeleton className="h-4 w-2/3" /></div><Skeleton className="h-7 w-3/4 shrink-0" /><div className="mt-auto space-y-2"><Skeleton className="h-6 w-1/2" /><Skeleton className="h-3 w-1/3" /></div></div>)}</div>}>
         <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
           {indicators.map(({ label, values, Icon, color, changes, neutral }, index) => (
             <div key={index} className={`flex min-w-0 flex-col gap-4 border-[var(--color-border-light)] px-5 py-6 sm:px-6 ${index ? "border-t xl:border-t-0 xl:border-l" : ""} ${index === 1 ? "sm:border-t-0" : ""} ${index % 2 ? "sm:border-l" : ""}`}>
@@ -124,9 +125,9 @@ export function ABCOverview(props: {
             </div>
           ))}
         </div>
-      </section>
+      </LoadingRegion>
 
-      <section className={panel} aria-label="Resumo das classes ABC" aria-busy={props.loading || props.comparison.loading}>
+      <LoadingRegion as="section" className={panel} label="Resumo das classes ABC" loading={props.skeleton ?? props.loading} error={props.error} skeleton={<div className="p-5 sm:p-6"><Skeleton className="h-5 w-40" /><Skeleton className="mt-4 h-2 w-full" /><div className="mt-5 grid grid-cols-1 sm:grid-cols-3">{[0, 1, 2].map(index => <div key={index} className="space-y-4 py-5 sm:pr-6"><div className="flex gap-3"><Skeleton className="h-12 w-12 shrink-0 rounded-xl" /><div className="flex-1 space-y-3"><Skeleton className="h-3 w-1/2" /><Skeleton className="h-3 w-2/3" /></div></div><Skeleton className="h-6 w-3/4" /><Skeleton className="h-3 w-2/3" /></div>)}</div></div>}>
         <div className="px-5 pt-5 sm:px-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-sm font-semibold">Distribuição ABC</h2>
@@ -156,14 +157,7 @@ export function ABCOverview(props: {
             );
           })}
         </div>
-      </section>
+      </LoadingRegion>
     </>
   );
-}
-
-export function ABCOverviewSkeleton() {
-  return <div aria-hidden="true" className="space-y-6 motion-safe:animate-pulse">
-    <div className={`${panel} grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`}>{[0, 1, 2, 3].map(item => <div key={item} className="space-y-4 p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-[var(--color-bg-tertiary)]" /><div className="h-3 w-1/2 rounded bg-[var(--color-bg-tertiary)]" /></div><div className="h-8 w-3/4 rounded bg-[var(--color-bg-tertiary)]" /><div className="h-4 w-1/2 rounded bg-[var(--color-bg-tertiary)]" /></div>)}</div>
-    <div className={`${panel} p-6`}><div className="h-4 w-40 rounded bg-[var(--color-bg-tertiary)]" /><div className="mt-4 h-2 rounded-full bg-[var(--color-bg-tertiary)]" /><div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">{[0, 1, 2].map(item => <div key={item} className="space-y-4"><div className="h-12 w-12 rounded-xl bg-[var(--color-bg-tertiary)]" /><div className="h-6 w-3/4 rounded bg-[var(--color-bg-tertiary)]" /><div className="h-3 w-1/2 rounded bg-[var(--color-bg-tertiary)]" /></div>)}</div></div>
-  </div>;
 }

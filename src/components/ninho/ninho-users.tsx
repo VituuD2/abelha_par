@@ -1,4 +1,5 @@
 "use client";
+import { LoadingRegion, RowsSkeleton } from "@/components/ui/loading-region";
 import { Select } from "@/components/ui/select";
 
 
@@ -35,12 +36,15 @@ export function NinhoUsers() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const load = useCallback(async () => {
-    const response = await fetch("/api/ninho/users", { cache: "no-store" });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Não foi possível carregar os usuários.");
-    setUsers(data.users); setCurrentUserId(data.currentUserId);
+    setLoading(true);
+    try {
+      const response = await fetch("/api/ninho/users", { cache: "no-store" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Não foi possível carregar os usuários.");
+      setUsers(data.users); setCurrentUserId(data.currentUserId);
+    } finally { setLoading(false); }
   }, []);
-  useEffect(() => { load().catch(reason => setError(reason.message)).finally(() => setLoading(false)); }, [load]);
+  useEffect(() => { load().catch(reason => setError(reason.message)); }, [load]);
   async function save(member: Member) {
     if (member.user_id === currentUserId && (member.role !== "admin" || !member.active)
       && !window.confirm("Esta alteração vai remover seu acesso ao Ninho. Continuar?")) return;
@@ -74,7 +78,7 @@ export function NinhoUsers() {
     <NinhoSection title="Equipe da colmeia" icon={Users}
       status={<span className="badge">{loading ? "Carregando…" : `${users.length} usuários`}</span>}
       actions={<button className="btn-ghost" disabled={busy || loading} onClick={() => { setError(null); load().catch(reason => setError(reason.message)); }}><RefreshCw aria-hidden="true" className="w-4 h-4" />Atualizar</button>}>
-      <div className="max-h-[560px] overflow-auto" tabIndex={0} role="region" aria-label="Lista de usuários"><table className="w-full min-w-[640px] text-sm text-left"><thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]"><tr><th scope="col" className="p-4">Usuário</th><th scope="col" className="p-4">Perfil</th><th scope="col" className="p-4">Acesso</th><th scope="col" className="p-4"><span className="sr-only">Ações</span></th></tr></thead><tbody>{users.map(member => <MemberRow key={member.user_id} member={member} currentUserId={currentUserId} busy={busy} onSave={save} />)}</tbody></table></div>{loading && <p className="text-sm">Carregando usuários…</p>}
+      <LoadingRegion label="Dados dos usuários" loading={loading} className="min-h-48 max-h-[560px]" skeleton={<RowsSkeleton rows={3} />}><div className="max-h-[560px] overflow-auto" tabIndex={0} role="region" aria-label="Lista de usuários"><table className="w-full min-w-[640px] text-sm text-left"><thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]"><tr><th scope="col" className="p-4">Usuário</th><th scope="col" className="p-4">Perfil</th><th scope="col" className="p-4">Acesso</th><th scope="col" className="p-4"><span className="sr-only">Ações</span></th></tr></thead><tbody>{users.map(member => <MemberRow key={member.user_id} member={member} currentUserId={currentUserId} busy={busy} onSave={save} />)}</tbody></table></div></LoadingRegion>
     </NinhoSection>
     <NinhoSection title="Adicionar à colmeia" icon={UserPlus}>
       <form onSubmit={create} className="grid sm:grid-cols-2 gap-4"><label className="text-sm">Nome<input className="field mt-1" autoComplete="name" required minLength={2} maxLength={100} value={name} disabled={busy} onChange={event => setName(event.target.value)} /></label><label className="text-sm">E-mail de acesso<input className="field mt-1" type="email" autoComplete="email" required maxLength={254} value={email} disabled={busy} onChange={event => setEmail(event.target.value)} /></label><label className="text-sm">Senha inicial<input className="field mt-1" type="password" autoComplete="new-password" required minLength={12} maxLength={128} value={password} disabled={busy} onChange={event => setPassword(event.target.value)} /><span className="text-xs text-[var(--color-text-tertiary)]">Ao menos 12 caracteres.</span></label><div className="text-sm"><Select label="Perfil" className="field mt-1" value={role} disabled={busy} onValueChange={event => setRole(event as Member["role"])}><option value="operator">Operador</option><option value="admin">Administrador</option></Select></div><button className="btn-primary sm:col-span-2" disabled={busy}>{busy ? "Salvando…" : "Criar usuário"}</button></form>

@@ -1,5 +1,6 @@
 "use client";
 import { Select } from "@/components/ui/select";
+import { LoadingRegion, TableSkeleton } from "@/components/ui/loading-region";
 import { DatePicker } from "@/components/ui/date-picker";
 
 
@@ -115,7 +116,7 @@ export default function OrdersPage() {
       <p className="mt-3 text-xs text-[var(--color-text-secondary)]">A data de atualização inclui pagamentos confirmados depois da criação. Amplie o período para selecionar pedidos antigos preparados hoje.</p>
       {error && <p role="alert" className="mt-3 text-sm text-[var(--color-accent-red)]">{error} A seleção precisa de uma consulta completa para ser confirmada.</p>}
     </section>
-    <section className="card min-w-0 overflow-hidden">
+    <LoadingRegion as="section" className="card min-w-0" label="Seleção de pedidos do dia" loading={busy} skeleton={<TableSkeleton columns={6} />}>
       <div className="p-5 space-y-4 border-b border-[var(--color-border-light)]">
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold text-lg">Sua seleção do dia</h2><p className="text-sm text-[var(--color-text-secondary)]">{orders.length} carregados · {filtered.length} no filtro · {selectedIds.length} selecionados</p></div><span className="badge badge-pending">Shift + clique para selecionar um intervalo</span></div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -131,7 +132,7 @@ export default function OrdersPage() {
         </div>
         {hiddenCount > 0 && <p className="text-xs text-[var(--color-accent-orange)]">{hiddenCount} pedido(s) selecionado(s) estão fora do filtro atual e continuam no lote.</p>}
       </div>
-      <div className="max-h-[720px] overflow-auto" tabIndex={0} role="region" aria-label="Lista de pedidos Nuvemshop"><table className="w-full min-w-[800px] text-sm"><thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)] text-left text-[var(--color-text-secondary)]"><tr><th className="p-3 w-10"><span className="sr-only">Seleção</span></th><th className="p-3">Pedido / cliente</th><th className="p-3">Criação</th><th className="p-3">Pagamento</th><th className="p-3">Envio</th><th className="p-3 text-right">Valor</th></tr></thead><tbody>
+      <div className="h-[min(720px,65dvh)] min-h-80 overflow-auto [scrollbar-gutter:stable]" tabIndex={0} role="region" aria-label="Lista de pedidos Nuvemshop"><table className="w-full min-w-[800px] table-fixed text-sm"><thead className="sticky top-0 z-10 bg-[var(--color-bg-tertiary)] text-left text-[var(--color-text-secondary)]"><tr><th className="p-3 w-10"><span className="sr-only">Seleção</span></th><th className="p-3">Pedido / cliente</th><th className="p-3">Criação</th><th className="p-3">Pagamento</th><th className="p-3">Envio</th><th className="p-3 text-right">Valor</th></tr></thead><tbody>
         {visible.map(order => <tr key={order.id} onClick={event => toggle(order, event.shiftKey)} className={`border-t border-[var(--color-border-light)] select-none ${eligible(order) && !busy ? "cursor-pointer hover:bg-[var(--color-accent-yellow)]/10" : "cursor-not-allowed opacity-60"} ${selected.has(order.id) ? "bg-[var(--color-accent-yellow)]/15" : ""}`}>
           <td className="p-3"><input aria-label={`Selecionar pedido ${order.number}`} type="checkbox" checked={selected.has(order.id)} disabled={busy || !eligible(order)} onChange={() => {}} onClick={event => { event.stopPropagation(); toggle(order, event.shiftKey); }} /></td>
           <td className="p-3"><p className="font-semibold">#{order.number} <span className="font-normal text-[var(--color-text-secondary)]">{order.clientName || "Cliente não informado"}</span></p><p className="text-xs text-[var(--color-text-tertiary)]">ID {order.id}{order.status === "cancelled" ? " · Cancelado" : ""}</p></td>
@@ -143,7 +144,7 @@ export default function OrdersPage() {
         {!visible.length && <tr><td colSpan={6} className="p-12 text-center text-[var(--color-text-secondary)]">{orders.length ? "Nenhum pedido corresponde aos filtros." : "Busque os pedidos da Nuvemshop para montar sua seleção."}</td></tr>}
       </tbody></table></div>
       <div className="p-4 flex items-center justify-between border-t border-[var(--color-border-light)] text-sm"><button className="btn-ghost" disabled={currentPage === 1} onClick={() => { setPage(currentPage - 1); anchor.current = null; }}>Anterior</button><span>Página {currentPage} de {pages}</span><button className="btn-ghost" disabled={currentPage === pages} onClick={() => { setPage(currentPage + 1); anchor.current = null; }}>Próxima</button></div>
-    </section>
+    </LoadingRegion>
     <div className="sticky bottom-20 lg:bottom-4 z-20 card-elevated mt-5 p-4 flex flex-wrap items-center justify-between gap-3">
       <div><p className="font-semibold">{selectedIds.length} pedidos para conferir</p><p className="text-xs text-[var(--color-text-secondary)]">{confirmedAt ? "Seleção confirmada. Você pode continuar para o cruzamento." : "A confirmação substitui a lista usada pela antiga planilha."}</p></div>
       <button className="btn-success" disabled={!connected || busy || Boolean(error) || !selectedIds.length || selectedIds.length > 1000} onClick={() => { usePreparationStore.getState().confirmSelection(); router.push("/"); }}><Check className="w-4 h-4" />Confirmar seleção<ArrowRight className="w-4 h-4" /></button>

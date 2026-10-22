@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LoadingRegion, RowsSkeleton } from "@/components/ui/loading-region";
 import { Header } from "@/components/layout/header";
 import { BatchTable } from "@/components/history/batch-table";
 import type { Batch } from "@/types";
@@ -33,7 +34,6 @@ export default function HistoryPage() {
     const abort = new AbortController();
     setIsLoading(true);
     setError(null);
-    setBatches([]);
     const load = async () => {
       try {
         const params = new URLSearchParams({ page: String(search.page) });
@@ -101,7 +101,6 @@ export default function HistoryPage() {
 
       <form className="card p-5 sm:p-6 mb-6 space-y-3" role="search" onSubmit={event => {
         event.preventDefault();
-        setBatches([]);
         setIsLoading(true);
         setSearch({ query: input.trim(), page: 1 });
       }}>
@@ -114,7 +113,7 @@ export default function HistoryPage() {
               placeholder="Número do pedido, nome do cliente ou rastreio"
               className="field w-full [&::-webkit-search-cancel-button]:appearance-none" style={{ paddingLeft: 40, paddingRight: 40 }} />
             {!!input && <button type="button" aria-label="Limpar busca" className="absolute right-3 top-3.5" onClick={() => {
-              setInput(""); setBatches([]); setIsLoading(true); setSearch({ query: "", page: 1 });
+              setInput(""); setIsLoading(true); setSearch({ query: "", page: 1 });
             }}><X className="w-4 h-4" /></button>}
           </div>
           <button type="submit" className="btn-primary">Buscar</button>
@@ -122,13 +121,8 @@ export default function HistoryPage() {
       </form>
 
       {/* Content */}
-      {loading ? (
-        <div className="space-y-3" role="status" aria-label="Buscando pedidos">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="skeleton h-16 w-full" />
-          ))}
-        </div>
-      ) : error ? (
+      <LoadingRegion label="Resultados do histórico" loading={loading} className="min-h-[480px]" skeleton={<RowsSkeleton rows={7} />}>
+      {error ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -162,6 +156,7 @@ export default function HistoryPage() {
           </nav>}
         </motion.div>
       )}
+      </LoadingRegion>
     </>
   );
 }

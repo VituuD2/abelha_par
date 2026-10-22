@@ -1,5 +1,6 @@
 ﻿"use client";
 import { Select } from "@/components/ui/select";
+import { LoadingRegion, RowsSkeleton } from "@/components/ui/loading-region";
 import { ANALYTICS_REQUEST_TIMEOUT_MS } from "@/lib/request-timeouts";
 import { DatePicker } from "@/components/ui/date-picker";
 
@@ -199,6 +200,7 @@ export function AnalyticsConnections() {
   const [callbackOrigin, setCallbackOrigin] = useState("");
   const applicationForm = useRef<HTMLDetailsElement>(null);
   const loadVersion = useRef(0);
+  const [connectionsLoading, setConnectionsLoading] = useState(false);
   const configureApplication = (connection: Connection) => {
     setCredentialConnection(connection.id);
     setClientId(connection.client_id || "");
@@ -211,7 +213,8 @@ export function AnalyticsConnections() {
       });
     }
   };
-  const load = useCallback(async () => {
+  const load = useCallback(async (foreground = false) => {
+    if (foreground) setConnectionsLoading(true);
     const version = ++loadVersion.current;
     try {
       const next = await call("/api/analytics/connections");
@@ -220,7 +223,7 @@ export function AnalyticsConnections() {
       if (version === loadVersion.current) setError(
         e instanceof Error ? e.message : "Camada analítica indisponível.",
       );
-    }
+    } finally { if (foreground) setConnectionsLoading(false); }
   }, []);
   useEffect(() => {
     setCallbackOrigin(window.location.origin);
@@ -252,7 +255,7 @@ export function AnalyticsConnections() {
       setNotice(saved?.scheduled
         ? "Atualização do CMV agendada."
         : "Configuração salva.");
-      await load();
+      await load(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao configurar.");
     } finally {
@@ -270,7 +273,7 @@ export function AnalyticsConnections() {
         to,
       });
       setNotice("Importação agendada.");
-      await load();
+      await load(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao importar.");
     } finally {
@@ -282,7 +285,7 @@ export function AnalyticsConnections() {
     setError(null);
     try {
       await call("/api/analytics/sync", { action: "retry", job });
-      await load();
+      await load(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao retomar.");
     } finally {
@@ -299,7 +302,8 @@ export function AnalyticsConnections() {
         <button
           aria-label="Atualizar conexões analíticas"
           className="btn-ghost"
-          onClick={load}
+          disabled={connectionsLoading}
+          onClick={() => void load(true)}
         >
           <RefreshCw className="w-4 h-4" />
         </button>
@@ -314,7 +318,7 @@ export function AnalyticsConnections() {
           {notice}
         </p>
       )}
-      {!state && !error && <p role="status" className="text-sm">Carregando conexões…</p>}
+      <LoadingRegion label="Contas e conexões analíticas" loading={connectionsLoading || (!state && !error)} preserveHeight={!!state} className="min-h-80" skeleton={<RowsSkeleton rows={5} />}>
       <div className="grid items-start gap-4 xl:grid-cols-2">
         {state?.connections.map((c) => {
           const health = c.health || connectionHealth(c);
@@ -361,6 +365,7 @@ export function AnalyticsConnections() {
           );
         })}
       </div>
+      </LoadingRegion>
       <details>
         <summary className="cursor-pointer font-semibold text-sm">
           Cadastrar ou identificar empresa

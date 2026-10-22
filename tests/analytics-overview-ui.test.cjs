@@ -67,7 +67,7 @@ test('integrated panels preserve KPI and class values, real variations, independ
   assert.match(badges[0].textContent, /\+50%/); assert.match(badges[1].textContent, /−20%/);
   assert.match(badges[2].textContent, /Pedidos \+25%/); assert.match(badges[3].textContent, /Entidades \+100%/);
   assert.match(badges[4].title, /não indica.*melhora ou piora/);
-  assert.doesNotMatch(kpis.textContent, /vs\. período anterior/);
+  assert.match(kpis.textContent, /vs\. período anterior/);
   const period = previousPeriod(calls.find(call => call.url.endsWith('/comparison')).body.filters);
   const range = `${period.from.split('-').reverse().join('/')} a ${period.to.split('-').reverse().join('/')}`;
   const info = kpis.querySelectorAll('button[aria-label^="Período comparado:"]');
@@ -213,6 +213,75 @@ test('period info exposes only the exact date range and number transitions respe
   await overview({ ...result, revenue: '20000' });
   assert.match(panel().querySelector('[data-kpi-value]').textContent, /200,00/);
   assert.equal(animations.length, 0);
+});
+
+test('manual analysis skeletons every data panel until both responses finish without replacing scroll containers', async t => {
+  mockRequests(t); await render('stable-manual-loading');
+  const ranking = document.querySelector('[aria-label="Tabela do ranking ABC"]');
+  const chart = document.querySelector('[aria-label="Área rolável do gráfico de Pareto"]');
+  const firstRow = ranking.querySelector('tbody tr');
+  ranking.scrollTop = 120; ranking.scrollLeft = 80; chart.scrollLeft = 50;
+  const report = deferred(), comparison = deferred();
+  mockRequests(t, { report: () => report.promise, comparison: () => comparison.promise });
+  await click(button('Últimos 7 dias')); await click(button('Analisar vendas'));
+  const regions = () => [...document.querySelectorAll('[data-loading-region]')].filter(region => !region.closest('dialog'));
+  assert.equal(regions().length, 4);
+  assert.ok(regions().every(region => region.dataset.loading === 'true' && region.querySelector('[data-loading-placeholder] .skeleton')));
+  assert.equal(document.querySelector('[aria-label="Tabela do ranking ABC"]'), ranking);
+  assert.equal(document.querySelector('[aria-label="Área rolável do gráfico de Pareto"]'), chart);
+  assert.equal(ranking.querySelector('tbody tr'), firstRow);
+  assert.equal(ranking.hasAttribute('inert'), false, 'scroll parent must remain interactive');
+  assert.equal(firstRow.hasAttribute('inert'), true, 'old rows cannot be opened during analysis');
+  await act(async () => report.resolve(Response.json({ ...result, total: 2, rows: rows.slice(0, 2), pareto: rows.slice(0, 2) })));
+  assert.ok(regions().every(region => region.dataset.loading === 'true'));
+  await act(async () => comparison.resolve(Response.json({ period: {}, previous })));
+  assert.ok(regions().every(region => !region.hasAttribute('data-loading')));
+  assert.equal(ranking.querySelectorAll('tbody tr').length, 2);
+  assert.equal(ranking.scrollTop, 120); assert.equal(ranking.scrollLeft, 80); assert.equal(chart.scrollLeft, 50);
+  assert.equal(ranking.querySelector('tbody tr').hasAttribute('inert'), false);
+});
+
+test('product and customer list requests retain sorting controls, focus and scroll while only rows show skeletons', async t => {
+  for (const grouping of ['Produtos Olist', 'Produtos base', 'Clientes']) {
+    mockRequests(t); await render('list-focus-' + grouping);
+    await click(button(grouping));
+    const viewport = document.querySelector('[aria-label="Tabela do ranking ABC"]');
+    const ranking = document.querySelector('[aria-label="Ranking ABC"]');
+    const regions = () => [...document.querySelectorAll('[data-loading-region]')].filter(region => !region.closest('dialog'));
+    const sort = [...viewport.querySelectorAll('thead button')].find(el => el.textContent === 'Valor bruto');
+    viewport.scrollTop = 150; viewport.scrollLeft = 60;
+    const pending = deferred();
+    const calls = mockRequests(t, { report: () => pending.promise });
+    await act(async () => sort.focus()); await click(sort);
+    assert.equal(document.activeElement, sort);
+    assert.equal(sort.disabled, false);
+    assert.equal(sort.getAttribute('aria-disabled'), 'true');
+    assert.equal(sort.hasAttribute('inert'), false);
+    assert.equal(viewport.getAttribute('aria-busy'), 'true');
+    assert.ok(viewport.querySelector('tbody .skeleton'));
+    assert.equal(viewport.querySelector('tbody tr').hasAttribute('inert'), true);
+    assert.ok(regions().every(region => !region.hasAttribute('data-loading')));
+    assert.equal(calls.filter(call => call.url.endsWith('/comparison')).length, 0);
+    viewport.scrollTop = 190;
+    await act(async () => pending.resolve(Response.json({ ...result, rows: [...rows].reverse().slice(0, 25) })));
+    assert.equal(document.activeElement, sort);
+    assert.equal(document.querySelector('[aria-label="Tabela do ranking ABC"]'), viewport);
+    assert.equal(viewport.scrollTop, 190); assert.equal(viewport.scrollLeft, 60);
+    assert.equal(viewport.querySelector('tbody .skeleton'), null);
+    assert.equal(viewport.querySelector('tbody tr').hasAttribute('inert'), false);
+
+    const page = deferred();
+    mockRequests(t, { report: () => page.promise });
+    const next = ranking.querySelector('[aria-label="Próxima página"]');
+    await act(async () => next.focus()); await click(next);
+    assert.equal(document.activeElement, next);
+    assert.equal(next.disabled, false);
+    assert.equal(next.getAttribute('aria-disabled'), 'true');
+    assert.ok(regions().every(region => !region.hasAttribute('data-loading')));
+    await act(async () => page.resolve(Response.json({ ...result, rows: rows.slice(25, 50) })));
+    assert.equal(document.activeElement, next);
+    assert.equal(viewport.scrollTop, 190); assert.equal(viewport.scrollLeft, 60);
+  }
 });
 
 test('zero or missing classes, zero baselines, incomplete allocation and negative participation remain explicit', async () => {
