@@ -67,7 +67,7 @@ export function Sidebar({ role }: { role: Role | null }) {
         <div className="app-sidebar-surface flex-1 px-4 py-7 flex flex-col">
           {/* Logo */}
           <div className="flex items-center gap-3.5 px-3 mb-9">
-            <div className="w-11 h-11 p-2.5 rounded-xl bg-[var(--color-accent-blue)] flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 p-2.5 rounded-xl bg-[var(--brand)] flex items-center justify-center shrink-0">
               <BrandMark className="h-full w-full" />
             </div>
             <div>

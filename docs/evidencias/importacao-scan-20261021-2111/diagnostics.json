@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-22T00:11:15.676638+00:00",
+  "recentCycles": [
+    {
+      "mean_minutes": 45,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "last_completion": "2026-10-21T23:52:33.374727+00:00",
+      "completed_cycles": 6,
+      "first_completion": "2026-10-21T19:28:24.131575+00:00"
+    },
+    {
+      "mean_minutes": 38.9,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "last_completion": "2026-10-22T00:09:15.946599+00:00",
+      "completed_cycles": 7,
+      "first_completion": "2026-10-21T19:18:24.796209+00:00"
+    },
+    {
+      "mean_minutes": 33.2,
+      "connection_id": "d24dd53e-e41f-401d-b810-e4b8e018933b",
+      "last_completion": "2026-10-21T23:53:24.826177+00:00",
+      "completed_cycles": 7,
+      "first_completion": "2026-10-21T19:37:17.315059+00:00"
+    }
+  ],
+  "callsLastHour": [
+    {
+      "name": "Olist 1",
+      "http429": 0,
+      "retries": 0,
+      "requests": 1105,
+      "timeouts": 0,
+      "responses": 1097,
+      "server_errors": 0,
+      "network_errors": 0
+    },
+    {
+      "name": "Olist 2",
+      "http429": 0,
+      "retries": 0,
+      "requests": 852,
+      "timeouts": 0,
+      "responses": 843,
+      "server_errors": 0,
+      "network_errors": 0
+    },
+    {
+      "name": "Olist 3",
+      "http429": 0,
+      "retries": 0,
+      "requests": 858,
+      "timeouts": 0,
+      "responses": 847,
+      "server_errors": 0,
+      "network_errors": 0
+    }
+  ],
+  "previousMissing": [
+    {
+      "now_present": 6,
+      "connection_id": "14b644dd-5ba0-46f4-9ee4-990e78ff0e44",
+      "previous_missing": 6
+    },
+    {
+      "now_present": 2,
+      "connection_id": "c666dd31-fd39-4686-b1d5-a19c45a8d534",
+      "previous_missing": 2
+    }
+  ]
+}
