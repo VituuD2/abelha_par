@@ -8,6 +8,7 @@ import { useScanStore } from "@/stores/scan-store";
 import { createClient } from "@/lib/supabase/client";
 import { ACCESS_FRESHNESS_MS, PROTECTED_ACCESS_FRESHNESS_MS, createSessionAccessMonitor, type SessionAccess, type SessionAccessSnapshot } from "@/lib/session-access";
 import { can, permissionForPage, type Permission } from "@/lib/permissions";
+import { ACCESS_REQUEST_TIMEOUT_MS } from "@/lib/request-timeouts";
 
 const AppAccessContext = createContext({ can: (permission: Permission): boolean => can(null, permission) });
 export const useAppAccess = () => useContext(AppAccessContext);
@@ -41,7 +42,7 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
 
   useEffect(() => {
     const current = createSessionAccessMonitor(async signal => {
-      const response = await fetch("/api/auth/access", { cache: "no-store", signal: AbortSignal.any([signal, AbortSignal.timeout(10_000)]) });
+      const response = await fetch("/api/auth/access", { cache: "no-store", signal: AbortSignal.any([signal, AbortSignal.timeout(ACCESS_REQUEST_TIMEOUT_MS)]) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Não foi possível verificar suas permissões.");
       return data;
@@ -90,7 +91,7 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
     return () => { cancelled = true; };
   }, [userId]);
   if (isAuthPage) return <main className="min-h-screen">{children}</main>;
-  if (accessError) return <main className="min-h-screen flex items-center justify-center p-6"><section className="card p-8 max-w-lg space-y-4"><h1 className="text-xl font-semibold">Acesso à colmeia</h1><p role="alert">{accessError}</p><button className="btn-primary" onClick={async () => { await createClient().auth.signOut(); window.location.assign("/login"); }}>Voltar ao login</button></section></main>;
+  if (accessError) return <main className="min-h-screen flex items-center justify-center p-6"><section className="card p-8 max-w-lg space-y-4"><h1 className="text-xl font-semibold">Acesso à colmeia</h1><p role="alert">{accessError}</p><div className="flex flex-wrap gap-3"><button className="btn-primary" disabled={access.loading} onClick={() => { void monitor.current?.refresh(currentScope.current, { force: true }); }}>{access.loading ? "Verificando…" : "Tentar novamente"}</button><button className="btn-ghost" onClick={async () => { await createClient().auth.signOut(); window.location.assign("/login"); }}>Voltar ao login</button></div></section></main>;
   if (access.loading || !userId || readyFor !== userId || !allowedPage) return <main className="p-10 text-center">Preparando sua sessão…</main>;
 
   return (

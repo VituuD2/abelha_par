@@ -1,5 +1,6 @@
 ﻿"use client";
 import { Select } from "@/components/ui/select";
+import { ANALYTICS_REQUEST_TIMEOUT_MS } from "@/lib/request-timeouts";
 import { DatePicker } from "@/components/ui/date-picker";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -69,11 +70,12 @@ async function call(path: string, body?: unknown) {
   const response = await fetch(
     path,
     body === undefined
-      ? { cache: "no-store" }
+      ? { cache: "no-store", signal: AbortSignal.timeout(ANALYTICS_REQUEST_TIMEOUT_MS) }
       : {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
+          signal: AbortSignal.timeout(ANALYTICS_REQUEST_TIMEOUT_MS),
         },
   );
   const data = await response.json();

@@ -1,5 +1,6 @@
 "use client";
 import { DatePicker } from "@/components/ui/date-picker";
+import { ANALYTICS_REQUEST_TIMEOUT_MS } from "@/lib/request-timeouts";
 import { Select } from "@/components/ui/select";
 import { Header } from "@/components/layout/header";
 
@@ -117,15 +118,18 @@ class AnalyticsRequestError extends Error {
   constructor(message: string, readonly code?: string) { super(message); }
 }
 async function jsonRequest(path: string, body?: unknown, signal?: AbortSignal) {
+  const requestSignal = signal
+    ? AbortSignal.any([signal, AbortSignal.timeout(ANALYTICS_REQUEST_TIMEOUT_MS)])
+    : AbortSignal.timeout(ANALYTICS_REQUEST_TIMEOUT_MS);
   const response = await fetch(
     path,
     body === undefined
-      ? { cache: "no-store", signal }
+      ? { cache: "no-store", signal: requestSignal }
       : {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
-          signal,
+          signal: requestSignal,
         },
   );
   const data = await response.json();

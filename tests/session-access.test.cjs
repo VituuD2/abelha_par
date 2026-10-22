@@ -99,3 +99,25 @@ test('unmount cancels pending checks and cannot update a new login',async()=>{
   monitor.observeSession('user');await settle();const before=updates;monitor.dispose();
   assert.equal(signal.aborted,true);request.resolve(admin);await settle();assert.equal(updates,before);
 });
+
+test('a timeout clears privileges but can be retried without logout, sharing one in-flight recovery', async () => {
+  const recovery = deferred(); let snapshot, calls = 0;
+  const monitor = createSessionAccessMonitor(async () => {
+    if (++calls === 1) throw new DOMException('signal timed out', 'TimeoutError');
+    return recovery.promise;
+  }, value => snapshot = value, { initialAccess: admin, initialScope: '/' });
+  await monitor.refresh('/', { force: true });
+  assert.equal(snapshot.role, null);
+  assert.equal(snapshot.userId, 'user');
+  assert.match(snapshot.error, /demorou mais que o esperado/);
+  const retry = monitor.refresh('/', { force: true });
+  assert.equal(snapshot.loading, true);
+  assert.equal(snapshot.role, null);
+  assert.equal(monitor.refresh('/', { force: true }), retry);
+  recovery.resolve(admin); await retry;
+  assert.equal(snapshot.role, 'admin');
+  assert.equal(snapshot.error, null);
+  assert.equal(snapshot.loading, false);
+  assert.equal(calls, 2);
+  monitor.dispose();
+});

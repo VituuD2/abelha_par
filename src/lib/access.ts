@@ -6,6 +6,8 @@ import { cache } from "react";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { can, type Permission, type Role } from "@/lib/permissions";
+import { AuthenticationUnavailableError } from "@/lib/supabase/auth-user";
+import { MEMBERSHIP_TIMEOUT_MS } from "@/lib/supabase/request";
 
 export type { Role } from "@/lib/permissions";
 export type AccessContext = { user: User; workspaceId: string; role: Role; displayName: string };
@@ -17,9 +19,9 @@ export class AccessError extends Error {
 // Deduplicate layouts/page guards only within a React server request.
 // Route handlers still query membership on every operation.
 const readMembership = cache(async (userId: string) => {
-  const { data, error } = await createAdminClient().from("workspace_members")
+  const { data, error } = await createAdminClient(MEMBERSHIP_TIMEOUT_MS).from("workspace_members")
     .select("workspace_id, role, active, display_name").eq("user_id", userId).maybeSingle();
-  if (error) throw new AccessError("Não foi possível verificar suas permissões. Confira a atualização do banco para o Ninho.", 503);
+  if (error) throw new AccessError("Não foi possível verificar suas permissões agora. Tente novamente em instantes.", 503);
   return data;
 });
 
@@ -44,6 +46,6 @@ export async function authorize(permission: Permission = "app:access"): Promise<
     if (!can(access.role, permission)) return { response: deny("Você não tem permissão para acessar este recurso.", 403) };
     return { access };
   } catch (error) {
-    return { response: deny(error instanceof AccessError ? error.message : "Não foi possível verificar suas permissões.", error instanceof AccessError ? error.status : 503) };
+    return { response: deny(error instanceof AccessError || error instanceof AuthenticationUnavailableError ? error.message : "Não foi possível verificar suas permissões. Tente novamente.", error instanceof AccessError ? error.status : 503) };
   }
 }

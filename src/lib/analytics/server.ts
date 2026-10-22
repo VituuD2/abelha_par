@@ -7,6 +7,7 @@ import { compositionRulesForWorkspace } from "./composition-server";
 import { costSyncStatus } from "./cost-sync";
 import { ABC_DEFAULTS } from "./config";
 import { connectionHealth } from "@/lib/connection-status";
+import { STATUS_TIMEOUT_MS } from "@/lib/supabase/request";
 
 class HistoricalCostMigrationRequired extends Error {
   readonly code = "ANALYTICS_MIGRATION_REQUIRED";
@@ -77,7 +78,7 @@ export async function report(
   return data;
 }
 export async function analyticsStatus(workspace: string, actor: string) {
-  const db = createAdminClient();
+  const db = createAdminClient(STATUS_TIMEOUT_MS);
   const [companies, connections, jobs, sources, coverage, costSync] = await Promise.all([
     db
       .from("analytics_companies")
@@ -104,7 +105,7 @@ export async function analyticsStatus(workspace: string, actor: string) {
   ]);
   if ([companies, connections, jobs, sources, coverage].some((r) => r.error))
     throw new Error(
-      "Curva ABC ainda não disponível no banco. Aplique as migrações v11 e v12.",
+      "Não foi possível atualizar o progresso da Curva ABC agora. Tente novamente em instantes.",
     );
   // Read metadata only. Viewing status must never rotate credentials or spend API quota.
   const legacy = connections.data?.some(c => c.credential_kind === "legacy")

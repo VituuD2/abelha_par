@@ -1,3 +1,5 @@
+import { requestErrorMessage } from "./request-timeouts";
+
 export type SessionAccess = { userId: string; role: "admin" | "operator" };
 export type SessionAccessSnapshot = { userId: string | null; role: SessionAccess["role"] | null; loading: boolean; error: string | null; verifiedFor: string | null };
 
@@ -42,6 +44,7 @@ export function createSessionAccessMonitor(
     const controller = new AbortController();
     // A protected route must wait for a fresh check, without erasing the menu.
     if (invalidate) emit({ ...snapshot, verifiedFor: null });
+    if (snapshot.error) emit({ ...snapshot, loading: true });
     const promise = Promise.resolve().then(async () => {
       if (controller.signal.aborted) return;
       try {
@@ -55,7 +58,7 @@ export function createSessionAccessMonitor(
       } catch (error) {
         if (disposed || request !== generation || snapshot.userId !== userId) return;
         checkedAt = -Infinity;
-        emit({ userId, role: null, loading: false, error: error instanceof Error ? error.message : "Não foi possível verificar seu acesso.", verifiedFor: null });
+        emit({ userId, role: null, loading: false, error: requestErrorMessage(error, "Não foi possível verificar seu acesso."), verifiedFor: null });
       } finally {
         if (request === generation) inFlight = null;
       }

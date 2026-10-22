@@ -8,11 +8,11 @@ const access=require('../src/lib/access.ts');
 const auth=require('../src/lib/auth.ts');
 const admin=require('../src/lib/supabase/admin.ts');
 require.extensions['.tsx']=(module,filename)=>module._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,filename);
-let member={workspace_id:'workspace',active:true,role:'operator'},user={id:'verified-user',user_metadata:{role:'admin'}},failure=null;
+let member={workspace_id:'workspace',active:true,role:'operator'},user={id:'verified-user',user_metadata:{role:'admin'}},failure=null,authFailure=null;
 const original=Module._load;
 Module._load=function(name,...args){
   if(name==='@supabase/ssr')return {createServerClient(_url,_key,options){return {
-    auth:{async getUser(){options.cookies.setAll([{name:'renewed',value:'cookie',options:{httpOnly:true}}]);return {data:{user}};}},
+    auth:{async getUser(){options.cookies.setAll([{name:'renewed',value:'cookie',options:{httpOnly:true}}]);return {data:{user},error:authFailure};}},
     from(table){assert.equal(table,'workspace_members');const q={select(){return q},eq(k,v){assert.equal(k,'user_id');assert.equal(v,user.id);return q},abortSignal(){return q},async maybeSingle(){return {data:member,error:failure}}};return q;},
   };}};
   if(name==='next/navigation')return {redirect(destination){throw Object.assign(new Error('REDIRECT'),{destination});}};
@@ -63,4 +63,16 @@ test('page and subtree guard independently reject direct calls and recheck a dem
   assert.equal(reads,4);
   t.mock.method(auth,'getAuthenticatedUser',async()=>null);
   await assert.rejects(NinhoPage(),e=>e.destination==='/login');
+});
+
+test('an Auth outage returns an uncached retryable response instead of redirecting a valid session to login', async () => {
+  user = null; authFailure = { status: 503 };
+  try {
+    const response = await middleware(new NextRequest('https://app.test/ninho'));
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get('location'), null);
+    assert.equal(response.headers.get('retry-after'), '5');
+    assert.match(response.headers.get('cache-control'), /no-store/);
+    assert.equal(response.cookies.get('renewed').value, 'cookie');
+  } finally { authFailure = null; }
 });

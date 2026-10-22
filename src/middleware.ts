@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { can, permissionForPage } from "@/lib/permissions";
+import { readSupabaseUser } from "@/lib/supabase/auth-user";
+import { AUTH_TIMEOUT_MS, MEMBERSHIP_TIMEOUT_MS, createSupabaseFetch } from "@/lib/supabase/request";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -8,6 +10,7 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      global: { fetch: createSupabaseFetch(AUTH_TIMEOUT_MS) },
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (cookies) => {
@@ -18,7 +21,16 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
-  const { data: { user } } = await supabase.auth.getUser();
+  let user;
+  try {
+    user = await readSupabaseUser(supabase);
+  } catch {
+    const unavailable = new NextResponse("A verificação da sessão está temporariamente indisponível. Recarregue para tentar novamente.", {
+      status: 503, headers: { "Cache-Control": "private, no-store, max-age=0", Vary: "Cookie", "Retry-After": "5" },
+    });
+    response.cookies.getAll().forEach(cookie => unavailable.cookies.set(cookie));
+    return unavailable;
+  }
 
   const publicAuthRoutes = ["/login", "/forgot-password", "/reset-password"];
 
@@ -45,7 +57,7 @@ export async function middleware(request: NextRequest) {
     try {
       const { data, error } = await supabase.from("workspace_members")
         .select("workspace_id,role,active").eq("user_id", user.id)
-        .abortSignal(AbortSignal.timeout(5000)).maybeSingle();
+        .abortSignal(AbortSignal.timeout(MEMBERSHIP_TIMEOUT_MS)).maybeSingle();
       allowed = !error && !!data?.workspace_id && data.active === true && can(data.role, permission);
     } catch { /* Unavailable permissions deny access; server guards also recheck. */ }
     if (!allowed) {

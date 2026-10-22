@@ -5,9 +5,10 @@ import { id, object, string } from "./normalize";
 import { AnalyticsApiError, AnalyticsQuotaWait, olistRequest } from "./olist-client";
 import { createHash } from "crypto";
 import { costCents, queueCostHistory } from "./cost-history-sync";
+import { STATUS_TIMEOUT_MS } from "@/lib/supabase/request";
 
 export async function costSyncStatus(workspace: string) {
-  const db = createAdminClient();
+  const db = createAdminClient(STATUS_TIMEOUT_MS);
   const [result, history] = await Promise.all([db.from("analytics_cost_sync")
     .select("connection_id,page_offset,last_synced_at,last_error,next_at,updated_at")
     .eq("workspace_id", workspace).maybeSingle(),

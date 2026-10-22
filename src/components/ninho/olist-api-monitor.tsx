@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { summarizeApiUsage, type ApiUsage } from "@/lib/olist-api-types";
+import { ACCESS_REQUEST_TIMEOUT_MS, requestErrorMessage } from "@/lib/request-timeouts";
 
 const time = (value: string | number) => new Date(value).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
 
@@ -17,12 +18,12 @@ export function useOlistApiUsage() {
     setLoading(true);
     const request = new AbortController(); controller.current = request;
     try {
-      const response = await fetch("/api/analytics/api-usage", { cache: "no-store", signal: AbortSignal.any([request.signal, AbortSignal.timeout(10000)]) });
+      const response = await fetch("/api/analytics/api-usage", { cache: "no-store", signal: AbortSignal.any([request.signal, AbortSignal.timeout(ACCESS_REQUEST_TIMEOUT_MS)]) });
       const value = await response.json();
       if (!response.ok) throw new Error(value.error || "Consumo indisponível.");
       if (!request.signal.aborted) { setData(value); setError(null); }
     } catch (reason) {
-      if (!request.signal.aborted) setError(reason instanceof Error ? reason.message : "Consumo indisponível.");
+      if (!request.signal.aborted) setError(requestErrorMessage(reason, "Consumo indisponível."));
     } finally {
       pending.current = false;
       if (!request.signal.aborted) setLoading(false);

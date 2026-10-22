@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorize } from "@/lib/access";
 import { olistApiUsage } from "@/lib/olist-api-control";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 export async function GET() {
   const auth = await authorize("integrations:manage");
   if (auth.response) return auth.response;

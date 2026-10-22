@@ -3,6 +3,7 @@ import { authorize } from "@/lib/access";
 import { permissionsFor } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 export const revalidate = 0;
 
 export async function GET() {

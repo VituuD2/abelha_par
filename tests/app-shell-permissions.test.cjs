@@ -106,3 +106,40 @@ test('server-verified startup skips access fetch and Alt+Tab deduplicates backgr
   assert.equal(document.querySelector('a[href="/ninho"]'),null);
   assert.doesNotMatch(document.body.textContent,/SCANNING CONTINUES/);
 });
+
+test('a 10-second latency spike no longer cancels access, and a real timeout offers retry without signing out', async t => {
+  pathname = '/'; visibility = 'visible'; let now = 0, calls = 0, expire;
+  const deadlines = [];
+  t.mock.method(Date, 'now', () => now);
+  t.mock.method(global, 'setInterval', () => 1);
+  t.mock.method(global, 'clearInterval', () => {});
+  t.mock.method(AbortSignal, 'timeout', ms => {
+    const controller = new AbortController();
+    deadlines.push({ ms, controller });
+    return controller.signal;
+  });
+  t.mock.method(global, 'fetch', (_url, options) => {
+    calls++;
+    if (calls === 1) return new Promise((resolve, reject) => {
+      expire = { resolve, signal: options.signal };
+      options.signal.addEventListener('abort', () => reject(options.signal.reason), { once: true });
+    });
+    if (calls === 2) throw new DOMException('signal timed out', 'TimeoutError');
+    return Promise.resolve(Response.json({ userId: 'same-user', role: 'admin' }));
+  });
+  await render('OPERATION', { key: 'timeout-recovery', initialAccess: { userId: 'same-user', role: 'admin' } });
+  now = 60_000;
+  await act(async () => window.dispatchEvent(new dom.window.Event('focus')));
+  for (const deadline of deadlines) if (deadline.ms <= 10_000) deadline.controller.abort(new DOMException('', 'TimeoutError'));
+  assert.equal(expire.signal.aborted, false);
+  assert.match(document.body.textContent, /OPERATION/);
+  await act(async () => expire.resolve(Response.json({ userId: 'same-user', role: 'admin' })));
+  now = 120_000;
+  await act(async () => window.dispatchEvent(new dom.window.Event('focus')));
+  assert.match(document.body.textContent, /demorou mais que o esperado/);
+  const retry = [...document.querySelectorAll('button')].find(button => button.textContent === 'Tentar novamente');
+  assert.ok(retry);
+  await act(async () => retry.click());
+  assert.match(document.body.textContent, /OPERATION/);
+  assert.equal(calls, 3);
+});
