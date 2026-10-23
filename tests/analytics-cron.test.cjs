@@ -7,6 +7,7 @@ const costHistory = require("../src/lib/analytics/cost-history-sync.ts");
 require('node:test').beforeEach(t => {
   t.mock.method(Date, 'now', () => 1_800_000_000_000);
   t.mock.method(sync, 'processAnalyticsWebhookBatches', async () => ({ processed: 0, pending: false }));
+  t.mock.method(sync, 'processAnalyticsReconciliation', async () => ({ checked: 0, requeued: 0 }));
 });
 
 test("analytical cron rejects missing/mismatched authorization before any work", async t => {

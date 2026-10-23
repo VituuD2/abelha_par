@@ -114,7 +114,7 @@ test('partial coverage and unfinished or failed syncs still compare available da
   const currentCalls = mockRequests(t, { status: missingCurrent }); await render('missing-current');
   assert.equal(currentCalls.filter(call => call.url.endsWith('/comparison')).length, 1);
   assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);
-  assert.match(document.body.textContent, /Escopo parcial/);
+  assert.doesNotMatch(document.body.textContent, /Escopo parcial/);
   await click(button('Produtos base'));
   assert.equal(currentCalls.filter(call => call.url.endsWith('/comparison')).length, 2);
   assert.equal(panel().querySelectorAll('[data-trend-direction]').length, 5);

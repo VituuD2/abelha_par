@@ -206,7 +206,7 @@ test("dashboard polls existing reports as imports advance without asking the bro
   state.jobs.push(pending);
   await click(button("Atualizar"));
   assert.equal(typeof tick,"function");
-  assert.match(document.body.textContent,/3 pedidos processados/);
+  assert.doesNotMatch(document.body.textContent,/3 pedidos processados/);
   const before=requests.filter(r=>r.url.endsWith("/abc")).length;
   const requestsBeforeHidden=requests.length;
   Object.defineProperty(document,"visibilityState",{configurable:true,value:"hidden"});
@@ -220,17 +220,17 @@ test("dashboard polls existing reports as imports advance without asking the bro
   pending.cursor_date="2026-08-02";
   await act(async()=>tick());
   assert.ok(requests.filter(r=>r.url.endsWith("/abc")).length>before);
-  assert.match(document.body.textContent,/6 pedidos processados/);
+  assert.doesNotMatch(document.body.textContent,/6 pedidos processados/);
   assert.equal(requests.some(r=>r.url.includes("/analytics/sync") && r.body),false);
   assert.equal(requests.filter(r=>r.url.endsWith("/abc")).at(-1).body.ensureCoverage,false);
   state.jobs.pop();
   await click(button("Atualizar"));
 });
 
-test("missing coverage stays visibly partial and a server error does not leave a misleading old result", async () => {
+test("missing coverage keeps import details hidden and a server error does not leave a misleading old result", async () => {
   state.connections[0].verified_at = null;
   await click(button("Atualizar"));
-  assert.ok(document.body.textContent.includes("Escopo parcial"));
+  assert.ok(!document.body.textContent.includes("Escopo parcial"));
   global.fetch = async () =>
     new Response(JSON.stringify({ error: "Migração v11 pendente" }), {
       status: 503,

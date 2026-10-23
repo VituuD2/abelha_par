@@ -1,4 +1,5 @@
-import { object, string } from "./normalize";
+import { id, object, string } from "./normalize";
+import { signedDecimalUnits } from "./engine";
 import type { SyncJob } from "./types";
 
 export const dayAfter = (day: string, days = 1) =>
@@ -63,4 +64,31 @@ export function listingPage(listing: Record<string, unknown>, offset: number) {
   const done = total === undefined ? entries.length < 100 : offset + entries.length >= total;
   if (!entries.length && !done) throw new Error("Página de pedidos vazia antes do fim da consulta.");
   return { entries, done };
+}
+
+/** Reconciliation requires the provider's total; a partial page is never a day total. */
+export function reconciliationPage(listing: Record<string, unknown>, offset = 0) {
+  const page = listingPage(listing, offset), raw = object(listing.paginacao).total;
+  if (raw === undefined) throw new Error("Listagem Olist sem total para reconciliação.");
+  return { ...page, total: Number(raw) };
+}
+
+export function reconciliationAmounts(entries: unknown[]) {
+  const ids = new Set<string>();
+  let count = 0, cents: bigint | null = BigInt(0);
+  for (const entry of entries) {
+    const row = object(entry), external = id(row.id);
+    if (ids.has(external) || row.situacao == null || !Number.isInteger(Number(row.situacao)))
+      throw new Error("Listagem Olist inconsistente para reconciliação.");
+    ids.add(external);
+    if (Number(row.situacao) === 2) continue;
+    count++;
+    if (cents !== null) {
+      try {
+        if (typeof row.valor !== "string" && typeof row.valor !== "number") throw new Error("Valor ausente.");
+        cents += signedDecimalUnits(row.valor, 2);
+      } catch { cents = null; }
+    }
+  }
+  return { count, cents: cents?.toString() ?? null };
 }

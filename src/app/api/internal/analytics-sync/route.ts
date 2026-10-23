@@ -3,6 +3,7 @@ import {
   enqueueIncremental,
   processAnalyticsBatches,
   processAnalyticsWebhookBatches,
+  processAnalyticsReconciliation,
 } from "@/lib/analytics/sync";
 import { refreshDueAnalyticsTokens } from "@/lib/analytics/auth";
 import { processCostSync } from "@/lib/analytics/cost-sync";
@@ -22,6 +23,8 @@ export async function POST(request: Request) {
       .catch(() => ({ checked: 0, reconnect: 0, failed: 1 }));
     const webhooks = await processAnalyticsWebhookBatches(undefined, Math.min(20000, 45000 - (Date.now() - started)))
       .catch(() => ({ processed: 0, pending: true, error: "Fila de webhooks indisponível; nova tentativa no próximo ciclo." }));
+    const reconciliation = await processAnalyticsReconciliation(45000 - (Date.now() - started))
+      .catch(() => ({ checked: 0, requeued: 0, error: "Reconciliação diária indisponível." }));
     // Existing durable jobs can progress even if scheduling or proactive renewal is unavailable.
     const scheduling = await enqueueIncremental().then(() => ({ ok: true, error: null }))
       .catch(() => ({ ok: false, error: "Agendamento incremental indisponível; nova tentativa no próximo ciclo." }));
@@ -35,11 +38,11 @@ export async function POST(request: Request) {
       : { processed: 0, pending: true };
     const budget = 45000 - (Date.now() - started);
     if (budget < 15000)
-      return NextResponse.json({ processed: webhooks.processed, pending: true, webhooks, renewal, costs, scheduling }, { status: webhooks.error || renewal.reconnect || renewal.failed || costs.error || !scheduling.ok ? 503 : 200 });
+      return NextResponse.json({ processed: webhooks.processed, pending: true, webhooks, reconciliation, renewal, costs, scheduling }, { status: reconciliation.error || webhooks.error || renewal.reconnect || renewal.failed || costs.error || !scheduling.ok ? 503 : 200 });
     const result = await processAnalyticsBatches(undefined, budget);
     return NextResponse.json(
-      { ...result, processed: result.processed + webhooks.processed, pending: result.pending || webhooks.pending, webhooks, renewal, costs, scheduling, elapsedMs: Date.now() - started, ...(renewal.reconnect ? { guidance: "Reconecte a conta indicada no Ninho para retomar seu checkpoint." } : {}) },
-      { status: webhooks.error || result.error || renewal.reconnect || renewal.failed || costs.error || !scheduling.ok ? 503 : 200 },
+      { ...result, processed: result.processed + webhooks.processed, pending: result.pending || webhooks.pending, webhooks, reconciliation, renewal, costs, scheduling, elapsedMs: Date.now() - started, ...(renewal.reconnect ? { guidance: "Reconecte a conta indicada no Ninho para retomar seu checkpoint." } : {}) },
+      { status: reconciliation.error || webhooks.error || result.error || renewal.reconnect || renewal.failed || costs.error || !scheduling.ok ? 503 : 200 },
     );
   } catch {
     return NextResponse.json(

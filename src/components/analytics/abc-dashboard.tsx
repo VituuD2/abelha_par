@@ -23,7 +23,6 @@ import {
 } from "@/lib/analytics/config";
 import { type CoverageJob } from "@/lib/analytics/coverage";
 import { reportReliability } from "@/lib/analytics/reliability";
-import { ConnectionProgress } from "./connection-progress";
 import { ABCExportActions, ABCModeTabs } from "./abc-controls";
 import { ABCOverview, type ABCOverviewResult } from "./abc-overview";
 import { LoadingRegion, ChartSkeleton, RowsSkeleton, TableSkeleton, Skeleton } from "@/components/ui/loading-region";
@@ -540,11 +539,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     pendingProgressRefresh.current = null;
     refreshFromProgress(pending === "all");
   }, [loading, showSkeletons, refreshFromProgress]);
-  const selectedConnections = reliability?.connections || [];
-  const incomplete = !reliability?.complete;
-  const pendingHistory = status?.jobs.some(job => job.status !== "completed" &&
-    selectedConnections.some(connection => connection.id === job.connection_id) &&
-    job.from_date <= filters.to && job.to_date >= filters.from);
   const select = (dimension: Dimension, values: string[]) =>
     setDraft((f) => ({
       ...f,
@@ -966,15 +960,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
         </div>
         </div>}
       </form>
-      <details className="card px-5 py-3 text-[13px] border-[var(--color-border-light)]" aria-busy={!reliability}>
-        <summary className="cursor-pointer font-medium text-[var(--color-abc-range-ink)]">{!reliability ? "Verificando cobertura" : incomplete ? "Escopo parcial" : pendingHistory ? "Importações" : "Cobertura verificada"}{pendingHistory ? " · atualização pendente" : reliability && incomplete ? " · histórico pendente" : ""}</summary>
-        <div className="mt-3 space-y-3">
-          {selectedConnections.map(connection => <div key={connection.id}>
-            <p className="mb-1 font-medium">{connection.name}</p>
-            <ConnectionProgress connection={connection.id} enabled={connection.enabled} jobs={status!.jobs} coverage={status!.coverage || status!.jobs} />
-          </div>)}
-        </div>
-      </details>
       {(error || schedulingError) && (
         <div className="card fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-2xl p-5 text-[var(--color-abc-down)] shadow-lg lg:bottom-6" role="alert">
           {(typeof error === "string" ? error : error?.message) || schedulingError}

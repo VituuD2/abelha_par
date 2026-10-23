@@ -1,6 +1,8 @@
 -- Run AFTER v13 and deployment. Independent of the hourly operational token cron.
 -- Vault: abelha_par_app_url (HTTPS origin), abelha_par_cron_secret (server CRON_SECRET).
 -- Never put secrets or OAuth tokens in versioned SQL or cron.job commands.
+-- After 20261023040000: the same minute cron reconciles one date at a time, 02:00-05:00 America/Sao_Paulo.
+-- Each connection checks today first, then the previous six days, at most two paced Olist calls/date/day.
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
 CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;

@@ -6,7 +6,7 @@ import { AnalyticsApiError, AnalyticsQuotaWait, AnalyticsBudgetExceeded as Yield
 import { id, normalizeOrder, nullable, object, orderItemProductId, string } from "./normalize";
 import type { ABCFilters, SyncJob } from "./types";
 import { AnalyticsActionError, AnalyticsDatabaseError, analyticsDatabaseError } from "./sync-errors";
-import { dayAfter, initialScan, listingPage, orderMarkers, reusableStage, stageOrder, type OrderStage } from "./import-plan";
+import { dayAfter, initialScan, listingPage, orderMarkers, reconciliationAmounts, reconciliationPage, reusableStage, stageOrder, type OrderStage } from "./import-plan";
 import { OlistControlError } from "@/lib/olist-api-control";
 
 export async function enqueueSync(
@@ -705,4 +705,63 @@ export async function processAnalyticsWebhookBatches(workspace?: string, budgetM
     ...(results.some(result => result.status === "rejected" || result.value.error)
       ? { error: "Pedidos do webhook pendentes; nova tentativa programada." } : {}),
   };
+}
+
+/** One date per minute off-peak; durable claims cover today through six days ago once daily. */
+export async function processAnalyticsReconciliation(budgetMs = 40000): Promise<{ checked: number; requeued: number; error?: string }> {
+  const started = Date.now(), now = new Date(started);
+  const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "America/Sao_Paulo", hour: "2-digit", hourCycle: "h23" }).format(now));
+  if (hour < 2 || hour >= 5 || budgetMs < 25000) return { checked: 0, requeued: 0 };
+  const db = createAdminClient(5000);
+  const claimed = await db.rpc("analytics_claim_reconciliation", { p_run: saoPauloDate(now) });
+  if (claimed.error) throw analyticsDatabaseError("Não foi possível reservar a reconciliação diária.", claimed.error);
+  const item = claimed.data?.[0];
+  if (!item) return { checked: 0, requeued: 0 };
+  const scope = { p_connection: item.connection_id, p_day: item.sale_day, p_lease: item.lease_token };
+  const finish = async (count: number | null, cents: string | null, retry: number | null = null) => {
+    const saved = await db.rpc("analytics_finish_reconciliation", { ...scope, p_count: count, p_cents: cents, p_retry: retry });
+    if (saved.error) throw analyticsDatabaseError("Não foi possível salvar a reconciliação diária.", saved.error);
+    return saved.data as { checked: number; requeued: number };
+  };
+  try {
+    // Claims require the connection's verified CNPJ. This read-only check uses its scoped token;
+    // the normal importer still verifies identity before ingesting any repair.
+    const token = await analyticsToken(item.workspace_id, item.connection_id);
+    const deadline = started + Math.min(40000, budgetMs) - 2000;
+    const query = async (offset = 0, cancelled = false) => {
+      if (Date.now() + 12000 > deadline) throw new YieldBatch();
+      const reserved = await db.rpc("analytics_reconciliation_call", scope);
+      if (reserved.error) throw analyticsDatabaseError("Limite ou reserva da reconciliação alterado.", reserved.error);
+      const params = new URLSearchParams({ dataInicial: item.sale_day, dataFinal: item.sale_day,
+        limit: cancelled ? "1" : "100", offset: String(offset), orderBy: "asc" });
+      if (cancelled) params.set("situacao", "2");
+      return reconciliationPage(await olistRequest(token, item.connection_id, "/pedidos?" + params,
+        { deadlineMs: deadline, retryTransient: false }), offset);
+    };
+    const first = await query();
+    if (first.done) {
+      const totals = reconciliationAmounts(first.entries);
+      return await finish(totals.count, totals.cents);
+    }
+    if (first.total <= first.entries.length * 2) {
+      const second = await query(first.entries.length);
+      if (second.total !== first.total || !second.done)
+        throw new Error("A listagem mudou durante a reconciliação.");
+      const totals = reconciliationAmounts([...first.entries, ...second.entries]);
+      return await finish(totals.count, totals.cents);
+    }
+    // More than two pages: compare counts only. A partial sum would manufacture divergence.
+    const cancelled = await query(0, true);
+    if (cancelled.total > first.total) throw new Error("Total de cancelamentos Olist inconsistente.");
+    return await finish(first.total - cancelled.total, null);
+  } catch (reason) {
+    await finish(null, null, reason instanceof AnalyticsApiError ? reason.retryAfter : null);
+    return { checked: 0, requeued: 0, ...(reason instanceof YieldBatch || reason instanceof AnalyticsQuotaWait ? {}
+      : { error: "Reconciliação diária incompleta; a conferência será refeita no próximo dia." }) };
+  } finally {
+    // Also releases a lease if persisting the result failed; it never touches import checkpoints.
+    const released = await db.from("analytics_connections").update({ sync_lock: null, sync_locked_until: null })
+      .eq("workspace_id", item.workspace_id).eq("id", item.connection_id).eq("sync_lock", item.lease_token);
+    if (released.error) throw analyticsDatabaseError("Não foi possível liberar a reconciliação diária.", released.error);
+  }
 }
