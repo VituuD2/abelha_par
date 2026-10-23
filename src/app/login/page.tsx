@@ -28,7 +28,7 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthLayout title="Acesso do operador" description="Entre com seu e-mail para continuar a operação." icon={LockKeyhole}>
+    <AuthLayout title="Entrada da Colmeia" description="Entre com seu e-mail para continuar a operação." icon={LockKeyhole}>
       <form onSubmit={handleSubmit} className="space-y-5">
         <label className="block text-sm font-medium text-[var(--color-text-secondary)]">E-mail
           <input className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--color-border-medium)] bg-[var(--color-bg-elevated)] px-3.5 py-3 text-[var(--color-text-primary)] transition-colors focus:border-[var(--color-accent-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-blue)]/20" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
