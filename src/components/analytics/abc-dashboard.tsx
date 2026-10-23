@@ -85,6 +85,8 @@ type Drill = {
     connection: string;
     revenue: string;
     quantity: string;
+    total?: string;
+    items?: { name: string; sku: string; quantity: string; unitPrice: string; subtotal: string }[];
   }[];
 };
 const labels = {
@@ -334,8 +336,8 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       Object.keys(labels) as Column[],
     ),
     [entity, setEntity] = useState<ABCRow | null>(null),
-    [drillResult, setDrillResult] = useState<{ scope: string; page: number; data: Drill } | null>(null),
-    [drillRequest, setDrillRequest] = useState({ page: 1 }),
+    [drillResult, setDrillResult] = useState<{ scope: string; page: number; direction: "asc" | "desc"; data: Drill } | null>(null),
+    [drillRequest, setDrillRequest] = useState({ page: 1, direction: "desc" as "asc" | "desc" }),
     [drillLoading, setDrillLoading] = useState(false),
     [drillError, setDrillError] = useState<string | null>(null);
   const drillScope = entity ? JSON.stringify({ filters, entity: entity.entityId }) : "";
@@ -492,11 +494,11 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     setDrillError(null);
     jsonRequest(
       "/api/analytics/drilldown",
-      { filters, entity: entity.entityId, page: drillRequest.page },
+      { filters, entity: entity.entityId, page: drillRequest.page, ...(filters.grouping === "customer" ? { direction: drillRequest.direction } : {}) },
       abort.signal,
     )
       .then((data) => {
-        if (!abort.signal.aborted) setDrillResult({ scope: drillScope, page: drillRequest.page, data });
+        if (!abort.signal.aborted) setDrillResult({ scope: drillScope, page: drillRequest.page, direction: drillRequest.direction, data });
       })
       .catch((e) => {
         if (!abort.signal.aborted && e.name !== "AbortError") setDrillError(e.message);
@@ -558,7 +560,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   );
   const openEntity = (row: ABCRow) => {
     setEntity(row);
-    setDrillRequest({ page: 1 });
+    setDrillRequest({ page: 1, direction: "desc" });
     setDrillError(null);
     dialog.current?.showModal();
   };
@@ -1216,7 +1218,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 ].map(([title, values]) => (
                   <div className="card min-w-0 p-4" key={String(title)}>
                     <h3 className="font-semibold mb-3">{String(title)}</h3>
-                    <div className={title === "Por integração / canal" ? "max-h-60 overflow-y-auto overscroll-contain" : undefined}>
+                    <div className={filters.grouping !== "customer" && title === "Por integração / canal" ? "max-h-60 overflow-y-auto overscroll-contain" : undefined}>
                     {revenueDescending(values as Drill["companies"]).map((v, i) => (
                       <div
                         key={i}
@@ -1232,7 +1234,40 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   </div>
                 ))}
               </div>
-              <div aria-busy={drillLoading}>
+              {filters.grouping === "customer" ? <section aria-label="Pedidos do cliente" aria-busy={drillLoading}>
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="font-semibold">Pedidos</h3>
+                  <Select label="Ordenar pedidos" inline value={currentDrill?.direction || drillRequest.direction} disabled={drillLoading}
+                    popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: 1, direction: value as "asc" | "desc" })}>
+                    <option value="desc">Mais recentes primeiro</option>
+                    <option value="asc">Mais antigos primeiro</option>
+                  </Select>
+                </div>
+                <div className="divide-y divide-[var(--color-border-light)]">
+                  {drill.orders.map(order => <article key={`${order.connection}:${order.id}`} className="py-5 first:pt-0">
+                    <header className="mb-4 flex flex-wrap items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h4 className="break-words font-semibold">Pedido {order.number || order.id}</h4>
+                        <p className="mt-1 text-[13px] text-[var(--color-text-secondary)]"><time dateTime={order.date}>{order.date}</time> · {ORDER_STATUSES[order.status] || order.status}</p>
+                        <p className="mt-1 break-words text-[13px] text-[var(--color-text-secondary)]">{order.company} · {order.connection} · {order.source}</p>
+                      </div>
+                      <p className="text-right text-[13px] text-[var(--color-text-secondary)]">Total do pedido<strong className="block text-[15px] text-[var(--color-text-primary)]">{money(order.total ?? order.revenue)}</strong></p>
+                    </header>
+                    {order.items?.length ? <ul className="space-y-3">
+                      {order.items.map((item, index) => <li key={`${item.sku}:${index}`} className="rounded-xl bg-[var(--color-bg-secondary)] p-3">
+                        <p className="break-words text-[14px] font-medium"><EntityName name={item.name} /></p>
+                        <p className="mt-1 break-words text-[12px] text-[var(--color-text-secondary)]">SKU: {item.sku || "—"}</p>
+                        <dl className="mt-2 grid grid-cols-3 gap-2 text-[13px] tabular-nums">
+                          <div><dt className="text-[var(--color-text-secondary)]">Qtd.</dt><dd>{number(item.quantity)}</dd></div>
+                          <div><dt className="text-[var(--color-text-secondary)]">Unitário</dt><dd className="break-words">{money(item.unitPrice)}</dd></div>
+                          <div className="text-right"><dt className="text-[var(--color-text-secondary)]">Subtotal</dt><dd className="break-words font-medium">{money(item.subtotal)}</dd></div>
+                        </dl>
+                      </li>)}
+                    </ul> : <p className="text-[13px] text-[var(--color-text-secondary)]">Produtos indisponíveis neste pedido.</p>}
+                  </article>)}
+                </div>
+                {!drill.orders.length && <p className="text-[14px] text-[var(--color-text-secondary)]">Nenhum pedido encontrado.</p>}
+              </section> : <div aria-busy={drillLoading}>
                 <table className="text-[15px] w-full min-w-[560px]">
                   <thead>
                     <tr>
@@ -1271,17 +1306,17 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </div>}
               <div className="flex flex-wrap gap-3 items-center">
                 <button
                   type="button"
                   className="btn-ghost"
                   disabled={drillLoading || drillPage === 1}
-                  onClick={() => setDrillRequest({ page: drillPage - 1 })}
+                  onClick={() => setDrillRequest({ page: drillPage - 1, direction: currentDrill?.direction || drillRequest.direction })}
                 >
                   Anterior
                 </button>
-                <Select label="Página" inline value={drillPage} disabled={drillLoading || drillTotalPages === 1} popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: Number(value) })}>
+                <Select label="Página" inline value={drillPage} disabled={drillLoading || drillTotalPages === 1} popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: Number(value), direction: currentDrill?.direction || drillRequest.direction })}>
                   {Array.from({ length: drillTotalPages }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
                 </Select>
                 <p className="text-[15px]">
@@ -1292,7 +1327,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                   type="button"
                   className="btn-ghost"
                   disabled={drillLoading || drillPage >= drillTotalPages}
-                  onClick={() => setDrillRequest({ page: drillPage + 1 })}
+                  onClick={() => setDrillRequest({ page: drillPage + 1, direction: currentDrill?.direction || drillRequest.direction })}
                 >
                   Próxima
                 </button>
