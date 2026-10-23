@@ -86,6 +86,7 @@ export function extractOlistOrderId(payload: unknown): number | null {
     (value.data as Record<string, unknown> | undefined)?.id,
   ];
   for (const candidate of candidates) {
+    if (typeof candidate !== "number" && (typeof candidate !== "string" || !/^\d+$/.test(candidate))) continue;
     const numeric = typeof candidate === "number" ? candidate : Number(candidate);
     if (Number.isSafeInteger(numeric) && numeric > 0) return numeric;
   }

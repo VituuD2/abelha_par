@@ -4,7 +4,10 @@ const sync = require("../src/lib/analytics/sync.ts"), auth = require("../src/lib
 const cron = require("../src/app/api/internal/analytics-sync/route.ts");
 const costSync = require("../src/lib/analytics/cost-sync.ts");
 const costHistory = require("../src/lib/analytics/cost-history-sync.ts");
-require('node:test').beforeEach(t => t.mock.method(Date, 'now', () => 1_800_000_000_000));
+require('node:test').beforeEach(t => {
+  t.mock.method(Date, 'now', () => 1_800_000_000_000);
+  t.mock.method(sync, 'processAnalyticsWebhookBatches', async () => ({ processed: 0, pending: false }));
+});
 
 test("analytical cron rejects missing/mismatched authorization before any work", async t => {
   const previous = process.env.CRON_SECRET;
@@ -92,4 +95,31 @@ test('two of three cron cycles leave the CMV account available for sales',async 
   t.mock.method(sync,'processAnalyticsBatches',async()=>({processed:4,pending:true}));
   const response=await cron.POST(new Request('http://localhost/api/internal/analytics-sync',{method:'POST',headers:{authorization:'Bearer fairness-test'}}));
   assert.equal(response.status,200);assert.equal((await response.json()).processed,4);
+});
+
+test('cron drains webhooks first and gives the sweep only the remaining 45-second budget', async t => {
+  const previous = process.env.CRON_SECRET;
+  process.env.CRON_SECRET = 'webhook-budget-test';
+  t.after(() => { if (previous === undefined) delete process.env.CRON_SECRET; else process.env.CRON_SECRET = previous; });
+  let now = 1_800_000_000_000;
+  const calls = [];
+  t.mock.method(Date, 'now', () => now);
+  t.mock.method(auth, 'refreshDueAnalyticsTokens', async () => ({ checked: 0, reconnect: 0, failed: 0 }));
+  t.mock.method(sync, 'processAnalyticsWebhookBatches', async (workspace, budget) => {
+    calls.push('webhooks'); assert.equal(workspace, undefined); assert.equal(budget, 20000);
+    now += 20000;
+    return { processed: 2, pending: false };
+  });
+  t.mock.method(sync, 'enqueueIncremental', async () => { calls.push('schedule'); });
+  t.mock.method(costHistory, 'processCostHistorySync', async () => { throw Error('No time left for costs'); });
+  t.mock.method(sync, 'processAnalyticsBatches', async (workspace, budget) => {
+    calls.push('sweep'); assert.equal(workspace, undefined); assert.equal(budget, 25000);
+    return { processed: 3, pending: false };
+  });
+  const response = await cron.POST(new Request('http://localhost/api/internal/analytics-sync', {
+    method: 'POST', headers: { authorization: 'Bearer webhook-budget-test' },
+  }));
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).processed, 5);
+  assert.deepEqual(calls, ['webhooks', 'schedule', 'sweep']);
 });

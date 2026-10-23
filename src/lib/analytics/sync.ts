@@ -97,6 +97,7 @@ export async function processAnalyticsBatch(
   workspace?: string,
   budgetMs = 40000,
   reserved?: SyncJob,
+  webhookOnly = false,
 ) {
   const db = createAdminClient(5000),
     started = Date.now();
@@ -166,51 +167,9 @@ export async function processAnalyticsBatch(
     };
     const productCache = new Map<string, Record<string, unknown>>();
     const sourceCache = new Map<string, { fingerprint: string; id: string }>();
-    // Small pages and empty days should not waste the rest of a cron invocation.
-    while (true) {
-      if (!job.pending_ids.length) {
-        // Upgrade at a page boundary. A stored pending page is always drained first.
-        if (context && job.mode === "incremental" && !job.import_state?.scan) {
-          const nextSale = !job.covers_sales ? job.from_date : job.query_phase === "updates" ? dayAfter(job.cursor_date) : job.cursor_date;
-          const updates = nextSale > job.to_date;
-          await checkpoint({ import_state: { ...job.import_state, scan: initialScan(job, context.historyFrom, context.creationThrough), order: null },
-            query_phase: updates ? "updates" : "sales", cursor_date: updates ? job.to_date : nextSale,
-            ...(job.query_phase !== "sales" || !job.covers_sales ? { page_offset: 0, page_done: false } : {}), covers_sales: true });
-        }
-        const params = new URLSearchParams({
-          limit: "100",
-          offset: String(job.page_offset),
-          orderBy: job.lane === "recent" ? "desc" : "asc",
-        });
-        if (job.mode === "incremental" && job.query_phase !== "sales") {
-          const scan = job.import_state?.scan;
-          params.set("dataAtualizacao", scan?.since || job.cursor_date);
-          if (scan) { params.set("dataInicial", scan.from); params.set("dataFinal", scan.to); }
-        }
-        else {
-          params.set("dataInicial", job.cursor_date);
-          params.set("dataFinal", job.cursor_date);
-        }
-        stage = "listing";
-        const listing = await query("/pedidos?" + params);
-        const { entries, done } = listingPage(listing, job.page_offset);
-        const ids = entries.map((v) => id(object(v).id));
-        if (new Set(ids).size !== ids.length) throw new Error("Listagem de pedidos com IDs repetidos.");
-        await checkpoint({
-          pending_ids: ids,
-          pending_index: 0,
-          page_done: done,
-          pages: job.pages + 1,
-        });
-      }
-      for (
-        let index = job.pending_index;
-        index < job.pending_ids.length;
-        index++
-      ) {
+    const ingestOrder = async (externalId: string, index?: number) => {
         stage = "detail";
-        const externalId = id(job.pending_ids[index]);
-        const cached = job.import_state?.order;
+        const cached = index === undefined ? null : job.import_state?.order;
         let orderStage: OrderStage;
         if (context && reusableStage(cached, externalId, context.connectionVersion)) {
           orderStage = cached!; metrics.stageCacheHits++;
@@ -221,10 +180,10 @@ export async function processAnalyticsBatch(
           if (inlineTags !== undefined) metrics.inlineMarkers++;
           orderStage = { externalId, fetchedAt: new Date().toISOString(), connectionVersion: context?.connectionVersion || 0,
             raw: stageOrder(detail), ...(inlineTags !== undefined ? { tags: inlineTags, tagsChecked: true } : {}) };
-          if (resumable) await checkpoint({ import_state: { ...job.import_state, order: orderStage } });
+          if (resumable && index !== undefined) await checkpoint({ import_state: { ...job.import_state, order: orderStage } });
         }
         const raw = orderStage.raw, fetchedAt = orderStage.fetchedAt;
-        if (id(raw.id) !== id(job.pending_ids[index]))
+        if (id(raw.id) !== externalId)
           throw new Error("A Olist retornou outro pedido.");
         if (Number(raw.situacao) === 2) {
           stage = "cancellation";
@@ -239,14 +198,14 @@ export async function processAnalyticsBatch(
               "Não foi possível atualizar o cancelamento da venda.",
             );
           processed++;
-          await checkpoint({
+          if (index !== undefined) await checkpoint({
             pending_index: index + 1,
             processed: job.processed + 1,
             attempts: 0,
             last_error: null,
             ...(resumable ? { import_state: { ...job.import_state, order: null } } : {}),
           });
-          continue;
+          return;
         }
         const ecommerce = object(raw.ecommerce),
           sourceKey =
@@ -405,7 +364,7 @@ export async function processAnalyticsBatch(
           orderStage = { ...orderStage, invoice: invoice ? {
             id: invoice.id, situacao: invoice.situacao, tipo: invoice.tipo, finalidade: invoice.finalidade, dataEmissao: invoice.dataEmissao,
           } : null, invoiceChecked: true };
-          if (resumable) await checkpoint({ import_state: { ...job.import_state, order: orderStage } });
+          if (resumable && index !== undefined) await checkpoint({ import_state: { ...job.import_state, order: orderStage } });
         }
         if (tags === undefined && !orderStage.tagsChecked) try {
           stage = "markers";
@@ -421,7 +380,7 @@ export async function processAnalyticsBatch(
         }
         if (!orderStage.tagsChecked) {
           orderStage = { ...orderStage, tags, tagsChecked: true };
-          if (resumable) await checkpoint({ import_state: { ...job.import_state, order: orderStage } });
+          if (resumable && index !== undefined) await checkpoint({ import_state: { ...job.import_state, order: orderStage } });
         }
         stage = "normalization";
         const normalized = normalizeOrder(
@@ -455,13 +414,80 @@ export async function processAnalyticsBatch(
               : "Não foi possível gravar o pedido analítico atomicamente.",
           );
         processed++;
-        await checkpoint({
+        if (index !== undefined) await checkpoint({
           pending_index: index + 1,
           processed: job.processed + 1,
           attempts: 0,
           last_error: null,
           ...(resumable ? { import_state: { ...job.import_state, order: null } } : {}),
         });
+    };
+    if (webhookOnly) {
+      const { data: events, error } = await db.from("analytics_webhook_orders")
+        .select("external_id,request_version,attempts").eq("workspace_id", job.workspace_id)
+        .eq("connection_id", job.connection_id).lte("next_at", new Date().toISOString())
+        .order("requested_at").limit(5);
+      if (error) throw analyticsDatabaseError("Não foi possível consultar os pedidos do webhook.", error);
+      for (const event of events || []) {
+        try {
+          // Always fetch current ERP state; notification order and cached sweep stages are irrelevant.
+          await ingestOrder(id(event.external_id));
+          const acknowledged = await db.from("analytics_webhook_orders").delete()
+            .eq("workspace_id", job.workspace_id).eq("connection_id", job.connection_id)
+            .eq("external_id", event.external_id).eq("request_version", event.request_version);
+          if (acknowledged.error) throw analyticsDatabaseError("Não foi possível concluir o pedido do webhook.", acknowledged.error);
+        } catch (reason) {
+          const delay = reason instanceof YieldBatch ? 1 : reason instanceof AnalyticsApiError
+            ? reason.retryAfter : Math.min(3600, 30 * 2 ** Math.min(event.attempts, 7));
+          // A new event must not reset an account's Retry-After or erase this retry.
+          const deferred = await db.from("analytics_webhook_orders")
+            .update({ next_at: new Date(Date.now() + delay * 1000).toISOString(), attempts: event.attempts + 1 })
+            .eq("workspace_id", job.workspace_id).eq("connection_id", job.connection_id).eq("external_id", event.external_id);
+          if (deferred.error) throw analyticsDatabaseError("Não foi possível adiar o pedido do webhook.", deferred.error);
+          throw reason;
+        }
+      }
+      return { processed, pending: !!events?.length, outcome: "completed" };
+    }
+    // Small pages and empty days should not waste the rest of a cron invocation.
+    while (true) {
+      if (!job.pending_ids.length) {
+        // Upgrade at a page boundary. A stored pending page is always drained first.
+        if (context && job.mode === "incremental" && !job.import_state?.scan) {
+          const nextSale = !job.covers_sales ? job.from_date : job.query_phase === "updates" ? dayAfter(job.cursor_date) : job.cursor_date;
+          const updates = nextSale > job.to_date;
+          await checkpoint({ import_state: { ...job.import_state, scan: initialScan(job, context.historyFrom, context.creationThrough), order: null },
+            query_phase: updates ? "updates" : "sales", cursor_date: updates ? job.to_date : nextSale,
+            ...(job.query_phase !== "sales" || !job.covers_sales ? { page_offset: 0, page_done: false } : {}), covers_sales: true });
+        }
+        const params = new URLSearchParams({
+          limit: "100",
+          offset: String(job.page_offset),
+          orderBy: job.lane === "recent" ? "desc" : "asc",
+        });
+        if (job.mode === "incremental" && job.query_phase !== "sales") {
+          const scan = job.import_state?.scan;
+          params.set("dataAtualizacao", scan?.since || job.cursor_date);
+          if (scan) { params.set("dataInicial", scan.from); params.set("dataFinal", scan.to); }
+        }
+        else {
+          params.set("dataInicial", job.cursor_date);
+          params.set("dataFinal", job.cursor_date);
+        }
+        stage = "listing";
+        const listing = await query("/pedidos?" + params);
+        const { entries, done } = listingPage(listing, job.page_offset);
+        const ids = entries.map((v) => id(object(v).id));
+        if (new Set(ids).size !== ids.length) throw new Error("Listagem de pedidos com IDs repetidos.");
+        await checkpoint({
+          pending_ids: ids,
+          pending_index: 0,
+          page_done: done,
+          pages: job.pages + 1,
+        });
+      }
+      for (let index = job.pending_index; index < job.pending_ids.length; index++) {
+        await ingestOrder(id(job.pending_ids[index]), index);
       }
       if (job.pending_index >= job.pending_ids.length) {
         if (context && job.mode === "incremental" && job.query_phase !== "sales" && !job.import_state?.scan) {
@@ -551,6 +577,17 @@ export async function processAnalyticsBatch(
     failureCode = quotaWait ? "local_quota" : reason instanceof AnalyticsApiError ? reason.status
       : reason instanceof AnalyticsDatabaseError ? reason.databaseCode
       : reason instanceof AnalyticsActionError || reason instanceof OlistControlError ? reason.code : null;
+    if (webhookOnly) {
+      if (reason instanceof AnalyticsApiError) {
+        const deferred = await db.from("analytics_webhook_orders")
+          .update({ next_at: new Date(Date.now() + reason.retryAfter * 1000).toISOString() })
+          .eq("workspace_id", job.workspace_id).eq("connection_id", job.connection_id)
+          .lte("next_at", new Date().toISOString());
+        if (deferred.error) throw analyticsDatabaseError("Não foi possível adiar a fila do webhook.", deferred.error);
+      }
+      return { processed, pending: true, outcome,
+        error: yielded || quotaWait ? null : "Falha na atualização do pedido do webhook; nova tentativa programada." };
+    }
     const errorCode = reason instanceof AnalyticsActionError ? reason.code
       : reason instanceof AnalyticsApiError && reason.status === 401 ? "authorization_required"
       : reason instanceof AnalyticsApiError && reason.status === 403 ? "permission_required" : null;
@@ -601,6 +638,7 @@ export async function processAnalyticsBatch(
   } finally {
     let releaseError: Error | null = null;
     try {
+      if (webhookOnly) await checkpoint({ status: "queued", lease_token: null, lease_until: null });
       const released = await db
         .from("analytics_connections")
         .update({
@@ -647,5 +685,24 @@ export async function processAnalyticsBatches(workspace?: string, budgetMs = 400
       outcome: result.status === "fulfilled" ? result.value.outcome : "persistence_error",
       processed: result.status === "fulfilled" ? result.value.processed : 0 })),
     ...(errors.length ? { error: errors.join(" ") } : {}),
+  };
+}
+
+/** Drain a short webhook slice before the unchanged range sweep. Account leases are shared. */
+export async function processAnalyticsWebhookBatches(workspace?: string, budgetMs = 20000) {
+  const started = Date.now();
+  if (budgetMs < 15000) return { processed: 0, pending: true };
+  const { data, error } = await createAdminClient(5000).rpc("analytics_claim_webhook_jobs", {
+    p_workspace: workspace || null, p_limit: 3,
+  });
+  if (error) throw analyticsDatabaseError("Não foi possível reservar os pedidos do webhook.", error);
+  const jobs: SyncJob[] = data || [];
+  const results = await Promise.allSettled(jobs.map(job =>
+    processAnalyticsBatch(workspace, Math.max(0, budgetMs - (Date.now() - started)), job, true)));
+  return {
+    processed: results.reduce((total, result) => total + (result.status === "fulfilled" ? result.value.processed : 0), 0),
+    pending: results.some(result => result.status === "rejected" || result.value.pending),
+    ...(results.some(result => result.status === "rejected" || result.value.error)
+      ? { error: "Pedidos do webhook pendentes; nova tentativa programada." } : {}),
   };
 }
