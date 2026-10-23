@@ -68,7 +68,7 @@ export function Sidebar({ role }: { role: Role | null }) {
           {/* Logo */}
           <div className="flex items-center gap-3.5 px-3 mb-9">
             <div className="w-11 h-11 p-2.5 rounded-xl bg-[var(--brand)] flex items-center justify-center shrink-0">
-              <BrandMark className="h-full w-full" />
+              <BrandMark className="h-full w-full dark:fill-[var(--color-bg-secondary)]" />
             </div>
             <div>
               <p className="text-[18px] font-bold text-[var(--color-text-primary)] tracking-tight leading-tight">
