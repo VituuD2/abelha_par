@@ -87,7 +87,11 @@ export function NinhoSettings() {
     </div>
     {error && <p role="alert" className="card p-4 text-[var(--color-accent-red)]">{error}</p>}
     {notice && <p role="status" className="card p-4 text-[var(--color-accent-green)]">{notice}</p>}
-    <div role="tabpanel" id="ninho-connections" aria-labelledby="connections-tab" hidden={tab !== "connections"} className="space-y-4">
+    <div role="tabpanel" id="ninho-connections" aria-labelledby="connections-tab" hidden={tab !== "connections"} className="space-y-6">
+      <AnalyticsConnections onRefreshWebhooks={refreshWebhooks} />
+      <div className="space-y-3">
+      <h2 className="text-sm font-semibold text-[var(--color-text-secondary)]">Integrações operacionais</h2>
+      <div className="grid items-start gap-4 lg:grid-cols-2">
       <NinhoSection title="Olist ERP" icon={Cloud}
         status={health ? <ConnectionStatus health={health} /> : <span className="badge">Verificando…</span>}
         actions={(health?.action === "authorize" || health?.action === "reconnect") && <a className={`btn-primary ${busy ? "pointer-events-none opacity-50" : ""}`} href="/api/auth/login">{health.action === "reconnect" ? "Reconectar Olist" : "Conectar Olist"}</a>}>
@@ -95,7 +99,8 @@ export function NinhoSettings() {
         <div className="flex flex-wrap gap-3"><button className="btn-ghost" disabled={busy || !olist} onClick={() => action("verify")}><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} />Verificar acesso</button><button className="btn-ghost text-[var(--color-accent-red)]" disabled={busy || !olist} onClick={() => action("disconnect")}>Remover conexão</button></div>
       </NinhoSection>
       <NuvemshopConnection />
-      <AnalyticsConnections onRefreshWebhooks={refreshWebhooks} />
+      </div>
+      </div>
       <NinhoSection title="Webhook Olist" icon={Link2} iconClassName="bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)]"
         status={<span className={`badge ${webhook?.enabled && webhook.status.status === "active" ? "badge-checked" : "badge-pending"}`}>
           {!webhook ? "Verificando…" : !webhook.enabled ? "Pausado" : webhook.connections?.length ? `${webhook.connections.length} conexões` : webhook.status.status === "active" ? "Ativo" : webhook.status.status === "pending" ? "Aguardando" : "Indisponível"}

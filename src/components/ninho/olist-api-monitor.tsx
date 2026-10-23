@@ -52,23 +52,24 @@ export function OlistApiMonitor({ connectionId, usage }: { connectionId: string;
       <h4 className="text-sm font-semibold">Consumo da API</h4>
       <button type="button" disabled={loading} aria-label="Atualizar consumo" className="btn-ghost !p-2" onClick={() => void refresh()}><RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} /></button>
     </div>
-    {error && <p className="text-xs text-amber-900" role="status">{error} Dados desatualizados.</p>}
-    <LoadingRegion label="Dados de consumo da API" loading={loading && (!data || foregroundLoading)} className="min-h-60" skeleton={<RowsSkeleton rows={3} />}>
+    {error && <p className="text-xs text-[var(--color-accent-orange)]" role="status">{error} Dados desatualizados.</p>}
+    <LoadingRegion label="Dados de consumo da API" loading={loading && (!data || foregroundLoading)} className="min-h-24" skeleton={<RowsSkeleton rows={3} />}>
     {!data ? <p className="text-xs text-[var(--color-text-secondary)]">Consultando consumo…</p>
       : !data.available ? <p className="text-xs" role="status">{data.error || "Monitor indisponível."}</p>
       : !account || !summary ? <p className="text-xs text-[var(--color-text-secondary)]">Sem medição desta conexão.</p> : <>
-        <dl className="grid grid-cols-2 gap-3 rounded-xl bg-[var(--color-bg-secondary)] p-3">
-          <div><dt className="text-xs text-[var(--color-text-secondary)]">App · último minuto</dt><dd className="mt-1 text-lg font-semibold tabular-nums">{summary.lastMinuteMeasured ? summary.lastMinute : "—"}<span className="ml-1 text-xs font-normal text-[var(--color-text-secondary)]">/ {account.effective_limit} chamadas</span></dd></div>
-          <div><dt className="text-xs text-[var(--color-text-secondary)]">Conta · amostra Olist{!fresh && hasSample ? " antiga" : ""}</dt><dd className="mt-1 text-lg font-semibold tabular-nums">{hasSample ? `${account.provider_limit! - account.provider_remaining!}/${account.provider_limit}` : "Sem amostra"}</dd></div>
+        <dl className="grid grid-cols-2 gap-3 rounded-xl bg-[var(--color-bg-elevated)] p-3">
+          <div className="min-w-0"><dt className="text-xs text-[var(--color-text-secondary)]">App · último minuto</dt><dd className="mt-1 text-base font-semibold tabular-nums">{summary.lastMinuteMeasured ? summary.lastMinute : "—"}<span className="ml-1 text-xs font-normal text-[var(--color-text-secondary)]">/ {account.effective_limit} chamadas</span></dd></div>
+          <div className="min-w-0"><dt className="text-xs text-[var(--color-text-secondary)]">Conta · amostra Olist{!fresh && hasSample ? " antiga" : ""}</dt><dd className="mt-1 break-words text-base font-semibold tabular-nums">{hasSample ? `${account.provider_limit! - account.provider_remaining!}/${account.provider_limit}` : "Sem amostra"}</dd></div>
         </dl>
-        {account.cooldown_until && Date.parse(account.cooldown_until) > now && <p className="text-xs text-amber-900">Retomada a partir de {time(account.cooldown_until)}</p>}
-        <div className="flex h-10 items-end gap-1" role="img" aria-label={`Chamadas do app por minuto nos últimos 15 minutos de ${account.name}`}>
-          {summary.bars.map(bar => <div key={bar.time} title={`${time(bar.time)}: ${bar.covered ? `${bar.requests} chamadas` : "sem medição"}`} className={`flex-1 rounded-t ${bar.covered ? "bg-amber-500" : "bg-stone-300"}`} style={{ height: `${Math.max(3, Math.min(100, bar.requests / Math.max(1, account.app_limit) * 100))}%` }} />)}
-        </div>
-        <div className="flex justify-between gap-2 text-xs text-[var(--color-text-secondary)]"><span>Últimos 15 min · app</span><span>{error ? "Desatualizado" : `Atualizado ${time(data.generated_at!)}`} · Brasília</span></div>
-        <details className="text-xs">
-          <summary className="cursor-pointer font-medium">Detalhes de consumo</summary>
+        {account.cooldown_until && Date.parse(account.cooldown_until) > now && <p className="text-xs text-[var(--color-accent-orange)]">Retomada a partir de {time(account.cooldown_until)}</p>}
+        <p className="mt-2 text-xs text-[var(--color-text-secondary)]">{error ? "Desatualizado" : `Atualizado ${time(data.generated_at!)}`} · Brasília</p>
+        <details className="mt-2 text-xs">
+          <summary className="cursor-pointer py-2 font-medium">Detalhes de consumo</summary>
           <div className="mt-3 space-y-2 text-[var(--color-text-secondary)]">
+            <div className="flex h-10 items-end gap-1" role="img" aria-label={`Chamadas do app por minuto nos últimos 15 minutos de ${account.name}`}>
+              {summary.bars.map(bar => <div key={bar.time} title={`${time(bar.time)}: ${bar.covered ? `${bar.requests} chamadas` : "sem medição"}`} className={`flex-1 rounded-t ${bar.covered ? "bg-[var(--color-accent-yellow)]" : "bg-[var(--color-progress-track)]"}`} style={{ height: `${Math.max(3, Math.min(100, bar.requests / Math.max(1, account.app_limit) * 100))}%` }} />)}
+            </div>
+            <p>Últimos 15 min · app</p>
             <p>{account.plan} · plano {account.plan_limit}/min · app {account.app_limit}/min · permitido {account.effective_limit}/min</p>
             <p>60 min: {summary.sources.orders} vendas · {summary.sources.costs} CMV · {summary.sources.operational} conferência · {summary.sources.identity} validação</p>
             <p>{summary.throttled} respostas 429 · {summary.failures} falhas · {summary.retries} novas tentativas · média {summary.averageMs === null ? "sem amostra" : `${summary.averageMs} ms`}</p>

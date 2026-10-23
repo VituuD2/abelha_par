@@ -309,41 +309,47 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
         </button>
       }>
       {error && (
-        <p role="alert" className="text-sm text-red-800">
+        <p role="alert" className="text-sm text-[var(--color-accent-red)]">
           {error}
         </p>
       )}
       {notice && (
-        <p role="status" className="text-sm text-green-800">
+        <p role="status" className="text-sm text-[var(--color-accent-green)]">
           {notice}
         </p>
       )}
       <LoadingRegion label="Contas e conexões analíticas" loading={connectionsLoading || (!state && !error)} preserveHeight={!!state} className="min-h-80" skeleton={<RowsSkeleton rows={5} />}>
-      <div className="grid items-start gap-4 xl:grid-cols-2">
+      <div className="grid items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
         {state?.connections.map((c) => {
           const health = c.health || connectionHealth(c);
           const company = state.companies.find(company => company.id === c.company_id);
           const authorized = !["configure", "authorize", "reconnect", "relink"].includes(health.action || "") && health.code !== "unavailable";
           const costs = state.costSync?.connection_id === c.id ? state.costSync : null;
+          const pendingJobs = state.jobs.filter(job => job.connection_id === c.id && job.status !== "completed").length;
           return (
-            <article key={c.id} aria-label={`Conexão ${c.name}`} className="min-w-0 rounded-2xl border border-[var(--color-border-light)] p-4 sm:p-5 space-y-4">
+            <article key={c.id} aria-label={`Conexão ${c.name}`} className="min-w-0 rounded-2xl border border-[var(--color-border-medium)] bg-[var(--color-bg-secondary)] p-4 space-y-4">
               <header className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h3 className="font-semibold">{c.name}</h3>
-                  {company?.name !== c.name && <p className="text-xs text-[var(--color-text-secondary)]">{company?.name}</p>}
+                <div className="min-w-0 flex-1 basis-32">
+                  <h3 className="break-words text-base font-semibold">{c.name}</h3>
+                  {company?.name !== c.name && <p className="break-words text-xs text-[var(--color-text-secondary)]">{company?.name}</p>}
                   <p className="mt-1 text-xs text-[var(--color-text-secondary)]">CNPJ {c.verified_tax_id || company?.tax_id || "pendente"}{c.verified_at && " · validado"}</p>
                 </div>
                 <ConnectionStatus health={health} />
               </header>
-              {health.code !== "connected" && health.code !== "paused" && c.last_error && <p className="text-xs text-amber-900" role="status">{c.last_error}</p>}
-              <ConnectionProgress compact enabled={c.enabled} connection={c.id} jobs={state.jobs} coverage={state.coverage || []} onRetry={job => void retry(job)} busy={busy} />
-              <p className="text-xs text-[var(--color-text-secondary)]">Última importação: {c.last_synced_at ? new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "aguardando"}</p>
+              {health.code !== "connected" && health.code !== "paused" && c.last_error && <p className="break-words text-xs text-[var(--color-accent-orange)]" role="status">{c.last_error}</p>}
+              <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-y border-[var(--color-border-light)] py-3 text-xs">
+                <div className="min-w-0"><dt className="text-[var(--color-text-secondary)]">Última importação</dt><dd className="mt-1 font-medium tabular-nums">{c.last_synced_at ? new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "aguardando"}</dd></div>
+                <div className="text-right"><dt className="text-[var(--color-text-secondary)]">Fila de importação</dt><dd className="mt-1 font-medium tabular-nums">{pendingJobs} {pendingJobs === 1 ? "tarefa" : "tarefas"}</dd></div>
+              </dl>
+              <div className="[&_summary]:py-2 [&_summary]:text-xs [&>div>div:first-child]:bg-[var(--color-bg-elevated)]">
+                <ConnectionProgress compact enabled={c.enabled} connection={c.id} jobs={state.jobs} coverage={state.coverage || []} onRetry={job => void retry(job)} busy={busy} />
+              </div>
               <OlistApiMonitor connectionId={c.id} usage={usage} />
               {costs && <details className="border-t border-[var(--color-border-light)] pt-3 text-xs">
-                <summary className="cursor-pointer font-medium">CMV · {costs.history ? `${costs.history.completed}/${costs.history.total} produtos` : "aguardando"}{costs.history?.pending ? ` · ${costs.history.pending} pendentes` : ""}</summary>
+                <summary className="cursor-pointer py-2 font-medium">CMV · {costs.history ? `${costs.history.completed}/${costs.history.total} produtos` : "aguardando"}{costs.history?.pending ? ` · ${costs.history.pending} pendentes` : ""}</summary>
                 <div className="mt-3 space-y-2">
                   <p className="text-[var(--color-text-secondary)]">Atualizado: {costs.history?.last_synced_at ? new Date(costs.history.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "aguardando"}</p>
-                  {(costs.last_error || costs.history?.last_error) && <p role="status" className="text-amber-900">{costs.last_error || costs.history?.last_error}</p>}
+                  {(costs.last_error || costs.history?.last_error) && <p role="status" className="text-[var(--color-accent-orange)]">{costs.last_error || costs.history?.last_error}</p>}
                   <button className="btn-ghost" disabled={busy || !c.enabled || !authorized} onClick={() => save({ action: "refresh-costs" })}>Atualizar CMV</button>
                 </div>
               </details>}
@@ -352,10 +358,10 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
                 {health.action === "relink" && <button disabled={busy} className="btn-primary" onClick={() => save({ action: "relink", id: c.id })}>Restabelecer vínculo operacional</button>}
                 {(health.action === "authorize" || health.action === "reconnect") && <a href={c.credential_kind === "legacy" ? "/api/auth/login" : `/api/analytics/oauth/login?connection=${c.id}`} className={`btn-primary ${busy ? "pointer-events-none opacity-50" : ""}`} aria-disabled={busy}>{health.action === "authorize" ? "Autorizar esta conta" : "Reconectar esta conta"}</a>}
                 {health.action === "verify" && <button disabled={busy} className="btn-primary" onClick={() => save({ action: "verify", id: c.id })}>Validar CNPJ na API</button>}
-                <button disabled={busy} className="btn-ghost" onClick={() => save({ action: c.enabled ? "pause" : "resume", id: c.id })}>{c.enabled ? "Pausar análise" : "Ativar análise"}</button>
-                <details className="text-xs">
-                  <summary className="cursor-pointer px-3 py-2 font-medium">Gerenciar</summary>
+                <details className="w-full text-xs">
+                  <summary className="cursor-pointer py-2 font-medium">Gerenciar conexão</summary>
                   <div className="flex flex-wrap gap-2 pt-2">
+                    <button disabled={busy} className="btn-ghost" onClick={() => save({ action: c.enabled ? "pause" : "resume", id: c.id })}>{c.enabled ? "Pausar análise" : "Ativar análise"}</button>
                     {health.action !== "verify" && <button disabled={busy || !c.enabled || !authorized} className="btn-ghost" onClick={() => save({ action: "verify", id: c.id })}>Validar CNPJ na API</button>}
                     {c.credential_kind !== "legacy" && <button disabled={busy} className="btn-ghost" onClick={() => configureApplication(c)}>Alterar aplicativo</button>}
                   </div>
@@ -365,9 +371,13 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
           );
         })}
       </div>
+      {state && !state.connections.length && <p className="py-4 text-sm text-[var(--color-text-secondary)]">Nenhuma conta analítica cadastrada. Adicione uma conta Olist nas configurações abaixo.</p>}
       </LoadingRegion>
-      <details>
-        <summary className="cursor-pointer font-semibold text-sm">
+      <div className="space-y-3 border-t border-[var(--color-border-light)] pt-5">
+      <h3 className="text-sm font-semibold">Configuração e importação</h3>
+      <div className="grid items-start gap-3 lg:grid-cols-2">
+      <details className="min-w-0 rounded-xl border border-[var(--color-border-light)] p-4 open:lg:col-span-2">
+        <summary className="cursor-pointer font-medium text-sm">
           Cadastrar ou identificar empresa
         </summary>
         <form
@@ -429,8 +439,8 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
           </button>
         </form>
       </details>
-      <details ref={applicationForm}>
-        <summary className="cursor-pointer font-semibold text-sm">
+      <details ref={applicationForm} className="min-w-0 rounded-xl border border-[var(--color-border-light)] p-4 open:lg:col-span-2">
+        <summary className="cursor-pointer font-medium text-sm">
           Adicionar conta Olist ou atualizar aplicativo
         </summary>
         <form
@@ -537,7 +547,7 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
             </label>
           </div>
           {credentialConnection && (
-            <p className="text-xs text-amber-800">
+            <p className="text-xs text-[var(--color-accent-orange)]">
               Salvar novas credenciais invalida a autorização desta conexão
               analítica. Será necessário autorizar novamente.
             </p>
@@ -547,8 +557,8 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
           </button>
         </form>
       </details>
-      <details>
-        <summary className="cursor-pointer font-semibold text-sm">
+      <details className="min-w-0 rounded-xl border border-[var(--color-border-light)] p-4 open:lg:col-span-2">
+        <summary className="cursor-pointer font-medium text-sm">
           Classificar integrações, lojas e marketplaces
         </summary>
         <div className="mt-4 space-y-3">
@@ -572,9 +582,9 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
           )}
         </div>
       </details>
-      <details className="border-t border-[var(--color-border-light)] pt-5 space-y-4">
-        <summary className="cursor-pointer font-semibold flex gap-2 items-center">
-          <Database className="w-4 h-4" />
+      <details className="min-w-0 rounded-xl border border-[var(--color-border-light)] p-4 space-y-4 open:lg:col-span-2">
+        <summary className="cursor-pointer font-medium text-sm">
+          <Database aria-hidden="true" className="mr-2 inline h-4 w-4" />
           Importar outro período
         </summary>
         <form
@@ -628,6 +638,8 @@ export function AnalyticsConnections({ onRefreshWebhooks }: { onRefreshWebhooks?
         </form>
 
       </details>
+      </div>
+      </div>
     </NinhoSection>
   );
 }
