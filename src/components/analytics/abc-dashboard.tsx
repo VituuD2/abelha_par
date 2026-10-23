@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header";
 
 
 import Link from "next/link";
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -158,9 +158,13 @@ function MultiFilter({
   const [search, setSearch] = useState("");
   const [remote, setRemote] = useState<Option[] | null>(null),
     [searchError, setSearchError] = useState(false);
-  useEffect(() => {
+  const [searchScope, setSearchScope] = useState({ dimension, search });
+  if (searchScope.dimension !== dimension || searchScope.search !== search) {
+    setSearchScope({ dimension, search });
     setRemote(null);
     setSearchError(false);
+  }
+  useEffect(() => {
     if (!search || dimension === "statuses") return;
     const abort = new AbortController(),
       timer = setTimeout(() => {
@@ -278,6 +282,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const reportScope = useRef("");
   const [reportFailed, setReportFailed] = useState(false);
   const backgroundRefresh = useRef(false);
+  const [backgroundRefreshing, setBackgroundRefreshing] = useState(false);
   const [highlight, setHighlight] = useState<ParetoHighlight | null>(null);
   const highlightRow = result?.pareto.find(row => row.entityId === highlight?.entityId) || result?.rows.find(row => row.entityId === highlight?.entityId) || null;
   const updateHighlight = (next: ParetoHighlight | null) => setHighlight(current =>
@@ -294,6 +299,11 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     [direction, setDirection] = useState("asc"),
     [refresh, setRefresh] = useState(0),
     [dataRefresh, setDataRefresh] = useState(0);
+  const [schedulingScope, setSchedulingScope] = useState({ filters, refresh });
+  if (schedulingScope.filters !== filters || schedulingScope.refresh !== refresh) {
+    setSchedulingScope({ filters, refresh });
+    setSchedulingError(null);
+  }
   const [search, setSearch] = useState("");
   const [searchPage, setSearchPage] = useState(1);
   const [exportNotice, setExportNotice] = useState("");
@@ -313,12 +323,14 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const activeFilterCount = appliedSelections.reduce((count, dim) => count + (filters.selections[dim]?.length || 0), 0);
   const markForeground = () => {
     backgroundRefresh.current = false;
+    setBackgroundRefreshing(false);
     setForegroundLoading(true);
     setTableRefresh(false);
     setLoading(true);
   };
   const markTableRefresh = () => {
     backgroundRefresh.current = false;
+    setBackgroundRefreshing(false);
     setForegroundLoading(false);
     setTableRefresh(true);
     setLoading(true);
@@ -340,6 +352,14 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     [drillRequest, setDrillRequest] = useState({ page: 1, direction: "desc" as "asc" | "desc" }),
     [drillLoading, setDrillLoading] = useState(false),
     [drillError, setDrillError] = useState<string | null>(null);
+  const [drillInputs, setDrillInputs] = useState({ entity, drillRequest, filters });
+  if (drillInputs.entity !== entity || drillInputs.drillRequest !== drillRequest || drillInputs.filters !== filters) {
+    setDrillInputs({ entity, drillRequest, filters });
+    if (entity) {
+      setDrillLoading(true);
+      setDrillError(null);
+    }
+  }
   const drillScope = entity ? JSON.stringify({ filters, entity: entity.entityId }) : "";
   const visibleColumns = columns.filter(column => filters.grouping !== "customer" || column !== "sku");
   const columnLabel = (column: Column) => column === "name" ? (filters.grouping === "customer" ? "Cliente" : "Produto")
@@ -348,7 +368,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   const drill = currentDrill?.data;
   const drillPage = currentDrill?.page || 1;
   const drillTotalPages = Math.max(1, Math.ceil((drill?.total || 0) / 50));
-  const dialog = useRef<HTMLDialogElement>(null);
+  const [dialog, setDialog] = useState<HTMLDialogElement | null>(null);
   const scheduledFilters = useRef("");
   const statusSequence = useRef(0);
   const lastProgress = useRef("");
@@ -364,6 +384,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
       return;
     }
     backgroundRefresh.current = true;
+    setBackgroundRefreshing(true);
     if (includeOptions) setRefresh(value => value + 1);
     else setDataRefresh(value => value + 1);
   }, []);
@@ -389,7 +410,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   }, [refresh]);
   useEffect(() => {
     const filterScope = JSON.stringify(filters);
-    setSchedulingError(null);
     if (scheduledFilters.current === filterScope) return;
     const abort = new AbortController();
     // Existing sales can be displayed while durable history is being scheduled.
@@ -422,6 +442,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     setForegroundLoading(!tableOnly && !backgroundRefresh.current);
     setTableRefresh(tableOnly);
     backgroundRefresh.current = false;
+    setBackgroundRefreshing(false);
     setReportFailed(false);
     setLoading(true);
     setError(null);
@@ -490,8 +511,6 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   useEffect(() => {
     if (!entity) return;
     const abort = new AbortController();
-    setDrillLoading(true);
-    setDrillError(null);
     jsonRequest(
       "/api/analytics/drilldown",
       { filters, entity: entity.entityId, page: drillRequest.page, ...(filters.grouping === "customer" ? { direction: drillRequest.direction } : {}) },
@@ -510,9 +529,9 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
   }, [entity, drillRequest, filters, drillScope]);
   const reliability = status ? reportReliability(status, filters) : null;
   const comparison = useABCComparison(filters, refresh, dataRefresh);
-  const showSkeletons = foregroundLoading && !backgroundRefresh.current && (loading || comparison.loading);
+  const showSkeletons = foregroundLoading && !backgroundRefreshing && (loading || comparison.loading);
   const tableLoading = tableRefresh && loading;
-  foregroundPending.current = showSkeletons;
+  useLayoutEffect(() => { foregroundPending.current = showSkeletons; }, [showSkeletons]);
   const displayResult = result || EMPTY_RESULT;
   const reportUnavailable = reportFailed ? "Não foi possível carregar esta análise. Tente atualizar os dados." : null;
   useEffect(() => {
@@ -562,7 +581,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
     setEntity(row);
     setDrillRequest({ page: 1, direction: "desc" });
     setDrillError(null);
-    dialog.current?.showModal();
+    dialog?.showModal();
   };
   const cell = (row: ABCRow, column: Column) =>
     column === "revenue" ? (
@@ -1181,7 +1200,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           </LoadingRegion>
       </div>
       <dialog
-        ref={dialog}
+        ref={setDialog}
         onClose={() => {
           setEntity(null);
           setDrillResult(null);
@@ -1197,7 +1216,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
           <button
             aria-label="Fechar detalhes"
             className="btn-ghost shrink-0"
-            onClick={() => dialog.current?.close()}
+            onClick={() => dialog?.close()}
           >
             <X className="w-[22px] h-[22px]" />
           </button>
@@ -1238,7 +1257,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <h3 className="font-semibold">Pedidos</h3>
                   <Select label="Ordenar pedidos" inline value={currentDrill?.direction || drillRequest.direction} disabled={drillLoading}
-                    popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: 1, direction: value as "asc" | "desc" })}>
+                    popoverContainer={dialog ?? undefined} onValueChange={value => setDrillRequest({ page: 1, direction: value as "asc" | "desc" })}>
                     <option value="desc">Mais recentes primeiro</option>
                     <option value="asc">Mais antigos primeiro</option>
                   </Select>
@@ -1316,7 +1335,7 @@ export function ABCDashboard({ isAdmin, initialGrouping = "product" }: { isAdmin
                 >
                   Anterior
                 </button>
-                <Select label="Página" inline value={drillPage} disabled={drillLoading || drillTotalPages === 1} popoverContainer={dialog.current ?? undefined} onValueChange={value => setDrillRequest({ page: Number(value), direction: currentDrill?.direction || drillRequest.direction })}>
+                <Select label="Página" inline value={drillPage} disabled={drillLoading || drillTotalPages === 1} popoverContainer={dialog ?? undefined} onValueChange={value => setDrillRequest({ page: Number(value), direction: currentDrill?.direction || drillRequest.direction })}>
                   {Array.from({ length: drillTotalPages }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
                 </Select>
                 <p className="text-[15px]">

@@ -1,10 +1,6 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 
-const compat = new FlatCompat({
-  baseDirectory: dirname(fileURLToPath(import.meta.url)),
-});
 export default [
   {
     ignores: [
@@ -15,7 +11,14 @@ export default [
       "next-env.d.ts",
     ],
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...nextVitals,
+  ...nextTypescript,
   // Legacy code uses permissive provider payload types. TypeScript still validates all sources.
-  { rules: { "@typescript-eslint/no-explicit-any": "warn" } },
+  { rules: {
+    "@typescript-eslint/no-explicit-any": "warn",
+    // Legacy React hooks code is fixed incrementally.
+    "react-hooks/refs": "warn",
+    "react-hooks/set-state-in-effect": "warn",
+    "react-hooks/purity": "warn",
+  } },
 ];

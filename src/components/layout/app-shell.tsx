@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePreparationStore } from "@/stores/preparation-store";
 import { useScanStore } from "@/stores/scan-store";
 import { createClient } from "@/lib/supabase/client";
@@ -17,15 +17,16 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
   const pathname = usePathname();
   const router = useRouter();
   // A new visit needs a new proof even when returning to the same URL.
-  const routeVisit = useRef({ pathname, version: 0 });
-  if (routeVisit.current.pathname !== pathname) {
-    routeVisit.current = { pathname, version: routeVisit.current.version + 1 };
+  const [routeVisit, setRouteVisit] = useState({ pathname, version: 0 });
+  if (routeVisit.pathname !== pathname) {
+    setRouteVisit({ pathname, version: routeVisit.version + 1 });
   }
-  const scope = `${routeVisit.current.version}:${pathname}`;
-  const bootstrap = useRef(initialAccess?.userId === serverUserId ? initialAccess : null);
+  const scope = `${routeVisit.version}:${pathname}`;
+  const bootstrapAccess = initialAccess?.userId === serverUserId ? initialAccess : null;
+  const bootstrap = useRef(bootstrapAccess);
   const [access, setAccess] = useState<SessionAccessSnapshot>(() => ({
-    userId: bootstrap.current?.userId || null, role: bootstrap.current?.role || null,
-    loading: !bootstrap.current, error: null, verifiedFor: bootstrap.current ? scope : null,
+    userId: bootstrapAccess?.userId || null, role: bootstrapAccess?.role || null,
+    loading: !bootstrapAccess, error: null, verifiedFor: bootstrapAccess ? scope : null,
   }));
   const monitor = useRef<ReturnType<typeof createSessionAccessMonitor> | null>(null);
   const userId = access.userId;
@@ -34,9 +35,11 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
   const isAuthPage = ["/login", "/forgot-password", "/reset-password"].includes(pathname);
   const pagePermission = permissionForPage(pathname);
   const currentPath = useRef(pathname);
-  currentPath.current = pathname;
   const currentScope = useRef(scope);
-  currentScope.current = scope;
+  useLayoutEffect(() => {
+    currentPath.current = pathname;
+    currentScope.current = scope;
+  }, [pathname, scope]);
   const routeVerified = access.verifiedFor === scope;
   const allowedPage = !pagePermission || (routeVerified && can(access.role, pagePermission));
 
@@ -91,7 +94,7 @@ export function AppShell({ children, userId: serverUserId, initialAccess = null 
     return () => { cancelled = true; };
   }, [userId]);
   if (isAuthPage) return <main className="min-h-screen">{children}</main>;
-  if (accessError) return <main className="min-h-screen flex items-center justify-center p-6"><section className="card p-8 max-w-lg space-y-4"><h1 className="text-xl font-semibold">Acesso à colmeia</h1><p role="alert">{accessError}</p><div className="flex flex-wrap gap-3"><button className="btn-primary" disabled={access.loading} onClick={() => { void monitor.current?.refresh(currentScope.current, { force: true }); }}>{access.loading ? "Verificando…" : "Tentar novamente"}</button><button className="btn-ghost" onClick={async () => { await createClient().auth.signOut(); window.location.assign("/login"); }}>Voltar ao login</button></div></section></main>;
+  if (accessError) return <main className="min-h-screen flex items-center justify-center p-6"><section className="card p-8 max-w-lg space-y-4"><h1 className="text-xl font-semibold">Acesso à colmeia</h1><p role="alert">{accessError}</p><div className="flex flex-wrap gap-3"><button className="btn-primary" disabled={access.loading} onClick={() => { void monitor.current?.refresh(currentScope.current, { force: true }); }}>{access.loading ? "Verificando…" : "Tentar novamente"}</button><button className="btn-ghost" onClick={async () => { await createClient().auth.signOut(); window.location.assign(new URL("/login", window.location.origin).href); }}>Voltar ao login</button></div></section></main>;
   if (access.loading || !userId || readyFor !== userId || !allowedPage) return <main className="min-h-screen flex items-center justify-center p-6"><div role="status" className="w-full max-w-sm space-y-5"><div className="h-10 w-10 rounded-xl bg-[var(--color-bg-tertiary)]" /><p className="font-medium">Preparando sua sessão…</p><div aria-hidden="true" className="space-y-3"><div className="skeleton h-3 w-full" /><div className="skeleton h-3 w-2/3" /></div></div></main>;
 
   return (
