@@ -7,11 +7,12 @@ import { operationalHealth, type ConnectionHealth } from "@/lib/connection-statu
 import { ConnectionStatus } from "@/components/ui/connection-status";
 import { NuvemshopConnection } from "@/components/ninho/nuvemshop-connection";
 import { NinhoUsers } from "@/components/ninho/ninho-users";
-import { AnalyticsConnections, type ConnectionWebhook } from "@/components/ninho/analytics-connections";
+import { AnalyticsConnections } from "@/components/ninho/analytics-connections";
 import { NinhoSection } from "./ninho-section";
 import type { OlistWebhookStatus } from "@/types";
 
 type OlistStatus = { status?: string; health?: ConnectionHealth; isConnected: boolean; needsReconnect?: boolean; message?: string | null };
+type ConnectionWebhook = { id: string; name: string; url: string | null; lastReceivedAt: string | null };
 type Webhook = { enabled: boolean; url: string | null; status: OlistWebhookStatus; connections?: ConnectionWebhook[] };
 const oauthErrors: Record<string, string> = {
   OAuthValidationFailed: "A tentativa de conexão expirou. Conecte a Olist novamente.",
@@ -31,6 +32,7 @@ export function NinhoSettings() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedWebhook, setCopiedWebhook] = useState<string | null>(null);
   const refreshWebhooks = useCallback(async () => {
     const response = await fetch("/api/ninho/webhook", { cache: "no-store" });
     const payload = await response.json();
@@ -93,15 +95,38 @@ export function NinhoSettings() {
         <div className="flex flex-wrap gap-3"><button className="btn-ghost" disabled={busy || !olist} onClick={() => action("verify")}><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} />Verificar acesso</button><button className="btn-ghost text-[var(--color-accent-red)]" disabled={busy || !olist} onClick={() => action("disconnect")}>Remover conexão</button></div>
       </NinhoSection>
       <NuvemshopConnection />
-      <AnalyticsConnections webhooks={webhook?.connections} onRefreshWebhooks={refreshWebhooks} />
+      <AnalyticsConnections onRefreshWebhooks={refreshWebhooks} />
       <NinhoSection title="Webhook Olist" icon={Link2} iconClassName="bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)]"
         status={<span className={`badge ${webhook?.enabled && webhook.status.status === "active" ? "badge-checked" : "badge-pending"}`}>
-          {!webhook ? "Verificando…" : !webhook.enabled ? "Pausado" : webhook.status.status === "active" ? "Ativo" : webhook.status.status === "pending" ? "Aguardando" : "Indisponível"}
+          {!webhook ? "Verificando…" : !webhook.enabled ? "Pausado" : webhook.connections?.length ? `${webhook.connections.length} conexões` : webhook.status.status === "active" ? "Ativo" : webhook.status.status === "pending" ? "Aguardando" : "Indisponível"}
         </span>}
         actions={webhook && <button className="btn-ghost" disabled={busy} onClick={() => action(webhook.enabled ? "disable" : "enable")}>{webhook.enabled ? "Pausar recebimento" : "Ativar recebimento"}</button>}>
-        {webhook ? <><p className="text-sm">{!webhook.enabled ? "Recebimento pausado." : webhook.status.status === "active" ? `Última notificação: ${new Date(webhook.status.lastReceivedAt!).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })} (Brasília).` : webhook.status.status === "pending" ? "Aguardando a primeira notificação da Olist." : "Status de recebimento indisponível."}</p>
+        {webhook ? <>
+          <div className="grid items-start gap-4 xl:grid-cols-3">
+            {webhook.connections?.map(connection => <article key={connection.id} aria-label={`Webhook ${connection.name}`} className="min-w-0 space-y-3 rounded-2xl border border-[var(--color-border-light)] p-4">
+              <h3 className="font-semibold">{connection.name}</h3>
+              {connection.url ? <>
+                <label className="block text-xs">URL para notificações de vendas · {connection.name}
+                  <input readOnly className="field mt-1 text-xs" value={connection.url} onFocus={event => event.target.select()} />
+                </label>
+                <button className="btn-ghost" aria-label={`Copiar webhook de ${connection.name}`} onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(connection.url!);
+                    setCopiedWebhook(connection.id);
+                    setTimeout(() => setCopiedWebhook(current => current === connection.id ? null : current), 2000);
+                  } catch { setError("Selecione a URL do webhook desta conexão e copie manualmente."); }
+                }}><Copy className="w-4 h-4" />{copiedWebhook === connection.id ? "URL copiada" : "Copiar URL"}</button>
+              </> : <p className="text-xs text-[var(--color-accent-orange)]">Webhook indisponível para esta conexão.</p>}
+              <p className="text-xs text-[var(--color-text-secondary)]">{connection.lastReceivedAt ? `Último evento: ${new Date(connection.lastReceivedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })} (Brasília).` : "Aguardando o primeiro evento."}</p>
+            </article>)}
+          </div>
+          <button className="btn-ghost" disabled={busy} onClick={() => action("refresh")}>Atualizar status</button>
+          <details open={!webhook.connections?.length || undefined} className="space-y-3 border-t border-[var(--color-border-light)] pt-3">
+          <summary className="cursor-pointer text-sm font-medium">URL anterior do webhook</summary>
+          <p className="text-sm">{!webhook.enabled ? "Recebimento pausado." : webhook.status.status === "active" ? `Última notificação: ${new Date(webhook.status.lastReceivedAt!).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })} (Brasília).` : webhook.status.status === "pending" ? "Aguardando a primeira notificação da Olist." : "Status de recebimento indisponível."}</p>
           {webhook.url ? <><label className="block text-sm">URL para Notificações de vendas na Olist<input readOnly className="field mt-2 text-xs" value={webhook.url} onFocus={event => event.target.select()} /></label><button className="btn-ghost" onClick={async () => { try { await navigator.clipboard.writeText(webhook.url!); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setError("Selecione a URL e copie manualmente."); } }}><Copy className="w-4 h-4" />{copied ? "URL copiada" : "Copiar URL"}</button></> : <p className="text-sm text-[var(--color-accent-orange)]">A chave do webhook precisa ser configurada no servidor.</p>}
-          <div className="flex flex-wrap gap-3"><button className="btn-ghost" disabled={busy || !webhook.url} onClick={() => action("rotate")}>Gerar nova URL</button><button className="btn-ghost" disabled={busy} onClick={() => action("refresh")}>Atualizar status</button></div></> : <p className="text-sm">Verificando webhook…</p>}
+          <button className="btn-ghost" disabled={busy || !webhook.url} onClick={() => action("rotate")}>Gerar nova URL</button>
+          </details></> : <p className="text-sm">Verificando webhook…</p>}
       </NinhoSection>
     </div>
     <div role="tabpanel" id="ninho-users" aria-labelledby="users-tab" hidden={tab !== "users"}><NinhoUsers /></div>

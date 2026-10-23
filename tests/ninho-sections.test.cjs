@@ -17,7 +17,7 @@ after(async()=>{await act(async()=>root.unmount());dom.window.close();});
 
 test('Ninho shows each account webhook and last event, copies only the chosen URL and offers manual copying on failure',async t=>{
   const connections=[1,2,3].map(id=>({id:`connection-${id}`,company_id:`company-${id}`,name:`Olist ${id}`,credential_kind:'oauth',enabled:true,client_id:`app-${id}`,expires_at:'2099-01-01',verified_at:'2026-10-21',last_synced_at:null}));
-  const webhooks=connections.map((connection,index)=>({id:connection.id,url:`https://example.test/api/webhooks/olist/owner/account-${index+1}`,lastReceivedAt:index===1?'2026-10-22T13:00:00Z':null}));
+  const webhooks=connections.map((connection,index)=>({id:connection.id,name:connection.name,url:`https://example.test/api/webhooks/olist/owner/account-${index+1}`,lastReceivedAt:index===1?'2026-10-22T13:00:00Z':null}));
   const calls=[],copied=[],polls=[];
   t.mock.method(global,'setInterval',fn=>{polls.push(fn);return polls.length;});
   t.mock.method(global,'clearInterval',()=>{});
@@ -35,8 +35,11 @@ test('Ninho shows each account webhook and last event, copies only the chosen UR
   Object.defineProperty(global.navigator,'clipboard',{configurable:true,value:clipboard});
   t.after(()=>{if(clipboardDescriptor)Object.defineProperty(global.navigator,'clipboard',clipboardDescriptor);else delete global.navigator.clipboard;});
   await act(async()=>root.render(React.createElement(NinhoSettings,{key:'per-account-webhooks'})));
-  const cards=[...document.querySelectorAll('article[aria-label^="Conexão "]')];
+  const webhookSection=document.querySelector('section[aria-label="Webhook Olist"]');
+  const cards=[...webhookSection.querySelectorAll('article[aria-label^="Webhook "]')];
   assert.equal(cards.length,3);
+  assert.deepEqual(cards.map(card=>card.querySelector('h3').textContent),connections.map(connection=>connection.name));
+  for(const card of document.querySelectorAll('article[aria-label^="Conexão "]'))assert.equal(card.querySelector('input[readonly]'),null,'connection cards must not contain webhook URLs');
   const fields=cards.map(card=>card.querySelector('input[readonly]'));
   assert.deepEqual(fields.map(field=>field.value),webhooks.map(webhook=>webhook.url));
   assert.equal(new Set(fields.map(field=>field.value)).size,3);
@@ -44,7 +47,7 @@ test('Ninho shows each account webhook and last event, copies only the chosen UR
   assert.match(cards[0].textContent,/Aguardando o primeiro evento/);
   assert.match(cards[1].textContent,/Último evento: 22\/10\/2026, 10:00:00 \(Brasília\)/);
   assert.match(cards[2].textContent,/Aguardando o primeiro evento/);
-  const toggle=document.querySelector('button[aria-label="Conexões da Curva ABC"]');
+  const toggle=document.querySelector('button[aria-label="Webhook Olist"]');
   await act(async()=>toggle.click());
   assert.equal(fields[2].closest('[hidden]'),null);
   assert.equal(calls.filter(call=>call.url==='/api/ninho/webhook').length,1,'initial loading must not duplicate webhook reads');

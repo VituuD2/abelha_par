@@ -10,11 +10,11 @@ export async function GET(request: Request) {
   const db = createAdminClient(), appUrl = getAppUrl(request);
   const [{ data, error }, { data: connections, error: connectionsError }] = await Promise.all([
     db.from("workspaces").select("olist_webhook_enabled, olist_webhook_revision").eq("id", access.workspaceId).single(),
-    db.from("analytics_connections").select("id,webhook_secret,webhook_last_received_at").eq("workspace_id", access.workspaceId).order("name"),
+    db.from("analytics_connections").select("id,name,webhook_secret,webhook_last_received_at").eq("workspace_id", access.workspaceId).order("name"),
   ]);
   if (error || connectionsError) return NextResponse.json({ error: "Não foi possível verificar o webhook." }, { status: 503 });
   return NextResponse.json({ enabled: data.olist_webhook_enabled, url: getOlistWebhookUrl(appUrl, access.workspaceId, data.olist_webhook_revision), status: await getOlistWebhookStatus(access.workspaceId),
-    connections: (connections || []).map(connection => ({ id: connection.id,
+    connections: (connections || []).map(connection => ({ id: connection.id, name: connection.name,
       url: getOlistConnectionWebhookUrl(appUrl, connection.id, connection.webhook_secret), lastReceivedAt: connection.webhook_last_received_at })),
   }, { headers: { "Cache-Control": "no-store" } });
 }

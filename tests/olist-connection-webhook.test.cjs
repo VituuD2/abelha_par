@@ -212,8 +212,9 @@ test('admin webhook settings return three scoped URLs and receipt times without 
   for (const connection of body.connections) {
     const row = rows.find(row => row.id === connection.id);
     assert.equal(row.workspace_id, WORKSPACE);
+    assert.equal(connection.name, row.name);
     assert.equal(connection.lastReceivedAt, row.webhook_last_received_at);
-    assert.deepEqual(Object.keys(connection).sort(), ['id', 'lastReceivedAt', 'url']);
+    assert.deepEqual(Object.keys(connection).sort(), ['id', 'lastReceivedAt', 'name', 'url']);
     assert.equal(new URL(connection.url).pathname, `/api/webhooks/olist/${row.id}/${webhook.getOlistConnectionWebhookSignature(row.id, row.webhook_secret)}`);
   }
   for (const row of rows) assert.ok(!JSON.stringify(body).includes(row.webhook_secret));
