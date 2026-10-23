@@ -15,6 +15,59 @@ Module._load=originalLoad;
 const root=createRoot(document.getElementById('app'));
 after(async()=>{await act(async()=>root.unmount());dom.window.close();});
 
+test('Ninho shows each account webhook and last event, copies only the chosen URL and offers manual copying on failure',async t=>{
+  const connections=[1,2,3].map(id=>({id:`connection-${id}`,company_id:`company-${id}`,name:`Olist ${id}`,credential_kind:'oauth',enabled:true,client_id:`app-${id}`,expires_at:'2099-01-01',verified_at:'2026-10-21',last_synced_at:null}));
+  const webhooks=connections.map((connection,index)=>({id:connection.id,url:`https://example.test/api/webhooks/olist/owner/account-${index+1}`,lastReceivedAt:index===1?'2026-10-22T13:00:00Z':null}));
+  const calls=[],copied=[],polls=[];
+  t.mock.method(global,'setInterval',fn=>{polls.push(fn);return polls.length;});
+  t.mock.method(global,'clearInterval',()=>{});
+  t.mock.method(global,'fetch',async(url,options={})=>{
+    calls.push({url,method:options.method||'GET'});
+    return Response.json(url==='/api/auth/status'?{isConnected:true,status:'valid'}
+      :url==='/api/ninho/webhook'?{enabled:true,url:'https://example.test/legacy-webhook',status:{status:'pending'},connections:webhooks}
+      :url==='/api/nuvemshop/connection'?{connected:false}
+      :url==='/api/analytics/connections'?{companies:[],connections,jobs:[],sources:[],coverage:[]}
+      :url==='/api/analytics/api-usage'?{available:true,accounts:[]}
+      :{users:[],currentUserId:'admin'});
+  });
+  const clipboard={async writeText(value){copied.push(value);}};
+  const clipboardDescriptor=Object.getOwnPropertyDescriptor(global.navigator,'clipboard');
+  Object.defineProperty(global.navigator,'clipboard',{configurable:true,value:clipboard});
+  t.after(()=>{if(clipboardDescriptor)Object.defineProperty(global.navigator,'clipboard',clipboardDescriptor);else delete global.navigator.clipboard;});
+  await act(async()=>root.render(React.createElement(NinhoSettings,{key:'per-account-webhooks'})));
+  const cards=[...document.querySelectorAll('article[aria-label^="Conexão "]')];
+  assert.equal(cards.length,3);
+  const fields=cards.map(card=>card.querySelector('input[readonly]'));
+  assert.deepEqual(fields.map(field=>field.value),webhooks.map(webhook=>webhook.url));
+  assert.equal(new Set(fields.map(field=>field.value)).size,3);
+  assert.ok(fields.every(field=>field.closest('[hidden]')),'connection URLs remain inside their collapsed section');
+  assert.match(cards[0].textContent,/Aguardando o primeiro evento/);
+  assert.match(cards[1].textContent,/Último evento: 22\/10\/2026, 10:00:00 \(Brasília\)/);
+  assert.match(cards[2].textContent,/Aguardando o primeiro evento/);
+  const toggle=document.querySelector('button[aria-label="Conexões da Curva ABC"]');
+  await act(async()=>toggle.click());
+  assert.equal(fields[2].closest('[hidden]'),null);
+  assert.equal(calls.filter(call=>call.url==='/api/ninho/webhook').length,1,'initial loading must not duplicate webhook reads');
+  webhooks[0].lastReceivedAt='2026-10-22T14:00:00Z';
+  await act(async()=>document.querySelector('button[aria-label="Atualizar conexões analíticas"]').click());
+  assert.match(cards[0].textContent,/Último evento: 22\/10\/2026, 11:00:00/);
+  assert.equal(calls.filter(call=>call.url==='/api/ninho/webhook').length,2);
+  webhooks[2].lastReceivedAt='2026-10-22T15:00:00Z';
+  await act(async()=>{for(const poll of polls)await poll();});
+  assert.match(cards[2].textContent,/Último evento: 22\/10\/2026, 12:00:00/);
+  assert.equal(calls.filter(call=>call.url==='/api/ninho/webhook').length,3);
+  assert.equal(calls.filter(call=>call.url==='/api/auth/status').length,1,'webhook refresh does not reread unrelated authorization');
+  await act(async()=>cards[2].querySelector('button[aria-label="Copiar webhook de Olist 3"]').click());
+  assert.deepEqual(copied,[webhooks[2].url]);
+  assert.match(cards[2].textContent,/URL copiada/);
+  assert.doesNotMatch(cards[0].textContent,/URL copiada/);
+  t.mock.method(clipboard,'writeText',async()=>{throw new Error('Clipboard unavailable');});
+  await act(async()=>cards[0].querySelector('button[aria-label="Copiar webhook de Olist 1"]').click());
+  assert.match(document.querySelector('[role="alert"]').textContent,/Selecione a URL do webhook desta conexão e copie manualmente/);
+  assert.ok(calls.every(call=>call.method==='GET'),'viewing and copying URLs must not change or synchronize integrations');
+  await act(async()=>root.render(null));
+});
+
 test('Ninho conceals sensitive options by default, keeps sections independent and does not reset drafts or expand during refresh',async t=>{
   const calls=[],polls=[];
   t.mock.method(global,'setInterval',fn=>{polls.push(fn);return polls.length;});

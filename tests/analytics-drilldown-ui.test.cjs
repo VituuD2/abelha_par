@@ -165,7 +165,8 @@ test('only detail summaries order companies and integrations by descending reven
     const names = card => [...card.querySelectorAll('div > span:first-child')].map(span => span.textContent);
     assert.deepEqual(names(cards[0]), ['Olist 1', 'Olist 2', 'Olist 3']);
     assert.deepEqual(names(cards[1]), ['Canal maior', 'Canal menor', 'Canal negativo']);
-    assert.deepEqual([...modal().querySelectorAll('tbody tr td:first-child')].map(td => td.textContent), summary.orders.map(order => order.number));
+    const orderLabels = modal().querySelectorAll(customer ? 'section[aria-label="Pedidos do cliente"] article h4' : 'tbody tr td:first-child');
+    assert.deepEqual([...orderLabels].map(label => label.textContent), summary.orders.map(order => customer ? `Pedido ${order.number}` : order.number));
     await close();
     assert.deepEqual([...document.querySelectorAll('tr[data-abc-entity]')].map(row => row.dataset.abcEntity), ['A', 'B']);
   }

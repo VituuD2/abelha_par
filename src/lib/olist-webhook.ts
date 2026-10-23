@@ -52,6 +52,29 @@ export function getOlistWebhookUrl(appUrl: string, workspaceId: string, revision
   }
 }
 
+export function getOlistConnectionWebhookSignature(connectionId: string, secret: string) {
+  if (secret.length < 32) throw new Error("Chave do webhook indisponível.");
+  return createHmac("sha256", secret).update(`olist-connection-webhook:${connectionId}`).digest("base64url");
+}
+
+export function isValidOlistConnectionWebhookSignature(connectionId: string, signature: string, secret: string) {
+  try {
+    const expected = Buffer.from(getOlistConnectionWebhookSignature(connectionId, secret));
+    const received = Buffer.from(signature);
+    return expected.length === received.length && timingSafeEqual(expected, received);
+  } catch {
+    return false;
+  }
+}
+
+export function getOlistConnectionWebhookUrl(appUrl: string, connectionId: string, secret: string) {
+  try {
+    return `${appUrl}/api/webhooks/olist/${connectionId}/${getOlistConnectionWebhookSignature(connectionId, secret)}`;
+  } catch {
+    return null;
+  }
+}
+
 export function extractOlistOrderId(payload: unknown): number | null {
   if (!payload || typeof payload !== "object") return null;
   const value = payload as Record<string, unknown>;

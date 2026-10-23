@@ -7,12 +7,12 @@ import { operationalHealth, type ConnectionHealth } from "@/lib/connection-statu
 import { ConnectionStatus } from "@/components/ui/connection-status";
 import { NuvemshopConnection } from "@/components/ninho/nuvemshop-connection";
 import { NinhoUsers } from "@/components/ninho/ninho-users";
-import { AnalyticsConnections } from "@/components/ninho/analytics-connections";
+import { AnalyticsConnections, type ConnectionWebhook } from "@/components/ninho/analytics-connections";
 import { NinhoSection } from "./ninho-section";
 import type { OlistWebhookStatus } from "@/types";
 
 type OlistStatus = { status?: string; health?: ConnectionHealth; isConnected: boolean; needsReconnect?: boolean; message?: string | null };
-type Webhook = { enabled: boolean; url: string | null; status: OlistWebhookStatus };
+type Webhook = { enabled: boolean; url: string | null; status: OlistWebhookStatus; connections?: ConnectionWebhook[] };
 const oauthErrors: Record<string, string> = {
   OAuthValidationFailed: "A tentativa de conexão expirou. Conecte a Olist novamente.",
   OAuthProviderDenied: "A Olist não autorizou a conexão. Confira a conta e suas permissões.",
@@ -31,12 +31,18 @@ export function NinhoSettings() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const load = useCallback(async (verify = false) => {
-    const responses = await Promise.all([fetch(`/api/auth/status${verify ? "?verify=1" : ""}`, { cache: "no-store" }), fetch("/api/ninho/webhook", { cache: "no-store" })]);
-    const payloads = await Promise.all(responses.map(response => response.json()));
-    for (let index = 0; index < responses.length; index++) if (!responses[index].ok) throw new Error(payloads[index].error || "Não foi possível carregar as configurações.");
-    setOlist(payloads[0]); setWebhook(payloads[1]);
+  const refreshWebhooks = useCallback(async () => {
+    const response = await fetch("/api/ninho/webhook", { cache: "no-store" });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || "Não foi possível carregar as configurações.");
+    setWebhook(payload);
   }, []);
+  const load = useCallback(async (verify = false) => {
+    const [response] = await Promise.all([fetch(`/api/auth/status${verify ? "?verify=1" : ""}`, { cache: "no-store" }), refreshWebhooks()]);
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || "Não foi possível carregar as configurações.");
+    setOlist(payload);
+  }, [refreshWebhooks]);
   useEffect(() => {
     void load().catch(reason => setError(reason.message));
     const params = new URLSearchParams(window.location.search);
@@ -87,7 +93,7 @@ export function NinhoSettings() {
         <div className="flex flex-wrap gap-3"><button className="btn-ghost" disabled={busy || !olist} onClick={() => action("verify")}><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} />Verificar acesso</button><button className="btn-ghost text-[var(--color-accent-red)]" disabled={busy || !olist} onClick={() => action("disconnect")}>Remover conexão</button></div>
       </NinhoSection>
       <NuvemshopConnection />
-      <AnalyticsConnections />
+      <AnalyticsConnections webhooks={webhook?.connections} onRefreshWebhooks={refreshWebhooks} />
       <NinhoSection title="Webhook Olist" icon={Link2} iconClassName="bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)]"
         status={<span className={`badge ${webhook?.enabled && webhook.status.status === "active" ? "badge-checked" : "badge-pending"}`}>
           {!webhook ? "Verificando…" : !webhook.enabled ? "Pausado" : webhook.status.status === "active" ? "Ativo" : webhook.status.status === "pending" ? "Aguardando" : "Indisponível"}

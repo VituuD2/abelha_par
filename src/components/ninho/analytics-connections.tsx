@@ -5,7 +5,7 @@ import { ANALYTICS_REQUEST_TIMEOUT_MS } from "@/lib/request-timeouts";
 import { DatePicker } from "@/components/ui/date-picker";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Building2, RefreshCw, Database } from "lucide-react";
+import { Building2, RefreshCw, Database, Copy } from "lucide-react";
 import { ConnectionProgress } from "@/components/analytics/connection-progress";
 import { OlistApiMonitor, useOlistApiUsage } from "./olist-api-monitor";
 import { connectionHealth, type ConnectionHealth } from "@/lib/connection-status";
@@ -18,6 +18,11 @@ import {
   type AnalyticsOAuthErrorCode,
 } from "@/lib/analytics/oauth-errors";
 type Company = { id: string; name: string; tax_id: string | null };
+export type ConnectionWebhook = {
+  id: string;
+  url: string | null;
+  lastReceivedAt: string | null;
+};
 type Connection = {
   id: string;
   company_id: string;
@@ -180,7 +185,7 @@ function SourceForm({
     </form>
   );
 }
-export function AnalyticsConnections() {
+export function AnalyticsConnections({ webhooks = [], onRefreshWebhooks }: { webhooks?: ConnectionWebhook[]; onRefreshWebhooks?: () => Promise<void> }) {
   const usage = useOlistApiUsage();
   const [state, setState] = useState<State | null>(null),
     [error, setError] = useState<string | null>(null),
@@ -201,6 +206,7 @@ export function AnalyticsConnections() {
   const applicationForm = useRef<HTMLDetailsElement>(null);
   const loadVersion = useRef(0);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
+  const [copiedWebhook, setCopiedWebhook] = useState<string | null>(null);
   const configureApplication = (connection: Connection) => {
     setCredentialConnection(connection.id);
     setClientId(connection.client_id || "");
@@ -213,18 +219,18 @@ export function AnalyticsConnections() {
       });
     }
   };
-  const load = useCallback(async (foreground = false) => {
+  const load = useCallback(async (foreground = false, refreshWebhooks = false) => {
     if (foreground) setConnectionsLoading(true);
     const version = ++loadVersion.current;
     try {
-      const next = await call("/api/analytics/connections");
+      const [next] = await Promise.all([call("/api/analytics/connections"), refreshWebhooks ? onRefreshWebhooks?.() : undefined]);
       if (version === loadVersion.current) setState(next);
     } catch (e) {
       if (version === loadVersion.current) setError(
         e instanceof Error ? e.message : "Camada analítica indisponível.",
       );
     } finally { if (foreground) setConnectionsLoading(false); }
-  }, []);
+  }, [onRefreshWebhooks]);
   useEffect(() => {
     setCallbackOrigin(window.location.origin);
     void load();
@@ -242,7 +248,7 @@ export function AnalyticsConnections() {
   useEffect(() => {
     const timer = setInterval(() => {
       if (document.visibilityState === "hidden") return;
-      void load();
+      void load(false, true);
     }, 15000);
     return () => clearInterval(timer);
   }, [load]);
@@ -255,7 +261,7 @@ export function AnalyticsConnections() {
       setNotice(saved?.scheduled
         ? "Atualização do CMV agendada."
         : "Configuração salva.");
-      await load(true);
+      await load(true, true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao configurar.");
     } finally {
@@ -303,7 +309,7 @@ export function AnalyticsConnections() {
           aria-label="Atualizar conexões analíticas"
           className="btn-ghost"
           disabled={connectionsLoading}
-          onClick={() => void load(true)}
+          onClick={() => void load(true, true)}
         >
           <RefreshCw className="w-4 h-4" />
         </button>
@@ -325,6 +331,7 @@ export function AnalyticsConnections() {
           const company = state.companies.find(company => company.id === c.company_id);
           const authorized = !["configure", "authorize", "reconnect", "relink"].includes(health.action || "") && health.code !== "unavailable";
           const costs = state.costSync?.connection_id === c.id ? state.costSync : null;
+          const webhook = webhooks.find(webhook => webhook.id === c.id);
           return (
             <article key={c.id} aria-label={`Conexão ${c.name}`} className="min-w-0 rounded-2xl border border-[var(--color-border-light)] p-4 sm:p-5 space-y-4">
               <header className="flex flex-wrap items-start justify-between gap-3">
@@ -338,6 +345,21 @@ export function AnalyticsConnections() {
               {health.code !== "connected" && health.code !== "paused" && c.last_error && <p className="text-xs text-amber-900" role="status">{c.last_error}</p>}
               <ConnectionProgress compact enabled={c.enabled} connection={c.id} jobs={state.jobs} coverage={state.coverage || []} onRetry={job => void retry(job)} busy={busy} />
               <p className="text-xs text-[var(--color-text-secondary)]">Última importação: {c.last_synced_at ? new Date(c.last_synced_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "aguardando"}</p>
+              {webhook && <div className="space-y-2 border-t border-[var(--color-border-light)] pt-3">
+                {webhook.url ? <>
+                  <label className="block text-xs">Webhook Olist · {c.name}
+                    <input readOnly className="field mt-1 text-xs" value={webhook.url} onFocus={event => event.target.select()} />
+                  </label>
+                  <button className="btn-ghost" aria-label={`Copiar webhook de ${c.name}`} onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(webhook.url!);
+                      setCopiedWebhook(c.id);
+                      setTimeout(() => setCopiedWebhook(current => current === c.id ? null : current), 2000);
+                    } catch { setError("Selecione a URL do webhook desta conexão e copie manualmente."); }
+                  }}><Copy className="w-4 h-4" />{copiedWebhook === c.id ? "URL copiada" : "Copiar URL"}</button>
+                </> : <p className="text-xs text-[var(--color-accent-orange)]">Webhook indisponível para esta conexão.</p>}
+                <p className="text-xs text-[var(--color-text-secondary)]">{webhook.lastReceivedAt ? `Último evento: ${new Date(webhook.lastReceivedAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })} (Brasília).` : "Aguardando o primeiro evento."}</p>
+              </div>}
               <OlistApiMonitor connectionId={c.id} usage={usage} />
               {costs && <details className="border-t border-[var(--color-border-light)] pt-3 text-xs">
                 <summary className="cursor-pointer font-medium">CMV · {costs.history ? `${costs.history.completed}/${costs.history.total} produtos` : "aguardando"}{costs.history?.pending ? ` · ${costs.history.pending} pendentes` : ""}</summary>

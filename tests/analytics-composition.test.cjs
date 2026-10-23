@@ -15,7 +15,7 @@ let db, sale;
 const migration = readFileSync('supabase/migration_v14_v15_analytics_complete.sql', 'utf8');
 before(async () => {
   // Validate the artifact users apply after v13, including reproducibility and reapplication.
-  assert.equal(migration,require('../scripts/build-analytics-migration.cjs').buildMigration());
+  assert.equal(migration.replace(/\r\n/g,'\n'),require('../scripts/build-analytics-migration.cjs').buildMigration());
   db = await isolatedDatabase();
   await db.exec(migration);
   await db.exec(migration);

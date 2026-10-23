@@ -28,6 +28,6 @@ test('Curva ABC has its own themed navigation in desktop and mobile for all memb
   for(const isAdmin of [false,true]){
     const html=renderToStaticMarkup(React.createElement(Sidebar,{role:isAdmin?'admin':'operator'}));
     assert.equal((html.match(/href="\/analytics\/abc"/g)||[]).length,2);
-    assert.equal((html.match(/Néctar/g)||[]).length,2);
+    assert.equal((html.match(/<span\b[^>]*>Néctar<\/span>/g)||[]).length,2);
   }
 });
